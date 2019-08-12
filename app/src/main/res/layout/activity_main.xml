@@ -1,0 +1,233 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/colorDefaultBg"
+    android:gravity="center_horizontal"
+    android:orientation="vertical"
+    tools:context=".MainActivity">
+
+    <include layout="@layout/widget_tool_bar" />
+
+    <Space
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1" />
+
+    <android.support.v7.widget.CardView
+        android:layout_width="@dimen/home_card_width"
+        android:layout_height="@dimen/home_card_height"
+        android:clickable="true"
+        android:focusable="true"
+        android:foreground="?android:attr/selectableItemBackground"
+        app:cardCornerRadius="@dimen/home_card_radius">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:gravity="center_vertical"
+            android:orientation="horizontal"
+            android:paddingLeft="@dimen/padding_default"
+            android:paddingRight="@dimen/padding_default">
+
+            <ImageView
+                android:layout_width="@dimen/image_list_size"
+                android:layout_height="@dimen/image_list_size"
+                android:src="@mipmap/ic_dew_point" />
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:orientation="vertical"
+                android:padding="@dimen/padding_default">
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="水分活度测量"
+                    android:textColor="@color/colorBody"
+                    android:textSize="@dimen/sizeSubTitle"
+                    android:textStyle="bold" />
+
+                <Space
+                    android:layout_width="match_parent"
+                    android:layout_height="0dp"
+                    android:layout_weight="1" />
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="moisture measuring"
+                    android:textColor="@color/colorSecondBody"
+                    android:textSize="@dimen/sizeBody"
+                    android:textStyle="bold" />
+            </LinearLayout>
+        </LinearLayout>
+
+    </android.support.v7.widget.CardView>
+
+    <android.support.v7.widget.CardView
+        android:layout_width="@dimen/home_card_width"
+        android:layout_height="@dimen/home_card_height"
+        android:layout_marginTop="@dimen/home_card_margin"
+        android:clickable="true"
+        android:focusable="true"
+        android:foreground="?android:attr/selectableItemBackground"
+        app:cardCornerRadius="@dimen/home_card_radius">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:gravity="center_vertical"
+            android:orientation="horizontal"
+            android:paddingLeft="@dimen/padding_default"
+            android:paddingRight="@dimen/padding_default">
+
+            <ImageView
+                android:layout_width="@dimen/image_list_size"
+                android:layout_height="@dimen/image_list_size"
+                android:src="@mipmap/ic_edit_file" />
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:orientation="vertical"
+                android:padding="@dimen/padding_default">
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="数据校正"
+                    android:textColor="@color/colorBody"
+                    android:textSize="@dimen/sizeSubTitle"
+                    android:textStyle="bold" />
+
+                <Space
+                    android:layout_width="match_parent"
+                    android:layout_height="0dp"
+                    android:layout_weight="1" />
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="data correction"
+                    android:textColor="@color/colorSecondBody"
+                    android:textSize="@dimen/sizeBody"
+                    android:textStyle="bold" />
+            </LinearLayout>
+        </LinearLayout>
+    </android.support.v7.widget.CardView>
+
+    <android.support.v7.widget.CardView
+        android:layout_width="@dimen/home_card_width"
+        android:layout_height="@dimen/home_card_height"
+        android:layout_marginTop="@dimen/home_card_margin"
+        android:clickable="true"
+        android:focusable="true"
+        android:foreground="?android:attr/selectableItemBackground"
+        app:cardCornerRadius="@dimen/home_card_radius">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:gravity="center_vertical"
+            android:orientation="horizontal"
+            android:paddingLeft="@dimen/padding_default"
+            android:paddingRight="@dimen/padding_default">
+
+            <ImageView
+                android:layout_width="@dimen/image_list_size"
+                android:layout_height="@dimen/image_list_size"
+                android:src="@mipmap/ic_view_file" />
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:orientation="vertical"
+                android:padding="@dimen/padding_default">
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="历史查询"
+                    android:textColor="@color/colorBody"
+                    android:textSize="@dimen/sizeSubTitle"
+                    android:textStyle="bold" />
+
+                <Space
+                    android:layout_width="match_parent"
+                    android:layout_height="0dp"
+                    android:layout_weight="1" />
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="query history"
+                    android:textColor="@color/colorSecondBody"
+                    android:textSize="@dimen/sizeBody"
+                    android:textStyle="bold" />
+            </LinearLayout>
+        </LinearLayout>
+
+    </android.support.v7.widget.CardView>
+
+    <android.support.v7.widget.CardView
+        android:layout_width="@dimen/home_card_width"
+        android:layout_height="@dimen/home_card_height"
+        android:layout_marginTop="@dimen/home_card_margin"
+        android:clickable="true"
+        android:focusable="true"
+        android:foreground="?android:attr/selectableItemBackground"
+        app:cardCornerRadius="@dimen/home_card_radius">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:gravity="center_vertical"
+            android:orientation="horizontal"
+            android:paddingLeft="@dimen/padding_default"
+            android:paddingRight="@dimen/padding_default">
+
+            <ImageView
+                android:layout_width="@dimen/image_list_size"
+                android:layout_height="@dimen/image_list_size"
+                android:src="@mipmap/ic_settings" />
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:orientation="vertical"
+                android:padding="@dimen/padding_default">
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="应用设置"
+                    android:textColor="@color/colorBody"
+                    android:textSize="@dimen/sizeSubTitle"
+                    android:textStyle="bold" />
+
+                <Space
+                    android:layout_width="match_parent"
+                    android:layout_height="0dp"
+                    android:layout_weight="1" />
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="application settings"
+                    android:textColor="@color/colorSecondBody"
+                    android:textSize="@dimen/sizeBody"
+                    android:textStyle="bold" />
+            </LinearLayout>
+        </LinearLayout>
+
+    </android.support.v7.widget.CardView>
+
+    <Space
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1" />
+</LinearLayout>

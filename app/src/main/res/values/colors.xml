@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="colorPrimary">#FFFFFF</color>
+    <color name="colorPrimaryDark">#FFFFFF</color>
+    <color name="colorAccent">#219EF3</color>
+
+    <color name="colorRed">#DB4F47</color>
+    <color name="colorWhite">#FFFFFF</color>
+    <color name="colorSecondWhite">#7FFFFFFF</color>
+    <color name="colorDefaultBg">#DBDEE5</color>
+    <color name="colorClear">#00000000</color>
+
+    <!--内容颜色-->
+    <color name="colorBody">#DD000000</color>
+    <!--二级内容颜色-->
+    <color name="colorSecondBody">#69000000</color>
+    <!--不激活状态颜色、分割线颜色-->
+    <color name="colorDisableBody">#3F000000</color>
+
+
+    <color name="colorBtnDisable">#7F144894</color>
+    <color name="colorBtnPress">#123d78</color>
+    <color name="colorBtnUnPress">#144894</color>
+</resources>
