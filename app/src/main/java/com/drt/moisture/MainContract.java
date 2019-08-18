@@ -3,6 +3,7 @@ package com.drt.moisture;
 import net.yzj.android.common.base.BaseView;
 
 public interface MainContract {
+
     interface Model {
     }
 

@@ -18,7 +18,7 @@
     <color name="colorDisableBody">#3F000000</color>
 
 
-    <color name="colorBtnDisable">#7F144894</color>
+    <color name="colorBtnDisable">#7F219EF3</color>
     <color name="colorBtnPress">#123d78</color>
-    <color name="colorBtnUnPress">#144894</color>
+    <color name="colorBtnUnPress">#219EF3</color>
 </resources>

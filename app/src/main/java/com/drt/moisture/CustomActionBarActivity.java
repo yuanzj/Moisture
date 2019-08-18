@@ -7,6 +7,7 @@ import android.support.annotation.Nullable;
 import android.support.v7.widget.Toolbar;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -30,7 +31,7 @@ public abstract class CustomActionBarActivity<T extends BasePresenter> extends B
     /*是否是返回(有可能是代表别的功能)*/
     private boolean is_title_back = true;
     /*返回*/
-    private ImageView titleBack;
+    private ImageButton titleBack;
     /*标题名称*/
     private TextView titleName;
 

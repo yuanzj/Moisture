@@ -17,11 +17,13 @@
         android:layout_weight="1" />
 
     <android.support.v7.widget.CardView
+        android:id="@+id/menu_01"
         android:layout_width="@dimen/home_card_width"
         android:layout_height="@dimen/home_card_height"
         android:clickable="true"
         android:focusable="true"
         android:foreground="?android:attr/selectableItemBackground"
+        android:onClick="onClick"
         app:cardCornerRadius="@dimen/home_card_radius">
 
         <LinearLayout
@@ -69,12 +71,14 @@
     </android.support.v7.widget.CardView>
 
     <android.support.v7.widget.CardView
+        android:id="@+id/menu_02"
         android:layout_width="@dimen/home_card_width"
         android:layout_height="@dimen/home_card_height"
         android:layout_marginTop="@dimen/home_card_margin"
         android:clickable="true"
         android:focusable="true"
         android:foreground="?android:attr/selectableItemBackground"
+        android:onClick="onClick"
         app:cardCornerRadius="@dimen/home_card_radius">
 
         <LinearLayout
@@ -121,12 +125,14 @@
     </android.support.v7.widget.CardView>
 
     <android.support.v7.widget.CardView
+        android:id="@+id/menu_03"
         android:layout_width="@dimen/home_card_width"
         android:layout_height="@dimen/home_card_height"
         android:layout_marginTop="@dimen/home_card_margin"
         android:clickable="true"
         android:focusable="true"
         android:foreground="?android:attr/selectableItemBackground"
+        android:onClick="onClick"
         app:cardCornerRadius="@dimen/home_card_radius">
 
         <LinearLayout
@@ -174,12 +180,14 @@
     </android.support.v7.widget.CardView>
 
     <android.support.v7.widget.CardView
+        android:id="@+id/menu_04"
         android:layout_width="@dimen/home_card_width"
         android:layout_height="@dimen/home_card_height"
         android:layout_marginTop="@dimen/home_card_margin"
         android:clickable="true"
         android:focusable="true"
         android:foreground="?android:attr/selectableItemBackground"
+        android:onClick="onClick"
         app:cardCornerRadius="@dimen/home_card_radius">
 
         <LinearLayout
