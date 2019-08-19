@@ -1,1 +1,1 @@
-include ':app', ':zjandroidcommon'
+include ':app', ':zjandroidcommon', ':bluetoothspp', ':bluetoothspp'
