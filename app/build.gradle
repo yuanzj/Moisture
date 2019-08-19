@@ -42,5 +42,8 @@ dependencies {
     //jetbrains 注解
     implementation 'org.jetbrains:annotations-java5:15.0'
 
+    // 图表
+    implementation 'com.github.PhilJay:MPAndroidChart:v3.1.0'
+
 
 }
