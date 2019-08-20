@@ -63,6 +63,7 @@ public class MeasureActivity extends CustomActionBarActivity<MeasurePresenter> i
         // holder.chart.setValueTypeface(mTf);
         chart.getDescription().setEnabled(false);
         chart.setDrawGridBackground(false);
+        chart.setNoDataText("No chart data available. Use the menu to add entries and data sets!");
 
         XAxis xAxis = chart.getXAxis();
         xAxis.setPosition(XAxis.XAxisPosition.BOTTOM);
@@ -141,7 +142,7 @@ public class MeasureActivity extends CustomActionBarActivity<MeasurePresenter> i
         d1.setHighLightColor(getResources().getColor(R.color.colorAccent, getTheme()));
         d1.setColor(getResources().getColor(R.color.colorAccent, getTheme()));
         d1.setCircleColor(getResources().getColor(R.color.colorAccent, getTheme()));
-        d1.setDrawValues(false);
+        d1.setDrawValues(true);
 
         ArrayList<Entry> values2 = new ArrayList<>();
 
@@ -155,12 +156,62 @@ public class MeasureActivity extends CustomActionBarActivity<MeasurePresenter> i
         d2.setHighLightColor(getResources().getColor(R.color.colorGreen, getTheme()));
         d2.setColor(getResources().getColor(R.color.colorGreen, getTheme()));
         d2.setCircleColor(getResources().getColor(R.color.colorGreen, getTheme()));
-        d2.setDrawValues(false);
+        d2.setDrawValues(true);
 
         ArrayList<ILineDataSet> sets = new ArrayList<>();
         sets.add(d1);
         sets.add(d2);
 
         return new LineData(sets);
+    }
+
+    private void addEntry() {
+
+        LineData data = chart.getData();
+
+        if (data != null) {
+
+            ILineDataSet set = data.getDataSetByIndex(0);
+            // set.addEntry(...); // can be called as well
+
+            if (set == null) {
+                set = createSet();
+                data.addDataSet(set);
+            }
+
+            data.addEntry(new Entry(set.getEntryCount(), (float) (Math.random() * 40) + 30f), 0);
+            data.notifyDataChanged();
+
+            // let the chart know it's data has changed
+            chart.notifyDataSetChanged();
+
+            // limit the number of visible entries
+            chart.setVisibleXRangeMaximum(120);
+            // chart.setVisibleYRange(30, AxisDependency.LEFT);
+
+            // move to the latest entry
+            chart.moveViewToX(data.getEntryCount());
+
+            // this automatically refreshes the chart (calls invalidate())
+            // chart.moveViewTo(data.getXValCount()-7, 55f,
+            // AxisDependency.LEFT);
+        }
+    }
+
+    private LineDataSet createSet() {
+
+        LineDataSet set = new LineDataSet(null, "Dynamic Data");
+        set.setAxisDependency(YAxis.AxisDependency.LEFT);
+        set.setColor(ColorTemplate.getHoloBlue());
+        set.setCircleColor(Color.WHITE);
+        set.setLineWidth(2f);
+        set.setCircleRadius(4f);
+        set.setFillAlpha(65);
+        set.setFillColor(ColorTemplate.getHoloBlue());
+        set.setHighLightColor(Color.rgb(244, 117, 117));
+        set.setValueTextColor(Color.WHITE);
+        set.setValueTextSize(9f);
+        set.setDrawValues(false);
+        return set;
     }
 }
