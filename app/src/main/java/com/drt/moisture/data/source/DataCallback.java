@@ -5,7 +5,11 @@ package com.drt.moisture.data.source;
  */
 public interface DataCallback<T> {
 
+    void runningTime(String time);
+
     void success(T value);
+
+    void measureDone();
 
     void error(Throwable e);
 }

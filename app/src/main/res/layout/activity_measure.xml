@@ -9,14 +9,159 @@
 
     <com.github.mikephil.charting.charts.LineChart
         android:id="@+id/chart"
-        android:layout_margin="@dimen/padding_default"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content" />
+        android:layout_height="wrap_content"
+        android:layout_margin="@dimen/padding_default" />
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_margin="@dimen/padding_default"
+        android:orientation="horizontal">
+
+        <LinearLayout
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:gravity="left"
+            android:orientation="horizontal">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="时间"
+                android:textColor="@color/colorSecondBody"
+                android:textSize="@dimen/sizeBody" />
+
+            <TextView
+                android:id="@+id/time"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="@dimen/padding_default"
+                android:text="--"
+                android:textColor="@color/colorBody"
+                android:textSize="@dimen/sizeSubTitle" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:gravity="center"
+            android:orientation="horizontal">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="温度"
+                android:textColor="@color/colorSecondBody"
+                android:textSize="@dimen/sizeBody" />
+
+            <TextView
+                android:id="@+id/temperature"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="@dimen/padding_default"
+                android:text="--"
+                android:textColor="@color/colorBody"
+                android:textSize="@dimen/sizeSubTitle" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:gravity="right"
+            android:orientation="horizontal">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="水分活度"
+                android:textColor="@color/colorSecondBody"
+                android:textSize="@dimen/sizeBody" />
+
+            <TextView
+                android:id="@+id/activeness"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="@dimen/padding_default"
+                android:text="--"
+                android:textColor="@color/colorBody"
+                android:textSize="@dimen/sizeSubTitle" />
+        </LinearLayout>
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center"
+        android:orientation="horizontal"
+        android:padding="@dimen/padding_default">
+
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="已测量"
+            android:textColor="@color/colorSecondBody"
+            android:textSize="@dimen/sizeBody" />
+
+        <TextView
+            android:id="@+id/alreadyRunning"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="@dimen/padding_default"
+            android:text="--"
+            android:textColor="@color/colorBody"
+            android:textSize="@dimen/sizeBody" />
+    </LinearLayout>
 
     <Space
         android:layout_width="match_parent"
         android:layout_height="0dp"
         android:layout_weight="1" />
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/list_item_height_default"
+        android:background="@color/colorWhite"
+        android:gravity="left|center_vertical"
+        android:orientation="horizontal"
+        android:paddingLeft="@dimen/padding_default">
+
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="样品名称"
+            android:textColor="@color/colorSecondBody"
+            android:textSize="@dimen/sizeBody" />
+
+        <EditText
+            android:id="@+id/mesasureName"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_marginLeft="@dimen/padding_default"
+            android:layout_marginTop="8dp"
+            android:layout_marginRight="@dimen/padding_default"
+            android:layout_marginBottom="8dp"
+            android:layout_weight="1"
+            android:background="@drawable/edittext_bg_selector"
+            android:focusableInTouchMode="true"
+            android:hint="请输入测量样品名称"
+            android:singleLine="true"
+            android:textColor="@color/colorBody"
+            android:textCursorDrawable="@drawable/solid_shape_bottom_line"
+            android:textSize="@dimen/sizeSubTitle" />
+
+        <Space
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1" />
+
+    </LinearLayout>
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -45,8 +190,10 @@
             android:layout_weight="1" />
 
         <LinearLayout
+            android:id="@+id/btnStartMeasure"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:background="@drawable/selector_btn"
             android:gravity="center"
             android:orientation="vertical">
 
@@ -65,9 +212,12 @@
         </LinearLayout>
 
         <LinearLayout
+            android:id="@+id/btnStopMeasure"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginLeft="@dimen/padding_default"
+            android:alpha="0.32"
+            android:background="@drawable/selector_btn"
             android:gravity="center"
             android:orientation="vertical">
 
