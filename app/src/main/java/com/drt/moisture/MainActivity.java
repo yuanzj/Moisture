@@ -5,6 +5,7 @@ import android.view.KeyEvent;
 import android.view.View;
 import android.widget.Toast;
 
+import com.drt.moisture.correct.CorrectActivity;
 import com.drt.moisture.measure.MeasureActivity;
 
 
@@ -59,6 +60,9 @@ public class MainActivity extends CustomActionBarActivity<MainPresenter> {
         switch (view.getId()) {
             case R.id.menu_01:
                 startActivity(new Intent(this, MeasureActivity.class));
+                break;
+            case R.id.menu_02:
+                startActivity(new Intent(this, CorrectActivity.class));
                 break;
         }
 

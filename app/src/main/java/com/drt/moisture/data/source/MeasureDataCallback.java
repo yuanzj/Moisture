@@ -3,7 +3,7 @@ package com.drt.moisture.data.source;
 /**
  * @author yuanzhijian
  */
-public interface DataCallback<T> {
+public interface MeasureDataCallback<T> {
 
     void runningTime(String time);
 

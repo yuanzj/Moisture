@@ -2,4 +2,6 @@
     <string name="app_name">水分活度测试仪</string>
 
     <string name="activity_measure">测量</string>
+
+    <string name="activity_correct">校正</string>
 </resources>

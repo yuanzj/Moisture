@@ -1,4 +1,4 @@
-package com.drt.moisture.measure;
+package com.drt.moisture.correct;
 
 import android.graphics.Point;
 import android.os.Bundle;
@@ -6,7 +6,6 @@ import android.support.annotation.Nullable;
 import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
-import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.LinearLayout;
 import android.widget.Spinner;
@@ -31,9 +30,9 @@ import butterknife.OnClick;
 /**
  * @author yuanzhijian
  */
-public class MeasureActivity extends CustomActionBarActivity<MeasurePresenter> implements MeasureContract.View {
+public class CorrectActivity extends CustomActionBarActivity<CorrectPresenter> implements CorrectContract.View {
 
-    private static final String TAG = MeasureActivity.class.getSimpleName();
+    private static final String TAG = CorrectActivity.class.getSimpleName();
 
     @BindView(R.id.title_rightImage)
     ImageButton btnBluetooth;
@@ -54,7 +53,7 @@ public class MeasureActivity extends CustomActionBarActivity<MeasurePresenter> i
     Spinner spMeasureTime;
 
     @BindView(R.id.mesasureName)
-    EditText measureName;
+    TextView correctTitle;
 
     @BindView(R.id.alreadyRunning)
     TextView alreadyRunning;
@@ -81,12 +80,12 @@ public class MeasureActivity extends CustomActionBarActivity<MeasurePresenter> i
 
     @Override
     public int getLayoutId() {
-        return R.layout.activity_measure;
+        return R.layout.activity_correct;
     }
 
     @Override
     public void initView() {
-        mPresenter = new MeasurePresenter();
+        mPresenter = new CorrectPresenter();
         mPresenter.attachView(this);
 
         initChartView();
@@ -96,9 +95,11 @@ public class MeasureActivity extends CustomActionBarActivity<MeasurePresenter> i
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
                 Log.d(TAG, "spMeasureModel:onItemSelected:position:" + position);
                 if (position == 0) {
-                    spMeasureTime.setEnabled(true);
+                    correctTitle.setText("请放置氯化钠饱和液");
+                } else if (position == 1) {
+                    correctTitle.setText("请放置氯化镁饱和液");
                 } else {
-                    spMeasureTime.setEnabled(false);
+                    correctTitle.setText("请先放置氯化钠饱和液");
                 }
             }
 
@@ -162,12 +163,12 @@ public class MeasureActivity extends CustomActionBarActivity<MeasurePresenter> i
 
     @OnClick(R.id.btnStartMeasure)
     public void startMeasure() {
-        mPresenter.startMeasure(spMeasureModel.getSelectedItemPosition(), measureName.getText().toString());
+        mPresenter.startCorrect(spMeasureModel.getSelectedItemPosition());
     }
 
     @OnClick(R.id.btnStopMeasure)
     public void stopMeasure() {
-        mPresenter.stopMeasure();
+        mPresenter.stopCorrect();
     }
 
     @Override
@@ -177,25 +178,18 @@ public class MeasureActivity extends CustomActionBarActivity<MeasurePresenter> i
             public void run() {
                 switch (measureStatus) {
                     case BT_NOT_CONNECT:
-                        measureName.setEnabled(false);
                         btnStartMeasure.setAlpha(0.32f);
                         btnStopMeasure.setAlpha(0.32f);
                         spMeasureModel.setEnabled(false);
                         spMeasureTime.setEnabled(false);
                         break;
                     case NORMAL:
-                        measureName.setEnabled(true);
                         btnStartMeasure.setAlpha(1.0f);
                         btnStopMeasure.setAlpha(0.32f);
                         spMeasureModel.setEnabled(true);
-                        if (spMeasureModel.getSelectedItemPosition() == 0) {
-                            spMeasureTime.setEnabled(true);
-                        } else {
-                            spMeasureTime.setEnabled(false);
-                        }
+                        spMeasureTime.setEnabled(true);
                         break;
                     case RUNNING:
-                        measureName.setEnabled(false);
                         btnStartMeasure.setAlpha(0.32f);
                         btnStopMeasure.setAlpha(1.0f);
                         spMeasureModel.setEnabled(false);
@@ -205,17 +199,12 @@ public class MeasureActivity extends CustomActionBarActivity<MeasurePresenter> i
                     case ERROR:
                     case DONE:
                         if (measureStatus == MeasureStatus.DONE) {
-                            Toast.makeText(getApplicationContext(), "测量完成", Toast.LENGTH_LONG).show();
+                            Toast.makeText(getApplicationContext(), "校正完成", Toast.LENGTH_LONG).show();
                         }
-                        measureName.setEnabled(true);
                         btnStartMeasure.setAlpha(1.0f);
                         btnStopMeasure.setAlpha(0.32f);
                         spMeasureModel.setEnabled(true);
-                        if (spMeasureModel.getSelectedItemPosition() == 0) {
-                            spMeasureTime.setEnabled(true);
-                        } else {
-                            spMeasureTime.setEnabled(false);
-                        }
+                        spMeasureTime.setEnabled(true);
                         break;
                     default:
                         break;
@@ -223,6 +212,16 @@ public class MeasureActivity extends CustomActionBarActivity<MeasurePresenter> i
             }
         });
 
+    }
+
+    @Override
+    public void updateStep(final String message) {
+        runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                correctTitle.setText(message);
+            }
+        });
     }
 
     @Override
@@ -304,7 +303,7 @@ public class MeasureActivity extends CustomActionBarActivity<MeasurePresenter> i
         // holder.chart.setValueTypeface(mTf);
         chart.getDescription().setEnabled(false);
         chart.setDrawGridBackground(false);
-        chart.setNoDataText("没有测量数据。请点击右上角蓝牙按钮连接设备后开始测量!");
+        chart.setNoDataText("没有校正数据。请点击右上角蓝牙按钮连接设备后开始校正!");
 
         XAxis xAxis = chart.getXAxis();
         xAxis.setPosition(XAxis.XAxisPosition.BOTTOM);

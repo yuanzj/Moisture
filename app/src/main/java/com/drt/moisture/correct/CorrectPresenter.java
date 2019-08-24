@@ -1,21 +1,20 @@
-package com.drt.moisture.measure;
+package com.drt.moisture.correct;
 
-import android.text.TextUtils;
 
 import com.drt.moisture.data.MeasureStatus;
 import com.drt.moisture.data.MeasureValue;
-import com.drt.moisture.data.source.MeasureDataCallback;
+import com.drt.moisture.data.source.CorrectDataCallback;
 
 import net.yzj.android.common.base.BasePresenter;
 
-public class MeasurePresenter extends BasePresenter<MeasureContract.View> implements MeasureContract.Presenter {
+public class CorrectPresenter extends BasePresenter<CorrectContract.View> implements CorrectContract.Presenter {
 
-    private MeasureContract.Model model;
+    private CorrectContract.Model model;
 
     private MeasureStatus measureStatus;
 
-    public MeasurePresenter() {
-        model = new MeasureModel();
+    public CorrectPresenter() {
+        model = new CorrectModel();
         measureStatus = MeasureStatus.NORMAL;
     }
 
@@ -30,12 +29,8 @@ public class MeasurePresenter extends BasePresenter<MeasureContract.View> implem
     }
 
     @Override
-    public void startMeasure(int measureModel, String measureName) {
+    public void startCorrect(final int measureModel) {
         if (!isViewAttached()) {
-            return;
-        }
-        if (TextUtils.isEmpty(measureName)) {
-            mView.onError(new Exception("请输入测量样品名称"));
             return;
         }
 
@@ -46,7 +41,7 @@ public class MeasurePresenter extends BasePresenter<MeasureContract.View> implem
             case DONE:
                 break;
             case RUNNING:
-                mView.onError(new Exception("测量中..."));
+                mView.onError(new Exception("校正中..."));
                 return;
             case BT_NOT_CONNECT:
                 mView.onError(new Exception("设备尚未连接，请点击右上角蓝牙按钮连接设备"));
@@ -55,7 +50,7 @@ public class MeasurePresenter extends BasePresenter<MeasureContract.View> implem
                 return;
         }
 
-        model.startQuery(measureModel, new MeasureDataCallback<MeasureValue>() {
+        model.startCorrect(measureModel, new CorrectDataCallback<MeasureValue>() {
 
             @Override
             public void runningTime(String time) {
@@ -69,8 +64,11 @@ public class MeasurePresenter extends BasePresenter<MeasureContract.View> implem
             }
 
             @Override
-            public void measureDone() {
+            public void correctDone(int step) {
                 setMeasureStatus(MeasureStatus.DONE);
+                if (measureModel == 2 && step == 0) {
+                    mView.updateStep("请接着放置氯化镁饱和液");
+                }
             }
 
             @Override
@@ -85,12 +83,12 @@ public class MeasurePresenter extends BasePresenter<MeasureContract.View> implem
     }
 
     @Override
-    public void stopMeasure() {
+    public void stopCorrect() {
         if (measureStatus == MeasureStatus.RUNNING) {
-            model.stopQuery();
+            model.stopCorrect();
             setMeasureStatus(MeasureStatus.STOP);
         } else {
-            mView.onError(new Exception("尚未开始测量"));
+            mView.onError(new Exception("尚未开始校正"));
         }
     }
 

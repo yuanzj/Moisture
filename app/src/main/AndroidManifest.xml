@@ -21,6 +21,10 @@
         <activity
             android:name=".measure.MeasureActivity"
             android:label="@string/activity_measure" />
+
+        <activity
+            android:name=".correct.CorrectActivity"
+            android:label="@string/activity_correct" />
     </application>
 
 </manifest>

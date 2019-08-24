@@ -5,6 +5,12 @@
         <item>自动测量</item>
     </string-array>
 
+    <string-array name="correct_model">
+        <item>氯化钠校正</item>
+        <item>氯化镁校正</item>
+        <item>双点校正</item>
+    </string-array>
+
     <string-array name="measure_time_array">
         <item>1 分钟</item>
         <item>2 分钟</item>

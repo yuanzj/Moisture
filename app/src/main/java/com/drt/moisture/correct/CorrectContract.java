@@ -1,13 +1,14 @@
-package com.drt.moisture.measure;
+package com.drt.moisture.correct;
 
 import com.drt.moisture.data.MeasureStatus;
 import com.drt.moisture.data.MeasureValue;
+import com.drt.moisture.data.source.CorrectDataCallback;
 import com.drt.moisture.data.source.MeasureDataCallback;
 
 import net.yzj.android.common.base.BaseView;
 
 
-public interface MeasureContract {
+public interface CorrectContract {
     interface Model {
 
         /**
@@ -24,15 +25,17 @@ public interface MeasureContract {
          */
         void setMeasureTime(int period);
 
-        void startQuery(int model, MeasureDataCallback<MeasureValue> callback);
+        void startCorrect(int model, CorrectDataCallback<MeasureValue> callback);
 
-        void stopQuery();
+        void stopCorrect();
 
     }
 
     interface View extends BaseView {
 
         void updateUI(MeasureStatus measureStatus);
+
+        void updateStep(String message);
 
         void alreadyRunning(String time);
 
@@ -62,11 +65,10 @@ public interface MeasureContract {
         /**
          * 启动测量
          *
-         * @param model       测试模式 0 定时，1： 自动
-         * @param measureName 测量项目名称
+         * @param model 测试模式 0 定时，1： 自动
          */
-        void startMeasure(int model, String measureName);
+        void startCorrect(int model);
 
-        void stopMeasure();
+        void stopCorrect();
     }
 }
