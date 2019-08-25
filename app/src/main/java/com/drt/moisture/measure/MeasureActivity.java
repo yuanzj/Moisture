@@ -7,13 +7,12 @@ import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.EditText;
-import android.widget.ImageButton;
 import android.widget.LinearLayout;
 import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.drt.moisture.CustomActionBarActivity;
+import com.drt.moisture.BluetoothBaseActivity;
 import com.drt.moisture.R;
 import com.drt.moisture.data.MeasureStatus;
 import com.drt.moisture.data.MeasureValue;
@@ -31,12 +30,9 @@ import butterknife.OnClick;
 /**
  * @author yuanzhijian
  */
-public class MeasureActivity extends CustomActionBarActivity<MeasurePresenter> implements MeasureContract.View {
+public class MeasureActivity extends BluetoothBaseActivity<MeasurePresenter> implements MeasureContract.View {
 
     private static final String TAG = MeasureActivity.class.getSimpleName();
-
-    @BindView(R.id.title_rightImage)
-    ImageButton btnBluetooth;
 
     @BindView(R.id.chart)
     LineChart chart;
@@ -72,9 +68,7 @@ public class MeasureActivity extends CustomActionBarActivity<MeasurePresenter> i
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        initBack();
-        btnBluetooth.setVisibility(View.VISIBLE);
-        btnBluetooth.setImageResource(R.mipmap.ic_bluetooth);
+
         spMeasureTime.setSelection(mPresenter.getMeasureTime() - 1);
 
     }
@@ -153,11 +147,6 @@ public class MeasureActivity extends CustomActionBarActivity<MeasurePresenter> i
                 Toast.makeText(getApplicationContext(), throwable.getLocalizedMessage(), Toast.LENGTH_SHORT).show();
             }
         });
-    }
-
-    @OnClick(R.id.title_rightImage)
-    public void actionBluetooth() {
-
     }
 
     @OnClick(R.id.btnStartMeasure)

@@ -12,6 +12,7 @@ import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.drt.moisture.BluetoothBaseActivity;
 import com.drt.moisture.CustomActionBarActivity;
 import com.drt.moisture.R;
 import com.drt.moisture.data.MeasureStatus;
@@ -30,12 +31,9 @@ import butterknife.OnClick;
 /**
  * @author yuanzhijian
  */
-public class CorrectActivity extends CustomActionBarActivity<CorrectPresenter> implements CorrectContract.View {
+public class CorrectActivity extends BluetoothBaseActivity<CorrectPresenter> implements CorrectContract.View {
 
     private static final String TAG = CorrectActivity.class.getSimpleName();
-
-    @BindView(R.id.title_rightImage)
-    ImageButton btnBluetooth;
 
     @BindView(R.id.chart)
     LineChart chart;
@@ -71,11 +69,7 @@ public class CorrectActivity extends CustomActionBarActivity<CorrectPresenter> i
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        initBack();
-        btnBluetooth.setVisibility(View.VISIBLE);
-        btnBluetooth.setImageResource(R.mipmap.ic_bluetooth);
         spMeasureTime.setSelection(mPresenter.getMeasureTime() - 1);
-
     }
 
     @Override
@@ -154,11 +148,6 @@ public class CorrectActivity extends CustomActionBarActivity<CorrectPresenter> i
                 Toast.makeText(getApplicationContext(), throwable.getLocalizedMessage(), Toast.LENGTH_SHORT).show();
             }
         });
-    }
-
-    @OnClick(R.id.title_rightImage)
-    public void actionBluetooth() {
-
     }
 
     @OnClick(R.id.btnStartMeasure)

@@ -71,7 +71,7 @@ public class DeviceList extends Activity {
         scanButton = (Button) findViewById(R.id.button_scan);
         String strScanDevice = getIntent().getStringExtra("scan_for_devices");
         if(strScanDevice == null) 
-        	strScanDevice = "SCAN FOR DEVICES";
+        	strScanDevice = "扫描周围的蓝牙设备";
         scanButton.setText(strScanDevice);
         scanButton.setOnClickListener(new OnClickListener() {
             public void onClick(View v) {

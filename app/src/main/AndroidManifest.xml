@@ -2,6 +2,8 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.drt.moisture">
 
+    <uses-permission android:name="android.permission.BLUETOOTH" />
+    <uses-permission android:name="android.permission.BLUETOOTH_ADMIN" />
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
 
@@ -32,6 +34,12 @@
         <activity
             android:name=".report.ReportActivity"
             android:label="@string/activity_query" />
+
+        <activity
+            android:name="com.zhjian.bluetooth.spp.DeviceList"
+            android:theme="@style/Theme.ActivityDialogStyle"
+        />
+
     </application>
 
 </manifest>

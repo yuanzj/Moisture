@@ -70,4 +70,10 @@ public class MainActivity extends CustomActionBarActivity<MainPresenter> {
         }
 
     }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        App.getInstance().getBluetoothSPP().disconnect();
+    }
 }

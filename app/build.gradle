@@ -28,6 +28,8 @@ dependencies {
     implementation 'com.android.support:cardview-v7:28.0.0'
 
     implementation project(':zjandroidcommon')
+    // SPP 蓝牙库
+    implementation project(':bluetoothspp')
 
     //butterknife
     implementation 'com.jakewharton:butterknife:8.8.1'
@@ -50,5 +52,6 @@ dependencies {
 
     // excel 导出
     implementation 'net.sourceforge.jexcelapi:jxl:2.6.12'
+
 
 }

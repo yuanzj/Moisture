@@ -14,6 +14,7 @@ import android.widget.Toast;
 import com.bin.david.form.core.SmartTable;
 import com.bin.david.form.data.format.bg.IBackgroundFormat;
 import com.bin.david.form.data.table.TableData;
+import com.drt.moisture.BluetoothBaseActivity;
 import com.drt.moisture.CustomActionBarActivity;
 import com.drt.moisture.R;
 import com.drt.moisture.data.MeasureValue;
@@ -30,12 +31,9 @@ import butterknife.BindView;
 import butterknife.OnClick;
 
 
-public class ReportActivity extends CustomActionBarActivity<ReportPresenter> implements ReportContract.View {
+public class ReportActivity extends BluetoothBaseActivity<ReportPresenter> implements ReportContract.View {
 
     private static final String TAG = ReportActivity.class.getSimpleName();
-
-    @BindView(R.id.title_rightImage)
-    ImageButton btnBluetooth;
 
     @BindView(R.id.export)
     ImageButton export;
@@ -49,9 +47,6 @@ public class ReportActivity extends CustomActionBarActivity<ReportPresenter> imp
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        initBack();
-        btnBluetooth.setVisibility(View.VISIBLE);
-        btnBluetooth.setImageResource(R.mipmap.ic_bluetooth);
 
         export.setVisibility(View.VISIBLE);
     }
