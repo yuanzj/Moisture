@@ -69,8 +69,8 @@ public class CorrectPresenter extends BasePresenter<CorrectContract.View> implem
 
             @Override
             public void correctDone(int step) {
+                setMeasureStatus(MeasureStatus.DONE);
                 if (isViewAttached()) {
-                    setMeasureStatus(MeasureStatus.DONE);
                     if (measureModel == 2 && step == 0) {
                         mView.updateStep("请接着放置氯化镁饱和液");
                     }
@@ -79,8 +79,8 @@ public class CorrectPresenter extends BasePresenter<CorrectContract.View> implem
 
             @Override
             public void error(Throwable e) {
+                setMeasureStatus(MeasureStatus.ERROR);
                 if (isViewAttached()) {
-                    setMeasureStatus(MeasureStatus.ERROR);
                     mView.onError(e);
                 }
             }
@@ -96,13 +96,17 @@ public class CorrectPresenter extends BasePresenter<CorrectContract.View> implem
             model.stopCorrect();
             setMeasureStatus(MeasureStatus.STOP);
         } else {
-            mView.onError(new Exception("尚未开始校正"));
+            if (isViewAttached()) {
+                mView.onError(new Exception("尚未开始校正"));
+            }
         }
     }
 
     public void setMeasureStatus(MeasureStatus measureStatus) {
         this.measureStatus = measureStatus;
-        mView.updateUI(measureStatus);
+        if (isViewAttached()) {
+            mView.updateUI(measureStatus);
+        }
     }
 
 

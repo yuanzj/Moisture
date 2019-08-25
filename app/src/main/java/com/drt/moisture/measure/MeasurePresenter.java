@@ -81,8 +81,8 @@ public class MeasurePresenter extends BasePresenter<MeasureContract.View> implem
 
             @Override
             public void error(Throwable e) {
+                setMeasureStatus(MeasureStatus.ERROR);
                 if (isViewAttached()) {
-                    setMeasureStatus(MeasureStatus.ERROR);
                     mView.onError(e);
                 }
             }
@@ -97,13 +97,17 @@ public class MeasurePresenter extends BasePresenter<MeasureContract.View> implem
             model.stopQuery();
             setMeasureStatus(MeasureStatus.STOP);
         } else {
-            mView.onError(new Exception("尚未开始测量"));
+            if (isViewAttached()) {
+                mView.onError(new Exception("尚未开始测量"));
+            }
         }
     }
 
     public void setMeasureStatus(MeasureStatus measureStatus) {
         this.measureStatus = measureStatus;
-        mView.updateUI(measureStatus);
+        if (isViewAttached()) {
+            mView.updateUI(measureStatus);
+        }
     }
 
 
