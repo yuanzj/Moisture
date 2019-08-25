@@ -1,11 +1,14 @@
 package com.drt.moisture.measure;
 
 import android.annotation.SuppressLint;
+import android.util.Log;
 
 import com.drt.moisture.App;
 import com.drt.moisture.data.AppConfig;
 import com.drt.moisture.data.MeasureValue;
 import com.drt.moisture.data.source.MeasureDataCallback;
+import com.drt.moisture.data.source.bluetooth.SppDataCallback;
+import com.drt.moisture.data.source.bluetooth.response.RecordDataResponse;
 import com.drt.moisture.util.DateUtil;
 
 import java.text.SimpleDateFormat;
@@ -14,7 +17,9 @@ import java.util.Random;
 import java.util.Timer;
 import java.util.TimerTask;
 
-public class MeasureModel implements MeasureContract.Model {
+public class MeasureModel implements MeasureContract.Model, SppDataCallback<RecordDataResponse> {
+
+    private static final String TAG = MeasureModel.class.getSimpleName();
 
     private Timer startTimer, stopTimer, clockerTime;
 
@@ -50,6 +55,8 @@ public class MeasureModel implements MeasureContract.Model {
             @Override
             public void run() {
                 // 发送蓝牙请求
+                App.getInstance().getBluetoothService().recordQuery((int) System.currentTimeMillis() / 1000, MeasureModel.this);
+
                 MeasureValue measureValue = new MeasureValue();
                 measureValue.setTemperature(new Random().nextInt(50));
                 measureValue.setActivity(new Random().nextInt(100));
@@ -102,4 +109,13 @@ public class MeasureModel implements MeasureContract.Model {
         }
     }
 
+    @Override
+    public void delivery(RecordDataResponse recordDataResponse) {
+        Log.d(TAG, "delivery：" + recordDataResponse);
+    }
+
+    @Override
+    public Class<RecordDataResponse> getEntityType() {
+        return RecordDataResponse.class;
+    }
 }

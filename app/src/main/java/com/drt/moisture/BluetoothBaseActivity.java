@@ -113,6 +113,7 @@ public abstract class BluetoothBaseActivity<T extends BasePresenter> extends Bas
             public void onDataReceived(byte[] data, String message) {
                 // Do something when data incoming
                 Log.d(TAG, new String(data) + "=====message:" + message);
+                App.getInstance().getBluetoothService().parse(data);
             }
         });
     }

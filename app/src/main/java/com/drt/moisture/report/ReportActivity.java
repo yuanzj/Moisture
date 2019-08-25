@@ -15,7 +15,6 @@ import com.bin.david.form.core.SmartTable;
 import com.bin.david.form.data.format.bg.IBackgroundFormat;
 import com.bin.david.form.data.table.TableData;
 import com.drt.moisture.BluetoothBaseActivity;
-import com.drt.moisture.CustomActionBarActivity;
 import com.drt.moisture.R;
 import com.drt.moisture.data.MeasureValue;
 import com.drt.moisture.util.AppPermission;

@@ -30,7 +30,8 @@ dependencies {
     implementation project(':zjandroidcommon')
     // SPP 蓝牙库
     implementation project(':bluetoothspp')
-
+    // SPP 蓝牙库
+    implementation project(':rkconverter')
     //butterknife
     implementation 'com.jakewharton:butterknife:8.8.1'
     annotationProcessor 'com.jakewharton:butterknife-compiler:8.8.1'

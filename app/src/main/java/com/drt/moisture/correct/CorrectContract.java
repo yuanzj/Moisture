@@ -3,7 +3,6 @@ package com.drt.moisture.correct;
 import com.drt.moisture.data.MeasureStatus;
 import com.drt.moisture.data.MeasureValue;
 import com.drt.moisture.data.source.CorrectDataCallback;
-import com.drt.moisture.data.source.MeasureDataCallback;
 
 import net.yzj.android.common.base.BaseView;
 
