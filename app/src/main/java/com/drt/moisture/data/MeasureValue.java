@@ -1,15 +1,44 @@
 package com.drt.moisture.data;
 
+import com.bin.david.form.annotation.SmartColumn;
+import com.bin.david.form.annotation.SmartTable;
+
+@SmartTable(name="水分活度表")
 public class MeasureValue {
 
+    @SmartColumn(id =1,name = "时间")
+    private String reportTime;
+
+    @SmartColumn(id =2,name = "样品名称")
+    private String name;
+
+    @SmartColumn(id =3,name = "温度")
     private double temperature;
 
+    @SmartColumn(id =4,name = "水分活度")
     private int activity;
 
-    private String reportTime;
+    @SmartColumn(id =5,name = "环境值")
+    private int humidity;
 
     private String runningTime;
 
+
+    public String getReportTime() {
+        return reportTime;
+    }
+
+    public void setReportTime(String reportTime) {
+        this.reportTime = reportTime;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
 
     public double getTemperature() {
         return temperature;
@@ -27,12 +56,12 @@ public class MeasureValue {
         this.activity = activity;
     }
 
-    public String getReportTime() {
-        return reportTime;
+    public int getHumidity() {
+        return humidity;
     }
 
-    public void setReportTime(String reportTime) {
-        this.reportTime = reportTime;
+    public void setHumidity(int humidity) {
+        this.humidity = humidity;
     }
 
     public String getRunningTime() {
@@ -46,9 +75,11 @@ public class MeasureValue {
     @Override
     public String toString() {
         return "MeasureValue{" +
-                "temperature=" + temperature +
+                "reportTime='" + reportTime + '\'' +
+                ", name='" + name + '\'' +
+                ", temperature=" + temperature +
                 ", activity=" + activity +
-                ", reportTime='" + reportTime + '\'' +
+                ", humidity=" + humidity +
                 ", runningTime='" + runningTime + '\'' +
                 '}';
     }

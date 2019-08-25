@@ -235,6 +235,12 @@ public class CorrectActivity extends CustomActionBarActivity<CorrectPresenter> i
         });
     }
 
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        mPresenter.stopCorrect();
+    }
+
     private void addEntry(MeasureValue measureValue) {
 
         LineData data = chart.getData();

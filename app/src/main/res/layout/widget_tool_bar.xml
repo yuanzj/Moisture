@@ -34,6 +34,16 @@
         />
 
     <ImageButton
+        android:id="@+id/export"
+        android:minWidth="48dp"
+        android:layout_width="?attr/actionBarSize"
+        android:layout_height="match_parent"
+        android:layout_gravity="right"
+        android:src="@mipmap/ic_export"
+        android:background="@drawable/selector_btn"
+        android:visibility="gone" />
+
+    <ImageButton
         android:id="@+id/title_rightImage"
         android:minWidth="48dp"
         android:layout_width="?attr/actionBarSize"
@@ -41,6 +51,7 @@
         android:layout_gravity="right"
         android:background="@drawable/selector_btn"
         android:visibility="gone" />
+
     <TextView
         android:id="@+id/title_rightTv"
         android:layout_width="wrap_content"

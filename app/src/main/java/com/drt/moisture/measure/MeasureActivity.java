@@ -236,6 +236,12 @@ public class MeasureActivity extends CustomActionBarActivity<MeasurePresenter> i
         });
     }
 
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        mPresenter.stopMeasure();
+    }
+
     private void addEntry(MeasureValue measureValue) {
 
         LineData data = chart.getData();

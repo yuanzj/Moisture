@@ -54,27 +54,35 @@ public class CorrectPresenter extends BasePresenter<CorrectContract.View> implem
 
             @Override
             public void runningTime(String time) {
-                mView.alreadyRunning(time);
+                if (isViewAttached()) {
+                    mView.alreadyRunning(time);
+                }
             }
 
             @Override
             public void success(MeasureValue value) {
-                // 绑定数据
-                mView.onSuccess(value);
+                if (isViewAttached()) {
+                    // 绑定数据
+                    mView.onSuccess(value);
+                }
             }
 
             @Override
             public void correctDone(int step) {
-                setMeasureStatus(MeasureStatus.DONE);
-                if (measureModel == 2 && step == 0) {
-                    mView.updateStep("请接着放置氯化镁饱和液");
+                if (isViewAttached()) {
+                    setMeasureStatus(MeasureStatus.DONE);
+                    if (measureModel == 2 && step == 0) {
+                        mView.updateStep("请接着放置氯化镁饱和液");
+                    }
                 }
             }
 
             @Override
             public void error(Throwable e) {
-                setMeasureStatus(MeasureStatus.ERROR);
-                mView.onError(e);
+                if (isViewAttached()) {
+                    setMeasureStatus(MeasureStatus.ERROR);
+                    mView.onError(e);
+                }
             }
 
         });

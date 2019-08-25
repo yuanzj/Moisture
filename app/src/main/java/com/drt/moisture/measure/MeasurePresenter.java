@@ -59,26 +59,33 @@ public class MeasurePresenter extends BasePresenter<MeasureContract.View> implem
 
             @Override
             public void runningTime(String time) {
-                mView.alreadyRunning(time);
+                if (isViewAttached()) {
+                    mView.alreadyRunning(time);
+                }
             }
 
             @Override
             public void success(MeasureValue value) {
-                // 绑定数据
-                mView.onSuccess(value);
+                if (isViewAttached()) {
+                    // 绑定数据
+                    mView.onSuccess(value);
+                }
             }
 
             @Override
             public void measureDone() {
-                setMeasureStatus(MeasureStatus.DONE);
+                if (isViewAttached()) {
+                    setMeasureStatus(MeasureStatus.DONE);
+                }
             }
 
             @Override
             public void error(Throwable e) {
-                setMeasureStatus(MeasureStatus.ERROR);
-                mView.onError(e);
+                if (isViewAttached()) {
+                    setMeasureStatus(MeasureStatus.ERROR);
+                    mView.onError(e);
+                }
             }
-
         });
 
         setMeasureStatus(MeasureStatus.RUNNING);
