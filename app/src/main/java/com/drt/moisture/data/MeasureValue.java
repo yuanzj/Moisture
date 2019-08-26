@@ -16,13 +16,10 @@ public class MeasureValue {
     private double temperature;
 
     @SmartColumn(id =4,name = "水分活度")
-    private int activity;
+    private double activity;
 
     @SmartColumn(id =5,name = "环境值")
-    private int humidity;
-
-    private String runningTime;
-
+    private double humidity;
 
     public String getReportTime() {
         return reportTime;
@@ -48,28 +45,20 @@ public class MeasureValue {
         this.temperature = temperature;
     }
 
-    public int getActivity() {
+    public double getActivity() {
         return activity;
     }
 
-    public void setActivity(int activity) {
+    public void setActivity(double activity) {
         this.activity = activity;
     }
 
-    public int getHumidity() {
+    public double getHumidity() {
         return humidity;
     }
 
-    public void setHumidity(int humidity) {
+    public void setHumidity(double humidity) {
         this.humidity = humidity;
-    }
-
-    public String getRunningTime() {
-        return runningTime;
-    }
-
-    public void setRunningTime(String runningTime) {
-        this.runningTime = runningTime;
     }
 
     @Override
@@ -80,7 +69,6 @@ public class MeasureValue {
                 ", temperature=" + temperature +
                 ", activity=" + activity +
                 ", humidity=" + humidity +
-                ", runningTime='" + runningTime + '\'' +
                 '}';
     }
 }

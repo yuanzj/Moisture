@@ -37,9 +37,11 @@
 
         <activity
             android:name="com.zhjian.bluetooth.spp.DeviceList"
-            android:theme="@style/Theme.ActivityDialogStyle"
-        />
+            android:theme="@style/Theme.ActivityDialogStyle" />
 
+        <activity
+            android:name=".setting.SettingActivity"
+            android:label="@string/activity_setting" />
     </application>
 
 </manifest>

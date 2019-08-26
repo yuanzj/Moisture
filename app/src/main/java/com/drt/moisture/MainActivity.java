@@ -8,6 +8,7 @@ import android.widget.Toast;
 import com.drt.moisture.correct.CorrectActivity;
 import com.drt.moisture.measure.MeasureActivity;
 import com.drt.moisture.report.ReportActivity;
+import com.drt.moisture.setting.SettingActivity;
 
 
 public class MainActivity extends CustomActionBarActivity<MainPresenter> {
@@ -67,6 +68,10 @@ public class MainActivity extends CustomActionBarActivity<MainPresenter> {
             case R.id.menu_03:
                 startActivity(new Intent(this, ReportActivity.class));
                 break;
+            case R.id.menu_04:
+                startActivity(new Intent(this, SettingActivity.class));
+                break;
+
         }
 
     }

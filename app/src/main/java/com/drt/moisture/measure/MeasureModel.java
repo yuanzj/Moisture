@@ -13,7 +13,6 @@ import com.drt.moisture.util.DateUtil;
 
 import java.text.SimpleDateFormat;
 import java.util.Date;
-import java.util.Random;
 import java.util.Timer;
 import java.util.TimerTask;
 
@@ -24,6 +23,10 @@ public class MeasureModel implements MeasureContract.Model, SppDataCallback<Reco
     private Timer startTimer, stopTimer, clockerTime;
 
     private Date startTime;
+
+    private volatile MeasureDataCallback<MeasureValue> measureDataCallback;
+
+    private MeasureValue measureValue = new MeasureValue();
 
     @SuppressLint("SimpleDateFormat")
     private SimpleDateFormat sdf = new SimpleDateFormat("HH:mm:ss");
@@ -42,7 +45,8 @@ public class MeasureModel implements MeasureContract.Model, SppDataCallback<Reco
     }
 
     @Override
-    public void startQuery(int model, final MeasureDataCallback<MeasureValue> callback) {
+    public void startQuery(int model, MeasureDataCallback<MeasureValue> callback) {
+        this.measureDataCallback = callback;
         // 启动定时查询定时器
         if (startTimer != null) {
             startTimer.cancel();
@@ -55,13 +59,7 @@ public class MeasureModel implements MeasureContract.Model, SppDataCallback<Reco
             @Override
             public void run() {
                 // 发送蓝牙请求
-                App.getInstance().getBluetoothService().recordQuery((int) System.currentTimeMillis() / 1000, MeasureModel.this);
-
-                MeasureValue measureValue = new MeasureValue();
-                measureValue.setTemperature(new Random().nextInt(50));
-                measureValue.setActivity(new Random().nextInt(100));
-                measureValue.setReportTime(sdf.format(new Date()));
-                callback.success(measureValue);
+                App.getInstance().getBluetoothService().queryRecord((int) System.currentTimeMillis() / 1000, MeasureModel.this);
             }
         }, 0, period);
 
@@ -73,7 +71,7 @@ public class MeasureModel implements MeasureContract.Model, SppDataCallback<Reco
         clockerTime.schedule(new TimerTask() {
             @Override
             public void run() {
-                callback.runningTime(DateUtil.dateDistance(startTime, new Date()));
+                measureDataCallback.runningTime(DateUtil.dateDistance(startTime, new Date()));
             }
         }, 0, 1000);
 
@@ -88,7 +86,7 @@ public class MeasureModel implements MeasureContract.Model, SppDataCallback<Reco
                 @Override
                 public void run() {
                     stopQuery();
-                    callback.measureDone();
+                    measureDataCallback.measureDone();
                 }
             }, measuringTime * 60 * 1000);
         } else {
@@ -112,6 +110,16 @@ public class MeasureModel implements MeasureContract.Model, SppDataCallback<Reco
     @Override
     public void delivery(RecordDataResponse recordDataResponse) {
         Log.d(TAG, "delivery：" + recordDataResponse);
+        if (measureDataCallback != null) {
+
+            measureValue.setTemperature(recordDataResponse.getTemperature() / 100.0);
+            measureValue.setActivity(recordDataResponse.getActivity() / 100.0);
+            measureValue.setHumidity(recordDataResponse.getHumidity() / 100.0);
+            measureValue.setReportTime(sdf.format(new Date(recordDataResponse.getTime() * 1000)));
+            measureValue.setName(String.valueOf(recordDataResponse.getName()));
+            measureDataCallback.success(measureValue);
+        }
+
     }
 
     @Override

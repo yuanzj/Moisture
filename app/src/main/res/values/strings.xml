@@ -6,4 +6,6 @@
     <string name="activity_correct">校正</string>
 
     <string name="activity_query">查询</string>
+
+    <string name="activity_setting">设置</string>
 </resources>
