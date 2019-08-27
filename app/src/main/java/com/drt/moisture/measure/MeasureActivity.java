@@ -22,6 +22,7 @@ import com.github.mikephil.charting.components.YAxis;
 import com.github.mikephil.charting.data.Entry;
 import com.github.mikephil.charting.data.LineData;
 import com.github.mikephil.charting.data.LineDataSet;
+import com.github.mikephil.charting.formatter.ValueFormatter;
 import com.github.mikephil.charting.interfaces.datasets.ILineDataSet;
 
 import butterknife.BindView;
@@ -50,7 +51,7 @@ public class MeasureActivity extends BluetoothBaseActivity<MeasurePresenter> imp
     Spinner spMeasureTime;
 
     @BindView(R.id.mesasureName)
-    EditText measureName;
+    Spinner measureName;
 
     @BindView(R.id.alreadyRunning)
     TextView alreadyRunning;
@@ -151,7 +152,7 @@ public class MeasureActivity extends BluetoothBaseActivity<MeasurePresenter> imp
 
     @OnClick(R.id.btnStartMeasure)
     public void startMeasure() {
-        mPresenter.startMeasure(spMeasureModel.getSelectedItemPosition(), measureName.getText().toString());
+        mPresenter.startMeasure(spMeasureModel.getSelectedItemPosition(), String.valueOf(measureName.getSelectedItemPosition() + 1));
     }
 
     @OnClick(R.id.btnStopMeasure)
@@ -245,7 +246,7 @@ public class MeasureActivity extends BluetoothBaseActivity<MeasurePresenter> imp
             set = createTemperatureSet();
             data.addDataSet(set);
         }
-        data.addEntry(new Entry(set.getEntryCount(), (float) measureValue.getTemperature()), 0);
+        data.addEntry(new Entry(set.getEntryCount(), (float) measureValue.getTemperature(), measureValue), 0);
         data.notifyDataChanged();
 
         set = data.getDataSetByIndex(1);
@@ -253,17 +254,17 @@ public class MeasureActivity extends BluetoothBaseActivity<MeasurePresenter> imp
             set = createActivitySet();
             data.addDataSet(set);
         }
-        data.addEntry(new Entry(set.getEntryCount(), (float) measureValue.getActivity()), 1);
+        data.addEntry(new Entry(set.getEntryCount(), (float) measureValue.getActivity(), measureValue), 1);
         data.notifyDataChanged();
 
         // let the chart know it's data has changed
         chart.notifyDataSetChanged();
 
-        chart.setVisibleXRangeMaximum(6);
+        chart.setVisibleXRangeMaximum(12);
         //chart.setVisibleYRangeMaximum(15, AxisDependency.LEFT);
 //
 //            // this automatically refreshes the chart (calls invalidate())
-        chart.moveViewTo(data.getEntryCount() - 7, 50f, YAxis.AxisDependency.LEFT);
+        chart.moveViewTo(data.getEntryCount() - 13, 50f, YAxis.AxisDependency.LEFT);
     }
 
     private LineDataSet createTemperatureSet() {
@@ -305,6 +306,13 @@ public class MeasureActivity extends BluetoothBaseActivity<MeasurePresenter> imp
         xAxis.setPosition(XAxis.XAxisPosition.BOTTOM);
         xAxis.setDrawGridLines(false);
         xAxis.setDrawAxisLine(true);
+        xAxis.setValueFormatter(new ValueFormatter() {
+            @Override
+            public String getFormattedValue(float value) {
+                Entry entry = chart.getLineData().getDataSetByIndex(0).getEntryForIndex((int) value);
+                return ((MeasureValue) entry.getData()).getReportTime();
+            }
+        });
 
         YAxis leftAxis = chart.getAxisLeft();
         leftAxis.setLabelCount(5, false);

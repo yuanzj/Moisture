@@ -1,5 +1,19 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+
+    <string-array name="measure_name">
+        <item>样品1</item>
+        <item>样品2</item>
+        <item>样品3</item>
+        <item>样品4</item>
+        <item>样品5</item>
+        <item>样品6</item>
+        <item>样品7</item>
+        <item>样品8</item>
+        <item>样品9</item>
+        <item>样品10</item>
+    </string-array>
+
     <string-array name="measure_model">
         <item>定时测量</item>
         <item>自动测量</item>

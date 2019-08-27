@@ -139,27 +139,18 @@
             android:textColor="@color/colorSecondBody"
             android:textSize="@dimen/sizeBody" />
 
-        <EditText
+        <Spinner
             android:id="@+id/mesasureName"
-            android:layout_width="0dp"
+            android:layout_width="1dp"
             android:layout_height="match_parent"
             android:layout_marginLeft="@dimen/padding_default"
             android:layout_marginTop="8dp"
             android:layout_marginRight="@dimen/padding_default"
             android:layout_marginBottom="8dp"
             android:layout_weight="1"
-            android:background="@drawable/edittext_bg_selector"
-            android:focusableInTouchMode="true"
-            android:hint="请输入测量样品名称"
-            android:singleLine="true"
-            android:textColor="@color/colorBody"
-            android:textCursorDrawable="@drawable/solid_shape_bottom_line"
-            android:textSize="@dimen/sizeSubTitle" />
+            android:entries="@array/measure_name" />
 
-        <Space
-            android:layout_width="0dp"
-            android:layout_height="match_parent"
-            android:layout_weight="1" />
+
 
     </LinearLayout>
 
