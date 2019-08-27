@@ -17,7 +17,7 @@ public class RecordDataRequest {
     private int Reserved;
 
     @RkField(position = 5, length = 4)
-    private long time;
+    private byte[] time;
 
     public byte getCmdGroup() {
         return CmdGroup;
@@ -51,11 +51,11 @@ public class RecordDataRequest {
         Reserved = reserved;
     }
 
-    public long getTime() {
+    public byte[] getTime() {
         return time;
     }
 
-    public void setTime(long time) {
+    public void setTime(byte[] time) {
         this.time = time;
     }
 }

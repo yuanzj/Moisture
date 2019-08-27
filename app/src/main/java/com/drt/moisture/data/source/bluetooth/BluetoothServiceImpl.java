@@ -10,6 +10,7 @@ import com.drt.moisture.data.source.bluetooth.resquest.DeviceInfoRequest;
 import com.drt.moisture.data.source.bluetooth.resquest.RecordDataRequest;
 import com.rokyinfo.convert.exception.FieldConvertException;
 import com.rokyinfo.convert.exception.RkFieldException;
+import com.rokyinfo.convert.util.ByteConvert;
 
 public class BluetoothServiceImpl implements BluetoothService {
 
@@ -45,7 +46,7 @@ public class BluetoothServiceImpl implements BluetoothService {
         recordDataRequest.setCmd((byte) 0x05);
         recordDataRequest.setResponse((byte) 0x01);
         recordDataRequest.setReserved(0);
-        recordDataRequest.setTime(time);
+        recordDataRequest.setTime(ByteConvert.uintToBytes(time));
         try {
             App.getInstance().getBluetoothSPP().send(BluetoothDataUtil.encode(recordDataRequest), false);
         } catch (IllegalAccessException e) {

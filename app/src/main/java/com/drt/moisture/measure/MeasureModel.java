@@ -59,7 +59,7 @@ public class MeasureModel implements MeasureContract.Model, SppDataCallback<Reco
             @Override
             public void run() {
                 // 发送蓝牙请求
-                App.getInstance().getBluetoothService().queryRecord((int) System.currentTimeMillis() / 1000, MeasureModel.this);
+                App.getInstance().getBluetoothService().queryRecord( System.currentTimeMillis() / 1000, MeasureModel.this);
             }
         }, 0, period);
 

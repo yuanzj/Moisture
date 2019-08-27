@@ -1,10 +1,12 @@
 package com.drt.moisture.data.source.bluetooth;
 
-import com.drt.moisture.util.Crc16;
+import com.drt.moisture.data.source.bluetooth.resquest.RecordDataRequest;
 import com.rokyinfo.convert.RkFieldConverter;
 import com.rokyinfo.convert.exception.FieldConvertException;
 import com.rokyinfo.convert.exception.RkFieldException;
 import com.rokyinfo.convert.util.ByteConvert;
+import com.zhjian.bluetooth.spp.CRC16;
+import com.zhjian.bluetooth.spp.HexString;
 
 public class BluetoothDataUtil {
 
@@ -56,7 +58,7 @@ public class BluetoothDataUtil {
         // CRC校验
         byte[] crcData = new byte[paramsContent.length + 11];
         System.arraycopy(bleParams, 6, crcData, 0, crcData.length);
-        byte[] crcValue = ByteConvert.intToBytes(Crc16.crc16CcittCalc(crcData, crcData.length));
+        byte[] crcValue = ByteConvert.ushortToBytes((int) CRC16.caluCRC(crcData));
         bleParams[17 + paramsContent.length] = crcValue[0];
         bleParams[17 + paramsContent.length + 1] = crcValue[1];
         // 包尾
@@ -72,7 +74,7 @@ public class BluetoothDataUtil {
             data[i] = dataValue[i];
         }
 
-        if (Crc16.crc16CcittCalc(data, data.length) == ByteConvert.bytesToInt(new byte[]{dataValue[dataValue.length - 2], dataValue[dataValue.length - 1], 0, 0})) {
+        if ((int) CRC16.caluCRC(data) == ByteConvert.bytesToUshort(new byte[]{dataValue[dataValue.length - 2], dataValue[dataValue.length - 1]})) {
             // 不包含包头和包尾巴
             byte[] objValue = new byte[dataValue.length - 2 - 11];
             for (int i = 0; i < objValue.length; i++) {
@@ -83,6 +85,28 @@ public class BluetoothDataUtil {
         } else {
             throw new FieldConvertException("CRC 校验失败");
         }
+    }
+
+    public static void main(String... args) {
+        RecordDataRequest recordDataRequest = new RecordDataRequest();
+        recordDataRequest.setCmdGroup((byte) 0xA3);
+        recordDataRequest.setCmd((byte) 0x05);
+        recordDataRequest.setResponse((byte) 0x01);
+        recordDataRequest.setReserved(0);
+        System.out.println(String.valueOf(System.currentTimeMillis() / 1000));
+
+        recordDataRequest.setTime(ByteConvert.uintToBytes(System.currentTimeMillis() / 1000));
+        try {
+            System.out.println(HexString.bytesToHex(BluetoothDataUtil.encode(recordDataRequest)));
+        } catch (IllegalAccessException e) {
+            e.printStackTrace();
+        } catch (RkFieldException e) {
+            e.printStackTrace();
+        } catch (FieldConvertException e) {
+            e.printStackTrace();
+        }
+        System.out.println(ByteConvert.bytesToUint(HexString.hexToBytes("5D64A9E5")));
+
     }
 
 }
