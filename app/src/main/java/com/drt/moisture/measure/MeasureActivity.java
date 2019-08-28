@@ -246,7 +246,7 @@ public class MeasureActivity extends BluetoothBaseActivity<MeasurePresenter> imp
             set = createTemperatureSet();
             data.addDataSet(set);
         }
-        data.addEntry(new Entry(set.getEntryCount(), (float) measureValue.getTemperature(), measureValue), 0);
+        data.addEntry(new Entry(set.getEntryCount(), (float) measureValue.getTemperature(), measureValue.getReportTime()), 0);
         data.notifyDataChanged();
 
         set = data.getDataSetByIndex(1);
@@ -254,7 +254,7 @@ public class MeasureActivity extends BluetoothBaseActivity<MeasurePresenter> imp
             set = createActivitySet();
             data.addDataSet(set);
         }
-        data.addEntry(new Entry(set.getEntryCount(), (float) measureValue.getActivity(), measureValue), 1);
+        data.addEntry(new Entry(set.getEntryCount(), (float) measureValue.getActivity(), measureValue.getReportTime()), 1);
         data.notifyDataChanged();
 
         // let the chart know it's data has changed
@@ -310,7 +310,7 @@ public class MeasureActivity extends BluetoothBaseActivity<MeasurePresenter> imp
             @Override
             public String getFormattedValue(float value) {
                 Entry entry = chart.getLineData().getDataSetByIndex(0).getEntryForIndex((int) value);
-                return ((MeasureValue) entry.getData()).getReportTime();
+                return (String) entry.getData();
             }
         });
 
