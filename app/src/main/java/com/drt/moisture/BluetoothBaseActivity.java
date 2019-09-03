@@ -99,7 +99,7 @@ public abstract class BluetoothBaseActivity<T extends BasePresenter> extends Bas
     @Override
     protected void onResume() {
         super.onResume();
-        if (getBluetoothStatus() == BluetoothState.STATE_CONNECTED) {
+        if (getBluetoothStatus() == Constants.STATUS_DEVICE_CONNECTED) {
             btnBluetooth.setImageResource(R.mipmap.ic_bluetooth_connected);
         } else {
             btnBluetooth.setImageResource(R.mipmap.ic_bluetooth);
@@ -237,7 +237,7 @@ public abstract class BluetoothBaseActivity<T extends BasePresenter> extends Bas
             App.getInstance().getBluetoothClient().openBluetooth();
         } else {
 
-            if (App.getInstance().getConnectMacAddress() != null && App.getInstance().getBluetoothClient().getConnectStatus(App.getInstance().getConnectMacAddress()) == STATUS_CONNECTED) {
+            if (getBluetoothStatus() == Constants.STATUS_DEVICE_CONNECTED) {
                 AlertDialog.Builder builder = new AlertDialog.Builder(this).setTitle("提示")
                         .setMessage("当前蓝牙已经连接，是否确认关闭当前连接选择新的设备？")
                         .setPositiveButton("确认", new DialogInterface.OnClickListener() {
@@ -268,7 +268,6 @@ public abstract class BluetoothBaseActivity<T extends BasePresenter> extends Bas
                 }
 
             }
-
 
         }
     }
@@ -303,7 +302,11 @@ public abstract class BluetoothBaseActivity<T extends BasePresenter> extends Bas
     }
 
     protected int getBluetoothStatus() {
-        return App.getInstance().getBluetoothSPP().getServiceState();
+        if (App.getInstance().getConnectMacAddress() != null) {
+            return App.getInstance().getBluetoothClient().getConnectStatus(App.getInstance().getConnectMacAddress());
+        } else {
+            return Constants.STATUS_UNKNOWN;
+        }
     }
 
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
