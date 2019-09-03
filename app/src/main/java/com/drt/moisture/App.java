@@ -6,6 +6,7 @@ import com.drt.moisture.data.source.BluetoothService;
 import com.drt.moisture.data.source.LocalDataService;
 import com.drt.moisture.data.source.bluetooth.BluetoothServiceImpl;
 import com.drt.moisture.data.source.local.LocalDataServiceImpl;
+import com.inuker.bluetooth.library.BluetoothClient;
 import com.zhjian.bluetooth.spp.BluetoothSPP;
 
 
@@ -18,6 +19,10 @@ public class App extends Application {
     private BluetoothService bluetoothService;
 
     private BluetoothSPP bluetoothSPP;
+
+    private BluetoothClient mClient;
+
+    private String connectMacAddress;
 
     public static App getInstance() {
         if (app == null) {
@@ -38,6 +43,18 @@ public class App extends Application {
         return bluetoothSPP;
     }
 
+    public BluetoothClient getBluetoothClient() {
+        return mClient;
+    }
+
+    public String getConnectMacAddress() {
+        return connectMacAddress;
+    }
+
+    public void setConnectMacAddress(String connectMacAddress) {
+        this.connectMacAddress = connectMacAddress;
+    }
+
     @Override
     public void onCreate() {
         super.onCreate();
@@ -46,6 +63,8 @@ public class App extends Application {
         bluetoothSPP.setupService();
         localDataService = new LocalDataServiceImpl(this);
         bluetoothService = new BluetoothServiceImpl(this);
+
+        mClient = new BluetoothClient(this);
 
     }
 }

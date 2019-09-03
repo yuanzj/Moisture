@@ -1,6 +1,7 @@
 package com.drt.moisture.data.source.bluetooth;
 
 import android.content.Context;
+import android.util.Log;
 
 import com.drt.moisture.App;
 import com.drt.moisture.data.source.BluetoothService;
@@ -8,11 +9,19 @@ import com.drt.moisture.data.source.bluetooth.response.DeviceInfoResponse;
 import com.drt.moisture.data.source.bluetooth.response.RecordDataResponse;
 import com.drt.moisture.data.source.bluetooth.resquest.DeviceInfoRequest;
 import com.drt.moisture.data.source.bluetooth.resquest.RecordDataRequest;
+import com.inuker.bluetooth.library.connect.response.BleWriteResponse;
+import com.inuker.bluetooth.library.utils.UUIDUtils;
 import com.rokyinfo.convert.exception.FieldConvertException;
 import com.rokyinfo.convert.exception.RkFieldException;
 import com.rokyinfo.convert.util.ByteConvert;
 
-public class BluetoothServiceImpl implements BluetoothService {
+import java.util.UUID;
+
+import static com.inuker.bluetooth.library.Code.REQUEST_SUCCESS;
+
+public class BluetoothServiceImpl implements BluetoothService, BleWriteResponse{
+
+    private static final String TAG = BluetoothServiceImpl.class.getSimpleName();
 
     private volatile SppDataCallback sppDataCallback;
 
@@ -48,7 +57,8 @@ public class BluetoothServiceImpl implements BluetoothService {
         recordDataRequest.setReserved(0);
         recordDataRequest.setTime(ByteConvert.uintToBytes(time));
         try {
-            App.getInstance().getBluetoothSPP().send(BluetoothDataUtil.encode(recordDataRequest), false);
+            App.getInstance().getBluetoothClient().write(App.getInstance().getConnectMacAddress(), UUIDUtils.makeUUID(0xFFE0), UUIDUtils.makeUUID(0xFFE1), BluetoothDataUtil.encode(recordDataRequest), this);
+
         } catch (IllegalAccessException e) {
             e.printStackTrace();
         } catch (RkFieldException e) {
@@ -69,7 +79,7 @@ public class BluetoothServiceImpl implements BluetoothService {
         deviceInfoRequest.setReserved(0);
 
         try {
-            App.getInstance().getBluetoothSPP().send(BluetoothDataUtil.encode(deviceInfoRequest), false);
+            App.getInstance().getBluetoothClient().write(App.getInstance().getConnectMacAddress(), UUIDUtils.makeUUID(0xFFE0), UUIDUtils.makeUUID(0xFFE1), BluetoothDataUtil.encode(deviceInfoRequest), this);
         } catch (IllegalAccessException e) {
             e.printStackTrace();
         } catch (RkFieldException e) {
@@ -79,4 +89,10 @@ public class BluetoothServiceImpl implements BluetoothService {
         }
     }
 
+    @Override
+    public void onResponse(int code) {
+        if (code == REQUEST_SUCCESS) {
+            Log.d(TAG, "onResponse success");
+        }
+    }
 }

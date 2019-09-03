@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="72dp"
+    android:background="@drawable/selector_btn_transparent"
+    android:gravity="center_vertical"
+    android:orientation="vertical"
+    android:padding="@dimen/padding_default">
+
+
+
+
+    <TextView
+        android:id="@+id/title"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:textColor="@color/colorBody"
+        android:textSize="@dimen/sizeSubTitle"
+        android:text="标题"
+        />
+    <Space
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1" />
+    <TextView
+        android:id="@+id/desc"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:textColor="@color/colorSecondBody"
+        android:textSize="@dimen/sizeBody"
+        android:text="描述"
+        />
+
+</LinearLayout>
