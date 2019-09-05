@@ -26,18 +26,21 @@ import com.inuker.bluetooth.library.Constants;
 import com.inuker.bluetooth.library.connect.listener.BleConnectStatusListener;
 import com.inuker.bluetooth.library.connect.listener.BluetoothStateListener;
 import com.inuker.bluetooth.library.connect.response.BleConnectResponse;
+import com.inuker.bluetooth.library.connect.response.BleNotifyResponse;
 import com.inuker.bluetooth.library.model.BleGattProfile;
 import com.inuker.bluetooth.library.search.SearchResult;
-import com.zhjian.bluetooth.spp.BluetoothSPP;
-import com.zhjian.bluetooth.spp.BluetoothState;
-import com.zhjian.bluetooth.spp.DeviceList;
+import com.inuker.bluetooth.library.utils.UUIDUtils;
 
 import net.yzj.android.common.base.BaseMvpActivity;
 import net.yzj.android.common.base.BasePresenter;
 
+import java.util.Arrays;
+import java.util.UUID;
+
 import butterknife.BindView;
 import butterknife.OnClick;
 
+import static com.inuker.bluetooth.library.Constants.REQUEST_SUCCESS;
 import static com.inuker.bluetooth.library.Constants.STATUS_CONNECTED;
 import static com.inuker.bluetooth.library.Constants.STATUS_DEVICE_CONNECTING;
 import static com.inuker.bluetooth.library.Constants.STATUS_DISCONNECTED;
@@ -49,6 +52,8 @@ import static com.inuker.bluetooth.library.Constants.STATUS_DISCONNECTED;
 public abstract class BluetoothBaseActivity<T extends BasePresenter> extends BaseMvpActivity<T> implements View.OnClickListener, Toolbar.OnMenuItemClickListener {
 
     private static final String TAG = BluetoothBaseActivity.class.getSimpleName();
+
+    public static final int REQUEST_CONNECT_DEVICE = 384;
 
     /*Toolbar*/
     private Toolbar toolBar;
@@ -80,19 +85,6 @@ public abstract class BluetoothBaseActivity<T extends BasePresenter> extends Bas
         initBack();
         btnBluetooth.setVisibility(View.VISIBLE);
 
-        App.getInstance().getBluetoothSPP().setOnDataReceivedListener(new BluetoothSPP.OnDataReceivedListener() {
-            public void onDataReceived(byte[] data, String message) {
-                // Do something when data incoming
-                Log.d(TAG, new String(data) + "=====message:" + message);
-                try {
-                    App.getInstance().getBluetoothService().parse(data);
-                } catch (Exception e) {
-                    e.printStackTrace();
-                }
-
-            }
-        });
-
         App.getInstance().getBluetoothClient().registerBluetoothStateListener(mBluetoothStateListener);
     }
 
@@ -101,6 +93,7 @@ public abstract class BluetoothBaseActivity<T extends BasePresenter> extends Bas
         super.onResume();
         if (getBluetoothStatus() == Constants.STATUS_DEVICE_CONNECTED) {
             btnBluetooth.setImageResource(R.mipmap.ic_bluetooth_connected);
+            App.getInstance().getBluetoothClient().registerConnectStatusListener(App.getInstance().getConnectMacAddress(), mBleConnectStatusListener);
         } else {
             btnBluetooth.setImageResource(R.mipmap.ic_bluetooth);
         }
@@ -243,10 +236,10 @@ public abstract class BluetoothBaseActivity<T extends BasePresenter> extends Bas
                         .setPositiveButton("确认", new DialogInterface.OnClickListener() {
                             @Override
                             public void onClick(DialogInterface dialogInterface, int i) {
-                                App.getInstance().getBluetoothSPP().disconnect();
+                                App.getInstance().getBluetoothClient().disconnect(App.getInstance().getConnectMacAddress());
                                 // Do something if bluetooth is already enable
                                 Intent intent = new Intent(getApplicationContext(), BleScanActivity.class);
-                                startActivityForResult(intent, BluetoothState.REQUEST_CONNECT_DEVICE);
+                                startActivityForResult(intent, REQUEST_CONNECT_DEVICE);
                             }
                         })
                         .setNegativeButton("取消", new DialogInterface.OnClickListener() {
@@ -264,7 +257,7 @@ public abstract class BluetoothBaseActivity<T extends BasePresenter> extends Bas
                     ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.ACCESS_FINE_LOCATION}, 200);
                 } else {
                     Intent intent = new Intent(getApplicationContext(), BleScanActivity.class);
-                    startActivityForResult(intent, BluetoothState.REQUEST_CONNECT_DEVICE);
+                    startActivityForResult(intent, REQUEST_CONNECT_DEVICE);
                 }
 
             }
@@ -291,7 +284,7 @@ public abstract class BluetoothBaseActivity<T extends BasePresenter> extends Bas
             case 200://刚才的识别码
                 if (grantResults[0] == PackageManager.PERMISSION_GRANTED) {//用户同意权限,执行我们的操作
                     Intent intent = new Intent(getApplicationContext(), BleScanActivity.class);
-                    startActivityForResult(intent, BluetoothState.REQUEST_CONNECT_DEVICE);
+                    startActivityForResult(intent, REQUEST_CONNECT_DEVICE);
                 } else {//用户拒绝之后,当然我们也可以弹出一个窗口,直接跳转到系统设置页面
                     Toast.makeText(this, "未开启定位权限,请手动到设置去开启权限", Toast.LENGTH_LONG).show();
                 }
@@ -310,21 +303,13 @@ public abstract class BluetoothBaseActivity<T extends BasePresenter> extends Bas
     }
 
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
-        if (requestCode == BluetoothState.REQUEST_CONNECT_DEVICE) {
+        if (requestCode == REQUEST_CONNECT_DEVICE) {
             if (resultCode == Activity.RESULT_OK) {
                 SearchResult searchResult = data.getParcelableExtra("SearchResult");
                 App.getInstance().setConnectMacAddress(searchResult.getAddress());
 
-                App.getInstance().getBluetoothClient().unregisterConnectStatusListener(App.getInstance().getConnectMacAddress(), mBleConnectStatusListener);
                 App.getInstance().getBluetoothClient().registerConnectStatusListener(App.getInstance().getConnectMacAddress(), mBleConnectStatusListener);
                 App.getInstance().getBluetoothClient().connect(App.getInstance().getConnectMacAddress(), bleConnectResponse);
-            }
-        } else if (requestCode == BluetoothState.REQUEST_ENABLE_BT) {
-            if (resultCode == Activity.RESULT_OK) {
-//                App.getInstance().getBluetoothSPP().setupService();
-                connect();
-            } else {
-                // Do something if user doesn't choose any device (Pressed back)
             }
         }
     }
@@ -332,8 +317,8 @@ public abstract class BluetoothBaseActivity<T extends BasePresenter> extends Bas
     private BleConnectResponse bleConnectResponse = new BleConnectResponse() {
         @Override
         public void onResponse(int code, BleGattProfile profile) {
-            if (code == Constants.REQUEST_SUCCESS) {
-
+            if (code == REQUEST_SUCCESS) {
+                App.getInstance().getBluetoothClient().notify(App.getInstance().getConnectMacAddress(), UUIDUtils.makeUUID(0xFFE0), UUIDUtils.makeUUID(0xFFE1), bleNotifyResponse);
             }
         }
     };
@@ -360,6 +345,28 @@ public abstract class BluetoothBaseActivity<T extends BasePresenter> extends Bas
             } else if (status == STATUS_DISCONNECTED) {
                 btnBluetooth.setImageResource(R.mipmap.ic_bluetooth);
                 Toast.makeText(getApplicationContext(), "连接已断开", Toast.LENGTH_SHORT).show();
+                App.getInstance().getBluetoothClient().unregisterConnectStatusListener(mac, mBleConnectStatusListener);
+            }
+        }
+    };
+
+    private static final BleNotifyResponse bleNotifyResponse = new BleNotifyResponse() {
+        @Override
+        public void onNotify(UUID service, UUID character, byte[] value) {
+            try {
+                if (value.length > 7) {
+                    value = Arrays.copyOfRange(value, 6 , value.length - 1);
+                }
+                App.getInstance().getBluetoothService().parse(value);
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }
+
+        @Override
+        public void onResponse(int code) {
+            if (code == REQUEST_SUCCESS) {
+                Toast.makeText(App.getInstance(), "开启监听蓝牙返回数据成功！", Toast.LENGTH_SHORT).show();
             }
         }
     };
