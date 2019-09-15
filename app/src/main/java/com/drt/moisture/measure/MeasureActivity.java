@@ -1,17 +1,21 @@
 package com.drt.moisture.measure;
 
+import android.content.DialogInterface;
 import android.graphics.Point;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.support.v7.app.AlertDialog;
 import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.EditText;
+import android.widget.ImageButton;
 import android.widget.LinearLayout;
 import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.drt.moisture.App;
 import com.drt.moisture.BluetoothBaseActivity;
 import com.drt.moisture.R;
 import com.drt.moisture.data.MeasureStatus;
@@ -24,6 +28,9 @@ import com.github.mikephil.charting.data.LineData;
 import com.github.mikephil.charting.data.LineDataSet;
 import com.github.mikephil.charting.formatter.ValueFormatter;
 import com.github.mikephil.charting.interfaces.datasets.ILineDataSet;
+
+import java.util.Collections;
+import java.util.List;
 
 import butterknife.BindView;
 import butterknife.OnClick;
@@ -51,7 +58,7 @@ public class MeasureActivity extends BluetoothBaseActivity<MeasurePresenter> imp
     Spinner spMeasureTime;
 
     @BindView(R.id.mesasureName)
-    Spinner measureName;
+    EditText measureName;
 
     @BindView(R.id.alreadyRunning)
     TextView alreadyRunning;
@@ -64,6 +71,9 @@ public class MeasureActivity extends BluetoothBaseActivity<MeasurePresenter> imp
 
     @BindView(R.id.activeness)
     TextView activeness;
+
+    @BindView(R.id.history)
+    ImageButton history;
 
 
     @Override
@@ -152,12 +162,28 @@ public class MeasureActivity extends BluetoothBaseActivity<MeasurePresenter> imp
 
     @OnClick(R.id.btnStartMeasure)
     public void startMeasure() {
-        mPresenter.startMeasure(spMeasureModel.getSelectedItemPosition(), String.valueOf(measureName.getSelectedItemPosition() + 1));
+        mPresenter.startMeasure(spMeasureModel.getSelectedItemPosition(), measureName.getText().toString());
     }
 
     @OnClick(R.id.btnStopMeasure)
     public void stopMeasure() {
         mPresenter.stopMeasure();
+    }
+
+    @OnClick(R.id.history)
+    public void onClickHistory() {
+        List<String> historyList = App.getInstance().getLocalDataService().queryHistory();
+        Collections.reverse(historyList);
+        final String[] items = historyList.toArray(new String[historyList.size()]);
+        AlertDialog.Builder builder = new AlertDialog.Builder(this)
+                .setTitle("历史样品名称")
+                .setItems(items, new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialogInterface, int i) {
+                        measureName.setText(items[i]);
+                    }
+                });
+        builder.create().show();
     }
 
     @Override
@@ -168,6 +194,8 @@ public class MeasureActivity extends BluetoothBaseActivity<MeasurePresenter> imp
                 switch (measureStatus) {
                     case BT_NOT_CONNECT:
                         measureName.setEnabled(false);
+                        history.setEnabled(false);
+                        history.setAlpha(0.32f);
                         btnStartMeasure.setAlpha(0.32f);
                         btnStopMeasure.setAlpha(0.32f);
                         spMeasureModel.setEnabled(false);
@@ -175,6 +203,8 @@ public class MeasureActivity extends BluetoothBaseActivity<MeasurePresenter> imp
                         break;
                     case NORMAL:
                         measureName.setEnabled(true);
+                        history.setEnabled(true);
+                        history.setAlpha(1.0f);
                         btnStartMeasure.setAlpha(1.0f);
                         btnStopMeasure.setAlpha(0.32f);
                         spMeasureModel.setEnabled(true);
@@ -186,6 +216,8 @@ public class MeasureActivity extends BluetoothBaseActivity<MeasurePresenter> imp
                         break;
                     case RUNNING:
                         measureName.setEnabled(false);
+                        history.setEnabled(false);
+                        history.setAlpha(0.32f);
                         btnStartMeasure.setAlpha(0.32f);
                         btnStopMeasure.setAlpha(1.0f);
                         spMeasureModel.setEnabled(false);
@@ -198,6 +230,8 @@ public class MeasureActivity extends BluetoothBaseActivity<MeasurePresenter> imp
                             Toast.makeText(getApplicationContext(), "测量完成", Toast.LENGTH_LONG).show();
                         }
                         measureName.setEnabled(true);
+                        history.setEnabled(true);
+                        history.setAlpha(1.0f);
                         btnStartMeasure.setAlpha(1.0f);
                         btnStopMeasure.setAlpha(0.32f);
                         spMeasureModel.setEnabled(true);
@@ -241,43 +275,45 @@ public class MeasureActivity extends BluetoothBaseActivity<MeasurePresenter> imp
             chart.setData(data);
         }
 
-        ILineDataSet set = data.getDataSetByIndex(0);
-        if (set == null) {
-            set = createTemperatureSet();
-            data.addDataSet(set);
-        }
-        data.addEntry(new Entry(set.getEntryCount(), (float) measureValue.getTemperature(), measureValue.getReportTime()), 0);
-        data.notifyDataChanged();
+        ILineDataSet
 
-        set = data.getDataSetByIndex(1);
+//        set = data.getDataSetByIndex(0);
+//        if (set == null) {
+//            set = createTemperatureSet();
+//            data.addDataSet(set);
+//        }
+//        data.addEntry(new Entry(set.getEntryCount(), (float) measureValue.getTemperature(), measureValue.getReportTime()), 0);
+//        data.notifyDataChanged();
+
+        set = data.getDataSetByIndex(0);
         if (set == null) {
             set = createActivitySet();
             data.addDataSet(set);
         }
-        data.addEntry(new Entry(set.getEntryCount(), (float) measureValue.getActivity(), measureValue.getReportTime()), 1);
+        data.addEntry(new Entry(set.getEntryCount(), (float) measureValue.getActivity(), measureValue.getReportTime()), 0);
         data.notifyDataChanged();
 
         // let the chart know it's data has changed
         chart.notifyDataSetChanged();
 
-        chart.setVisibleXRangeMaximum(12);
+        chart.setVisibleXRangeMaximum(30);
         //chart.setVisibleYRangeMaximum(15, AxisDependency.LEFT);
 //
 //            // this automatically refreshes the chart (calls invalidate())
-        chart.moveViewTo(data.getEntryCount() - 13, 50f, YAxis.AxisDependency.LEFT);
+        chart.moveViewTo(data.getEntryCount() - 31, 50f, YAxis.AxisDependency.LEFT);
     }
 
-    private LineDataSet createTemperatureSet() {
-
-        LineDataSet d1 = new LineDataSet(null, "温度");
-        d1.setLineWidth(2.5f);
-        d1.setCircleRadius(4.5f);
-        d1.setHighLightColor(getResources().getColor(R.color.colorAccent, getTheme()));
-        d1.setColor(getResources().getColor(R.color.colorAccent, getTheme()));
-        d1.setCircleColor(getResources().getColor(R.color.colorAccent, getTheme()));
-        d1.setDrawValues(true);
-        return d1;
-    }
+//    private LineDataSet createTemperatureSet() {
+//
+//        LineDataSet d1 = new LineDataSet(null, "温度");
+//        d1.setLineWidth(2.5f);
+//        d1.setCircleRadius(4.5f);
+//        d1.setHighLightColor(getResources().getColor(R.color.colorAccent, getTheme()));
+//        d1.setColor(getResources().getColor(R.color.colorAccent, getTheme()));
+//        d1.setCircleColor(getResources().getColor(R.color.colorAccent, getTheme()));
+//        d1.setDrawValues(true);
+//        return d1;
+//    }
 
     private LineDataSet createActivitySet() {
 
@@ -288,6 +324,7 @@ public class MeasureActivity extends BluetoothBaseActivity<MeasurePresenter> imp
         d2.setColor(getResources().getColor(R.color.colorGreen, getTheme()));
         d2.setCircleColor(getResources().getColor(R.color.colorGreen, getTheme()));
         d2.setDrawValues(true);
+        d2.setMode(LineDataSet.Mode.CUBIC_BEZIER);
         return d2;
     }
 

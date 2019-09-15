@@ -1,8 +1,10 @@
 package com.drt.moisture.correct;
 
+import android.content.DialogInterface;
 import android.graphics.Point;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.support.v7.app.AlertDialog;
 import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
@@ -21,6 +23,7 @@ import com.github.mikephil.charting.components.YAxis;
 import com.github.mikephil.charting.data.Entry;
 import com.github.mikephil.charting.data.LineData;
 import com.github.mikephil.charting.data.LineDataSet;
+import com.github.mikephil.charting.formatter.ValueFormatter;
 import com.github.mikephil.charting.interfaces.datasets.ILineDataSet;
 
 import butterknife.BindView;
@@ -150,7 +153,22 @@ public class CorrectActivity extends BluetoothBaseActivity<CorrectPresenter> imp
 
     @OnClick(R.id.btnStartMeasure)
     public void startMeasure() {
-        mPresenter.startCorrect(spMeasureModel.getSelectedItemPosition());
+
+        AlertDialog.Builder builder = new AlertDialog.Builder(this)
+                .setTitle("提示")
+                .setMessage(correctTitle.getText()).setPositiveButton("确认", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialogInterface, int i) {
+                        mPresenter.startCorrect(spMeasureModel.getSelectedItemPosition());
+                    }
+                }).setNegativeButton("取消", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialogInterface, int i) {
+                        dialogInterface.dismiss();
+                    }
+                });
+        builder.create().show();
+
     }
 
     @OnClick(R.id.btnStopMeasure)
@@ -207,6 +225,20 @@ public class CorrectActivity extends BluetoothBaseActivity<CorrectPresenter> imp
             @Override
             public void run() {
                 correctTitle.setText(message);
+                AlertDialog.Builder builder = new AlertDialog.Builder(CorrectActivity.this)
+                        .setTitle("提示")
+                        .setMessage(message).setPositiveButton("确认", new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialogInterface, int i) {
+                                mPresenter.startCorrect(spMeasureModel.getSelectedItemPosition());
+                            }
+                        }).setNegativeButton("取消", new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialogInterface, int i) {
+                                dialogInterface.dismiss();
+                            }
+                        });
+                builder.create().show();
             }
         });
     }
@@ -237,43 +269,44 @@ public class CorrectActivity extends BluetoothBaseActivity<CorrectPresenter> imp
             chart.setData(data);
         }
 
-        ILineDataSet set = data.getDataSetByIndex(0);
-        if (set == null) {
-            set = createTemperatureSet();
-            data.addDataSet(set);
-        }
-        data.addEntry(new Entry(set.getEntryCount(), (float) measureValue.getTemperature()), 0);
-        data.notifyDataChanged();
+        ILineDataSet
+//        set = data.getDataSetByIndex(0);
+//        if (set == null) {
+//            set = createTemperatureSet();
+//            data.addDataSet(set);
+//        }
+//        data.addEntry(new Entry(set.getEntryCount(), (float) measureValue.getTemperature()), 0);
+//        data.notifyDataChanged();
 
-        set = data.getDataSetByIndex(1);
+        set = data.getDataSetByIndex(0);
         if (set == null) {
             set = createActivitySet();
             data.addDataSet(set);
         }
-        data.addEntry(new Entry(set.getEntryCount(), (float) measureValue.getActivity()), 1);
+        data.addEntry(new Entry(set.getEntryCount(), (float) measureValue.getActivity(), measureValue.getReportTime()), 0);
         data.notifyDataChanged();
 
         // let the chart know it's data has changed
         chart.notifyDataSetChanged();
 
-        chart.setVisibleXRangeMaximum(6);
+        chart.setVisibleXRangeMaximum(30);
         //chart.setVisibleYRangeMaximum(15, AxisDependency.LEFT);
 //
 //            // this automatically refreshes the chart (calls invalidate())
-        chart.moveViewTo(data.getEntryCount() - 7, 50f, YAxis.AxisDependency.LEFT);
+        chart.moveViewTo(data.getEntryCount() - 31, 50f, YAxis.AxisDependency.LEFT);
     }
 
-    private LineDataSet createTemperatureSet() {
-
-        LineDataSet d1 = new LineDataSet(null, "温度");
-        d1.setLineWidth(2.5f);
-        d1.setCircleRadius(4.5f);
-        d1.setHighLightColor(getResources().getColor(R.color.colorAccent, getTheme()));
-        d1.setColor(getResources().getColor(R.color.colorAccent, getTheme()));
-        d1.setCircleColor(getResources().getColor(R.color.colorAccent, getTheme()));
-        d1.setDrawValues(true);
-        return d1;
-    }
+//    private LineDataSet createTemperatureSet() {
+//
+//        LineDataSet d1 = new LineDataSet(null, "温度");
+//        d1.setLineWidth(2.5f);
+//        d1.setCircleRadius(4.5f);
+//        d1.setHighLightColor(getResources().getColor(R.color.colorAccent, getTheme()));
+//        d1.setColor(getResources().getColor(R.color.colorAccent, getTheme()));
+//        d1.setCircleColor(getResources().getColor(R.color.colorAccent, getTheme()));
+//        d1.setDrawValues(true);
+//        return d1;
+//    }
 
     private LineDataSet createActivitySet() {
 
@@ -284,6 +317,7 @@ public class CorrectActivity extends BluetoothBaseActivity<CorrectPresenter> imp
         d2.setColor(getResources().getColor(R.color.colorGreen, getTheme()));
         d2.setCircleColor(getResources().getColor(R.color.colorGreen, getTheme()));
         d2.setDrawValues(true);
+        d2.setMode(LineDataSet.Mode.CUBIC_BEZIER);
         return d2;
     }
 
@@ -302,6 +336,13 @@ public class CorrectActivity extends BluetoothBaseActivity<CorrectPresenter> imp
         xAxis.setPosition(XAxis.XAxisPosition.BOTTOM);
         xAxis.setDrawGridLines(false);
         xAxis.setDrawAxisLine(true);
+        xAxis.setValueFormatter(new ValueFormatter() {
+            @Override
+            public String getFormattedValue(float value) {
+                Entry entry = chart.getLineData().getDataSetByIndex(0).getEntryForIndex((int) value);
+                return (String) entry.getData();
+            }
+        });
 
         YAxis leftAxis = chart.getAxisLeft();
         leftAxis.setLabelCount(5, false);

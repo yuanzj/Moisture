@@ -2,6 +2,7 @@ package com.drt.moisture.measure;
 
 import android.text.TextUtils;
 
+import com.drt.moisture.App;
 import com.drt.moisture.data.MeasureStatus;
 import com.drt.moisture.data.MeasureValue;
 import com.drt.moisture.data.source.MeasureDataCallback;
@@ -55,6 +56,7 @@ public class MeasurePresenter extends BasePresenter<MeasureContract.View> implem
                 return;
         }
 
+        App.getInstance().getLocalDataService().setHistory(measureName);
         model.startQuery(measureModel, new MeasureDataCallback<MeasureValue>() {
 
             @Override
