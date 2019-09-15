@@ -3,6 +3,7 @@ package com.drt.moisture.measure;
 import com.drt.moisture.data.MeasureStatus;
 import com.drt.moisture.data.MeasureValue;
 import com.drt.moisture.data.source.MeasureDataCallback;
+import com.drt.moisture.data.source.bluetooth.response.StartMeasureResponse;
 
 import net.yzj.android.common.base.BaseView;
 
@@ -23,6 +24,8 @@ public interface MeasureContract {
          * @param period
          */
         void setMeasureTime(int period);
+
+        void startMeasure(String name, int model, MeasureDataCallback<StartMeasureResponse> callback);
 
         void startQuery(int model, MeasureDataCallback<MeasureValue> callback);
 

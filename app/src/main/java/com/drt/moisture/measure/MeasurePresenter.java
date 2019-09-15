@@ -6,6 +6,7 @@ import com.drt.moisture.App;
 import com.drt.moisture.data.MeasureStatus;
 import com.drt.moisture.data.MeasureValue;
 import com.drt.moisture.data.source.MeasureDataCallback;
+import com.drt.moisture.data.source.bluetooth.response.StartMeasureResponse;
 
 import net.yzj.android.common.base.BasePresenter;
 
@@ -31,7 +32,7 @@ public class MeasurePresenter extends BasePresenter<MeasureContract.View> implem
     }
 
     @Override
-    public void startMeasure(int measureModel, String measureName) {
+    public void startMeasure(final int measureModel, String measureName) {
         if (!isViewAttached()) {
             return;
         }
@@ -57,38 +58,60 @@ public class MeasurePresenter extends BasePresenter<MeasureContract.View> implem
         }
 
         App.getInstance().getLocalDataService().setHistory(measureName);
-        model.startQuery(measureModel, new MeasureDataCallback<MeasureValue>() {
 
+        model.startMeasure(measureName, measureModel, new MeasureDataCallback<StartMeasureResponse>() {
             @Override
             public void runningTime(String time) {
-                if (isViewAttached()) {
-                    mView.alreadyRunning(time);
-                }
+
             }
 
             @Override
-            public void success(MeasureValue value) {
-                if (isViewAttached()) {
-                    // 绑定数据
-                    mView.onSuccess(value);
-                }
+            public void success(StartMeasureResponse value) {
+                model.startQuery(measureModel, new MeasureDataCallback<MeasureValue>() {
+
+                    @Override
+                    public void runningTime(String time) {
+                        if (isViewAttached()) {
+                            mView.alreadyRunning(time);
+                        }
+                    }
+
+                    @Override
+                    public void success(MeasureValue value) {
+                        if (isViewAttached()) {
+                            // 绑定数据
+                            mView.onSuccess(value);
+                        }
+                    }
+
+                    @Override
+                    public void measureDone() {
+                        if (isViewAttached()) {
+                            setMeasureStatus(MeasureStatus.DONE);
+                        }
+                    }
+
+                    @Override
+                    public void error(Throwable e) {
+                        setMeasureStatus(MeasureStatus.ERROR);
+                        if (isViewAttached()) {
+                            mView.onError(e);
+                        }
+                    }
+                });
             }
 
             @Override
             public void measureDone() {
-                if (isViewAttached()) {
-                    setMeasureStatus(MeasureStatus.DONE);
-                }
+
             }
 
             @Override
             public void error(Throwable e) {
-                setMeasureStatus(MeasureStatus.ERROR);
-                if (isViewAttached()) {
-                    mView.onError(e);
-                }
+
             }
         });
+
 
         setMeasureStatus(MeasureStatus.RUNNING);
     }

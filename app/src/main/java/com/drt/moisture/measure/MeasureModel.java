@@ -9,6 +9,9 @@ import com.drt.moisture.data.MeasureValue;
 import com.drt.moisture.data.source.MeasureDataCallback;
 import com.drt.moisture.data.source.bluetooth.SppDataCallback;
 import com.drt.moisture.data.source.bluetooth.response.RecordDataResponse;
+import com.drt.moisture.data.source.bluetooth.response.StartMeasureResponse;
+import com.drt.moisture.data.source.bluetooth.response.StopMeasureResponse;
+import com.drt.moisture.setting.SettingModel;
 import com.drt.moisture.util.DateUtil;
 
 import java.text.SimpleDateFormat;
@@ -45,6 +48,25 @@ public class MeasureModel implements MeasureContract.Model, SppDataCallback<Reco
     }
 
     @Override
+    public void startMeasure(String name, int model, final MeasureDataCallback<StartMeasureResponse> callback) {
+        AppConfig appConfig = App.getInstance().getLocalDataService().queryAppConfig();
+        int period = appConfig.getPeriod();
+        int measuringTime = appConfig.getMeasuringTime();
+        App.getInstance().getBluetoothService().startMeasure(name, model, period, measuringTime, new SppDataCallback<StartMeasureResponse>() {
+
+            @Override
+            public void delivery(StartMeasureResponse startMeasureResponse) {
+                callback.success(startMeasureResponse);
+            }
+
+            @Override
+            public Class<StartMeasureResponse> getEntityType() {
+                return StartMeasureResponse.class;
+            }
+        }, false);
+    }
+
+    @Override
     public void startQuery(int model, MeasureDataCallback<MeasureValue> callback) {
         this.measureDataCallback = callback;
         // 启动定时查询定时器
@@ -59,7 +81,7 @@ public class MeasureModel implements MeasureContract.Model, SppDataCallback<Reco
             @Override
             public void run() {
                 // 发送蓝牙请求
-                App.getInstance().getBluetoothService().queryRecord( System.currentTimeMillis() / 1000, MeasureModel.this);
+                App.getInstance().getBluetoothService().queryRecord(System.currentTimeMillis() / 1000, MeasureModel.this);
             }
         }, 0, period);
 
@@ -105,6 +127,19 @@ public class MeasureModel implements MeasureContract.Model, SppDataCallback<Reco
         if (clockerTime != null) {
             clockerTime.cancel();
         }
+
+        App.getInstance().getBluetoothService().stopMeasure(new SppDataCallback<StopMeasureResponse>() {
+
+            @Override
+            public void delivery(StopMeasureResponse stopMeasureResponse) {
+
+            }
+
+            @Override
+            public Class<StopMeasureResponse> getEntityType() {
+                return null;
+            }
+        });
     }
 
     @Override
