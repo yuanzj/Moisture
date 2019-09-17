@@ -5,14 +5,8 @@ import android.util.Log;
 
 import com.drt.moisture.App;
 import com.drt.moisture.data.source.BluetoothService;
-import com.drt.moisture.data.source.bluetooth.response.DeviceInfoResponse;
-import com.drt.moisture.data.source.bluetooth.response.RecordDataResponse;
-import com.drt.moisture.data.source.bluetooth.response.StartMeasureResponse;
-import com.drt.moisture.data.source.bluetooth.response.StopMeasureResponse;
-import com.drt.moisture.data.source.bluetooth.resquest.DeviceInfoRequest;
-import com.drt.moisture.data.source.bluetooth.resquest.RecordDataRequest;
-import com.drt.moisture.data.source.bluetooth.resquest.StartMeasureRequest;
-import com.drt.moisture.data.source.bluetooth.resquest.StopMeasureRequest;
+import com.drt.moisture.data.source.bluetooth.response.*;
+import com.drt.moisture.data.source.bluetooth.resquest.*;
 import com.drt.moisture.measure.MeasureModel;
 import com.inuker.bluetooth.library.connect.response.BleWriteResponse;
 import com.inuker.bluetooth.library.utils.UUIDUtils;
@@ -148,17 +142,89 @@ public class BluetoothServiceImpl implements BluetoothService, BleWriteResponse 
     }
 
     @Override
+    public void startCorrect(final int mode, final int type, final int time, final SppDataCallback<StartMeasureResponse> sppDataCallback, boolean retry) {
+        this.sppDataCallback = sppDataCallback;
+
+        StartCorrectRequest startCorrectRequest = new StartCorrectRequest();
+        startCorrectRequest.setCmdGroup((byte) 0xA5);
+        startCorrectRequest.setCmd((byte) 0x09);
+        startCorrectRequest.setResponse((byte) 0x01);
+        startCorrectRequest.setReserved(0);
+
+//       校准方式<br/>0x01：单点校准<br/>0x02：两点校准
+        startCorrectRequest.setModel((byte) mode);
+
+//        校准类型<br/>0x01：氯化钠校准<br/>0x02：氯化镁校准
+        startCorrectRequest.setType((byte) type);
+
+        startCorrectRequest.setTime((byte) time);
+        try {
+            App.getInstance().getBluetoothClient().write(App.getInstance().getConnectMacAddress(), UUIDUtils.makeUUID(0xFFE0), UUIDUtils.makeUUID(0xFFE1), BluetoothDataUtil.encode(startCorrectRequest), this);
+            currentRetryCount++;
+            if (!retry) {
+                expectResponseCode = 0xA5;
+                currentRetryCount = 0;
+                if (timeoutTimer != null) {
+                    timeoutTimer.cancel();
+                }
+                timeoutTimer = new Timer();
+                timeoutTimer.schedule(new TimerTask() {
+                    @Override
+                    public void run() {
+                        if (currentRetryCount > 3) {
+                            currentRetryCount = 0;
+                            timeoutTimer.cancel();
+                            timeoutTimer = null;
+                        } else {
+                            startCorrect(mode, type, time, sppDataCallback, true);
+                        }
+
+                    }
+                }, 3000, 3000);
+            }
+
+        } catch (IllegalAccessException e) {
+            e.printStackTrace();
+        } catch (RkFieldException e) {
+            e.printStackTrace();
+        } catch (FieldConvertException e) {
+            e.printStackTrace();
+        }
+    }
+
+    @Override
     public void stopMeasure(SppDataCallback<StopMeasureResponse> sppDataCallback) {
         this.sppDataCallback = sppDataCallback;
 
-        StopMeasureRequest deviceInfoRequest = new StopMeasureRequest();
-        deviceInfoRequest.setCmdGroup((byte) 0xA5);
-        deviceInfoRequest.setCmd((byte) 0x07);
-        deviceInfoRequest.setResponse((byte) 0x01);
-        deviceInfoRequest.setReserved(0);
+        StopMeasureRequest request = new StopMeasureRequest();
+        request.setCmdGroup((byte) 0xA5);
+        request.setCmd((byte) 0x07);
+        request.setResponse((byte) 0x01);
+        request.setReserved(0);
 
         try {
-            App.getInstance().getBluetoothClient().write(App.getInstance().getConnectMacAddress(), UUIDUtils.makeUUID(0xFFE0), UUIDUtils.makeUUID(0xFFE1), BluetoothDataUtil.encode(deviceInfoRequest), this);
+            App.getInstance().getBluetoothClient().write(App.getInstance().getConnectMacAddress(), UUIDUtils.makeUUID(0xFFE0), UUIDUtils.makeUUID(0xFFE1), BluetoothDataUtil.encode(request), this);
+        } catch (IllegalAccessException e) {
+            e.printStackTrace();
+        } catch (RkFieldException e) {
+            e.printStackTrace();
+        } catch (FieldConvertException e) {
+            e.printStackTrace();
+        }
+    }
+
+    @Override
+    public void stopCorrect(SppDataCallback<StopMeasureResponse> sppDataCallback) {
+        this.sppDataCallback = sppDataCallback;
+
+        StopMeasureRequest request = new StopMeasureRequest();
+        request.setCmdGroup((byte) 0xA5);
+        request.setCmd((byte) 0x0A);
+        request.setResponse((byte) 0x01);
+        request.setReserved(0);
+
+        try {
+            App.getInstance().getBluetoothClient().write(App.getInstance().getConnectMacAddress(), UUIDUtils.makeUUID(0xFFE0), UUIDUtils.makeUUID(0xFFE1), BluetoothDataUtil.encode(request), this);
         } catch (IllegalAccessException e) {
             e.printStackTrace();
         } catch (RkFieldException e) {
@@ -178,6 +244,29 @@ public class BluetoothServiceImpl implements BluetoothService, BleWriteResponse 
         recordDataRequest.setResponse((byte) 0x01);
         recordDataRequest.setReserved(0);
         recordDataRequest.setTime(ByteConvert.uintToBytes(time));
+        try {
+            App.getInstance().getBluetoothClient().write(App.getInstance().getConnectMacAddress(), UUIDUtils.makeUUID(0xFFE0), UUIDUtils.makeUUID(0xFFE1), BluetoothDataUtil.encode(recordDataRequest), this);
+
+        } catch (IllegalAccessException e) {
+            e.printStackTrace();
+        } catch (RkFieldException e) {
+            e.printStackTrace();
+        } catch (FieldConvertException e) {
+            e.printStackTrace();
+        }
+    }
+
+    @Override
+    public void queryCorrect(int type, SppDataCallback<CorrectDataResponse> sppDataCallback) {
+        this.sppDataCallback = sppDataCallback;
+
+        CorrectDataRequest recordDataRequest = new CorrectDataRequest();
+        recordDataRequest.setCmdGroup((byte) 0xA4 );
+        recordDataRequest.setCmd((byte) 0x05);
+        recordDataRequest.setResponse((byte) 0x01);
+        recordDataRequest.setReserved(0);
+//        水分活度数据类型<br/>0x00：实际测试值<br/>0x01：真实值
+        recordDataRequest.setType((byte)type);
         try {
             App.getInstance().getBluetoothClient().write(App.getInstance().getConnectMacAddress(), UUIDUtils.makeUUID(0xFFE0), UUIDUtils.makeUUID(0xFFE1), BluetoothDataUtil.encode(recordDataRequest), this);
 

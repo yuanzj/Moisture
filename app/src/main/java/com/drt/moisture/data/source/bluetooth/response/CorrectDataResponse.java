@@ -2,7 +2,7 @@ package com.drt.moisture.data.source.bluetooth.response;
 
 import com.rokyinfo.convert.RkField;
 
-public class RecordDataResponse {
+public class CorrectDataResponse {
 
     @RkField(position = 0, length = 1)
     private byte CmdGroup;

@@ -70,7 +70,7 @@ public class CorrectActivity extends BluetoothBaseActivity<CorrectPresenter> imp
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        spMeasureTime.setSelection(mPresenter.getMeasureTime() - 1);
+        spMeasureTime.setSelection(mPresenter.getCorrectTime() - 1);
     }
 
     @Override
@@ -108,7 +108,7 @@ public class CorrectActivity extends BluetoothBaseActivity<CorrectPresenter> imp
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
                 Log.d(TAG, "spMeasureTime:spMeasureModelonItemSelected:position:" + position);
-                mPresenter.setMeasureTime(position + 1);
+                mPresenter.setCorrectTime(position + 1);
             }
 
             @Override
@@ -159,7 +159,31 @@ public class CorrectActivity extends BluetoothBaseActivity<CorrectPresenter> imp
                 .setMessage(correctTitle.getText()).setPositiveButton("确认", new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialogInterface, int i) {
-                        mPresenter.startCorrect(spMeasureModel.getSelectedItemPosition());
+
+//                        校准方式<br/>0x01：单点校准<br/>0x02：两点校准
+//                        校准类型<br/>0x01：氯化钠校准<br/>0x02：氯化镁校准
+
+//        <item>氯化钠校正</item>
+//        <item>氯化镁校正</item>
+//        <item>双点校正</item>
+
+                        int model;
+                        int type;
+                        if (spMeasureModel.getSelectedItemPosition() == 2) {
+//                            双点校正
+                            model = 0x02;
+                            type = 0x01;
+                        } else if (spMeasureModel.getSelectedItemPosition() == 1) {
+//                            氯化镁校正
+                            model = 0x02;
+                            type = 0x02;
+                        } else {
+//                            氯化钠校正
+                            model = 0x01;
+                            type = 0x01;
+                        }
+
+                        mPresenter.startCorrect(model, type);
                     }
                 }).setNegativeButton("取消", new DialogInterface.OnClickListener() {
                     @Override
@@ -230,7 +254,9 @@ public class CorrectActivity extends BluetoothBaseActivity<CorrectPresenter> imp
                         .setMessage(message).setPositiveButton("确认", new DialogInterface.OnClickListener() {
                             @Override
                             public void onClick(DialogInterface dialogInterface, int i) {
-                                mPresenter.startCorrect(spMeasureModel.getSelectedItemPosition());
+
+                                mPresenter.startCorrect(0x02, 0x02);
+
                             }
                         }).setNegativeButton("取消", new DialogInterface.OnClickListener() {
                             @Override
@@ -278,7 +304,7 @@ public class CorrectActivity extends BluetoothBaseActivity<CorrectPresenter> imp
 //        data.addEntry(new Entry(set.getEntryCount(), (float) measureValue.getTemperature()), 0);
 //        data.notifyDataChanged();
 
-        set = data.getDataSetByIndex(0);
+                set = data.getDataSetByIndex(0);
         if (set == null) {
             set = createActivitySet();
             data.addDataSet(set);

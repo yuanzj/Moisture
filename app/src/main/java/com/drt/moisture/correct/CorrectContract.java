@@ -4,6 +4,8 @@ import com.drt.moisture.data.MeasureStatus;
 import com.drt.moisture.data.MeasureValue;
 import com.drt.moisture.data.source.CorrectDataCallback;
 
+import com.drt.moisture.data.source.MeasureDataCallback;
+import com.drt.moisture.data.source.bluetooth.response.StartMeasureResponse;
 import net.yzj.android.common.base.BaseView;
 
 
@@ -15,14 +17,16 @@ public interface CorrectContract {
          *
          * @return
          */
-        int getMeasureTime();
+        int getCorrectTime();
 
         /**
          * 设置测量时长
          *
          * @param period
          */
-        void setMeasureTime(int period);
+        void setCorrectTime(int period);
+
+        void startCorrect(int mode, int type, int time, final MeasureDataCallback<StartMeasureResponse> callback);
 
         void startCorrect(int model, CorrectDataCallback<MeasureValue> callback);
 
@@ -52,21 +56,21 @@ public interface CorrectContract {
          *
          * @return
          */
-        int getMeasureTime();
+        int getCorrectTime();
 
         /**
          * 设置测量时长
          *
          * @param period
          */
-        void setMeasureTime(int period);
+        void setCorrectTime(int period);
 
         /**
          * 启动测量
          *
-         * @param model 测试模式 0 定时，1： 自动
+         * @param measureModel 测试模式 0 定时，1： 自动
          */
-        void startCorrect(int model);
+        void startCorrect(final int measureModel, final int type);
 
         void stopCorrect();
     }

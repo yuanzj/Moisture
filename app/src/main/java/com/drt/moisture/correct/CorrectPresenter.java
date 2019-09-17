@@ -5,6 +5,8 @@ import com.drt.moisture.data.MeasureStatus;
 import com.drt.moisture.data.MeasureValue;
 import com.drt.moisture.data.source.CorrectDataCallback;
 
+import com.drt.moisture.data.source.MeasureDataCallback;
+import com.drt.moisture.data.source.bluetooth.response.StartMeasureResponse;
 import net.yzj.android.common.base.BasePresenter;
 
 public class CorrectPresenter extends BasePresenter<CorrectContract.View> implements CorrectContract.Presenter {
@@ -19,17 +21,17 @@ public class CorrectPresenter extends BasePresenter<CorrectContract.View> implem
     }
 
     @Override
-    public int getMeasureTime() {
-        return model.getMeasureTime();
+    public int getCorrectTime() {
+        return model.getCorrectTime();
     }
 
     @Override
-    public void setMeasureTime(int period) {
-        model.setMeasureTime(period);
+    public void setCorrectTime(int period) {
+        model.setCorrectTime(period);
     }
 
     @Override
-    public void startCorrect(final int measureModel) {
+    public void startCorrect(final int measureModel, final int type) {
         if (!isViewAttached()) {
             return;
         }
@@ -50,42 +52,64 @@ public class CorrectPresenter extends BasePresenter<CorrectContract.View> implem
                 return;
         }
 
-        model.startCorrect(measureModel, new CorrectDataCallback<MeasureValue>() {
-
+        model.startCorrect(measureModel, type, getCorrectTime(), new MeasureDataCallback<StartMeasureResponse>() {
             @Override
             public void runningTime(String time) {
-                if (isViewAttached()) {
-                    mView.alreadyRunning(time);
-                }
+
             }
 
             @Override
-            public void success(MeasureValue value) {
-                if (isViewAttached()) {
-                    // 绑定数据
-                    mView.onSuccess(value);
-                }
-            }
+            public void success(StartMeasureResponse value) {
+                model.startCorrect(measureModel, new CorrectDataCallback<MeasureValue>() {
 
-            @Override
-            public void correctDone(int step) {
-                setMeasureStatus(MeasureStatus.DONE);
-                if (isViewAttached()) {
-                    if (measureModel == 2 && step == 0) {
-                        mView.updateStep("请接着放置氯化镁饱和液");
+                    @Override
+                    public void runningTime(String time) {
+                        if (isViewAttached()) {
+                            mView.alreadyRunning(time);
+                        }
                     }
-                }
+
+                    @Override
+                    public void success(MeasureValue value) {
+                        if (isViewAttached()) {
+                            // 绑定数据
+                            mView.onSuccess(value);
+                        }
+                    }
+
+                    @Override
+                    public void correctDone(int step) {
+                        setMeasureStatus(MeasureStatus.DONE);
+                        if (isViewAttached()) {
+                            if (measureModel == 2 && step == 0) {
+                                mView.updateStep("请接着放置氯化镁饱和液");
+                            }
+                        }
+                    }
+
+                    @Override
+                    public void error(Throwable e) {
+                        setMeasureStatus(MeasureStatus.ERROR);
+                        if (isViewAttached()) {
+                            mView.onError(e);
+                        }
+                    }
+
+                });
+                setMeasureStatus(MeasureStatus.RUNNING);
+            }
+
+            @Override
+            public void measureDone() {
+
             }
 
             @Override
             public void error(Throwable e) {
-                setMeasureStatus(MeasureStatus.ERROR);
-                if (isViewAttached()) {
-                    mView.onError(e);
-                }
-            }
 
+            }
         });
+
 
         setMeasureStatus(MeasureStatus.RUNNING);
     }

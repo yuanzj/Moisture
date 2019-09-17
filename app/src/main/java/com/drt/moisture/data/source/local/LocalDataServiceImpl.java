@@ -28,6 +28,7 @@ public class LocalDataServiceImpl implements LocalDataService {
         SharedPreferences sp = context.getSharedPreferences("SP", MODE_PRIVATE);
         AppConfig appConfig = new AppConfig();
         appConfig.setMeasuringTime(sp.getInt("measuringTime", 10));
+        appConfig.setCorrectTime(sp.getInt("correctTime", 10));
         appConfig.setPeriod(sp.getInt("period", 1500));
         return appConfig;
     }
@@ -40,7 +41,7 @@ public class LocalDataServiceImpl implements LocalDataService {
         SharedPreferences.Editor editor = sp.edit();
         editor.putInt("measuringTime", appConfig.getMeasuringTime());
         editor.putInt("period", appConfig.getPeriod());
-
+        editor.putInt("correctTime", appConfig.getCorrectTime());
         editor.apply();
     }
 

@@ -149,9 +149,9 @@ public class MeasureModel implements MeasureContract.Model, SppDataCallback<Reco
 
             measureValue.setTemperature(recordDataResponse.getTemperature() / 100.0);
             measureValue.setActivity(recordDataResponse.getActivity() / 10000.0);
-            measureValue.setHumidity(recordDataResponse.getHumidity() / 100.0);
+            measureValue.setHumidity(0);
             measureValue.setReportTime(sdf.format(new Date(recordDataResponse.getTime() * 1000)));
-            measureValue.setName(String.valueOf(recordDataResponse.getName()));
+            measureValue.setName("");
             measureDataCallback.success(measureValue);
         }
 

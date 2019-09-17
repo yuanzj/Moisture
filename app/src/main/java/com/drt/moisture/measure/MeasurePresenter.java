@@ -99,6 +99,7 @@ public class MeasurePresenter extends BasePresenter<MeasureContract.View> implem
                         }
                     }
                 });
+                setMeasureStatus(MeasureStatus.RUNNING);
             }
 
             @Override

@@ -12,6 +12,11 @@ public class AppConfig {
      */
     private int measuringTime;
 
+    /**
+     * 校准时间 (单位分钟)
+     */
+    private int correctTime;
+
     public int getPeriod() {
         return period;
     }
@@ -28,5 +33,11 @@ public class AppConfig {
         this.measuringTime = measuringTime;
     }
 
+    public int getCorrectTime() {
+        return correctTime;
+    }
 
+    public void setCorrectTime(int correctTime) {
+        this.correctTime = correctTime;
+    }
 }
