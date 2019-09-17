@@ -28,7 +28,7 @@ public class LocalDataServiceImpl implements LocalDataService {
         SharedPreferences sp = context.getSharedPreferences("SP", MODE_PRIVATE);
         AppConfig appConfig = new AppConfig();
         appConfig.setMeasuringTime(sp.getInt("measuringTime", 10));
-        appConfig.setPeriod(sp.getInt("period", 1000));
+        appConfig.setPeriod(sp.getInt("period", 1500));
         return appConfig;
     }
 
@@ -41,14 +41,14 @@ public class LocalDataServiceImpl implements LocalDataService {
         editor.putInt("measuringTime", appConfig.getMeasuringTime());
         editor.putInt("period", appConfig.getPeriod());
 
-        editor.commit();
+        editor.apply();
     }
 
     @Override
     public List<String> queryHistory() {
         SharedPreferences sp = context.getSharedPreferences("SP", MODE_PRIVATE);
         String listJson = sp.getString("historyList", "");
-        if (listJson.length() > 0) {
+        if (listJson != null && listJson.length() > 0) {
             return new Gson().fromJson(listJson, new TypeToken<List<String>>() {
             }.getType());
         }
@@ -58,8 +58,13 @@ public class LocalDataServiceImpl implements LocalDataService {
     @Override
     public void setHistory(String name) {
         List<String> historyList = queryHistory();
-        if (historyList.size() >= 10) {
+        if (historyList.size() >= 20) {
             historyList.remove(0);
+        }
+        for (String item : historyList) {
+            if (item.equals(name)) {
+                return;
+            }
         }
 
         historyList.add(name);
@@ -70,6 +75,6 @@ public class LocalDataServiceImpl implements LocalDataService {
         SharedPreferences.Editor editor = sp.edit();
         editor.putString("historyList", new Gson().toJson(historyList));
 
-        editor.commit();
+        editor.apply();
     }
 }

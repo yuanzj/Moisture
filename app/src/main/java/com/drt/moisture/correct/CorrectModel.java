@@ -74,7 +74,7 @@ public class CorrectModel implements CorrectContract.Model {
                 // 发送蓝牙请求
                 MeasureValue measureValue = new MeasureValue();
                 measureValue.setTemperature(new Random().nextInt(50));
-                measureValue.setActivity(new Random().nextInt(100));
+                measureValue.setActivity(new Random().nextInt(10000) / 10000.0);
                 measureValue.setReportTime(sdf.format(new Date()));
                 callback.success(measureValue);
             }

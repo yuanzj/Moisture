@@ -137,7 +137,7 @@ public class MeasureModel implements MeasureContract.Model, SppDataCallback<Reco
 
             @Override
             public Class<StopMeasureResponse> getEntityType() {
-                return null;
+                return StopMeasureResponse.class;
             }
         });
     }
@@ -148,7 +148,7 @@ public class MeasureModel implements MeasureContract.Model, SppDataCallback<Reco
         if (measureDataCallback != null) {
 
             measureValue.setTemperature(recordDataResponse.getTemperature() / 100.0);
-            measureValue.setActivity(recordDataResponse.getActivity() / 100.0);
+            measureValue.setActivity(recordDataResponse.getActivity() / 10000.0);
             measureValue.setHumidity(recordDataResponse.getHumidity() / 100.0);
             measureValue.setReportTime(sdf.format(new Date(recordDataResponse.getTime() * 1000)));
             measureValue.setName(String.valueOf(recordDataResponse.getName()));

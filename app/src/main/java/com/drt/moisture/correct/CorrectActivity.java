@@ -347,11 +347,12 @@ public class CorrectActivity extends BluetoothBaseActivity<CorrectPresenter> imp
         YAxis leftAxis = chart.getAxisLeft();
         leftAxis.setLabelCount(5, false);
         leftAxis.setAxisMinimum(0f); // this replaces setStartAtZero(true)
+        leftAxis.setAxisMaximum(1.0000f);
 
         YAxis rightAxis = chart.getAxisRight();
         rightAxis.setLabelCount(5, false);
         rightAxis.setDrawGridLines(false);
         rightAxis.setAxisMinimum(0f); // this replaces setStartAtZero(true)
-
+        rightAxis.setAxisMaximum(1.0000f);
     }
 }

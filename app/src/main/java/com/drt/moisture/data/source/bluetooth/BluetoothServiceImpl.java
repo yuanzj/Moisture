@@ -89,8 +89,27 @@ public class BluetoothServiceImpl implements BluetoothService, BleWriteResponse 
         startMeasureRequest.setResponse((byte) 0x01);
         startMeasureRequest.setReserved(0);
         startMeasureRequest.setName(name);
-        startMeasureRequest.setModel((byte) measureModel);
-        startMeasureRequest.setInterval((byte) interval);
+
+//        测量方式<br/>0x01：自动测量<br/>0x02：定时测量，为该参数时，需要发送接下来的1字节定时时间
+        if (measureModel == 0) {
+            // 定时测量
+            startMeasureRequest.setModel((byte) 0x02);
+        } else {
+            startMeasureRequest.setModel((byte) 0x01);
+        }
+
+//        测量间隔<br/>0x01：1.5s<BR/>0x02：3s<BR/>0x03：5s
+
+        if (interval == 1500) {
+            startMeasureRequest.setInterval((byte) 0x01);
+        } else if (interval == 3000) {
+            startMeasureRequest.setInterval((byte) 0x02);
+        } else if (interval == 5000) {
+            startMeasureRequest.setInterval((byte) 0x03);
+        } else {
+            startMeasureRequest.setInterval((byte) 0x01);
+        }
+
         startMeasureRequest.setTime((byte) time);
         try {
             App.getInstance().getBluetoothClient().write(App.getInstance().getConnectMacAddress(), UUIDUtils.makeUUID(0xFFE0), UUIDUtils.makeUUID(0xFFE1), BluetoothDataUtil.encode(startMeasureRequest), this);
@@ -133,7 +152,7 @@ public class BluetoothServiceImpl implements BluetoothService, BleWriteResponse 
         this.sppDataCallback = sppDataCallback;
 
         StopMeasureRequest deviceInfoRequest = new StopMeasureRequest();
-        deviceInfoRequest.setCmdGroup((byte) 0xA1);
+        deviceInfoRequest.setCmdGroup((byte) 0xA5);
         deviceInfoRequest.setCmd((byte) 0x07);
         deviceInfoRequest.setResponse((byte) 0x01);
         deviceInfoRequest.setReserved(0);

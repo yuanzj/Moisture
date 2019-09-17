@@ -145,7 +145,7 @@ public class MeasureActivity extends BluetoothBaseActivity<MeasurePresenter> imp
                 addEntry(measureValue);
                 time.setText(measureValue.getReportTime());
                 temperature.setText(measureValue.getTemperature() + "°C");
-                activeness.setText(measureValue.getActivity() + "%");
+                activeness.setText(measureValue.getActivity() + "");
             }
         });
     }
@@ -354,11 +354,15 @@ public class MeasureActivity extends BluetoothBaseActivity<MeasurePresenter> imp
         YAxis leftAxis = chart.getAxisLeft();
         leftAxis.setLabelCount(5, false);
         leftAxis.setAxisMinimum(0f); // this replaces setStartAtZero(true)
+        leftAxis.setAxisMinimum(0f); // this replaces setStartAtZero(true)
+        leftAxis.setAxisMaximum(1.0000f);
 
         YAxis rightAxis = chart.getAxisRight();
         rightAxis.setLabelCount(5, false);
         rightAxis.setDrawGridLines(false);
         rightAxis.setAxisMinimum(0f); // this replaces setStartAtZero(true)
+        rightAxis.setAxisMinimum(0f); // this replaces setStartAtZero(true)
+        rightAxis.setAxisMaximum(1.0000f);
 
     }
 }
