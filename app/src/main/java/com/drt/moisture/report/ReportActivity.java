@@ -16,9 +16,11 @@ import com.bin.david.form.data.format.bg.IBackgroundFormat;
 import com.bin.david.form.data.table.TableData;
 import com.drt.moisture.BluetoothBaseActivity;
 import com.drt.moisture.R;
+import com.drt.moisture.data.MeasureStatus;
 import com.drt.moisture.data.MeasureValue;
 import com.drt.moisture.util.AppPermission;
 import com.drt.moisture.util.ExcelUtil;
+import com.inuker.bluetooth.library.Constants;
 
 import java.io.File;
 import java.text.SimpleDateFormat;
@@ -117,6 +119,15 @@ public class ReportActivity extends BluetoothBaseActivity<ReportPresenter> imple
     @Override
     protected void onDestroy() {
         super.onDestroy();
+    }
+
+    @Override
+    public void setBleConnectStatus(int status) {
+        if (status != Constants.STATUS_DEVICE_CONNECTED) {
+//            mPresenter.setMeasureStatus(MeasureStatus.BT_NOT_CONNECT);
+        } else {
+//            mPresenter.setMeasureStatus(MeasureStatus.NORMAL);
+        }
     }
 
     @OnClick(R.id.export)

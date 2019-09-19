@@ -36,10 +36,6 @@ public class MeasurePresenter extends BasePresenter<MeasureContract.View> implem
         if (!isViewAttached()) {
             return;
         }
-        if (TextUtils.isEmpty(measureName)) {
-            mView.onError(new Exception("请输入测量样品名称"));
-            return;
-        }
 
         switch (measureStatus) {
             case STOP:
@@ -55,6 +51,11 @@ public class MeasurePresenter extends BasePresenter<MeasureContract.View> implem
                 return;
             default:
                 return;
+        }
+
+        if (TextUtils.isEmpty(measureName)) {
+            mView.onError(new Exception("请输入测量样品名称"));
+            return;
         }
 
         App.getInstance().getLocalDataService().setHistory(measureName);

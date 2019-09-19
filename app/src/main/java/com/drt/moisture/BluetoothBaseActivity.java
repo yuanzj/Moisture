@@ -94,8 +94,10 @@ public abstract class BluetoothBaseActivity<T extends BasePresenter> extends Bas
         if (getBluetoothStatus() == Constants.STATUS_DEVICE_CONNECTED) {
             btnBluetooth.setImageResource(R.mipmap.ic_bluetooth_connected);
             App.getInstance().getBluetoothClient().registerConnectStatusListener(App.getInstance().getConnectMacAddress(), mBleConnectStatusListener);
+            setBleConnectStatus(Constants.STATUS_CONNECTED);
         } else {
             btnBluetooth.setImageResource(R.mipmap.ic_bluetooth);
+            setBleConnectStatus(STATUS_DISCONNECTED);
         }
     }
 
@@ -342,10 +344,12 @@ public abstract class BluetoothBaseActivity<T extends BasePresenter> extends Bas
             } else if (status == STATUS_CONNECTED) {
                 btnBluetooth.setImageResource(R.mipmap.ic_bluetooth_connected);
                 Toast.makeText(getApplicationContext(), "设备已连接", Toast.LENGTH_SHORT).show();
+                setBleConnectStatus(STATUS_CONNECTED);
             } else if (status == STATUS_DISCONNECTED) {
                 btnBluetooth.setImageResource(R.mipmap.ic_bluetooth);
                 Toast.makeText(getApplicationContext(), "连接已断开", Toast.LENGTH_SHORT).show();
                 App.getInstance().getBluetoothClient().unregisterConnectStatusListener(mac, mBleConnectStatusListener);
+                setBleConnectStatus(STATUS_DISCONNECTED);
             }
         }
     };
@@ -370,4 +374,6 @@ public abstract class BluetoothBaseActivity<T extends BasePresenter> extends Bas
             }
         }
     };
+
+    public abstract void setBleConnectStatus(int status);
 }

@@ -25,6 +25,7 @@ import com.github.mikephil.charting.data.LineData;
 import com.github.mikephil.charting.data.LineDataSet;
 import com.github.mikephil.charting.formatter.ValueFormatter;
 import com.github.mikephil.charting.interfaces.datasets.ILineDataSet;
+import com.inuker.bluetooth.library.Constants;
 
 import butterknife.BindView;
 import butterknife.OnClick;
@@ -284,6 +285,15 @@ public class CorrectActivity extends BluetoothBaseActivity<CorrectPresenter> imp
     protected void onDestroy() {
         super.onDestroy();
         mPresenter.stopCorrect();
+    }
+
+    @Override
+    public void setBleConnectStatus(int status) {
+        if (status != Constants.STATUS_CONNECTED) {
+            mPresenter.setMeasureStatus(MeasureStatus.BT_NOT_CONNECT);
+        } else {
+            mPresenter.setMeasureStatus(MeasureStatus.NORMAL);
+        }
     }
 
     private void addEntry(MeasureValue measureValue) {

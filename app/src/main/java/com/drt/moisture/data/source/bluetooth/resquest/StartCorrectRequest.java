@@ -25,6 +25,9 @@ public class StartCorrectRequest {
     @RkField(position = 7, length = 1)
     private byte time;
 
+    @RkField(position = 8, length = 1)
+    private byte step;
+
     public byte getCmdGroup() {
         return CmdGroup;
     }
@@ -79,5 +82,13 @@ public class StartCorrectRequest {
 
     public void setTime(byte time) {
         this.time = time;
+    }
+
+    public byte getStep() {
+        return step;
+    }
+
+    public void setStep(byte step) {
+        this.step = step;
     }
 }

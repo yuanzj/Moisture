@@ -3,6 +3,7 @@ package com.drt.moisture.correct;
 import android.annotation.SuppressLint;
 
 import android.util.Log;
+
 import com.drt.moisture.App;
 import com.drt.moisture.data.AppConfig;
 import com.drt.moisture.data.MeasureValue;
@@ -11,6 +12,7 @@ import com.drt.moisture.data.source.MeasureDataCallback;
 import com.drt.moisture.data.source.bluetooth.SppDataCallback;
 import com.drt.moisture.data.source.bluetooth.response.CorrectDataResponse;
 import com.drt.moisture.data.source.bluetooth.response.StartMeasureResponse;
+import com.drt.moisture.data.source.bluetooth.response.StopMeasureResponse;
 import com.drt.moisture.measure.MeasureModel;
 import com.drt.moisture.util.DateUtil;
 
@@ -138,6 +140,18 @@ public class CorrectModel implements CorrectContract.Model, SppDataCallback<Corr
         if (clockerTime != null) {
             clockerTime.cancel();
         }
+        App.getInstance().getBluetoothService().stopCorrect(new SppDataCallback<StopMeasureResponse>() {
+
+            @Override
+            public void delivery(StopMeasureResponse stopMeasureResponse) {
+
+            }
+
+            @Override
+            public Class<StopMeasureResponse> getEntityType() {
+                return StopMeasureResponse.class;
+            }
+        });
     }
 
     @Override

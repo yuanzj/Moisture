@@ -53,21 +53,13 @@ public class BluetoothServiceImpl implements BluetoothService, BleWriteResponse 
                         timeoutTimer.cancel();
                         timeoutTimer = null;
                     }
-                } catch (NoSuchMethodException e) {
-                    e.printStackTrace();
-                } catch (InvocationTargetException e) {
+                } catch (NoSuchMethodException | InvocationTargetException e) {
                     e.printStackTrace();
                 }
 
 
                 sppDataCallback.delivery(object);
-            } catch (InstantiationException e) {
-                e.printStackTrace();
-            } catch (IllegalAccessException e) {
-                e.printStackTrace();
-            } catch (FieldConvertException e) {
-                e.printStackTrace();
-            } catch (RkFieldException e) {
+            } catch (InstantiationException | IllegalAccessException | FieldConvertException | RkFieldException e) {
                 e.printStackTrace();
             }
         }
@@ -107,7 +99,7 @@ public class BluetoothServiceImpl implements BluetoothService, BleWriteResponse 
         startMeasureRequest.setTime((byte) time);
         try {
             App.getInstance().getBluetoothClient().write(App.getInstance().getConnectMacAddress(), UUIDUtils.makeUUID(0xFFE0), UUIDUtils.makeUUID(0xFFE1), BluetoothDataUtil.encode(startMeasureRequest), this);
-            currentRetryCount++;
+
             if (!retry) {
                 expectResponseCode = 0xA5;
                 currentRetryCount = 0;
@@ -118,23 +110,22 @@ public class BluetoothServiceImpl implements BluetoothService, BleWriteResponse 
                 timeoutTimer.schedule(new TimerTask() {
                     @Override
                     public void run() {
-                        if (currentRetryCount > 3) {
+                        if (currentRetryCount >= 2) {
                             currentRetryCount = 0;
                             timeoutTimer.cancel();
                             timeoutTimer = null;
                         } else {
-                            startMeasure(name, measureModel, interval, time, sppDataCallback, true);
+                            if (timeoutTimer != null) {
+                                currentRetryCount++;
+                                startMeasure(name, measureModel, interval, time, sppDataCallback, true);
+                            }
                         }
 
                     }
-                }, 3000, 3000);
+                }, 300, 300);
             }
 
-        } catch (IllegalAccessException e) {
-            e.printStackTrace();
-        } catch (RkFieldException e) {
-            e.printStackTrace();
-        } catch (FieldConvertException e) {
+        } catch (IllegalAccessException | RkFieldException | FieldConvertException e) {
             e.printStackTrace();
         }
 
@@ -158,9 +149,16 @@ public class BluetoothServiceImpl implements BluetoothService, BleWriteResponse 
         startCorrectRequest.setType((byte) type);
 
         startCorrectRequest.setTime((byte) time);
+        if (0x02 == mode) {
+            startCorrectRequest.setStep((byte) type);
+        } else {
+            startCorrectRequest.setStep((byte) mode);
+        }
+
+
         try {
             App.getInstance().getBluetoothClient().write(App.getInstance().getConnectMacAddress(), UUIDUtils.makeUUID(0xFFE0), UUIDUtils.makeUUID(0xFFE1), BluetoothDataUtil.encode(startCorrectRequest), this);
-            currentRetryCount++;
+
             if (!retry) {
                 expectResponseCode = 0xA5;
                 currentRetryCount = 0;
@@ -171,29 +169,32 @@ public class BluetoothServiceImpl implements BluetoothService, BleWriteResponse 
                 timeoutTimer.schedule(new TimerTask() {
                     @Override
                     public void run() {
-                        if (currentRetryCount > 3) {
+                        if (currentRetryCount >= 2) {
                             currentRetryCount = 0;
                             timeoutTimer.cancel();
                             timeoutTimer = null;
                         } else {
-                            startCorrect(mode, type, time, sppDataCallback, true);
+                            if (timeoutTimer != null) {
+                                currentRetryCount++;
+                                startCorrect(mode, type, time, sppDataCallback, true);
+                            }
                         }
 
                     }
-                }, 3000, 3000);
+                }, 300, 300);
             }
 
-        } catch (IllegalAccessException e) {
-            e.printStackTrace();
-        } catch (RkFieldException e) {
-            e.printStackTrace();
-        } catch (FieldConvertException e) {
+        } catch (IllegalAccessException | RkFieldException | FieldConvertException e) {
             e.printStackTrace();
         }
     }
 
     @Override
     public void stopMeasure(SppDataCallback<StopMeasureResponse> sppDataCallback) {
+        if (timeoutTimer != null) {
+            timeoutTimer.cancel();
+            timeoutTimer = null;
+        }
         this.sppDataCallback = sppDataCallback;
 
         StopMeasureRequest request = new StopMeasureRequest();
@@ -204,17 +205,17 @@ public class BluetoothServiceImpl implements BluetoothService, BleWriteResponse 
 
         try {
             App.getInstance().getBluetoothClient().write(App.getInstance().getConnectMacAddress(), UUIDUtils.makeUUID(0xFFE0), UUIDUtils.makeUUID(0xFFE1), BluetoothDataUtil.encode(request), this);
-        } catch (IllegalAccessException e) {
-            e.printStackTrace();
-        } catch (RkFieldException e) {
-            e.printStackTrace();
-        } catch (FieldConvertException e) {
+        } catch (IllegalAccessException | RkFieldException | FieldConvertException e) {
             e.printStackTrace();
         }
     }
 
     @Override
     public void stopCorrect(SppDataCallback<StopMeasureResponse> sppDataCallback) {
+        if (timeoutTimer != null) {
+            timeoutTimer.cancel();
+            timeoutTimer = null;
+        }
         this.sppDataCallback = sppDataCallback;
 
         StopMeasureRequest request = new StopMeasureRequest();
@@ -225,11 +226,7 @@ public class BluetoothServiceImpl implements BluetoothService, BleWriteResponse 
 
         try {
             App.getInstance().getBluetoothClient().write(App.getInstance().getConnectMacAddress(), UUIDUtils.makeUUID(0xFFE0), UUIDUtils.makeUUID(0xFFE1), BluetoothDataUtil.encode(request), this);
-        } catch (IllegalAccessException e) {
-            e.printStackTrace();
-        } catch (RkFieldException e) {
-            e.printStackTrace();
-        } catch (FieldConvertException e) {
+        } catch (IllegalAccessException | RkFieldException | FieldConvertException e) {
             e.printStackTrace();
         }
     }
@@ -247,11 +244,7 @@ public class BluetoothServiceImpl implements BluetoothService, BleWriteResponse 
         try {
             App.getInstance().getBluetoothClient().write(App.getInstance().getConnectMacAddress(), UUIDUtils.makeUUID(0xFFE0), UUIDUtils.makeUUID(0xFFE1), BluetoothDataUtil.encode(recordDataRequest), this);
 
-        } catch (IllegalAccessException e) {
-            e.printStackTrace();
-        } catch (RkFieldException e) {
-            e.printStackTrace();
-        } catch (FieldConvertException e) {
+        } catch (IllegalAccessException | RkFieldException | FieldConvertException e) {
             e.printStackTrace();
         }
     }
@@ -261,20 +254,16 @@ public class BluetoothServiceImpl implements BluetoothService, BleWriteResponse 
         this.sppDataCallback = sppDataCallback;
 
         CorrectDataRequest recordDataRequest = new CorrectDataRequest();
-        recordDataRequest.setCmdGroup((byte) 0xA4 );
+        recordDataRequest.setCmdGroup((byte) 0xA4);
         recordDataRequest.setCmd((byte) 0x05);
         recordDataRequest.setResponse((byte) 0x01);
         recordDataRequest.setReserved(0);
 //        水分活度数据类型<br/>0x00：实际测试值<br/>0x01：真实值
-        recordDataRequest.setType((byte)type);
+        recordDataRequest.setType((byte) type);
         try {
             App.getInstance().getBluetoothClient().write(App.getInstance().getConnectMacAddress(), UUIDUtils.makeUUID(0xFFE0), UUIDUtils.makeUUID(0xFFE1), BluetoothDataUtil.encode(recordDataRequest), this);
 
-        } catch (IllegalAccessException e) {
-            e.printStackTrace();
-        } catch (RkFieldException e) {
-            e.printStackTrace();
-        } catch (FieldConvertException e) {
+        } catch (IllegalAccessException | RkFieldException | FieldConvertException e) {
             e.printStackTrace();
         }
     }
@@ -291,11 +280,7 @@ public class BluetoothServiceImpl implements BluetoothService, BleWriteResponse 
 
         try {
             App.getInstance().getBluetoothClient().write(App.getInstance().getConnectMacAddress(), UUIDUtils.makeUUID(0xFFE0), UUIDUtils.makeUUID(0xFFE1), BluetoothDataUtil.encode(deviceInfoRequest), this);
-        } catch (IllegalAccessException e) {
-            e.printStackTrace();
-        } catch (RkFieldException e) {
-            e.printStackTrace();
-        } catch (FieldConvertException e) {
+        } catch (IllegalAccessException | RkFieldException | FieldConvertException e) {
             e.printStackTrace();
         }
     }

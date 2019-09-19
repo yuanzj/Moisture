@@ -13,6 +13,7 @@ import android.widget.Toast;
 import com.drt.moisture.BluetoothBaseActivity;
 import com.drt.moisture.R;
 import com.drt.moisture.data.DeviceInfo;
+import com.inuker.bluetooth.library.Constants;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -129,6 +130,15 @@ public class SettingActivity extends BluetoothBaseActivity<SettingPresenter> imp
                 break;
             default:
                 break;
+        }
+    }
+
+      @Override
+    public void setBleConnectStatus(int status) {
+        if (status != Constants.STATUS_DEVICE_CONNECTED) {
+//            mPresenter.setMeasureStatus(MeasureStatus.BT_NOT_CONNECT);
+        } else {
+//            mPresenter.setMeasureStatus(MeasureStatus.NORMAL);
         }
     }
 }

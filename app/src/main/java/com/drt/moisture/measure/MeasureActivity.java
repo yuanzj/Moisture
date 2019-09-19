@@ -28,6 +28,7 @@ import com.github.mikephil.charting.data.LineData;
 import com.github.mikephil.charting.data.LineDataSet;
 import com.github.mikephil.charting.formatter.ValueFormatter;
 import com.github.mikephil.charting.interfaces.datasets.ILineDataSet;
+import com.inuker.bluetooth.library.Constants;
 
 import java.util.Collections;
 import java.util.List;
@@ -81,7 +82,6 @@ public class MeasureActivity extends BluetoothBaseActivity<MeasurePresenter> imp
         super.onCreate(savedInstanceState);
 
         spMeasureTime.setSelection(mPresenter.getMeasureTime() - 1);
-
     }
 
     @Override
@@ -264,6 +264,15 @@ public class MeasureActivity extends BluetoothBaseActivity<MeasurePresenter> imp
     protected void onDestroy() {
         super.onDestroy();
         mPresenter.stopMeasure();
+    }
+
+    @Override
+    public void setBleConnectStatus(int status) {
+        if (status != Constants.STATUS_CONNECTED) {
+            mPresenter.setMeasureStatus(MeasureStatus.BT_NOT_CONNECT);
+        } else {
+            mPresenter.setMeasureStatus(MeasureStatus.NORMAL);
+        }
     }
 
     private void addEntry(MeasureValue measureValue) {
