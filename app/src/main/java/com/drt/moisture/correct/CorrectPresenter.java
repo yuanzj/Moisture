@@ -60,7 +60,7 @@ public class CorrectPresenter extends BasePresenter<CorrectContract.View> implem
 
             @Override
             public void success(StartMeasureResponse value) {
-                model.startCorrect(measureModel, new CorrectDataCallback<MeasureValue>() {
+                model.startCorrect(measureModel, type, new CorrectDataCallback<MeasureValue>() {
 
                     @Override
                     public void runningTime(String time) {

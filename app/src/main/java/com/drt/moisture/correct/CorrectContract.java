@@ -28,7 +28,7 @@ public interface CorrectContract {
 
         void startCorrect(int mode, int type, int time, final MeasureDataCallback<StartMeasureResponse> callback);
 
-        void startCorrect(int model, CorrectDataCallback<MeasureValue> callback);
+        void startCorrect(int measureModel,  int type, CorrectDataCallback<MeasureValue> callback);
 
         void stopCorrect();
 

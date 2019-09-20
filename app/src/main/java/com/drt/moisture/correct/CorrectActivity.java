@@ -137,7 +137,7 @@ public class CorrectActivity extends BluetoothBaseActivity<CorrectPresenter> imp
                 addEntry(measureValue);
                 time.setText(measureValue.getReportTime());
                 temperature.setText(measureValue.getTemperature() + "°C");
-                activeness.setText(measureValue.getActivity() + "%");
+                activeness.setText(measureValue.getActivity() + "");
             }
         });
     }
@@ -176,7 +176,7 @@ public class CorrectActivity extends BluetoothBaseActivity<CorrectPresenter> imp
                             type = 0x01;
                         } else if (spMeasureModel.getSelectedItemPosition() == 1) {
 //                            氯化镁校正
-                            model = 0x02;
+                            model = 0x01;
                             type = 0x02;
                         } else {
 //                            氯化钠校正

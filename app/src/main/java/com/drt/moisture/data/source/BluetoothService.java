@@ -58,7 +58,7 @@ public interface BluetoothService {
      * @param type
      * @param sppDataCallback
      */
-    void queryCorrect(int type, SppDataCallback<CorrectDataResponse> sppDataCallback);
+    void queryCorrect(int measureModel,  int type, int interval, long time, SppDataCallback<CorrectDataResponse> sppDataCallback);
 
     /**
      * 查询设备信息

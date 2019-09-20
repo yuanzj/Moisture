@@ -250,15 +250,41 @@ public class BluetoothServiceImpl implements BluetoothService, BleWriteResponse 
     }
 
     @Override
-    public void queryCorrect(int type, SppDataCallback<CorrectDataResponse> sppDataCallback) {
+    public void queryCorrect(int measureModel, int type, int interval, long time, SppDataCallback<CorrectDataResponse> sppDataCallback) {
         this.sppDataCallback = sppDataCallback;
 
         CorrectDataRequest recordDataRequest = new CorrectDataRequest();
         recordDataRequest.setCmdGroup((byte) 0xA4);
-        recordDataRequest.setCmd((byte) 0x05);
+//        命令编号
+//        0x05 单点氯化钠
+//        0x06 单点氯化镁
+//        0x15 多点氯化钠
+//        0x16 多点氯化镁
+
+//        校准方式<br/>0x01：单点校准<br/>0x02：两点校准
+//                        校准类型<br/>0x01：氯化钠校准<br/>0x02：氯化镁校准
+
+        if (measureModel == 0x01 && type == 0x01) {
+            recordDataRequest.setCmd((byte) 0x05);
+        } else if (measureModel == 0x01 && type == 0x02) {
+            recordDataRequest.setCmd((byte) 0x06);
+        } else if (measureModel == 0x02 && type == 0x01) {
+            recordDataRequest.setCmd((byte) 0x15);
+        } else if (measureModel == 0x02 && type == 0x02) {
+            recordDataRequest.setCmd((byte) 0x16);
+        }
+
+
         recordDataRequest.setResponse((byte) 0x01);
-        recordDataRequest.setReserved(0);
+        if (interval * 3 >= time) {
+            recordDataRequest.setReserved(0x01);
+        } else {
+            recordDataRequest.setReserved(0x00);
+        }
+
 //        水分活度数据类型<br/>0x00：实际测试值<br/>0x01：真实值
+
+
         recordDataRequest.setType((byte) type);
         try {
             App.getInstance().getBluetoothClient().write(App.getInstance().getConnectMacAddress(), UUIDUtils.makeUUID(0xFFE0), UUIDUtils.makeUUID(0xFFE1), BluetoothDataUtil.encode(recordDataRequest), this);

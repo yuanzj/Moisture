@@ -71,7 +71,7 @@ public class CorrectModel implements CorrectContract.Model, SppDataCallback<Corr
     }
 
     @Override
-    public void startCorrect(final int model, final CorrectDataCallback<MeasureValue> callback) {
+    public void startCorrect(final int measureModel, final int type, final CorrectDataCallback<MeasureValue> callback) {
         this.measureDataCallback = callback;
         if (step > 1) {
             step = 0;
@@ -96,7 +96,9 @@ public class CorrectModel implements CorrectContract.Model, SppDataCallback<Corr
         }
         startTimer = new Timer();
         AppConfig appConfig = App.getInstance().getLocalDataService().queryAppConfig();
-        int period = appConfig.getPeriod();
+        final int period = appConfig.getPeriod();
+        // 启动关闭测量定时器
+        final int measuringTime = appConfig.getCorrectTime();
         startTimer.schedule(new TimerTask() {
             @Override
             public void run() {
@@ -108,13 +110,12 @@ public class CorrectModel implements CorrectContract.Model, SppDataCallback<Corr
 //                callback.success(measureValue);
 
                 // 发送蓝牙请求
-                App.getInstance().getBluetoothService().queryCorrect(0x00, CorrectModel.this);
+                App.getInstance().getBluetoothService().queryCorrect(measureModel, type, period, measuringTime * 60 * 1000 - (System.currentTimeMillis() - startTime.getTime()), CorrectModel.this);
 
             }
         }, 0, period);
 
-        // 启动关闭测量定时器
-        int measuringTime = appConfig.getCorrectTime();
+
         if (stopTimer != null) {
             stopTimer.cancel();
         }
