@@ -277,15 +277,15 @@ public class BluetoothServiceImpl implements BluetoothService, BleWriteResponse 
 
         recordDataRequest.setResponse((byte) 0x01);
         if (interval * 3 >= time) {
-            recordDataRequest.setReserved(0x01);
+            recordDataRequest.setType(0x01);
         } else {
-            recordDataRequest.setReserved(0x00);
+            recordDataRequest.setType(0x00);
         }
 
 //        水分活度数据类型<br/>0x00：实际测试值<br/>0x01：真实值
 
 
-        recordDataRequest.setType((byte) type);
+        recordDataRequest.setReserved(0x00);
         try {
             App.getInstance().getBluetoothClient().write(App.getInstance().getConnectMacAddress(), UUIDUtils.makeUUID(0xFFE0), UUIDUtils.makeUUID(0xFFE1), BluetoothDataUtil.encode(recordDataRequest), this);
 
