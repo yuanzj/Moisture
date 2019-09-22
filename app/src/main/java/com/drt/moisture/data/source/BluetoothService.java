@@ -1,5 +1,7 @@
 package com.drt.moisture.data.source;
 
+import com.drt.moisture.data.CorrectParame;
+import com.drt.moisture.data.MeasureParame;
 import com.drt.moisture.data.source.bluetooth.SppDataCallback;
 import com.drt.moisture.data.source.bluetooth.response.*;
 
@@ -67,5 +69,28 @@ public interface BluetoothService {
      */
     void queryDeviceInfo(SppDataCallback<DeviceInfoResponse> sppDataCallback);
 
+
+    /**
+     * 设置时间
+     * @param time
+     * @param sppDataCallback
+     */
+    void setTime(long time, SppDataCallback<ParameterSetResponse> sppDataCallback);
+
+
+    /**
+     * 设置测量参数
+     * @param measureParame
+     * @param sppDataCallback
+     */
+    void setMeasureParame(MeasureParame measureParame, SppDataCallback<ParameterSetResponse> sppDataCallback);
+
+
+    /**
+     * 设置校准参数
+     * @param correctParame
+     * @param sppDataCallback
+     */
+    void setCorrectParame(CorrectParame correctParame, SppDataCallback<ParameterSetResponse> sppDataCallback);
 
 }

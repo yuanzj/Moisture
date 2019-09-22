@@ -93,4 +93,10 @@
         <item>60 分钟</item>
 
     </string-array>
+
+    <string-array name="setting_rate">
+        <item>1500</item>
+        <item>3000</item>
+        <item>5000</item>
+    </string-array>
 </resources>
