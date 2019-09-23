@@ -262,8 +262,8 @@ public class MeasureActivity extends BluetoothBaseActivity<MeasurePresenter> imp
 
     @Override
     protected void onDestroy() {
-        super.onDestroy();
         mPresenter.stopMeasure();
+        super.onDestroy();
     }
 
     @Override

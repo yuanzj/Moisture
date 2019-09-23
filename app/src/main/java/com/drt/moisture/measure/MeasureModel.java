@@ -11,7 +11,6 @@ import com.drt.moisture.data.source.bluetooth.SppDataCallback;
 import com.drt.moisture.data.source.bluetooth.response.RecordDataResponse;
 import com.drt.moisture.data.source.bluetooth.response.StartMeasureResponse;
 import com.drt.moisture.data.source.bluetooth.response.StopMeasureResponse;
-import com.drt.moisture.setting.SettingModel;
 import com.drt.moisture.util.DateUtil;
 
 import java.text.SimpleDateFormat;
@@ -23,7 +22,7 @@ public class MeasureModel implements MeasureContract.Model, SppDataCallback<Reco
 
     private static final String TAG = MeasureModel.class.getSimpleName();
 
-    private Timer startTimer, stopTimer, clockerTime;
+    private Timer runningTimer, stopTimer, clockerTime;
 
     private Date startTime;
 
@@ -67,17 +66,17 @@ public class MeasureModel implements MeasureContract.Model, SppDataCallback<Reco
     }
 
     @Override
-    public void startQuery(int model, MeasureDataCallback<MeasureValue> callback) {
+    public synchronized void startQuery(int model, MeasureDataCallback<MeasureValue> callback) {
         this.measureDataCallback = callback;
         // 启动定时查询定时器
-        if (startTimer != null) {
-            startTimer.cancel();
+        if (runningTimer != null) {
+            runningTimer.cancel();
         }
-        startTimer = new Timer();
+        runningTimer = new Timer();
         AppConfig appConfig = App.getInstance().getLocalDataService().queryAppConfig();
         int period = appConfig.getPeriod();
         startTime = new Date();
-        startTimer.schedule(new TimerTask() {
+        runningTimer.schedule(new TimerTask() {
             @Override
             public void run() {
                 // 发送蓝牙请求
@@ -118,8 +117,8 @@ public class MeasureModel implements MeasureContract.Model, SppDataCallback<Reco
 
     @Override
     public void stopQuery() {
-        if (startTimer != null) {
-            startTimer.cancel();
+        if (runningTimer != null) {
+            runningTimer.cancel();
         }
         if (stopTimer != null) {
             stopTimer.cancel();

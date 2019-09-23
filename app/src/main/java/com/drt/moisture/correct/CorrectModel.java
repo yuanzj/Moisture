@@ -13,19 +13,17 @@ import com.drt.moisture.data.source.bluetooth.SppDataCallback;
 import com.drt.moisture.data.source.bluetooth.response.CorrectDataResponse;
 import com.drt.moisture.data.source.bluetooth.response.StartMeasureResponse;
 import com.drt.moisture.data.source.bluetooth.response.StopMeasureResponse;
-import com.drt.moisture.measure.MeasureModel;
 import com.drt.moisture.util.DateUtil;
 
 import java.text.SimpleDateFormat;
 import java.util.Date;
-import java.util.Random;
 import java.util.Timer;
 import java.util.TimerTask;
 
 public class CorrectModel implements CorrectContract.Model, SppDataCallback<CorrectDataResponse> {
 
     private static final String TAG = CorrectModel.class.getSimpleName();
-    private Timer startTimer, stopTimer, clockerTime;
+    private Timer runningTimer, stopTimer, clockerTime;
 
     private Date startTime;
 
@@ -71,7 +69,7 @@ public class CorrectModel implements CorrectContract.Model, SppDataCallback<Corr
     }
 
     @Override
-    public void startCorrect(final int measureModel, final int type, final CorrectDataCallback<MeasureValue> callback) {
+    public synchronized void startCorrect(final int measureModel, final int type, final CorrectDataCallback<MeasureValue> callback) {
         this.measureDataCallback = callback;
         if (step > 1) {
             step = 0;
@@ -91,15 +89,15 @@ public class CorrectModel implements CorrectContract.Model, SppDataCallback<Corr
         }, 0, 1000);
 
         // 启动定时查询定时器
-        if (startTimer != null) {
-            startTimer.cancel();
+        if (runningTimer != null) {
+            runningTimer.cancel();
         }
-        startTimer = new Timer();
+        runningTimer = new Timer();
         AppConfig appConfig = App.getInstance().getLocalDataService().queryAppConfig();
         final int period = appConfig.getPeriod();
         // 启动关闭测量定时器
         final int measuringTime = appConfig.getCorrectTime();
-        startTimer.schedule(new TimerTask() {
+        runningTimer.schedule(new TimerTask() {
             @Override
             public void run() {
                 // 发送蓝牙请求
@@ -132,8 +130,8 @@ public class CorrectModel implements CorrectContract.Model, SppDataCallback<Corr
 
     @Override
     public void stopCorrect() {
-        if (startTimer != null) {
-            startTimer.cancel();
+        if (runningTimer != null) {
+            runningTimer.cancel();
         }
         if (stopTimer != null) {
             stopTimer.cancel();

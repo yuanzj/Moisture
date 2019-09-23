@@ -283,8 +283,8 @@ public class CorrectActivity extends BluetoothBaseActivity<CorrectPresenter> imp
 
     @Override
     protected void onDestroy() {
-        super.onDestroy();
         mPresenter.stopCorrect();
+        super.onDestroy();
     }
 
     @Override
