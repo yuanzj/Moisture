@@ -165,7 +165,7 @@ public class SettingModel implements SettingContract.Model {
     @Override
     public void setRateParame(int rate, int ratio, DataCallback<ParameterSetResponse> dataCallback) {
         this.parameterSetResponseDataCallback = dataCallback;
-        App.getInstance().getBluetoothService().setRateParam(rate, new SppDataCallback<ParameterSetResponse>() {
+        App.getInstance().getBluetoothService().setRateParam(rate, ratio, new SppDataCallback<ParameterSetResponse>() {
 
             @Override
             public void delivery(ParameterSetResponse parameterSetResponse) {
