@@ -25,6 +25,9 @@ public class RecordDataResponse {
     @RkField(position = 11, length = 2)
     private int activity;
 
+    @RkField(position = 13, length = 1)
+    private int measureStatus;
+
     public byte getCmdGroup() {
         return CmdGroup;
     }
@@ -81,6 +84,14 @@ public class RecordDataResponse {
         this.activity = activity;
     }
 
+    public int getMeasureStatus() {
+        return measureStatus;
+    }
+
+    public void setMeasureStatus(int measureStatus) {
+        this.measureStatus = measureStatus;
+    }
+
     @Override
     public String toString() {
         return "RecordDataResponse{" +
@@ -91,6 +102,7 @@ public class RecordDataResponse {
                 ", time=" + time +
                 ", temperature=" + temperature +
                 ", activity=" + activity +
+                ", measureStatus=" + measureStatus +
                 '}';
     }
 }

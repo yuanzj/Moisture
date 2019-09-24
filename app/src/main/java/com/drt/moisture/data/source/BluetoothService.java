@@ -4,6 +4,9 @@ import com.drt.moisture.data.CorrectParame;
 import com.drt.moisture.data.MeasureParame;
 import com.drt.moisture.data.source.bluetooth.SppDataCallback;
 import com.drt.moisture.data.source.bluetooth.response.*;
+import com.drt.moisture.data.source.bluetooth.resquest.SetCorrectParameRequest;
+import com.drt.moisture.data.source.bluetooth.resquest.SetMeasureParameRequest;
+import com.drt.moisture.data.source.bluetooth.resquest.SetRateRequest;
 
 public interface BluetoothService {
 
@@ -92,5 +95,36 @@ public interface BluetoothService {
      * @param sppDataCallback
      */
     void setCorrectParame(CorrectParame correctParame, SppDataCallback<ParameterSetResponse> sppDataCallback);
+
+    /**
+     * 查询测量参数
+     * @param sppDataCallback
+     */
+    void queryMeasureParame(SppDataCallback<SetMeasureParameRequest> sppDataCallback);
+
+    /**
+     * 查询校准参数
+     * @param sppDataCallback
+     */
+    void queryCorrectParam(SppDataCallback<SetCorrectParameRequest> sppDataCallback);
+
+    /**
+     * 查询测量参数
+     * @param sppDataCallback
+     */
+    void queryRateParame(SppDataCallback<SetRateRequest> sppDataCallback);
+
+    /**
+     * 设置频率
+     * @param sppDataCallback
+     */
+    void setRateParam(int rate, SppDataCallback<ParameterSetResponse> sppDataCallback);
+
+    /**
+     * 查询测量记录
+     *
+     * @param sppDataCallback
+     */
+    void queryHisRecord(String name,int index, SppDataCallback<RecordDataResponse> sppDataCallback);
 
 }

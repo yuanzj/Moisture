@@ -21,6 +21,9 @@ import com.drt.moisture.data.AppConfig;
 import com.drt.moisture.data.CorrectParame;
 import com.drt.moisture.data.DeviceInfo;
 import com.drt.moisture.data.MeasureParame;
+import com.drt.moisture.data.source.bluetooth.resquest.SetCorrectParameRequest;
+import com.drt.moisture.data.source.bluetooth.resquest.SetMeasureParameRequest;
+import com.drt.moisture.data.source.bluetooth.resquest.SetRateRequest;
 import com.inuker.bluetooth.library.Constants;
 
 import java.util.ArrayList;
@@ -52,6 +55,99 @@ public class SettingActivity extends BluetoothBaseActivity<SettingPresenter> imp
                     ((TextView) deviceInfoView.findViewById(R.id.title3)).setText(deviceInfo.getModel());
                     ((TextView) deviceInfoView.findViewById(R.id.title4)).setText(deviceInfo.getName());
                     ((TextView) deviceInfoView.findViewById(R.id.title5)).setText(deviceInfo.getBattery());
+                }
+            }
+        });
+    }
+
+    @Override
+    public void onMeasureConfigSuccess(final SetMeasureParameRequest setMeasureParameRequest) {
+        runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                if (dialogParameSet != null) {
+                    final EditText csA = dialogParameSet.findViewById(R.id.csA);
+                    final EditText csB = dialogParameSet.findViewById(R.id.csB);
+                    final EditText csC = dialogParameSet.findViewById(R.id.csC);
+                    final EditText csD = dialogParameSet.findViewById(R.id.csD);
+                    final EditText csE = dialogParameSet.findViewById(R.id.csE);
+                    final EditText csF = dialogParameSet.findViewById(R.id.csF);
+                    final EditText csG = dialogParameSet.findViewById(R.id.csG);
+                    final EditText csH = dialogParameSet.findViewById(R.id.csH);
+                    final EditText csI = dialogParameSet.findViewById(R.id.csI);
+                    final EditText csJ = dialogParameSet.findViewById(R.id.csJ);
+                    final EditText csK = dialogParameSet.findViewById(R.id.csK);
+                    final EditText csL = dialogParameSet.findViewById(R.id.csL);
+                    final EditText csM = dialogParameSet.findViewById(R.id.csM);
+
+                    csA.setText("" + setMeasureParameRequest.getA());
+                    csB.setText("" + setMeasureParameRequest.getB());
+                    csC.setText("" + setMeasureParameRequest.getC());
+                    csD.setText("" + setMeasureParameRequest.getD());
+                    csE.setText("" + setMeasureParameRequest.getE());
+                    csF.setText("" + setMeasureParameRequest.getF());
+                    csG.setText("" + setMeasureParameRequest.getG());
+                    csH.setText("" + setMeasureParameRequest.getH());
+                    csI.setText("" + setMeasureParameRequest.getI());
+                    csJ.setText("" + setMeasureParameRequest.getJ());
+                    csK.setText("" + setMeasureParameRequest.getK());
+                    csL.setText("" + setMeasureParameRequest.getL());
+                    csM.setText("" + setMeasureParameRequest.getM());
+                }
+            }
+        });
+    }
+
+    @Override
+    public void onCorrectConfigSuccess(final SetCorrectParameRequest setCorrectParameRequest) {
+        runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                if (dialogParameSet != null) {
+                    final EditText csA_1 = dialogParameSet.findViewById(R.id.csA_1);
+                    final EditText csB_1 = dialogParameSet.findViewById(R.id.csB_1);
+                    final EditText csC_1 = dialogParameSet.findViewById(R.id.csC_1);
+                    final EditText csD_1 = dialogParameSet.findViewById(R.id.csD_1);
+                    final EditText csE_1 = dialogParameSet.findViewById(R.id.csE_1);
+                    final EditText csF_1 = dialogParameSet.findViewById(R.id.csF_1);
+                    final EditText csG_1 = dialogParameSet.findViewById(R.id.csG_1);
+                    final EditText csH_1 = dialogParameSet.findViewById(R.id.csH_1);
+                    final EditText csI_1 = dialogParameSet.findViewById(R.id.csI_1);
+
+                    csA_1.setText("" + setCorrectParameRequest.getA());
+                    csB_1.setText("" + setCorrectParameRequest.getB());
+                    csC_1.setText("" + setCorrectParameRequest.getC());
+                    csD_1.setText("" + setCorrectParameRequest.getD());
+                    csE_1.setText("" + setCorrectParameRequest.getE());
+                    csF_1.setText("" + setCorrectParameRequest.getF());
+                    csG_1.setText("" + setCorrectParameRequest.getG());
+                    csH_1.setText("" + setCorrectParameRequest.getH());
+                    csI_1.setText("" + setCorrectParameRequest.getI());
+                }
+            }
+        });
+    }
+
+    @Override
+    public void onRateSuccess(final SetRateRequest deviceInfo) {
+        runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                if (dialogRate != null) {
+                    final Spinner spinner2 = dialogRate.findViewById(R.id.spinner2);
+                    if (deviceInfo.getRate() == 1500) {
+                        spinner2.setSelection(0, false);
+                    } else if (deviceInfo.getRate() == 3000) {
+                        spinner2.setSelection(1, false);
+                    } else if (deviceInfo.getRate() == 5000) {
+                        spinner2.setSelection(2, false);
+                    } else {
+                        spinner2.setSelection(0, false);
+                    }
+                    AppConfig appConfig = App.getInstance().getLocalDataService().queryAppConfig();
+                    appConfig.setPeriod(Integer.parseInt(spinner2.getSelectedItem().toString()));
+                    appConfig.setRatio(deviceInfo.getRatio());
+                    App.getInstance().getLocalDataService().setAppConfig(appConfig);
                 }
             }
         });
@@ -222,6 +318,7 @@ public class SettingActivity extends BluetoothBaseActivity<SettingPresenter> imp
                                 AppConfig appConfig = App.getInstance().getLocalDataService().queryAppConfig();
                                 appConfig.setPeriod(Integer.parseInt(spinner2.getSelectedItem().toString()));
                                 App.getInstance().getLocalDataService().setAppConfig(appConfig);
+                                mPresenter.setRateParame(appConfig.getPeriod());
                             }
                         })
                         .setNegativeButton("取消", new DialogInterface.OnClickListener() {
@@ -233,6 +330,7 @@ public class SettingActivity extends BluetoothBaseActivity<SettingPresenter> imp
                         })
                         .setCancelable(false);
                 builder.show();
+                mPresenter.queryRate();
             }
             break;
             case 3: {
@@ -270,8 +368,6 @@ public class SettingActivity extends BluetoothBaseActivity<SettingPresenter> imp
                 final EditText csK = dialogParameSet.findViewById(R.id.csK);
                 final EditText csL = dialogParameSet.findViewById(R.id.csL);
                 final EditText csM = dialogParameSet.findViewById(R.id.csM);
-                final EditText csN = dialogParameSet.findViewById(R.id.csN);
-
 
                 final EditText csA_1 = dialogParameSet.findViewById(R.id.csA_1);
                 final EditText csB_1 = dialogParameSet.findViewById(R.id.csB_1);
@@ -331,10 +427,6 @@ public class SettingActivity extends BluetoothBaseActivity<SettingPresenter> imp
                                     if (csM.getText().length() > 0) {
                                         measureParame.setM(Long.parseLong(csM.getText().toString()));
                                     }
-                                    if (csN.getText().length() > 0) {
-                                        measureParame.setN(Integer.parseInt(csN.getText().toString()));
-                                    }
-
 
                                     mPresenter.setMeasureParame(measureParame);
                                 } else {
@@ -382,6 +474,18 @@ public class SettingActivity extends BluetoothBaseActivity<SettingPresenter> imp
                         })
                         .setCancelable(false);
                 builder.show();
+                tabhost.setOnTabChangedListener(new TabHost.OnTabChangeListener() {
+                    @Override
+                    public void onTabChanged(String tabId) {
+                        if (tabId.equals("测量参数")) {
+                            mPresenter.queryMeasureConfig();
+                        } else if (tabId.equals("校准参数")) {
+                            mPresenter.queryCorrectConfig();
+                        }
+                    }
+                });
+
+                mPresenter.queryMeasureConfig();
             }
             break;
             default:

@@ -17,6 +17,8 @@ public class AppConfig {
      */
     private int correctTime;
 
+    private int ratio;
+
     public int getPeriod() {
         return period;
     }
@@ -39,5 +41,13 @@ public class AppConfig {
 
     public void setCorrectTime(int correctTime) {
         this.correctTime = correctTime;
+    }
+
+    public int getRatio() {
+        return ratio;
+    }
+
+    public void setRatio(int ratio) {
+        this.ratio = ratio;
     }
 }

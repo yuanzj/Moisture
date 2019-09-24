@@ -351,7 +351,6 @@ public class BluetoothServiceImpl implements BluetoothService, BleWriteResponse 
         setMeasureParameRequest.setK(measureParame.getK());
         setMeasureParameRequest.setL(measureParame.getL());
         setMeasureParameRequest.setM(measureParame.getM());
-        setMeasureParameRequest.setN(measureParame.getN());
 
         try {
             App.getInstance().getBluetoothClient().write(App.getInstance().getConnectMacAddress(), UUIDUtils.makeUUID(0xFFE0), UUIDUtils.makeUUID(0xFFE1), BluetoothDataUtil.encode(setMeasureParameRequest), this);
@@ -380,6 +379,92 @@ public class BluetoothServiceImpl implements BluetoothService, BleWriteResponse 
 
         try {
             App.getInstance().getBluetoothClient().write(App.getInstance().getConnectMacAddress(), UUIDUtils.makeUUID(0xFFE0), UUIDUtils.makeUUID(0xFFE1), BluetoothDataUtil.encode(setCorrectParameRequest), this);
+        } catch (IllegalAccessException | RkFieldException | FieldConvertException e) {
+            e.printStackTrace();
+        }
+    }
+
+    @Override
+    public void queryMeasureParame(SppDataCallback<SetMeasureParameRequest> sppDataCallback) {
+        this.sppDataCallback = sppDataCallback;
+        QueryParameRequest queryParameRequest = new QueryParameRequest();
+        queryParameRequest.setCmdGroup((byte) 0xA2);
+        queryParameRequest.setCmd((byte) 0x86);
+        queryParameRequest.setResponse((byte) 0x01);
+        queryParameRequest.setReserved(0);
+
+        try {
+            App.getInstance().getBluetoothClient().write(App.getInstance().getConnectMacAddress(), UUIDUtils.makeUUID(0xFFE0), UUIDUtils.makeUUID(0xFFE1), BluetoothDataUtil.encode(queryParameRequest), this);
+        } catch (IllegalAccessException | RkFieldException | FieldConvertException e) {
+            e.printStackTrace();
+        }
+    }
+
+    @Override
+    public void queryCorrectParam(SppDataCallback<SetCorrectParameRequest> sppDataCallback) {
+        this.sppDataCallback = sppDataCallback;
+        QueryParameRequest queryParameRequest = new QueryParameRequest();
+        queryParameRequest.setCmdGroup((byte) 0xA2);
+        queryParameRequest.setCmd((byte) 0x87);
+        queryParameRequest.setResponse((byte) 0x01);
+        queryParameRequest.setReserved(0);
+
+        try {
+            App.getInstance().getBluetoothClient().write(App.getInstance().getConnectMacAddress(), UUIDUtils.makeUUID(0xFFE0), UUIDUtils.makeUUID(0xFFE1), BluetoothDataUtil.encode(queryParameRequest), this);
+        } catch (IllegalAccessException | RkFieldException | FieldConvertException e) {
+            e.printStackTrace();
+        }
+    }
+
+    @Override
+    public void queryRateParame(SppDataCallback<SetRateRequest> sppDataCallback) {
+        this.sppDataCallback = sppDataCallback;
+        QueryParameRequest queryParameRequest = new QueryParameRequest();
+        queryParameRequest.setCmdGroup((byte) 0xA2);
+        queryParameRequest.setCmd((byte) 0x88);
+        queryParameRequest.setResponse((byte) 0x01);
+        queryParameRequest.setReserved(0);
+
+        try {
+            App.getInstance().getBluetoothClient().write(App.getInstance().getConnectMacAddress(), UUIDUtils.makeUUID(0xFFE0), UUIDUtils.makeUUID(0xFFE1), BluetoothDataUtil.encode(queryParameRequest), this);
+        } catch (IllegalAccessException | RkFieldException | FieldConvertException e) {
+            e.printStackTrace();
+        }
+    }
+
+    @Override
+    public void setRateParam(int rate, SppDataCallback<ParameterSetResponse> sppDataCallback) {
+        this.sppDataCallback = sppDataCallback;
+        SetRateRequest setRateRequest = new SetRateRequest();
+        setRateRequest.setCmdGroup((byte) 0xA2);
+        setRateRequest.setCmd((byte) 0x08);
+        setRateRequest.setResponse((byte) 0x01);
+        setRateRequest.setReserved(0);
+        setRateRequest.setRate(rate);
+        setRateRequest.setRatio((byte) 0);
+
+        try {
+            App.getInstance().getBluetoothClient().write(App.getInstance().getConnectMacAddress(), UUIDUtils.makeUUID(0xFFE0), UUIDUtils.makeUUID(0xFFE1), BluetoothDataUtil.encode(setRateRequest), this);
+        } catch (IllegalAccessException | RkFieldException | FieldConvertException e) {
+            e.printStackTrace();
+        }
+    }
+
+    @Override
+    public void queryHisRecord(String name ,int index ,SppDataCallback<RecordDataResponse> sppDataCallback) {
+        this.sppDataCallback = sppDataCallback;
+
+        HisRecordDataRequest recordDataRequest = new HisRecordDataRequest();
+        recordDataRequest.setCmdGroup((byte) 0xA3);
+        recordDataRequest.setCmd((byte) 0x06);
+        recordDataRequest.setResponse((byte) 0x01);
+        recordDataRequest.setReserved(0);
+        recordDataRequest.setTime(ByteConvert.uintToBytes(System.currentTimeMillis() / 1000));
+        recordDataRequest.setName(name);
+        recordDataRequest.setIndex(index);
+        try {
+            App.getInstance().getBluetoothClient().write(App.getInstance().getConnectMacAddress(), UUIDUtils.makeUUID(0xFFE0), UUIDUtils.makeUUID(0xFFE1), BluetoothDataUtil.encode(recordDataRequest), this);
+
         } catch (IllegalAccessException | RkFieldException | FieldConvertException e) {
             e.printStackTrace();
         }

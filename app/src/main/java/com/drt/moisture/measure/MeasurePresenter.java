@@ -83,6 +83,10 @@ public class MeasurePresenter extends BasePresenter<MeasureContract.View> implem
                             // 绑定数据
                             mView.onSuccess(value);
                         }
+                        if (value.getMeasureStatus() == 0x02) {
+                            stopMeasure();
+                            model.stopQuery();
+                        }
                     }
 
                     @Override

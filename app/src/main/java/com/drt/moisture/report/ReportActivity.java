@@ -7,6 +7,7 @@ import android.graphics.Rect;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.view.View;
+import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.LinearLayout;
 import android.widget.Toast;
@@ -45,6 +46,11 @@ public class ReportActivity extends BluetoothBaseActivity<ReportPresenter> imple
     @BindView(R.id.progress)
     LinearLayout progress;
 
+    @BindView(R.id.mesasureName)
+    EditText mesasureName;
+
+    boolean isBleConnected;
+
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -61,7 +67,6 @@ public class ReportActivity extends BluetoothBaseActivity<ReportPresenter> imple
     public void initView() {
         mPresenter = new ReportPresenter();
         mPresenter.attachView(this);
-        mPresenter.queryReport();
 
         Point outSize = new Point();
         this.getWindowManager().getDefaultDisplay().getSize(outSize);
@@ -111,22 +116,33 @@ public class ReportActivity extends BluetoothBaseActivity<ReportPresenter> imple
         runOnUiThread(new Runnable() {
             @Override
             public void run() {
-                table.setData(measureValues);
+                table.addData(measureValues, true);
+            }
+        });
+    }
+
+    @Override
+    public void onDone() {
+        runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                mesasureName.setEnabled(true);
             }
         });
     }
 
     @Override
     protected void onDestroy() {
+        mPresenter.stop();
         super.onDestroy();
     }
 
     @Override
     public void setBleConnectStatus(int status) {
-        if (status != Constants.STATUS_DEVICE_CONNECTED) {
-//            mPresenter.setMeasureStatus(MeasureStatus.BT_NOT_CONNECT);
+        if (status != Constants.STATUS_CONNECTED) {
+            isBleConnected = false;
         } else {
-//            mPresenter.setMeasureStatus(MeasureStatus.NORMAL);
+            isBleConnected = true;
         }
     }
 
@@ -155,6 +171,14 @@ public class ReportActivity extends BluetoothBaseActivity<ReportPresenter> imple
             }
         }
 
+    }
+    @OnClick(R.id.search)
+    public void search(){
+        if (!isBleConnected) {
+            Toast.makeText(this, "设备尚未连接，请点击右上角蓝牙按钮连接设备", Toast.LENGTH_SHORT).show();
+            return;
+        }
+        mPresenter.queryReport(mesasureName);
     }
 
     /**

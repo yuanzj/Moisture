@@ -21,6 +21,8 @@ public class MeasureValue {
     @SmartColumn(id =5,name = "环境值")
     private double humidity;
 
+    private int measureStatus;
+
     public String getReportTime() {
         return reportTime;
     }
@@ -61,6 +63,14 @@ public class MeasureValue {
         this.humidity = humidity;
     }
 
+    public int getMeasureStatus() {
+        return measureStatus;
+    }
+
+    public void setMeasureStatus(int measureStatus) {
+        this.measureStatus = measureStatus;
+    }
+
     @Override
     public String toString() {
         return "MeasureValue{" +
@@ -69,6 +79,7 @@ public class MeasureValue {
                 ", temperature=" + temperature +
                 ", activity=" + activity +
                 ", humidity=" + humidity +
+                ", measureStatus=" + measureStatus +
                 '}';
     }
 }

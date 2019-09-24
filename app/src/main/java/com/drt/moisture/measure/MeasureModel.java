@@ -151,6 +151,7 @@ public class MeasureModel implements MeasureContract.Model, SppDataCallback<Reco
             measureValue.setHumidity(0);
             measureValue.setReportTime(sdf.format(new Date(recordDataResponse.getTime() * 1000)));
             measureValue.setName("");
+            measureValue.setMeasureStatus(recordDataResponse.getMeasureStatus());
             measureDataCallback.success(measureValue);
         }
 

@@ -1,5 +1,8 @@
 package com.drt.moisture.report;
 
+import android.text.TextUtils;
+import android.widget.EditText;
+import android.widget.Toast;
 import com.drt.moisture.data.MeasureValue;
 import com.drt.moisture.data.source.MeasureDataCallback;
 
@@ -16,12 +19,18 @@ public class ReportPresenter extends BasePresenter<ReportContract.View> implemen
     }
 
     @Override
-    public void queryReport() {
+    public void queryReport(EditText measureName) {
+
+        if (TextUtils.isEmpty(measureName.getText())) {
+            mView.onError(new Exception("请输入样品名称"));
+            return;
+        }
+
         if (!isViewAttached()) {
             return;
         }
         mView.showLoading();
-        model.queryReport(new MeasureDataCallback<List<MeasureValue>>() {
+        model.queryReport(measureName.getText().toString(), new MeasureDataCallback<List<MeasureValue>>() {
             @Override
             public void runningTime(String time) {
 
@@ -37,7 +46,7 @@ public class ReportPresenter extends BasePresenter<ReportContract.View> implemen
 
             @Override
             public void measureDone() {
-
+                mView.onDone();
             }
 
             @Override
@@ -48,5 +57,11 @@ public class ReportPresenter extends BasePresenter<ReportContract.View> implemen
                 }
             }
         });
+        measureName.setEnabled(false);
+    }
+
+    @Override
+    public void stop() {
+        model.stop();
     }
 }

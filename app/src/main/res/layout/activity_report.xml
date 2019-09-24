@@ -10,6 +10,42 @@
 
     <include layout="@layout/widget_tool_bar" />
 
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="56dp"
+        android:paddingLeft="@dimen/activity_horizontal_margin"
+        android:paddingRight="@dimen/activity_horizontal_margin"
+    >
+        <EditText
+                android:id="@+id/mesasureName"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_marginLeft="@dimen/padding_default"
+                android:layout_marginTop="8dp"
+                android:layout_marginRight="@dimen/padding_default"
+                android:layout_marginBottom="8dp"
+                android:maxLength="10"
+                android:layout_weight="1"
+                android:background="@drawable/edittext_bg_selector"
+                android:focusableInTouchMode="true"
+                android:hint="请输入测量样品名称"
+                android:singleLine="true"
+                android:textColor="@color/colorBody"
+                android:textCursorDrawable="@drawable/solid_shape_bottom_line"
+                android:textSize="@dimen/sizeSubTitle" />
+
+        <Button
+                android:layout_width="48dp"
+                android:layout_height="match_parent"
+                android:text="查询"
+                android:id="@+id/search"
+                android:textSize="@dimen/sizeSubTitle"
+                android:textStyle="bold"
+                android:textColor="@color/colorPrimary"
+                android:background="@drawable/selector_btn_transparent"
+            />
+    </LinearLayout>
+
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent">

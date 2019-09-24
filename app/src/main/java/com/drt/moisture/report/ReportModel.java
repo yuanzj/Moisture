@@ -2,50 +2,86 @@ package com.drt.moisture.report;
 
 import android.annotation.SuppressLint;
 
+import com.drt.moisture.App;
+import com.drt.moisture.correct.CorrectModel;
+import com.drt.moisture.data.AppConfig;
 import com.drt.moisture.data.MeasureValue;
 import com.drt.moisture.data.source.MeasureDataCallback;
+import com.drt.moisture.data.source.bluetooth.SppDataCallback;
+import com.drt.moisture.data.source.bluetooth.response.RecordDataResponse;
 
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
-import java.util.Random;
+import java.util.*;
 
-public class ReportModel implements ReportContract.Model {
+public class ReportModel implements ReportContract.Model, SppDataCallback<RecordDataResponse> {
 
     @SuppressLint("SimpleDateFormat")
     private SimpleDateFormat sdf = new SimpleDateFormat("HH:mm:ss");
 
-    @Override
-    public void queryReport(final MeasureDataCallback<List<MeasureValue>> report) {
+    MeasureDataCallback<List<MeasureValue>> report;
 
+    volatile boolean running;
+
+    @Override
+    public void queryReport(final String measureName, final MeasureDataCallback<List<MeasureValue>> report) {
+
+        this.report = report;
 
         Runnable runnable = new Runnable() {
             @Override
             public void run() {
 
-                try {
-                    Thread.sleep(1 * 1000);
-                } catch (InterruptedException e) {
-                    e.printStackTrace();
-                }
                 // 发送蓝牙请求
-                // 获取数据
+                for (int i = 1; i <= 2000; i++) {
 
-                List<MeasureValue> values = new ArrayList<>();
-                for (int i = 0; i < 50; i++) {
-                    MeasureValue measureValue = new MeasureValue();
-                    measureValue.setTemperature(new Random().nextInt(50));
-                    measureValue.setActivity(new Random().nextInt(100));
-                    measureValue.setReportTime(sdf.format(new Date()));
-                    values.add(measureValue);
+                    if (!running) {
+                        break;
+                    }
+
+                    App.getInstance().getBluetoothService().queryHisRecord(measureName, i, ReportModel.this);
+
+                    try {
+                        Thread.sleep(200);
+                    } catch (InterruptedException e) {
+                        e.printStackTrace();
+                    }
+
+
                 }
-                report.success(values);
+
+                report.measureDone();
+
             }
         };
-
+        running = true;
         new Thread(runnable).start();
+    }
 
+    @Override
+    public void stop() {
+        running = false;
+    }
 
+    @Override
+    public void delivery(RecordDataResponse recordDataResponse) {
+
+        if (recordDataResponse.getTime() == 0) {
+            running = false;
+            return;
+        }
+        List<MeasureValue> values = new ArrayList<>();
+        MeasureValue measureValue = new MeasureValue();
+        measureValue.setTemperature(new Random().nextInt(50));
+        measureValue.setActivity(new Random().nextInt(100));
+        measureValue.setReportTime(sdf.format(new Date(recordDataResponse.getTime() * 1000)));
+        values.add(measureValue);
+        if (report != null) {
+            report.success(values);
+        }
+    }
+
+    @Override
+    public Class<RecordDataResponse> getEntityType() {
+        return RecordDataResponse.class;
     }
 }

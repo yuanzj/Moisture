@@ -1,5 +1,6 @@
 package com.drt.moisture.report;
 
+import android.widget.EditText;
 import com.drt.moisture.data.MeasureValue;
 import com.drt.moisture.data.source.MeasureDataCallback;
 
@@ -10,16 +11,22 @@ import java.util.List;
 public interface ReportContract {
 
     interface Model {
-        void queryReport(final MeasureDataCallback<List<MeasureValue>> report);
+        void queryReport(String measureName, final MeasureDataCallback<List<MeasureValue>> report);
+
+        void stop();
     }
 
     interface View extends BaseView {
 
         void onSuccess(List<MeasureValue> measureValues);
 
+        void onDone();
+
     }
 
     interface Presenter {
-        void queryReport();
+        void queryReport(EditText measureName);
+
+        void stop();
     }
 }
