@@ -145,7 +145,7 @@ public class SettingPresenter extends BasePresenter<SettingContract.View> implem
             return;
         }
         mView.showLoading();
-        model.setRateParame(rate, new DataCallback<ParameterSetResponse>() {
+        model.setRateParame(rate,ratio, new DataCallback<ParameterSetResponse>() {
             @Override
             public void delivery(ParameterSetResponse deviceInfo) {
                 if (isViewAttached()) {
