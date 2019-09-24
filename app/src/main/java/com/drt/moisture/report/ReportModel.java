@@ -8,12 +8,13 @@ import com.drt.moisture.data.AppConfig;
 import com.drt.moisture.data.MeasureValue;
 import com.drt.moisture.data.source.MeasureDataCallback;
 import com.drt.moisture.data.source.bluetooth.SppDataCallback;
+import com.drt.moisture.data.source.bluetooth.response.HisRecordDataResponse;
 import com.drt.moisture.data.source.bluetooth.response.RecordDataResponse;
 
 import java.text.SimpleDateFormat;
 import java.util.*;
 
-public class ReportModel implements ReportContract.Model, SppDataCallback<RecordDataResponse> {
+public class ReportModel implements ReportContract.Model, SppDataCallback<HisRecordDataResponse> {
 
     @SuppressLint("SimpleDateFormat")
     private SimpleDateFormat sdf = new SimpleDateFormat("HH:mm:ss");
@@ -63,7 +64,7 @@ public class ReportModel implements ReportContract.Model, SppDataCallback<Record
     }
 
     @Override
-    public void delivery(RecordDataResponse recordDataResponse) {
+    public void delivery(HisRecordDataResponse recordDataResponse) {
 
         if (recordDataResponse.getTime() == 0) {
             running = false;
@@ -74,6 +75,7 @@ public class ReportModel implements ReportContract.Model, SppDataCallback<Record
         measureValue.setTemperature(new Random().nextInt(50));
         measureValue.setActivity(new Random().nextInt(100));
         measureValue.setReportTime(sdf.format(new Date(recordDataResponse.getTime() * 1000)));
+        measureValue.setName(recordDataResponse.getName());
         values.add(measureValue);
         if (report != null) {
             report.success(values);
@@ -81,7 +83,7 @@ public class ReportModel implements ReportContract.Model, SppDataCallback<Record
     }
 
     @Override
-    public Class<RecordDataResponse> getEntityType() {
-        return RecordDataResponse.class;
+    public Class<HisRecordDataResponse> getEntityType() {
+        return HisRecordDataResponse.class;
     }
 }

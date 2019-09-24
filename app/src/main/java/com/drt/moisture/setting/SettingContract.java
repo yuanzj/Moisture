@@ -33,7 +33,7 @@ public interface SettingContract {
 
         void setCorrectParame(CorrectParame measureParame, DataCallback<ParameterSetResponse> dataCallback);
 
-        void setRateParame(int rate, DataCallback<ParameterSetResponse> dataCallback);
+        void setRateParame(int rate, int ratio, DataCallback<ParameterSetResponse> dataCallback);
     }
 
     interface View extends BaseView {
@@ -67,6 +67,6 @@ public interface SettingContract {
 
         void setCorrectParame(CorrectParame measureParame);
 
-        void setRateParame(int rate);
+        void setRateParame(int rate,int ratio);
     }
 }

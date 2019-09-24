@@ -252,6 +252,24 @@ public class BluetoothServiceImpl implements BluetoothService, BleWriteResponse 
     }
 
     @Override
+    public void queryAutoRecord(long time, SppDataCallback<AutoRecordDataResponse> sppDataCallback) {
+        this.sppDataCallback = sppDataCallback;
+
+        RecordDataRequest recordDataRequest = new RecordDataRequest();
+        recordDataRequest.setCmdGroup((byte) 0xA3);
+        recordDataRequest.setCmd((byte) 0x05);
+        recordDataRequest.setResponse((byte) 0x01);
+        recordDataRequest.setReserved(0);
+        recordDataRequest.setTime(ByteConvert.uintToBytes(time));
+        try {
+            App.getInstance().getBluetoothClient().write(App.getInstance().getConnectMacAddress(), UUIDUtils.makeUUID(0xFFE0), UUIDUtils.makeUUID(0xFFE1), BluetoothDataUtil.encode(recordDataRequest), this);
+
+        } catch (IllegalAccessException | RkFieldException | FieldConvertException e) {
+            e.printStackTrace();
+        }
+    }
+
+    @Override
     public void queryCorrect(int measureModel, int type, int interval, long time, SppDataCallback<CorrectDataResponse> sppDataCallback) {
         this.sppDataCallback = sppDataCallback;
 
@@ -433,7 +451,7 @@ public class BluetoothServiceImpl implements BluetoothService, BleWriteResponse 
     }
 
     @Override
-    public void setRateParam(int rate, SppDataCallback<ParameterSetResponse> sppDataCallback) {
+    public void setRateParam(int rate, int ratio, SppDataCallback<ParameterSetResponse> sppDataCallback) {
         this.sppDataCallback = sppDataCallback;
         SetRateRequest setRateRequest = new SetRateRequest();
         setRateRequest.setCmdGroup((byte) 0xA2);
@@ -441,7 +459,7 @@ public class BluetoothServiceImpl implements BluetoothService, BleWriteResponse 
         setRateRequest.setResponse((byte) 0x01);
         setRateRequest.setReserved(0);
         setRateRequest.setRate(rate);
-        setRateRequest.setRatio((byte) 0);
+        setRateRequest.setRatio((byte)ratio);
 
         try {
             App.getInstance().getBluetoothClient().write(App.getInstance().getConnectMacAddress(), UUIDUtils.makeUUID(0xFFE0), UUIDUtils.makeUUID(0xFFE1), BluetoothDataUtil.encode(setRateRequest), this);
@@ -451,7 +469,7 @@ public class BluetoothServiceImpl implements BluetoothService, BleWriteResponse 
     }
 
     @Override
-    public void queryHisRecord(String name ,int index ,SppDataCallback<RecordDataResponse> sppDataCallback) {
+    public void queryHisRecord(String name ,int index ,SppDataCallback<HisRecordDataResponse> sppDataCallback) {
         this.sppDataCallback = sppDataCallback;
 
         HisRecordDataRequest recordDataRequest = new HisRecordDataRequest();

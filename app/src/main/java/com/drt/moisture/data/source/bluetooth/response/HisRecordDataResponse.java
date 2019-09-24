@@ -2,7 +2,7 @@ package com.drt.moisture.data.source.bluetooth.response;
 
 import com.rokyinfo.convert.RkField;
 
-public class RecordDataResponse {
+public class HisRecordDataResponse {
 
     @RkField(position = 0, length = 1)
     private byte CmdGroup;
@@ -19,10 +19,13 @@ public class RecordDataResponse {
     @RkField(position = 5, length = 4)
     private long time;
 
-    @RkField(position = 9, length = 2)
+    @RkField(position = 9, length = 30)
+    private String name;
+
+    @RkField(position = 39, length = 2)
     private int temperature;
 
-    @RkField(position = 11, length = 2)
+    @RkField(position = 41, length = 2)
     private int activity;
 
     public byte getCmdGroup() {
@@ -63,6 +66,14 @@ public class RecordDataResponse {
 
     public void setTime(long time) {
         this.time = time;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
     }
 
     public int getTemperature() {

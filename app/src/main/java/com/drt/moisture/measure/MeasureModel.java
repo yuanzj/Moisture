@@ -1,13 +1,13 @@
 package com.drt.moisture.measure;
 
 import android.annotation.SuppressLint;
-import android.util.Log;
 
 import com.drt.moisture.App;
 import com.drt.moisture.data.AppConfig;
 import com.drt.moisture.data.MeasureValue;
 import com.drt.moisture.data.source.MeasureDataCallback;
 import com.drt.moisture.data.source.bluetooth.SppDataCallback;
+import com.drt.moisture.data.source.bluetooth.response.AutoRecordDataResponse;
 import com.drt.moisture.data.source.bluetooth.response.RecordDataResponse;
 import com.drt.moisture.data.source.bluetooth.response.StartMeasureResponse;
 import com.drt.moisture.data.source.bluetooth.response.StopMeasureResponse;
@@ -18,7 +18,7 @@ import java.util.Date;
 import java.util.Timer;
 import java.util.TimerTask;
 
-public class MeasureModel implements MeasureContract.Model, SppDataCallback<RecordDataResponse> {
+public class MeasureModel implements MeasureContract.Model {
 
     private static final String TAG = MeasureModel.class.getSimpleName();
 
@@ -66,7 +66,7 @@ public class MeasureModel implements MeasureContract.Model, SppDataCallback<Reco
     }
 
     @Override
-    public synchronized void startQuery(int model, MeasureDataCallback<MeasureValue> callback) {
+    public synchronized void startQuery(final int model, MeasureDataCallback<MeasureValue> callback) {
         this.measureDataCallback = callback;
         // 启动定时查询定时器
         if (runningTimer != null) {
@@ -80,7 +80,12 @@ public class MeasureModel implements MeasureContract.Model, SppDataCallback<Reco
             @Override
             public void run() {
                 // 发送蓝牙请求
-                App.getInstance().getBluetoothService().queryRecord(System.currentTimeMillis() / 1000, MeasureModel.this);
+                if (model == 0) {
+                    App.getInstance().getBluetoothService().queryRecord(System.currentTimeMillis() / 1000, sppDataCallback);
+                } else {
+                    App.getInstance().getBluetoothService().queryAutoRecord(System.currentTimeMillis() / 1000, sppDataCallback2);
+
+                }
             }
         }, 0, period);
 
@@ -141,24 +146,47 @@ public class MeasureModel implements MeasureContract.Model, SppDataCallback<Reco
         });
     }
 
-    @Override
-    public void delivery(RecordDataResponse recordDataResponse) {
-        Log.d(TAG, "delivery：" + recordDataResponse);
-        if (measureDataCallback != null) {
+    SppDataCallback sppDataCallback = new SppDataCallback<RecordDataResponse>(){
 
-            measureValue.setTemperature(recordDataResponse.getTemperature() / 100.0);
-            measureValue.setActivity(recordDataResponse.getActivity() / 10000.0);
-            measureValue.setHumidity(0);
-            measureValue.setReportTime(sdf.format(new Date(recordDataResponse.getTime() * 1000)));
-            measureValue.setName("");
-            measureValue.setMeasureStatus(recordDataResponse.getMeasureStatus());
-            measureDataCallback.success(measureValue);
+        @Override
+        public void delivery(RecordDataResponse recordDataResponse) {
+            if (measureDataCallback != null) {
+
+                measureValue.setTemperature(recordDataResponse.getTemperature() / 100.0);
+                measureValue.setActivity(recordDataResponse.getActivity() / 10000.0);
+                measureValue.setHumidity(0);
+                measureValue.setReportTime(sdf.format(new Date(recordDataResponse.getTime() * 1000)));
+                measureValue.setName("");
+                measureValue.setMeasureStatus(0);
+                measureDataCallback.success(measureValue);
+            }
         }
 
-    }
+        @Override
+        public Class<RecordDataResponse> getEntityType() {
+            return RecordDataResponse.class;
+        }
+    };
 
-    @Override
-    public Class<RecordDataResponse> getEntityType() {
-        return RecordDataResponse.class;
-    }
+    SppDataCallback sppDataCallback2 = new SppDataCallback<AutoRecordDataResponse>(){
+
+        @Override
+        public void delivery(AutoRecordDataResponse recordDataResponse) {
+            if (measureDataCallback != null) {
+
+                measureValue.setTemperature(recordDataResponse.getTemperature() / 100.0);
+                measureValue.setActivity(recordDataResponse.getActivity() / 10000.0);
+                measureValue.setHumidity(0);
+                measureValue.setReportTime(sdf.format(new Date(recordDataResponse.getTime() * 1000)));
+                measureValue.setName("");
+                measureValue.setMeasureStatus(recordDataResponse.getMeasureStatus());
+                measureDataCallback.success(measureValue);
+            }
+        }
+
+        @Override
+        public Class<AutoRecordDataResponse> getEntityType() {
+            return AutoRecordDataResponse.class;
+        }
+    };
 }

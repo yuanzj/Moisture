@@ -57,6 +57,13 @@ public interface BluetoothService {
      */
     void queryRecord(long time, SppDataCallback<RecordDataResponse> sppDataCallback);
 
+
+    /**
+     * 查询自动测量
+     * @param time
+     * @param sppDataCallback
+     */
+    void queryAutoRecord(long time, SppDataCallback<AutoRecordDataResponse> sppDataCallback);
     /**
      * 查询测量记录
      *
@@ -118,13 +125,13 @@ public interface BluetoothService {
      * 设置频率
      * @param sppDataCallback
      */
-    void setRateParam(int rate, SppDataCallback<ParameterSetResponse> sppDataCallback);
+    void setRateParam(int rate, int ratio, SppDataCallback<ParameterSetResponse> sppDataCallback);
 
     /**
      * 查询测量记录
      *
      * @param sppDataCallback
      */
-    void queryHisRecord(String name,int index, SppDataCallback<RecordDataResponse> sppDataCallback);
+    void queryHisRecord(String name,int index, SppDataCallback<HisRecordDataResponse> sppDataCallback);
 
 }

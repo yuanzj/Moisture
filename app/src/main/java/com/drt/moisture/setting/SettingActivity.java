@@ -2,6 +2,7 @@ package com.drt.moisture.setting;
 
 import android.content.DialogInterface;
 import android.support.v7.app.AlertDialog;
+import android.text.TextUtils;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -135,6 +136,7 @@ public class SettingActivity extends BluetoothBaseActivity<SettingPresenter> imp
             public void run() {
                 if (dialogRate != null) {
                     final Spinner spinner2 = dialogRate.findViewById(R.id.spinner2);
+                    final EditText ratio = dialogRate.findViewById(R.id.ratio);
                     if (deviceInfo.getRate() == 1500) {
                         spinner2.setSelection(0, false);
                     } else if (deviceInfo.getRate() == 3000) {
@@ -144,6 +146,7 @@ public class SettingActivity extends BluetoothBaseActivity<SettingPresenter> imp
                     } else {
                         spinner2.setSelection(0, false);
                     }
+                    ratio.setText(deviceInfo.getRatio());
                     AppConfig appConfig = App.getInstance().getLocalDataService().queryAppConfig();
                     appConfig.setPeriod(Integer.parseInt(spinner2.getSelectedItem().toString()));
                     appConfig.setRatio(deviceInfo.getRatio());
@@ -308,6 +311,8 @@ public class SettingActivity extends BluetoothBaseActivity<SettingPresenter> imp
                 dialogRate = LayoutInflater.from(this).inflate(R.layout.dialog_rate, null);
                 final Spinner spinner2 = dialogRate.findViewById(R.id.spinner2);
 
+                final EditText ratio = dialogRate.findViewById(R.id.ratio);
+
                 AlertDialog.Builder builder = new AlertDialog.Builder(this).setTitle("查询频率")
                         .setView(dialogRate)
                         .setPositiveButton("确认", new DialogInterface.OnClickListener() {
@@ -315,10 +320,15 @@ public class SettingActivity extends BluetoothBaseActivity<SettingPresenter> imp
                             public void onClick(DialogInterface dialogInterface, int i) {
                                 Log.d("yzj", "查询频率：" + Integer.parseInt(spinner2.getSelectedItem().toString()));
 
-                                AppConfig appConfig = App.getInstance().getLocalDataService().queryAppConfig();
-                                appConfig.setPeriod(Integer.parseInt(spinner2.getSelectedItem().toString()));
-                                App.getInstance().getLocalDataService().setAppConfig(appConfig);
-                                mPresenter.setRateParame(appConfig.getPeriod());
+                                if (TextUtils.isEmpty(ratio.getText())) {
+                                    Toast.makeText(getApplicationContext(),"请输入风机占空比", Toast.LENGTH_SHORT).show();
+                                } else {
+                                    AppConfig appConfig = App.getInstance().getLocalDataService().queryAppConfig();
+                                    appConfig.setPeriod(Integer.parseInt(spinner2.getSelectedItem().toString()));
+                                    appConfig.setRatio(Integer.parseInt(ratio.getText().toString()));
+                                    App.getInstance().getLocalDataService().setAppConfig(appConfig);
+                                    mPresenter.setRateParame(appConfig.getPeriod(), appConfig.getRatio());
+                                }
                             }
                         })
                         .setNegativeButton("取消", new DialogInterface.OnClickListener() {

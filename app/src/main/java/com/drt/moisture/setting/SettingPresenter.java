@@ -140,7 +140,7 @@ public class SettingPresenter extends BasePresenter<SettingContract.View> implem
     }
 
     @Override
-    public void setRateParame(int rate) {
+    public void setRateParame(int rate,int ratio) {
         if (!isViewAttached()) {
             return;
         }
