@@ -146,7 +146,7 @@ public class SettingActivity extends BluetoothBaseActivity<SettingPresenter> imp
                     } else {
                         spinner2.setSelection(0, false);
                     }
-                    ratio.setText(deviceInfo.getRatio());
+                    ratio.setText("" + deviceInfo.getRatio());
                     AppConfig appConfig = App.getInstance().getLocalDataService().queryAppConfig();
                     appConfig.setPeriod(Integer.parseInt(spinner2.getSelectedItem().toString()));
                     appConfig.setRatio(deviceInfo.getRatio());

@@ -7,7 +7,7 @@ android {
         minSdkVersion 23
         targetSdkVersion 28
         versionCode 20190924
-        versionName "1.18"
+        versionName "1.19"
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
     }
 
