@@ -17,31 +17,31 @@ public class SetCorrectParameRequest {
     private int Reserved;
 
     @RkField(position = 5, length = 4)
-    private long a;
+    private int a;
 
     @RkField(position = 9, length = 4)
-    private long b;
+    private int b;
 
     @RkField(position = 13, length = 4)
-    private long c;
+    private int c;
 
     @RkField(position = 17, length = 4)
-    private long d;
+    private int d;
 
     @RkField(position = 21, length = 4)
-    private long e;
+    private int e;
 
     @RkField(position = 25, length = 4)
-    private long f;
+    private int f;
 
     @RkField(position = 29, length = 4)
-    private long g;
+    private int g;
 
     @RkField(position = 33, length = 4)
-    private long h;
+    private int h;
 
     @RkField(position = 37, length = 4)
-    private long i;
+    private int i;
 
 
     public byte getCmdGroup() {
@@ -76,75 +76,75 @@ public class SetCorrectParameRequest {
         Reserved = reserved;
     }
 
-    public long getA() {
+    public int getA() {
         return a;
     }
 
-    public void setA(long a) {
+    public void setA(int a) {
         this.a = a;
     }
 
-    public long getB() {
+    public int getB() {
         return b;
     }
 
-    public void setB(long b) {
+    public void setB(int b) {
         this.b = b;
     }
 
-    public long getC() {
+    public int getC() {
         return c;
     }
 
-    public void setC(long c) {
+    public void setC(int c) {
         this.c = c;
     }
 
-    public long getD() {
+    public int getD() {
         return d;
     }
 
-    public void setD(long d) {
+    public void setD(int d) {
         this.d = d;
     }
 
-    public long getE() {
+    public int getE() {
         return e;
     }
 
-    public void setE(long e) {
+    public void setE(int e) {
         this.e = e;
     }
 
-    public long getF() {
+    public int getF() {
         return f;
     }
 
-    public void setF(long f) {
+    public void setF(int f) {
         this.f = f;
     }
 
-    public long getG() {
+    public int getG() {
         return g;
     }
 
-    public void setG(long g) {
+    public void setG(int g) {
         this.g = g;
     }
 
-    public long getH() {
+    public int getH() {
         return h;
     }
 
-    public void setH(long h) {
+    public void setH(int h) {
         this.h = h;
     }
 
-    public long getI() {
+    public int getI() {
         return i;
     }
 
-    public void setI(long i) {
+    public void setI(int i) {
         this.i = i;
     }
 }

@@ -29,7 +29,7 @@ public interface MeasureContract {
 
         void startQuery(int model, MeasureDataCallback<MeasureValue> callback);
 
-        void stopQuery();
+        void stopQuery(boolean sendCommand);
 
     }
 
@@ -70,6 +70,6 @@ public interface MeasureContract {
          */
         void startMeasure(int model, String measureName);
 
-        void stopMeasure();
+        void stopMeasure(boolean sendCommand);
     }
 }

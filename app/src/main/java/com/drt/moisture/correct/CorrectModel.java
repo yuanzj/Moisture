@@ -121,7 +121,7 @@ public class CorrectModel implements CorrectContract.Model, SppDataCallback<Corr
         stopTimer.schedule(new TimerTask() {
             @Override
             public void run() {
-                stopCorrect();
+                stopCorrect(true);
                 callback.correctDone(step++);
             }
         }, measuringTime * 60 * 1000);
@@ -129,7 +129,7 @@ public class CorrectModel implements CorrectContract.Model, SppDataCallback<Corr
     }
 
     @Override
-    public void stopCorrect() {
+    public void stopCorrect(boolean sendCommand) {
         if (runningTimer != null) {
             runningTimer.cancel();
         }
@@ -139,18 +139,20 @@ public class CorrectModel implements CorrectContract.Model, SppDataCallback<Corr
         if (clockerTime != null) {
             clockerTime.cancel();
         }
-        App.getInstance().getBluetoothService().stopCorrect(new SppDataCallback<StopMeasureResponse>() {
+        if (sendCommand) {
+            App.getInstance().getBluetoothService().stopCorrect(new SppDataCallback<StopMeasureResponse>() {
 
-            @Override
-            public void delivery(StopMeasureResponse stopMeasureResponse) {
+                @Override
+                public void delivery(StopMeasureResponse stopMeasureResponse) {
 
-            }
+                }
 
-            @Override
-            public Class<StopMeasureResponse> getEntityType() {
-                return StopMeasureResponse.class;
-            }
-        });
+                @Override
+                public Class<StopMeasureResponse> getEntityType() {
+                    return StopMeasureResponse.class;
+                }
+            });
+        }
     }
 
     @Override

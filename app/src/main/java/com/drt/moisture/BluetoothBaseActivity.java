@@ -8,6 +8,7 @@ import android.content.pm.ActivityInfo;
 import android.content.pm.PackageManager;
 import android.graphics.Color;
 import android.os.Bundle;
+import android.os.Handler;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.ActivityCompat;
@@ -34,6 +35,7 @@ import com.inuker.bluetooth.library.utils.UUIDUtils;
 import net.yzj.android.common.base.BaseMvpActivity;
 import net.yzj.android.common.base.BasePresenter;
 
+import java.sql.Time;
 import java.util.Arrays;
 import java.util.UUID;
 
@@ -371,6 +373,14 @@ public abstract class BluetoothBaseActivity<T extends BasePresenter> extends Bas
         public void onResponse(int code) {
             if (code == REQUEST_SUCCESS) {
                 Toast.makeText(App.getInstance(), "开启监听蓝牙返回数据成功！", Toast.LENGTH_SHORT).show();
+                // 发送校时指令
+                App.getInstance().getBluetoothService().setTime(System.currentTimeMillis() / 1000, null);
+                new Handler().postDelayed(new Runnable() {
+                    @Override
+                    public void run() {
+                        App.getInstance().getBluetoothService().setTime(System.currentTimeMillis() / 1000, null);
+                    }
+                }, 100);
             }
         }
     };

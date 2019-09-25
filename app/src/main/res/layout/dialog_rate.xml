@@ -13,7 +13,7 @@
         android:orientation="horizontal">
 
         <TextView
-            android:layout_width="60dp"
+            android:layout_width="100dp"
             android:layout_height="wrap_content"
             android:text="查询频率"
             android:textColor="@color/colorSecondBody"
@@ -41,7 +41,7 @@
             android:orientation="horizontal">
 
         <TextView
-                android:layout_width="60dp"
+                android:layout_width="100dp"
                 android:layout_height="wrap_content"
                 android:text="风机占空比"
                 android:textColor="@color/colorSecondBody"

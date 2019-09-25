@@ -167,7 +167,7 @@ public class MeasureActivity extends BluetoothBaseActivity<MeasurePresenter> imp
 
     @OnClick(R.id.btnStopMeasure)
     public void stopMeasure() {
-        mPresenter.stopMeasure();
+        mPresenter.stopMeasure(true);
     }
 
     @OnClick(R.id.history)
@@ -262,7 +262,7 @@ public class MeasureActivity extends BluetoothBaseActivity<MeasurePresenter> imp
 
     @Override
     protected void onDestroy() {
-        mPresenter.stopMeasure();
+        mPresenter.stopMeasure(false);
         super.onDestroy();
     }
 

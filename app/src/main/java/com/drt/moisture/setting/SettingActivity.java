@@ -81,19 +81,19 @@ public class SettingActivity extends BluetoothBaseActivity<SettingPresenter> imp
                     final EditText csL = dialogParameSet.findViewById(R.id.csL);
                     final EditText csM = dialogParameSet.findViewById(R.id.csM);
 
-                    csA.setText("" + setMeasureParameRequest.getA());
-                    csB.setText("" + setMeasureParameRequest.getB());
-                    csC.setText("" + setMeasureParameRequest.getC());
-                    csD.setText("" + setMeasureParameRequest.getD());
-                    csE.setText("" + setMeasureParameRequest.getE());
-                    csF.setText("" + setMeasureParameRequest.getF());
-                    csG.setText("" + setMeasureParameRequest.getG());
-                    csH.setText("" + setMeasureParameRequest.getH());
-                    csI.setText("" + setMeasureParameRequest.getI());
-                    csJ.setText("" + setMeasureParameRequest.getJ());
-                    csK.setText("" + setMeasureParameRequest.getK());
-                    csL.setText("" + setMeasureParameRequest.getL());
-                    csM.setText("" + setMeasureParameRequest.getM());
+                    csA.setText("" + setMeasureParameRequest.getA() / 1000000.0);
+                    csB.setText("" + setMeasureParameRequest.getB() / 1000000.0);
+                    csC.setText("" + setMeasureParameRequest.getC() / 1000000.0);
+                    csD.setText("" + setMeasureParameRequest.getD() / 1000000.0);
+                    csE.setText("" + setMeasureParameRequest.getE() / 1000000.0);
+                    csF.setText("" + setMeasureParameRequest.getF() / 1000000.0);
+                    csG.setText("" + setMeasureParameRequest.getG() / 1000000.0);
+                    csH.setText("" + setMeasureParameRequest.getH() / 1000000.0);
+                    csI.setText("" + setMeasureParameRequest.getI() / 1000000.0);
+                    csJ.setText("" + setMeasureParameRequest.getJ() / 1000000.0);
+                    csK.setText("" + setMeasureParameRequest.getK() / 1000000.0);
+                    csL.setText("" + setMeasureParameRequest.getL() / 1000000.0);
+                    csM.setText("" + setMeasureParameRequest.getM() / 1000000.0);
                 }
             }
         });
@@ -115,15 +115,15 @@ public class SettingActivity extends BluetoothBaseActivity<SettingPresenter> imp
                     final EditText csH_1 = dialogParameSet.findViewById(R.id.csH_1);
                     final EditText csI_1 = dialogParameSet.findViewById(R.id.csI_1);
 
-                    csA_1.setText("" + setCorrectParameRequest.getA());
-                    csB_1.setText("" + setCorrectParameRequest.getB());
-                    csC_1.setText("" + setCorrectParameRequest.getC());
-                    csD_1.setText("" + setCorrectParameRequest.getD());
-                    csE_1.setText("" + setCorrectParameRequest.getE());
-                    csF_1.setText("" + setCorrectParameRequest.getF());
-                    csG_1.setText("" + setCorrectParameRequest.getG());
-                    csH_1.setText("" + setCorrectParameRequest.getH());
-                    csI_1.setText("" + setCorrectParameRequest.getI());
+                    csA_1.setText("" + setCorrectParameRequest.getA() / 1000000.0);
+                    csB_1.setText("" + setCorrectParameRequest.getB() / 1000000.0);
+                    csC_1.setText("" + setCorrectParameRequest.getC() / 1000000.0);
+                    csD_1.setText("" + setCorrectParameRequest.getD() / 1000000.0);
+                    csE_1.setText("" + setCorrectParameRequest.getE() / 1000000.0);
+                    csF_1.setText("" + setCorrectParameRequest.getF() / 1000000.0);
+                    csG_1.setText("" + setCorrectParameRequest.getG() / 1000000.0);
+                    csH_1.setText("" + setCorrectParameRequest.getH() / 1000000.0);
+                    csI_1.setText("" + setCorrectParameRequest.getI() / 1000000.0);
                 }
             }
         });
@@ -399,43 +399,43 @@ public class SettingActivity extends BluetoothBaseActivity<SettingPresenter> imp
                                     MeasureParame measureParame = new MeasureParame();
 
                                     if (csA.getText().length() > 0) {
-                                        measureParame.setA(Long.parseLong(csA.getText().toString()));
+                                        measureParame.setA((int) (Double.parseDouble(csA.getText().toString()) * 1000000));
                                     }
                                     if (csB.getText().length() > 0) {
-                                        measureParame.setB(Long.parseLong(csB.getText().toString()));
+                                        measureParame.setB((int) (Double.parseDouble(csB.getText().toString()) * 1000000));
                                     }
                                     if (csC.getText().length() > 0) {
-                                        measureParame.setC(Long.parseLong(csC.getText().toString()));
+                                        measureParame.setC((int) (Double.parseDouble(csC.getText().toString()) * 1000000));
                                     }
                                     if (csD.getText().length() > 0) {
-                                        measureParame.setD(Long.parseLong(csD.getText().toString()));
+                                        measureParame.setD((int) (Double.parseDouble(csD.getText().toString()) * 1000000));
                                     }
                                     if (csE.getText().length() > 0) {
-                                        measureParame.setE(Long.parseLong(csE.getText().toString()));
+                                        measureParame.setE((int) (Double.parseDouble(csE.getText().toString()) * 1000000));
                                     }
                                     if (csF.getText().length() > 0) {
-                                        measureParame.setF(Long.parseLong(csF.getText().toString()));
+                                        measureParame.setF((int) (Double.parseDouble(csF.getText().toString()) * 1000000));
                                     }
                                     if (csG.getText().length() > 0) {
-                                        measureParame.setG(Long.parseLong(csG.getText().toString()));
+                                        measureParame.setG((int) (Double.parseDouble(csG.getText().toString()) * 1000000));
                                     }
                                     if (csH.getText().length() > 0) {
-                                        measureParame.setH(Long.parseLong(csH.getText().toString()));
+                                        measureParame.setH((int) (Double.parseDouble(csH.getText().toString()) * 1000000));
                                     }
                                     if (csI.getText().length() > 0) {
-                                        measureParame.setI(Long.parseLong(csI.getText().toString()));
+                                        measureParame.setI((int) (Double.parseDouble(csI.getText().toString()) * 1000000));
                                     }
                                     if (csJ.getText().length() > 0) {
-                                        measureParame.setJ(Long.parseLong(csJ.getText().toString()));
+                                        measureParame.setJ((int) (Double.parseDouble(csJ.getText().toString()) * 1000000));
                                     }
                                     if (csK.getText().length() > 0) {
-                                        measureParame.setK(Long.parseLong(csK.getText().toString()));
+                                        measureParame.setK((int) (Double.parseDouble(csK.getText().toString()) * 1000000));
                                     }
                                     if (csL.getText().length() > 0) {
-                                        measureParame.setL(Long.parseLong(csL.getText().toString()));
+                                        measureParame.setL((int) (Double.parseDouble(csL.getText().toString()) * 1000000));
                                     }
                                     if (csM.getText().length() > 0) {
-                                        measureParame.setM(Long.parseLong(csM.getText().toString()));
+                                        measureParame.setM((int) (Double.parseDouble(csM.getText().toString()) * 1000000));
                                     }
 
                                     mPresenter.setMeasureParame(measureParame);
@@ -443,31 +443,31 @@ public class SettingActivity extends BluetoothBaseActivity<SettingPresenter> imp
                                     CorrectParame correctParame = new CorrectParame();
 
                                     if (csA_1.getText().length() > 0) {
-                                        correctParame.setA(Long.parseLong(csA_1.getText().toString()));
+                                        correctParame.setA((int) (Double.parseDouble(csA_1.getText().toString()) * 1000000));
                                     }
                                     if (csB_1.getText().length() > 0) {
-                                        correctParame.setB(Long.parseLong(csB_1.getText().toString()));
+                                        correctParame.setB((int) (Double.parseDouble(csB_1.getText().toString()) * 1000000));
                                     }
                                     if (csC_1.getText().length() > 0) {
-                                        correctParame.setC(Long.parseLong(csC_1.getText().toString()));
+                                        correctParame.setC((int) (Double.parseDouble(csC_1.getText().toString()) * 1000000));
                                     }
                                     if (csD_1.getText().length() > 0) {
-                                        correctParame.setD(Long.parseLong(csD_1.getText().toString()));
+                                        correctParame.setD((int) (Double.parseDouble(csD_1.getText().toString()) * 1000000));
                                     }
                                     if (csE_1.getText().length() > 0) {
-                                        correctParame.setE(Long.parseLong(csE_1.getText().toString()));
+                                        correctParame.setE((int) (Double.parseDouble(csE_1.getText().toString()) * 1000000));
                                     }
                                     if (csF_1.getText().length() > 0) {
-                                        correctParame.setF(Long.parseLong(csF_1.getText().toString()));
+                                        correctParame.setF((int) (Double.parseDouble(csF_1.getText().toString()) * 1000000));
                                     }
                                     if (csG_1.getText().length() > 0) {
-                                        correctParame.setG(Long.parseLong(csG_1.getText().toString()));
+                                        correctParame.setG((int) (Double.parseDouble(csG_1.getText().toString()) * 1000000));
                                     }
                                     if (csH_1.getText().length() > 0) {
-                                        correctParame.setH(Long.parseLong(csH_1.getText().toString()));
+                                        correctParame.setH((int) (Double.parseDouble(csH_1.getText().toString()) * 1000000));
                                     }
                                     if (csI_1.getText().length() > 0) {
-                                        correctParame.setI(Long.parseLong(csI_1.getText().toString()));
+                                        correctParame.setI((int) (Double.parseDouble(csI_1.getText().toString()) * 1000000));
                                     }
 
                                     mPresenter.setCorrectParame(correctParame);
