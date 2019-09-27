@@ -84,8 +84,8 @@ public class MeasurePresenter extends BasePresenter<MeasureContract.View> implem
                             mView.onSuccess(value);
                         }
                         if (value.getMeasureStatus() == 0x02) {
-                            stopMeasure();
-                            model.stopQuery();
+                            stopMeasure(true);
+                            model.stopQuery(true);
                         }
                     }
 
@@ -123,9 +123,9 @@ public class MeasurePresenter extends BasePresenter<MeasureContract.View> implem
     }
 
     @Override
-    public void stopMeasure() {
+    public void stopMeasure(boolean sendCommand) {
         if (measureStatus == MeasureStatus.RUNNING) {
-            model.stopQuery();
+            model.stopQuery(sendCommand);
             setMeasureStatus(MeasureStatus.STOP);
         } else {
             if (isViewAttached()) {

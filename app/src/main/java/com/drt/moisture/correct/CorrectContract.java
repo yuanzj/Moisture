@@ -30,7 +30,7 @@ public interface CorrectContract {
 
         void startCorrect(int measureModel,  int type, CorrectDataCallback<MeasureValue> callback);
 
-        void stopCorrect();
+        void stopCorrect(boolean sendCommand);
 
     }
 
@@ -72,6 +72,6 @@ public interface CorrectContract {
          */
         void startCorrect(final int measureModel, final int type);
 
-        void stopCorrect();
+        void stopCorrect(boolean sendCommand);
     }
 }

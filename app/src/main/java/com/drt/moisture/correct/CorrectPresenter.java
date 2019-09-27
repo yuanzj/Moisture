@@ -115,9 +115,9 @@ public class CorrectPresenter extends BasePresenter<CorrectContract.View> implem
     }
 
     @Override
-    public void stopCorrect() {
+    public void stopCorrect(boolean sendCommand) {
         if (measureStatus == MeasureStatus.RUNNING) {
-            model.stopCorrect();
+            model.stopCorrect(sendCommand);
             setMeasureStatus(MeasureStatus.STOP);
         } else {
             if (isViewAttached()) {

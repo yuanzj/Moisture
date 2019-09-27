@@ -198,7 +198,7 @@ public class CorrectActivity extends BluetoothBaseActivity<CorrectPresenter> imp
 
     @OnClick(R.id.btnStopMeasure)
     public void stopMeasure() {
-        mPresenter.stopCorrect();
+        mPresenter.stopCorrect(true);
     }
 
     @Override
@@ -283,7 +283,7 @@ public class CorrectActivity extends BluetoothBaseActivity<CorrectPresenter> imp
 
     @Override
     protected void onDestroy() {
-        mPresenter.stopCorrect();
+        mPresenter.stopCorrect(false);
         super.onDestroy();
     }
 

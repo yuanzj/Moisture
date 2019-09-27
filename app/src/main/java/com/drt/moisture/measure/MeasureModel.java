@@ -111,7 +111,7 @@ public class MeasureModel implements MeasureContract.Model {
             stopTimer.schedule(new TimerTask() {
                 @Override
                 public void run() {
-                    stopQuery();
+                    stopQuery(true);
                     measureDataCallback.measureDone();
                 }
             }, measuringTime * 60 * 1000);
@@ -121,7 +121,7 @@ public class MeasureModel implements MeasureContract.Model {
     }
 
     @Override
-    public void stopQuery() {
+    public void stopQuery(boolean sendCommand) {
         if (runningTimer != null) {
             runningTimer.cancel();
         }
@@ -132,18 +132,20 @@ public class MeasureModel implements MeasureContract.Model {
             clockerTime.cancel();
         }
 
-        App.getInstance().getBluetoothService().stopMeasure(new SppDataCallback<StopMeasureResponse>() {
+        if (sendCommand) {
+            App.getInstance().getBluetoothService().stopMeasure(new SppDataCallback<StopMeasureResponse>() {
 
-            @Override
-            public void delivery(StopMeasureResponse stopMeasureResponse) {
+                @Override
+                public void delivery(StopMeasureResponse stopMeasureResponse) {
 
-            }
+                }
 
-            @Override
-            public Class<StopMeasureResponse> getEntityType() {
-                return StopMeasureResponse.class;
-            }
-        });
+                @Override
+                public Class<StopMeasureResponse> getEntityType() {
+                    return StopMeasureResponse.class;
+                }
+            });
+        }
     }
 
     SppDataCallback sppDataCallback = new SppDataCallback<RecordDataResponse>(){
