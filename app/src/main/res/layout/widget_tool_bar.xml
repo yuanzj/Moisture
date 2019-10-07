@@ -12,13 +12,16 @@
     app:contentInsetStartWithNavigation="0dp"
     app:popupTheme="@style/ThemeOverlay.AppCompat.Light">
 
-    <ImageButton
+    <Button
         android:id="@+id/title_back"
-        android:layout_width="?attr/actionBarSize"
+        android:layout_width="wrap_content"
         android:layout_height="match_parent"
         android:minWidth="48dp"
-        android:src="@mipmap/ic_back"
-        android:background="@drawable/selector_btn"
+        android:paddingLeft="8dp"
+        android:textSize="16sp"
+        android:drawableLeft="@mipmap/ic_back"
+        android:text="返回"
+        android:background="@drawable/selector_btn_transparent"
         android:visibility="gone" />
 
     <TextView

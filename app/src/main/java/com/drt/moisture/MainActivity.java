@@ -1,6 +1,8 @@
 package com.drt.moisture;
 
 import android.content.Intent;
+import android.os.Bundle;
+import android.support.annotation.Nullable;
 import android.view.KeyEvent;
 import android.view.View;
 import android.widget.Toast;
@@ -11,9 +13,15 @@ import com.drt.moisture.report.ReportActivity;
 import com.drt.moisture.setting.SettingActivity;
 
 
-public class MainActivity extends CustomActionBarActivity<MainPresenter> {
+public class MainActivity extends BluetoothBaseActivity<MainPresenter> {
 
     private long exitTime = 0;
+
+    @Override
+    protected void onCreate(@Nullable Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        titleBack.setVisibility(View.GONE);
+    }
 
     @Override
     public int getLayoutId() {
@@ -80,5 +88,10 @@ public class MainActivity extends CustomActionBarActivity<MainPresenter> {
     protected void onDestroy() {
         super.onDestroy();
         App.getInstance().getBluetoothSPP().disconnect();
+    }
+
+    @Override
+    public void setBleConnectStatus(int status) {
+
     }
 }

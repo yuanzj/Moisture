@@ -31,7 +31,7 @@
                 android:layout_height="wrap_content"
                 android:text="时间"
                 android:textColor="@color/colorSecondBody"
-                android:textSize="@dimen/sizeBody" />
+                android:textSize="@dimen/sizeSubTitle" />
 
             <TextView
                 android:id="@+id/time"
@@ -40,7 +40,7 @@
                 android:layout_marginLeft="@dimen/padding_default"
                 android:text="--"
                 android:textColor="@color/colorBody"
-                android:textSize="@dimen/sizeSubTitle" />
+                android:textSize="@dimen/sizeTitle" />
         </LinearLayout>
 
         <LinearLayout
@@ -55,7 +55,7 @@
                 android:layout_height="wrap_content"
                 android:text="温度"
                 android:textColor="@color/colorSecondBody"
-                android:textSize="@dimen/sizeBody" />
+                android:textSize="@dimen/sizeSubTitle" />
 
             <TextView
                 android:id="@+id/temperature"
@@ -64,7 +64,7 @@
                 android:layout_marginLeft="@dimen/padding_default"
                 android:text="--"
                 android:textColor="@color/colorBody"
-                android:textSize="@dimen/sizeSubTitle" />
+                android:textSize="@dimen/sizeTitle" />
         </LinearLayout>
 
         <LinearLayout
@@ -79,7 +79,7 @@
                 android:layout_height="wrap_content"
                 android:text="水分活度"
                 android:textColor="@color/colorSecondBody"
-                android:textSize="@dimen/sizeBody" />
+                android:textSize="@dimen/sizeSubTitle" />
 
             <TextView
                 android:id="@+id/activeness"
@@ -88,7 +88,7 @@
                 android:layout_marginLeft="@dimen/padding_default"
                 android:text="--"
                 android:textColor="@color/colorBody"
-                android:textSize="@dimen/sizeSubTitle" />
+                android:textSize="@dimen/sizeTitle" />
         </LinearLayout>
 
     </LinearLayout>
@@ -106,7 +106,7 @@
             android:layout_height="wrap_content"
             android:text="已测量"
             android:textColor="@color/colorSecondBody"
-            android:textSize="@dimen/sizeBody" />
+            android:textSize="@dimen/sizeSubTitle" />
 
         <TextView
             android:id="@+id/alreadyRunning"
@@ -115,7 +115,7 @@
             android:layout_marginLeft="@dimen/padding_default"
             android:text="--"
             android:textColor="@color/colorBody"
-            android:textSize="@dimen/sizeBody" />
+            android:textSize="@dimen/sizeTitle" />
     </LinearLayout>
 
     <Space
@@ -129,7 +129,9 @@
         android:background="@color/colorWhite"
         android:gravity="left|center_vertical"
         android:orientation="horizontal"
-        android:paddingLeft="@dimen/padding_default">
+        android:paddingLeft="@dimen/padding_default"
+        android:paddingRight="@dimen/padding_default"
+        >
 
 
         <TextView
@@ -164,10 +166,7 @@
             android:src="@mipmap/ic_history"
             android:background="@drawable/selector_btn_transparent"
             />
-        <Space
-            android:layout_width="0dp"
-            android:layout_height="match_parent"
-            android:layout_weight="1" />
+
 
     </LinearLayout>
 
@@ -175,74 +174,100 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:background="@color/colorWhite"
-        android:gravity="center_vertical"
-        android:orientation="horizontal"
-        android:padding="@dimen/padding_default">
-
-        <Spinner
-            android:id="@+id/spinner1"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:entries="@array/measure_model" />
-
-        <Spinner
-            android:id="@+id/spinner2"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginLeft="@dimen/padding_default"
-            android:entries="@array/measure_time_array" />
-
-        <Space
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_weight="1" />
+        android:orientation="vertical"
+        >
 
         <LinearLayout
-            android:id="@+id/btnStartMeasure"
-            android:layout_width="wrap_content"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:background="@drawable/selector_btn"
-            android:gravity="center"
-            android:orientation="vertical">
+            android:gravity="center_vertical"
+            android:orientation="horizontal"
+            android:padding="@dimen/padding_default">
 
-            <ImageView
-                android:layout_width="wrap_content"
+            <Spinner
+                android:id="@+id/spinner1"
+                android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:src="@mipmap/ic_start" />
+                android:layout_weight="1"
+                android:entries="@array/measure_model" />
 
-            <TextView
-                android:layout_width="wrap_content"
+            <Spinner
+                android:id="@+id/spinner2"
+                android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="@dimen/padding_default_half"
-                android:text="开始测量"
-                android:textColor="@color/colorBtnUnPress"
-                android:textSize="@dimen/sizeBody" />
+                android:layout_marginLeft="@dimen/padding_default"
+                android:layout_weight="1"
+                android:entries="@array/measure_time_array" />
+
+
         </LinearLayout>
 
         <LinearLayout
-            android:id="@+id/btnStopMeasure"
-            android:layout_width="wrap_content"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginLeft="@dimen/padding_default"
-            android:alpha="0.32"
-            android:background="@drawable/selector_btn"
-            android:gravity="center"
-            android:orientation="vertical">
+            android:gravity="center_vertical"
+            android:paddingBottom="@dimen/padding_default"
+            android:orientation="horizontal">
 
-            <ImageView
+            <Space
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1" />
+
+            <LinearLayout
+                android:id="@+id/btnStartMeasure"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:src="@mipmap/ic_stop" />
+                android:background="@drawable/selector_btn"
+                android:gravity="center"
+                android:orientation="vertical">
 
-            <TextView
+                <ImageView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:src="@mipmap/ic_start" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/padding_default_half"
+                    android:text="开始测量"
+                    android:textColor="@color/colorBtnUnPress"
+                    android:textSize="@dimen/sizeBody" />
+            </LinearLayout>
+            <Space
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1" />
+            <LinearLayout
+                android:id="@+id/btnStopMeasure"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="@dimen/padding_default_half"
-                android:text="停止测量"
-                android:textColor="@color/colorBtnUnPress"
-                android:textSize="@dimen/sizeBody" />
+                android:layout_marginLeft="@dimen/padding_default"
+                android:alpha="0.32"
+                android:background="@drawable/selector_btn"
+                android:gravity="center"
+                android:orientation="vertical">
+
+                <ImageView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:src="@mipmap/ic_stop" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/padding_default_half"
+                    android:text="停止测量"
+                    android:textColor="@color/colorBtnUnPress"
+                    android:textSize="@dimen/sizeBody" />
+            </LinearLayout>
+            <Space
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1" />
+
         </LinearLayout>
-
 
     </LinearLayout>
 
