@@ -18,6 +18,7 @@ import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -67,7 +68,7 @@ public abstract class BluetoothBaseActivity<T extends BasePresenter> extends Bas
     /*是否是返回(有可能是代表别的功能)*/
     private boolean is_title_back = true;
     /*返回*/
-    private ImageButton titleBack;
+    protected Button titleBack;
     /*标题名称*/
     private TextView titleName;
 
@@ -129,7 +130,7 @@ public abstract class BluetoothBaseActivity<T extends BasePresenter> extends Bas
         }
         titleBack.setVisibility(View.VISIBLE);
         if (!back) {
-            titleBack.setImageResource(resourcesId);
+//            titleBack.setImageResource(resourcesId);
         }
     }
 

@@ -10,37 +10,46 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".MainActivity">
+        <activity
+            android:name=".MainActivity"
+            android:screenOrientation="portrait">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
-
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
 
         <activity
             android:name=".measure.MeasureActivity"
-            android:label="@string/activity_measure" />
+            android:label="@string/activity_measure"
+            android:screenOrientation="portrait" />
 
         <activity
             android:name=".correct.CorrectActivity"
-            android:label="@string/activity_correct" />
+
+            android:label="@string/activity_correct"
+            android:screenOrientation="portrait" />
 
         <activity
             android:name=".report.ReportActivity"
-            android:label="@string/activity_query" />
+
+            android:label="@string/activity_query"
+            android:screenOrientation="portrait" />
 
         <activity
             android:name="com.zhjian.bluetooth.spp.DeviceList"
+            android:screenOrientation="portrait"
             android:theme="@style/Theme.ActivityDialogStyle" />
 
         <activity
             android:name=".setting.SettingActivity"
-            android:label="@string/activity_setting" />
+            android:label="@string/activity_setting"
+            android:screenOrientation="portrait" />
 
         <activity
             android:name=".BleScanActivity"
             android:label="@string/activity_scan"
+            android:screenOrientation="portrait"
             android:theme="@style/Theme.ActivityDialogStyle" />
 
         <service android:name="com.inuker.bluetooth.library.BluetoothService" />
