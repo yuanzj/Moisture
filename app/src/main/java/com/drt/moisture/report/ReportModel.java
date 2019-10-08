@@ -72,9 +72,13 @@ public class ReportModel implements ReportContract.Model, SppDataCallback<HisRec
         }
         List<MeasureValue> values = new ArrayList<>();
         MeasureValue measureValue = new MeasureValue();
-        measureValue.setTemperature(new Random().nextInt(50));
-        measureValue.setActivity(new Random().nextInt(100));
-        measureValue.setReportTime(sdf.format(new Date(recordDataResponse.getTime() * 1000)));
+        measureValue.setTemperature(recordDataResponse.getTemperature());
+        measureValue.setActivity(recordDataResponse.getActivity());
+        try {
+            measureValue.setReportTime(sdf.format(new Date(recordDataResponse.getTime() * 1000)));
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
         measureValue.setName(recordDataResponse.getName());
         values.add(measureValue);
         if (report != null) {
