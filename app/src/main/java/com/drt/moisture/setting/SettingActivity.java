@@ -653,7 +653,7 @@ public class SettingActivity extends BluetoothBaseActivity<SettingPresenter> imp
         public void run() {
             App.getInstance().getBluetoothService().setTime(System.currentTimeMillis() / 1000);
             // 每2S执行1次唤醒设备确保活跃状态
-            handler.postDelayed(this, 1000);
+            handler.postDelayed(this, 45000);
         }
     };
 }
