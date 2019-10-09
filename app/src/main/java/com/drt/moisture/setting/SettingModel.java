@@ -4,11 +4,13 @@ import com.drt.moisture.App;
 import com.drt.moisture.data.CorrectParame;
 import com.drt.moisture.data.DataCallback;
 import com.drt.moisture.data.DeviceInfo;
+import com.drt.moisture.data.HumidityParame;
 import com.drt.moisture.data.MeasureParame;
 import com.drt.moisture.data.source.bluetooth.SppDataCallback;
 import com.drt.moisture.data.source.bluetooth.response.DeviceInfoResponse;
 import com.drt.moisture.data.source.bluetooth.response.ParameterSetResponse;
 import com.drt.moisture.data.source.bluetooth.resquest.SetCorrectParameRequest;
+import com.drt.moisture.data.source.bluetooth.resquest.SetHumidityParameRequest;
 import com.drt.moisture.data.source.bluetooth.resquest.SetMeasureParameRequest;
 import com.drt.moisture.data.source.bluetooth.resquest.SetRateRequest;
 
@@ -19,6 +21,8 @@ public class SettingModel implements SettingContract.Model {
     private DataCallback<SetMeasureParameRequest> setMeasureParameRequestDataCallback;
 
     private DataCallback<SetCorrectParameRequest> setCorrectParameRequestDataCallback;
+
+    private DataCallback<SetHumidityParameRequest> setHumidityParameRequestDataCallback;
 
     private DataCallback<ParameterSetResponse> parameterSetResponseDataCallback;
 
@@ -88,6 +92,24 @@ public class SettingModel implements SettingContract.Model {
     }
 
     @Override
+    public void queryHumidityConfig(DataCallback<SetHumidityParameRequest> _dataCallback) {
+        this.setHumidityParameRequestDataCallback = _dataCallback;
+        App.getInstance().getBluetoothService().queryHumidityParam(new SppDataCallback<SetHumidityParameRequest>() {
+            @Override
+            public void delivery(SetHumidityParameRequest setMeasureParameRequest) {
+                if (setHumidityParameRequestDataCallback != null) {
+                    setHumidityParameRequestDataCallback.delivery(setMeasureParameRequest);
+                }
+            }
+
+            @Override
+            public Class<SetHumidityParameRequest> getEntityType() {
+                return SetHumidityParameRequest.class;
+            }
+        });
+    }
+
+    @Override
     public void queryRate(DataCallback<SetRateRequest> _dataCallback) {
         this.setRateRequestDataCallback = _dataCallback;
         App.getInstance().getBluetoothService().queryRateParame(new SppDataCallback<SetRateRequest>() {
@@ -147,6 +169,25 @@ public class SettingModel implements SettingContract.Model {
     public void setCorrectParame(CorrectParame measureParame, DataCallback<ParameterSetResponse> dataCallback) {
         this.parameterSetResponseDataCallback = dataCallback;
         App.getInstance().getBluetoothService().setCorrectParame(measureParame, new SppDataCallback<ParameterSetResponse>() {
+
+            @Override
+            public void delivery(ParameterSetResponse parameterSetResponse) {
+                if (parameterSetResponseDataCallback != null) {
+                    parameterSetResponseDataCallback.delivery(parameterSetResponse);
+                }
+            }
+
+            @Override
+            public Class<ParameterSetResponse> getEntityType() {
+                return ParameterSetResponse.class;
+            }
+        });
+    }
+
+    @Override
+    public void setHumidityParame(HumidityParame measureParame, DataCallback<ParameterSetResponse> dataCallback) {
+        this.parameterSetResponseDataCallback = dataCallback;
+        App.getInstance().getBluetoothService().setHumidityParame(measureParame, new SppDataCallback<ParameterSetResponse>() {
 
             @Override
             public void delivery(ParameterSetResponse parameterSetResponse) {

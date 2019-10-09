@@ -438,6 +438,37 @@
                         android:textCursorDrawable="@drawable/solid_shape_bottom_line"
                         android:textSize="@dimen/sizeSubTitle" />
                 </LinearLayout>
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="48dp"
+                    android:gravity="center_vertical"
+                    android:orientation="horizontal">
+
+                    <TextView
+                        android:layout_width="60dp"
+                        android:layout_height="wrap_content"
+                        android:text="参数N"
+                        android:textColor="@color/colorSecondBody"
+                        android:textSize="@dimen/sizeBody" />
+
+                    <EditText
+                        android:id="@+id/csN"
+                        android:layout_width="0dp"
+                        android:layout_height="match_parent"
+                        android:layout_marginLeft="@dimen/padding_default"
+                        android:layout_marginTop="8dp"
+                        android:layout_marginRight="@dimen/padding_default"
+                        android:layout_marginBottom="8dp"
+                        android:layout_weight="1"
+                        android:background="@drawable/edittext_bg_selector"
+                        android:focusableInTouchMode="true"
+                        android:hint="请输入参数"
+                        android:inputType="numberSigned|numberDecimal"
+                        android:singleLine="true"
+                        android:textColor="@color/colorBody"
+                        android:textCursorDrawable="@drawable/solid_shape_bottom_line"
+                        android:textSize="@dimen/sizeSubTitle" />
+                </LinearLayout>
             </LinearLayout>
 
             </ScrollView>
@@ -738,6 +769,488 @@
                     </LinearLayout>
 
                 </LinearLayout>
+            </ScrollView>
+
+            <ScrollView
+                android:id="@+id/tv3"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent">
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+
+                    android:orientation="vertical">
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="48dp"
+                        android:gravity="center_vertical"
+                        android:orientation="horizontal">
+
+                        <TextView
+                            android:layout_width="60dp"
+                            android:layout_height="wrap_content"
+                            android:text="参数A"
+                            android:textColor="@color/colorSecondBody"
+                            android:textSize="@dimen/sizeBody" />
+
+                        <EditText
+                            android:id="@+id/csA_2"
+                            android:layout_width="0dp"
+                            android:layout_height="match_parent"
+                            android:layout_marginLeft="@dimen/padding_default"
+                            android:layout_marginTop="8dp"
+                            android:layout_marginRight="@dimen/padding_default"
+                            android:layout_marginBottom="8dp"
+                            android:layout_weight="1"
+                            android:background="@drawable/edittext_bg_selector"
+                            android:focusableInTouchMode="true"
+                            android:hint="请输入参数"
+                            android:inputType="numberSigned|numberDecimal"
+                            android:singleLine="true"
+                            android:textColor="@color/colorBody"
+                            android:textCursorDrawable="@drawable/solid_shape_bottom_line"
+                            android:textSize="@dimen/sizeSubTitle" />
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="48dp"
+                        android:gravity="center_vertical"
+                        android:orientation="horizontal">
+
+                        <TextView
+                            android:layout_width="60dp"
+                            android:layout_height="wrap_content"
+                            android:text="参数B"
+                            android:textColor="@color/colorSecondBody"
+                            android:textSize="@dimen/sizeBody" />
+
+                        <EditText
+                            android:id="@+id/csB_2"
+                            android:layout_width="0dp"
+                            android:layout_height="match_parent"
+                            android:layout_marginLeft="@dimen/padding_default"
+                            android:layout_marginTop="8dp"
+                            android:layout_marginRight="@dimen/padding_default"
+                            android:layout_marginBottom="8dp"
+                            android:layout_weight="1"
+                            android:background="@drawable/edittext_bg_selector"
+                            android:focusableInTouchMode="true"
+                            android:hint="请输入参数"
+                            android:inputType="numberSigned|numberDecimal"
+                            android:singleLine="true"
+                            android:textColor="@color/colorBody"
+                            android:textCursorDrawable="@drawable/solid_shape_bottom_line"
+                            android:textSize="@dimen/sizeSubTitle" />
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="48dp"
+                        android:gravity="center_vertical"
+                        android:orientation="horizontal">
+
+                        <TextView
+                            android:layout_width="60dp"
+                            android:layout_height="wrap_content"
+                            android:text="参数C"
+                            android:textColor="@color/colorSecondBody"
+                            android:textSize="@dimen/sizeBody" />
+
+                        <EditText
+                            android:id="@+id/csC_2"
+                            android:layout_width="0dp"
+                            android:layout_height="match_parent"
+                            android:layout_marginLeft="@dimen/padding_default"
+                            android:layout_marginTop="8dp"
+                            android:layout_marginRight="@dimen/padding_default"
+                            android:layout_marginBottom="8dp"
+                            android:layout_weight="1"
+                            android:background="@drawable/edittext_bg_selector"
+                            android:focusableInTouchMode="true"
+                            android:hint="请输入参数"
+                            android:inputType="numberSigned|numberDecimal"
+                            android:singleLine="true"
+                            android:textColor="@color/colorBody"
+                            android:textCursorDrawable="@drawable/solid_shape_bottom_line"
+                            android:textSize="@dimen/sizeSubTitle" />
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="48dp"
+                        android:gravity="center_vertical"
+                        android:orientation="horizontal">
+
+                        <TextView
+                            android:layout_width="60dp"
+                            android:layout_height="wrap_content"
+                            android:text="参数D"
+                            android:textColor="@color/colorSecondBody"
+                            android:textSize="@dimen/sizeBody" />
+
+                        <EditText
+                            android:id="@+id/csD_2"
+                            android:layout_width="0dp"
+                            android:layout_height="match_parent"
+                            android:layout_marginLeft="@dimen/padding_default"
+                            android:layout_marginTop="8dp"
+                            android:layout_marginRight="@dimen/padding_default"
+                            android:layout_marginBottom="8dp"
+                            android:layout_weight="1"
+                            android:background="@drawable/edittext_bg_selector"
+                            android:focusableInTouchMode="true"
+                            android:hint="请输入参数"
+                            android:inputType="numberSigned|numberDecimal"
+                            android:singleLine="true"
+                            android:textColor="@color/colorBody"
+                            android:textCursorDrawable="@drawable/solid_shape_bottom_line"
+                            android:textSize="@dimen/sizeSubTitle" />
+                    </LinearLayout>
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="48dp"
+                        android:gravity="center_vertical"
+                        android:orientation="horizontal">
+
+                        <TextView
+                            android:layout_width="60dp"
+                            android:layout_height="wrap_content"
+                            android:text="参数E"
+                            android:textColor="@color/colorSecondBody"
+                            android:textSize="@dimen/sizeBody" />
+
+                        <EditText
+                            android:id="@+id/csE_2"
+                            android:layout_width="0dp"
+                            android:layout_height="match_parent"
+                            android:layout_marginLeft="@dimen/padding_default"
+                            android:layout_marginTop="8dp"
+                            android:layout_marginRight="@dimen/padding_default"
+                            android:layout_marginBottom="8dp"
+                            android:layout_weight="1"
+                            android:background="@drawable/edittext_bg_selector"
+                            android:focusableInTouchMode="true"
+                            android:hint="请输入参数"
+                            android:inputType="numberSigned|numberDecimal"
+                            android:singleLine="true"
+                            android:textColor="@color/colorBody"
+                            android:textCursorDrawable="@drawable/solid_shape_bottom_line"
+                            android:textSize="@dimen/sizeSubTitle" />
+                    </LinearLayout>
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="48dp"
+                        android:gravity="center_vertical"
+                        android:orientation="horizontal">
+
+                        <TextView
+                            android:layout_width="60dp"
+                            android:layout_height="wrap_content"
+                            android:text="参数F"
+                            android:textColor="@color/colorSecondBody"
+                            android:textSize="@dimen/sizeBody" />
+
+                        <EditText
+                            android:id="@+id/csF_2"
+                            android:layout_width="0dp"
+                            android:layout_height="match_parent"
+                            android:layout_marginLeft="@dimen/padding_default"
+                            android:layout_marginTop="8dp"
+                            android:layout_marginRight="@dimen/padding_default"
+                            android:layout_marginBottom="8dp"
+                            android:layout_weight="1"
+                            android:background="@drawable/edittext_bg_selector"
+                            android:focusableInTouchMode="true"
+                            android:hint="请输入参数"
+                            android:inputType="numberSigned|numberDecimal"
+                            android:singleLine="true"
+                            android:textColor="@color/colorBody"
+                            android:textCursorDrawable="@drawable/solid_shape_bottom_line"
+                            android:textSize="@dimen/sizeSubTitle" />
+                    </LinearLayout>
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="48dp"
+                        android:gravity="center_vertical"
+                        android:orientation="horizontal">
+
+                        <TextView
+                            android:layout_width="60dp"
+                            android:layout_height="wrap_content"
+                            android:text="参数G"
+                            android:textColor="@color/colorSecondBody"
+                            android:textSize="@dimen/sizeBody" />
+
+                        <EditText
+                            android:id="@+id/csG_2"
+                            android:layout_width="0dp"
+                            android:layout_height="match_parent"
+                            android:layout_marginLeft="@dimen/padding_default"
+                            android:layout_marginTop="8dp"
+                            android:layout_marginRight="@dimen/padding_default"
+                            android:layout_marginBottom="8dp"
+                            android:layout_weight="1"
+                            android:background="@drawable/edittext_bg_selector"
+                            android:focusableInTouchMode="true"
+                            android:hint="请输入参数"
+                            android:inputType="numberSigned|numberDecimal"
+                            android:singleLine="true"
+                            android:textColor="@color/colorBody"
+                            android:textCursorDrawable="@drawable/solid_shape_bottom_line"
+                            android:textSize="@dimen/sizeSubTitle" />
+                    </LinearLayout>
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="48dp"
+                        android:gravity="center_vertical"
+                        android:orientation="horizontal">
+
+                        <TextView
+                            android:layout_width="60dp"
+                            android:layout_height="wrap_content"
+                            android:text="参数H"
+                            android:textColor="@color/colorSecondBody"
+                            android:textSize="@dimen/sizeBody" />
+
+                        <EditText
+                            android:id="@+id/csH_2"
+                            android:layout_width="0dp"
+                            android:layout_height="match_parent"
+                            android:layout_marginLeft="@dimen/padding_default"
+                            android:layout_marginTop="8dp"
+                            android:layout_marginRight="@dimen/padding_default"
+                            android:layout_marginBottom="8dp"
+                            android:layout_weight="1"
+                            android:background="@drawable/edittext_bg_selector"
+                            android:focusableInTouchMode="true"
+                            android:hint="请输入参数"
+                            android:inputType="numberSigned|numberDecimal"
+                            android:singleLine="true"
+                            android:textColor="@color/colorBody"
+                            android:textCursorDrawable="@drawable/solid_shape_bottom_line"
+                            android:textSize="@dimen/sizeSubTitle" />
+                    </LinearLayout>
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="48dp"
+                        android:gravity="center_vertical"
+                        android:orientation="horizontal">
+
+                        <TextView
+                            android:layout_width="60dp"
+                            android:layout_height="wrap_content"
+                            android:text="参数I"
+                            android:textColor="@color/colorSecondBody"
+                            android:textSize="@dimen/sizeBody" />
+
+                        <EditText
+                            android:id="@+id/csI_2"
+                            android:layout_width="0dp"
+                            android:layout_height="match_parent"
+                            android:layout_marginLeft="@dimen/padding_default"
+                            android:layout_marginTop="8dp"
+                            android:layout_marginRight="@dimen/padding_default"
+                            android:layout_marginBottom="8dp"
+                            android:layout_weight="1"
+                            android:background="@drawable/edittext_bg_selector"
+                            android:focusableInTouchMode="true"
+                            android:hint="请输入参数"
+                            android:inputType="numberSigned|numberDecimal"
+                            android:singleLine="true"
+                            android:textColor="@color/colorBody"
+                            android:textCursorDrawable="@drawable/solid_shape_bottom_line"
+                            android:textSize="@dimen/sizeSubTitle" />
+                    </LinearLayout>
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="48dp"
+                        android:gravity="center_vertical"
+                        android:orientation="horizontal">
+
+                        <TextView
+                            android:layout_width="60dp"
+                            android:layout_height="wrap_content"
+                            android:text="参数J"
+                            android:textColor="@color/colorSecondBody"
+                            android:textSize="@dimen/sizeBody" />
+
+                        <EditText
+                            android:id="@+id/csJ_2"
+                            android:layout_width="0dp"
+                            android:layout_height="match_parent"
+                            android:layout_marginLeft="@dimen/padding_default"
+                            android:layout_marginTop="8dp"
+                            android:layout_marginRight="@dimen/padding_default"
+                            android:layout_marginBottom="8dp"
+                            android:layout_weight="1"
+                            android:background="@drawable/edittext_bg_selector"
+                            android:focusableInTouchMode="true"
+                            android:hint="请输入参数"
+                            android:inputType="numberSigned|numberDecimal"
+                            android:singleLine="true"
+                            android:textColor="@color/colorBody"
+                            android:textCursorDrawable="@drawable/solid_shape_bottom_line"
+                            android:textSize="@dimen/sizeSubTitle" />
+                    </LinearLayout>
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="48dp"
+                        android:gravity="center_vertical"
+                        android:orientation="horizontal">
+
+                        <TextView
+                            android:layout_width="60dp"
+                            android:layout_height="wrap_content"
+                            android:text="参数K"
+                            android:textColor="@color/colorSecondBody"
+                            android:textSize="@dimen/sizeBody" />
+
+                        <EditText
+                            android:id="@+id/csK_2"
+                            android:layout_width="0dp"
+                            android:layout_height="match_parent"
+                            android:layout_marginLeft="@dimen/padding_default"
+                            android:layout_marginTop="8dp"
+                            android:layout_marginRight="@dimen/padding_default"
+                            android:layout_marginBottom="8dp"
+                            android:layout_weight="1"
+                            android:background="@drawable/edittext_bg_selector"
+                            android:focusableInTouchMode="true"
+                            android:hint="请输入参数"
+                            android:inputType="numberSigned|numberDecimal"
+                            android:singleLine="true"
+                            android:textColor="@color/colorBody"
+                            android:textCursorDrawable="@drawable/solid_shape_bottom_line"
+                            android:textSize="@dimen/sizeSubTitle" />
+                    </LinearLayout>
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="48dp"
+                        android:gravity="center_vertical"
+                        android:orientation="horizontal">
+
+                        <TextView
+                            android:layout_width="60dp"
+                            android:layout_height="wrap_content"
+                            android:text="参数L"
+                            android:textColor="@color/colorSecondBody"
+                            android:textSize="@dimen/sizeBody" />
+
+                        <EditText
+                            android:id="@+id/csL_2"
+                            android:layout_width="0dp"
+                            android:layout_height="match_parent"
+                            android:layout_marginLeft="@dimen/padding_default"
+                            android:layout_marginTop="8dp"
+                            android:layout_marginRight="@dimen/padding_default"
+                            android:layout_marginBottom="8dp"
+                            android:layout_weight="1"
+                            android:background="@drawable/edittext_bg_selector"
+                            android:focusableInTouchMode="true"
+                            android:hint="请输入参数"
+                            android:inputType="numberSigned|numberDecimal"
+                            android:singleLine="true"
+                            android:textColor="@color/colorBody"
+                            android:textCursorDrawable="@drawable/solid_shape_bottom_line"
+                            android:textSize="@dimen/sizeSubTitle" />
+                    </LinearLayout>
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="48dp"
+                        android:gravity="center_vertical"
+                        android:orientation="horizontal">
+
+                        <TextView
+                            android:layout_width="60dp"
+                            android:layout_height="wrap_content"
+                            android:text="参数M"
+                            android:textColor="@color/colorSecondBody"
+                            android:textSize="@dimen/sizeBody" />
+
+                        <EditText
+                            android:id="@+id/csM_2"
+                            android:layout_width="0dp"
+                            android:layout_height="match_parent"
+                            android:layout_marginLeft="@dimen/padding_default"
+                            android:layout_marginTop="8dp"
+                            android:layout_marginRight="@dimen/padding_default"
+                            android:layout_marginBottom="8dp"
+                            android:layout_weight="1"
+                            android:background="@drawable/edittext_bg_selector"
+                            android:focusableInTouchMode="true"
+                            android:hint="请输入参数"
+                            android:inputType="numberSigned|numberDecimal"
+                            android:singleLine="true"
+                            android:textColor="@color/colorBody"
+                            android:textCursorDrawable="@drawable/solid_shape_bottom_line"
+                            android:textSize="@dimen/sizeSubTitle" />
+                    </LinearLayout>
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="48dp"
+                        android:gravity="center_vertical"
+                        android:orientation="horizontal">
+
+                        <TextView
+                            android:layout_width="60dp"
+                            android:layout_height="wrap_content"
+                            android:text="参数N"
+                            android:textColor="@color/colorSecondBody"
+                            android:textSize="@dimen/sizeBody" />
+
+                        <EditText
+                            android:id="@+id/csN_2"
+                            android:layout_width="0dp"
+                            android:layout_height="match_parent"
+                            android:layout_marginLeft="@dimen/padding_default"
+                            android:layout_marginTop="8dp"
+                            android:layout_marginRight="@dimen/padding_default"
+                            android:layout_marginBottom="8dp"
+                            android:layout_weight="1"
+                            android:background="@drawable/edittext_bg_selector"
+                            android:focusableInTouchMode="true"
+                            android:hint="请输入参数"
+                            android:inputType="numberSigned|numberDecimal"
+                            android:singleLine="true"
+                            android:textColor="@color/colorBody"
+                            android:textCursorDrawable="@drawable/solid_shape_bottom_line"
+                            android:textSize="@dimen/sizeSubTitle" />
+                    </LinearLayout>
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="48dp"
+                        android:gravity="center_vertical"
+                        android:orientation="horizontal">
+
+                        <TextView
+                            android:layout_width="60dp"
+                            android:layout_height="wrap_content"
+                            android:text="参数O"
+                            android:textColor="@color/colorSecondBody"
+                            android:textSize="@dimen/sizeBody" />
+
+                        <EditText
+                            android:id="@+id/csO_2"
+                            android:layout_width="0dp"
+                            android:layout_height="match_parent"
+                            android:layout_marginLeft="@dimen/padding_default"
+                            android:layout_marginTop="8dp"
+                            android:layout_marginRight="@dimen/padding_default"
+                            android:layout_marginBottom="8dp"
+                            android:layout_weight="1"
+                            android:background="@drawable/edittext_bg_selector"
+                            android:focusableInTouchMode="true"
+                            android:hint="请输入参数"
+                            android:inputType="numberSigned|numberDecimal"
+                            android:singleLine="true"
+                            android:textColor="@color/colorBody"
+                            android:textCursorDrawable="@drawable/solid_shape_bottom_line"
+                            android:textSize="@dimen/sizeSubTitle" />
+                    </LinearLayout>
+                </LinearLayout>
+
             </ScrollView>
 
         </FrameLayout>

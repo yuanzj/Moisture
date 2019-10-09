@@ -2,10 +2,10 @@ package com.drt.moisture.data;
 
 import com.rokyinfo.convert.RkField;
 
-public class MeasureParame {
+public class HumidityParame {
 
     @RkField(position = 5, length = 1)
-    private int n;
+    private long n;
 
     @RkField(position = 6, length = 4)
     private long a;
@@ -48,11 +48,11 @@ public class MeasureParame {
 
     private long o;
 
-    public int getN() {
+    public long getN() {
         return n;
     }
 
-    public void setN(int n) {
+    public void setN(long n) {
         this.n = n;
     }
 

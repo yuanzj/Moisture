@@ -1,59 +1,96 @@
-package com.drt.moisture.data;
+package com.drt.moisture.data.source.bluetooth.resquest;
 
 import com.rokyinfo.convert.RkField;
 
-public class MeasureParame {
+public class SetHumidityParameRequest {
 
-    @RkField(position = 5, length = 1)
-    private int n;
+    @RkField(position = 0, length = 1)
+    private byte CmdGroup;
 
-    @RkField(position = 6, length = 4)
+    @RkField(position = 1, length = 1)
+    private byte Cmd;
+
+    @RkField(position = 2, length = 1)
+    private byte Response;
+
+    @RkField(position = 3, length = 2)
+    private int Reserved;
+
+    @RkField(position = 5, length = 4)
     private long a;
 
-    @RkField(position = 10, length = 4)
+    @RkField(position = 9, length = 4)
     private long b;
 
-    @RkField(position = 14, length = 4)
+    @RkField(position = 13, length = 4)
     private long c;
 
-    @RkField(position = 18, length = 4)
+    @RkField(position = 17, length = 4)
     private long d;
 
-    @RkField(position = 22, length = 4)
+    @RkField(position = 21, length = 4)
     private long e;
 
-    @RkField(position = 26, length = 4)
+    @RkField(position = 25, length = 4)
     private long f;
 
-    @RkField(position = 30, length = 4)
+    @RkField(position = 29, length = 4)
     private long g;
 
-    @RkField(position = 34, length = 4)
+    @RkField(position = 33, length = 4)
     private long h;
 
-    @RkField(position = 38, length = 4)
+    @RkField(position = 37, length = 4)
     private long i;
 
-    @RkField(position = 42, length = 4)
+    @RkField(position = 41, length = 4)
     private long j;
 
-    @RkField(position = 46, length = 4)
+    @RkField(position = 45, length = 4)
     private long k;
 
-    @RkField(position = 50, length = 4)
+    @RkField(position = 49, length = 4)
     private long l;
 
-    @RkField(position = 54, length = 4)
+    @RkField(position = 53, length = 4)
     private long m;
 
+    @RkField(position = 57, length = 4)
+    private long n;
+
+    @RkField(position = 61, length = 4)
     private long o;
 
-    public int getN() {
-        return n;
+    public byte getCmdGroup() {
+        return CmdGroup;
     }
 
-    public void setN(int n) {
-        this.n = n;
+    public void setCmdGroup(byte cmdGroup) {
+        CmdGroup = cmdGroup;
+    }
+
+    public byte getCmd() {
+        return Cmd;
+    }
+
+    public void setCmd(byte cmd) {
+        Cmd = cmd;
+    }
+
+    public byte getResponse() {
+        return Response;
+    }
+
+    public void setResponse(byte response) {
+        Response = response;
+    }
+
+    public int getReserved() {
+        return Reserved;
+    }
+
+    public void setReserved(int reserved) {
+        Reserved = reserved;
     }
 
     public long getA() {
@@ -158,6 +195,14 @@ public class MeasureParame {
 
     public void setM(long m) {
         this.m = m;
+    }
+
+    public long getN() {
+        return n;
+    }
+
+    public void setN(long n) {
+        this.n = n;
     }
 
     public long getO() {

@@ -3,10 +3,12 @@ package com.drt.moisture.setting;
 import com.drt.moisture.data.CorrectParame;
 import com.drt.moisture.data.DataCallback;
 import com.drt.moisture.data.DeviceInfo;
+import com.drt.moisture.data.HumidityParame;
 import com.drt.moisture.data.MeasureParame;
 import com.drt.moisture.data.source.bluetooth.response.ParameterSetResponse;
 
 import com.drt.moisture.data.source.bluetooth.resquest.SetCorrectParameRequest;
+import com.drt.moisture.data.source.bluetooth.resquest.SetHumidityParameRequest;
 import com.drt.moisture.data.source.bluetooth.resquest.SetMeasureParameRequest;
 import com.drt.moisture.data.source.bluetooth.resquest.SetRateRequest;
 import net.yzj.android.common.base.BasePresenter;
@@ -72,6 +74,23 @@ public class SettingPresenter extends BasePresenter<SettingContract.View> implem
     }
 
     @Override
+    public void queryHumidityConfig() {
+        if (!isViewAttached()) {
+            return;
+        }
+        mView.showLoading();
+        model.queryHumidityConfig(new DataCallback<SetHumidityParameRequest>() {
+            @Override
+            public void delivery(SetHumidityParameRequest deviceInfo) {
+                if (isViewAttached()) {
+                    mView.hideLoading();
+                    mView.onHumidityConfigSuccess(deviceInfo);
+                }
+            }
+        });
+    }
+
+    @Override
     public void queryRate() {
         if (!isViewAttached()) {
             return;
@@ -129,6 +148,23 @@ public class SettingPresenter extends BasePresenter<SettingContract.View> implem
         }
         mView.showLoading();
         model.setCorrectParame(measureParame, new DataCallback<ParameterSetResponse>() {
+            @Override
+            public void delivery(ParameterSetResponse deviceInfo) {
+                if (isViewAttached()) {
+                    mView.hideLoading();
+                    mView.onSetParameSuccess();
+                }
+            }
+        });
+    }
+
+    @Override
+    public void setHumidityParame(HumidityParame measureParame) {
+        if (!isViewAttached()) {
+            return;
+        }
+        mView.showLoading();
+        model.setHumidityParame(measureParame, new DataCallback<ParameterSetResponse>() {
             @Override
             public void delivery(ParameterSetResponse deviceInfo) {
                 if (isViewAttached()) {

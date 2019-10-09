@@ -15,6 +15,7 @@ import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.Toolbar;
+import android.text.TextUtils;
 import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
@@ -23,6 +24,8 @@ import android.widget.ImageButton;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.drt.moisture.data.source.bluetooth.SppDataCallback;
+import com.drt.moisture.data.source.bluetooth.response.SocResponse;
 import com.drt.moisture.util.StatusBarUtil;
 import com.inuker.bluetooth.library.Constants;
 import com.inuker.bluetooth.library.connect.listener.BleConnectStatusListener;
@@ -35,6 +38,10 @@ import com.inuker.bluetooth.library.utils.UUIDUtils;
 
 import net.yzj.android.common.base.BaseMvpActivity;
 import net.yzj.android.common.base.BasePresenter;
+
+import org.greenrobot.eventbus.EventBus;
+import org.greenrobot.eventbus.Subscribe;
+import org.greenrobot.eventbus.ThreadMode;
 
 import java.sql.Time;
 import java.util.Arrays;
@@ -70,7 +77,7 @@ public abstract class BluetoothBaseActivity<T extends BasePresenter> extends Bas
     /*返回*/
     protected Button titleBack;
     /*标题名称*/
-    private TextView titleName;
+    private TextView titleName, secondTitle;
 
     @BindView(R.id.title_rightImage)
     ImageButton btnBluetooth;
@@ -78,6 +85,7 @@ public abstract class BluetoothBaseActivity<T extends BasePresenter> extends Bas
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        EventBus.getDefault().register(this);  //事件的注册
         // 系统 6.0 以上 状态栏白底黑字的实现方法
         StatusBarUtil.setLightStatusBar(this.getWindow());
         // 竖屏
@@ -98,9 +106,15 @@ public abstract class BluetoothBaseActivity<T extends BasePresenter> extends Bas
             btnBluetooth.setImageResource(R.mipmap.ic_bluetooth_connected);
             App.getInstance().getBluetoothClient().registerConnectStatusListener(App.getInstance().getConnectMacAddress(), mBleConnectStatusListener);
             setBleConnectStatus(Constants.STATUS_CONNECTED);
+            if (!TextUtils.isEmpty(App.getInstance().getDeviceSoc())) {
+                secondTitle.setText("电量:" + App.getInstance().getDeviceSoc() + "%");
+            } else {
+                secondTitle.setText("已连接");
+            }
         } else {
             btnBluetooth.setImageResource(R.mipmap.ic_bluetooth);
             setBleConnectStatus(STATUS_DISCONNECTED);
+            secondTitle.setText("蓝牙未连接");
         }
     }
 
@@ -112,6 +126,7 @@ public abstract class BluetoothBaseActivity<T extends BasePresenter> extends Bas
         toolBar.setTitle("");
         toolBar.setTitleTextColor(Color.WHITE);
         titleName = findViewById(R.id.title_name);
+        secondTitle = findViewById(R.id.second_title);
         setTitleName(getTitle().toString());
     }
 
@@ -279,6 +294,7 @@ public abstract class BluetoothBaseActivity<T extends BasePresenter> extends Bas
         if (App.getInstance().getConnectMacAddress() != null) {
             App.getInstance().getBluetoothClient().unregisterConnectStatusListener(App.getInstance().getConnectMacAddress(), mBleConnectStatusListener);
         }
+        EventBus.getDefault().unregister(this);
         super.onDestroy();
     }
 
@@ -344,15 +360,18 @@ public abstract class BluetoothBaseActivity<T extends BasePresenter> extends Bas
 
             if (status == STATUS_DEVICE_CONNECTING) {
                 Toast.makeText(getApplicationContext(), "设备连接中...", Toast.LENGTH_SHORT).show();
+                secondTitle.setText("连接中");
             } else if (status == STATUS_CONNECTED) {
                 btnBluetooth.setImageResource(R.mipmap.ic_bluetooth_connected);
                 Toast.makeText(getApplicationContext(), "设备已连接", Toast.LENGTH_SHORT).show();
                 setBleConnectStatus(STATUS_CONNECTED);
+                secondTitle.setText("已连接");
             } else if (status == STATUS_DISCONNECTED) {
                 btnBluetooth.setImageResource(R.mipmap.ic_bluetooth);
                 Toast.makeText(getApplicationContext(), "连接已断开", Toast.LENGTH_SHORT).show();
                 App.getInstance().getBluetoothClient().unregisterConnectStatusListener(mac, mBleConnectStatusListener);
                 setBleConnectStatus(STATUS_DISCONNECTED);
+                secondTitle.setText("连接已断开");
             }
         }
     };
@@ -375,11 +394,12 @@ public abstract class BluetoothBaseActivity<T extends BasePresenter> extends Bas
             if (code == REQUEST_SUCCESS) {
                 Toast.makeText(App.getInstance(), "开启监听蓝牙返回数据成功！", Toast.LENGTH_SHORT).show();
                 // 发送校时指令
-                App.getInstance().getBluetoothService().setTime(System.currentTimeMillis() / 1000, null);
+                App.getInstance().getBluetoothService().setTime(System.currentTimeMillis() / 1000);
                 new Handler().postDelayed(new Runnable() {
                     @Override
                     public void run() {
-                        App.getInstance().getBluetoothService().setTime(System.currentTimeMillis() / 1000, null);
+                        App.getInstance().getBluetoothService().setTime(System.currentTimeMillis() / 1000);
+                        App.getInstance().getBluetoothService().querySoc(socResponseSppDataCallback);
                     }
                 }, 100);
             }
@@ -387,4 +407,22 @@ public abstract class BluetoothBaseActivity<T extends BasePresenter> extends Bas
     };
 
     public abstract void setBleConnectStatus(int status);
+
+    private static final SppDataCallback<SocResponse> socResponseSppDataCallback = new SppDataCallback<SocResponse>() {
+        @Override
+        public void delivery(SocResponse socResponse) {
+            EventBus.getDefault().post(socResponse); //普通事件发布
+        }
+
+        @Override
+        public Class<SocResponse> getEntityType() {
+            return SocResponse.class;
+        }
+    };
+
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    public void onGetMessage(SocResponse socResponse) {
+        App.getInstance().setDeviceSoc(String.valueOf(socResponse.getSoc()));
+        secondTitle.setText(App.getInstance().getDeviceSoc());
+    }
 }

@@ -6,8 +6,8 @@ android {
         applicationId "com.drt.moisture"
         minSdkVersion 23
         targetSdkVersion 28
-        versionCode 20190927
-        versionName "1.21"
+        versionCode 20191009
+        versionName "1.22"
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
     }
 
@@ -72,5 +72,6 @@ dependencies {
     // GSON
     implementation 'com.google.code.gson:gson:2.8.5'
 
+    implementation 'org.greenrobot:eventbus:3.1.1'
 
 }

@@ -1,8 +1,8 @@
-package com.drt.moisture.data.source.bluetooth.resquest;
+package com.drt.moisture.data.source.bluetooth.response;
 
 import com.rokyinfo.convert.RkField;
 
-public class SetRateRequest {
+public class SocResponse {
 
     @RkField(position = 0, length = 1)
     private byte CmdGroup;
@@ -17,7 +17,10 @@ public class SetRateRequest {
     private int Reserved;
 
     @RkField(position = 5, length = 2)
-    private int rate;
+    private int voltage;
+
+    @RkField(position = 7, length = 1)
+    private int soc;
 
     public byte getCmdGroup() {
         return CmdGroup;
@@ -51,12 +54,31 @@ public class SetRateRequest {
         Reserved = reserved;
     }
 
-    public int getRate() {
-        return rate;
+    public int getVoltage() {
+        return voltage;
     }
 
-    public void setRate(int rate) {
-        this.rate = rate;
+    public void setVoltage(int voltage) {
+        this.voltage = voltage;
     }
 
+    public int getSoc() {
+        return soc;
+    }
+
+    public void setSoc(int soc) {
+        this.soc = soc;
+    }
+
+    @Override
+    public String toString() {
+        return "SocResponse{" +
+                "CmdGroup=" + CmdGroup +
+                ", Cmd=" + Cmd +
+                ", Response=" + Response +
+                ", Reserved=" + Reserved +
+                ", voltage=" + voltage +
+                ", soc=" + soc +
+                '}';
+    }
 }

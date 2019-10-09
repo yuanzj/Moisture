@@ -55,6 +55,9 @@ public class SetMeasureParameRequest {
     @RkField(position = 53, length = 4)
     private long m;
 
+    @RkField(position = 57, length = 1)
+    private int n;
+
     public byte getCmdGroup() {
         return CmdGroup;
     }
@@ -189,5 +192,13 @@ public class SetMeasureParameRequest {
 
     public void setM(long m) {
         this.m = m;
+    }
+
+    public int getN() {
+        return n;
+    }
+
+    public void setN(int n) {
+        this.n = n;
     }
 }

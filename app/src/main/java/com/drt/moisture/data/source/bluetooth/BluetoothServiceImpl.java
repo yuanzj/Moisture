@@ -5,6 +5,7 @@ import android.util.Log;
 
 import com.drt.moisture.App;
 import com.drt.moisture.data.CorrectParame;
+import com.drt.moisture.data.HumidityParame;
 import com.drt.moisture.data.MeasureParame;
 import com.drt.moisture.data.source.BluetoothService;
 import com.drt.moisture.data.source.bluetooth.response.*;
@@ -349,6 +350,22 @@ public class BluetoothServiceImpl implements BluetoothService, BleWriteResponse 
     }
 
     @Override
+    public void setTime(long time) {
+        SetTimeRequest setTimeRequest = new SetTimeRequest();
+        setTimeRequest.setCmdGroup((byte) 0xA2);
+        setTimeRequest.setCmd((byte) 0x05);
+        setTimeRequest.setResponse((byte) 0x02);
+        setTimeRequest.setReserved(0);
+        setTimeRequest.setTime(time);
+
+        try {
+            App.getInstance().getBluetoothClient().write(App.getInstance().getConnectMacAddress(), UUIDUtils.makeUUID(0xFFE0), UUIDUtils.makeUUID(0xFFE1), BluetoothDataUtil.encode(setTimeRequest), this);
+        } catch (IllegalAccessException | RkFieldException | FieldConvertException e) {
+            e.printStackTrace();
+        }
+    }
+
+    @Override
     public void setMeasureParame(MeasureParame measureParame, SppDataCallback<ParameterSetResponse> sppDataCallback) {
         this.sppDataCallback = sppDataCallback;
         SetMeasureParameRequest setMeasureParameRequest = new SetMeasureParameRequest();
@@ -369,6 +386,7 @@ public class BluetoothServiceImpl implements BluetoothService, BleWriteResponse 
         setMeasureParameRequest.setK(measureParame.getK());
         setMeasureParameRequest.setL(measureParame.getL());
         setMeasureParameRequest.setM(measureParame.getM());
+        setMeasureParameRequest.setN(measureParame.getN());
 
         try {
             App.getInstance().getBluetoothClient().write(App.getInstance().getConnectMacAddress(), UUIDUtils.makeUUID(0xFFE0), UUIDUtils.makeUUID(0xFFE1), BluetoothDataUtil.encode(setMeasureParameRequest), this);
@@ -397,6 +415,37 @@ public class BluetoothServiceImpl implements BluetoothService, BleWriteResponse 
 
         try {
             App.getInstance().getBluetoothClient().write(App.getInstance().getConnectMacAddress(), UUIDUtils.makeUUID(0xFFE0), UUIDUtils.makeUUID(0xFFE1), BluetoothDataUtil.encode(setCorrectParameRequest), this);
+        } catch (IllegalAccessException | RkFieldException | FieldConvertException e) {
+            e.printStackTrace();
+        }
+    }
+
+    @Override
+    public void setHumidityParame(HumidityParame measureParame, SppDataCallback<ParameterSetResponse> sppDataCallback) {
+        this.sppDataCallback = sppDataCallback;
+        SetHumidityParameRequest setMeasureParameRequest = new SetHumidityParameRequest();
+        setMeasureParameRequest.setCmdGroup((byte) 0xA2);
+        setMeasureParameRequest.setCmd((byte) 0x09);
+        setMeasureParameRequest.setResponse((byte) 0x01);
+        setMeasureParameRequest.setReserved(0);
+        setMeasureParameRequest.setA(measureParame.getA());
+        setMeasureParameRequest.setB(measureParame.getB());
+        setMeasureParameRequest.setC(measureParame.getC());
+        setMeasureParameRequest.setD(measureParame.getD());
+        setMeasureParameRequest.setE(measureParame.getE());
+        setMeasureParameRequest.setF(measureParame.getF());
+        setMeasureParameRequest.setG(measureParame.getG());
+        setMeasureParameRequest.setH(measureParame.getH());
+        setMeasureParameRequest.setI(measureParame.getI());
+        setMeasureParameRequest.setJ(measureParame.getJ());
+        setMeasureParameRequest.setK(measureParame.getK());
+        setMeasureParameRequest.setL(measureParame.getL());
+        setMeasureParameRequest.setM(measureParame.getM());
+        setMeasureParameRequest.setN(measureParame.getN());
+        setMeasureParameRequest.setO(measureParame.getO());
+
+        try {
+            App.getInstance().getBluetoothClient().write(App.getInstance().getConnectMacAddress(), UUIDUtils.makeUUID(0xFFE0), UUIDUtils.makeUUID(0xFFE1), BluetoothDataUtil.encode(setMeasureParameRequest), this);
         } catch (IllegalAccessException | RkFieldException | FieldConvertException e) {
             e.printStackTrace();
         }
@@ -435,6 +484,22 @@ public class BluetoothServiceImpl implements BluetoothService, BleWriteResponse 
     }
 
     @Override
+    public void queryHumidityParam(SppDataCallback<SetHumidityParameRequest> sppDataCallback) {
+        this.sppDataCallback = sppDataCallback;
+        QueryParameRequest queryParameRequest = new QueryParameRequest();
+        queryParameRequest.setCmdGroup((byte) 0xA2);
+        queryParameRequest.setCmd((byte) 0x89);
+        queryParameRequest.setResponse((byte) 0x01);
+        queryParameRequest.setReserved(0);
+
+        try {
+            App.getInstance().getBluetoothClient().write(App.getInstance().getConnectMacAddress(), UUIDUtils.makeUUID(0xFFE0), UUIDUtils.makeUUID(0xFFE1), BluetoothDataUtil.encode(queryParameRequest), this);
+        } catch (IllegalAccessException | RkFieldException | FieldConvertException e) {
+            e.printStackTrace();
+        }
+    }
+
+    @Override
     public void queryRateParame(SppDataCallback<SetRateRequest> sppDataCallback) {
         this.sppDataCallback = sppDataCallback;
         QueryParameRequest queryParameRequest = new QueryParameRequest();
@@ -459,7 +524,6 @@ public class BluetoothServiceImpl implements BluetoothService, BleWriteResponse 
         setRateRequest.setResponse((byte) 0x01);
         setRateRequest.setReserved(0);
         setRateRequest.setRate(rate);
-        setRateRequest.setRatio((byte)ratio);
 
         try {
             App.getInstance().getBluetoothClient().write(App.getInstance().getConnectMacAddress(), UUIDUtils.makeUUID(0xFFE0), UUIDUtils.makeUUID(0xFFE1), BluetoothDataUtil.encode(setRateRequest), this);
@@ -483,6 +547,22 @@ public class BluetoothServiceImpl implements BluetoothService, BleWriteResponse 
         try {
             App.getInstance().getBluetoothClient().write(App.getInstance().getConnectMacAddress(), UUIDUtils.makeUUID(0xFFE0), UUIDUtils.makeUUID(0xFFE1), BluetoothDataUtil.encode(recordDataRequest), this);
 
+        } catch (IllegalAccessException | RkFieldException | FieldConvertException e) {
+            e.printStackTrace();
+        }
+    }
+
+    @Override
+    public void querySoc(SppDataCallback<SocResponse> sppDataCallback) {
+        this.sppDataCallback = sppDataCallback;
+        QueryParameRequest queryParameRequest = new QueryParameRequest();
+        queryParameRequest.setCmdGroup((byte) 0xA1);
+        queryParameRequest.setCmd((byte) 0x06);
+        queryParameRequest.setResponse((byte) 0x01);
+        queryParameRequest.setReserved(0);
+
+        try {
+            App.getInstance().getBluetoothClient().write(App.getInstance().getConnectMacAddress(), UUIDUtils.makeUUID(0xFFE0), UUIDUtils.makeUUID(0xFFE1), BluetoothDataUtil.encode(queryParameRequest), this);
         } catch (IllegalAccessException | RkFieldException | FieldConvertException e) {
             e.printStackTrace();
         }

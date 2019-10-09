@@ -24,6 +24,8 @@ public class App extends Application {
 
     private String connectMacAddress;
 
+    private String deviceSoc;
+
     public static App getInstance() {
         if (app == null) {
             throw new IllegalAccessError("App is null");
@@ -53,6 +55,14 @@ public class App extends Application {
 
     public void setConnectMacAddress(String connectMacAddress) {
         this.connectMacAddress = connectMacAddress;
+    }
+
+    public String getDeviceSoc() {
+        return deviceSoc;
+    }
+
+    public void setDeviceSoc(String deviceSoc) {
+        this.deviceSoc = deviceSoc;
     }
 
     @Override

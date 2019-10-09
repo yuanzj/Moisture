@@ -3,10 +3,12 @@ package com.drt.moisture.setting;
 import com.drt.moisture.data.CorrectParame;
 import com.drt.moisture.data.DataCallback;
 import com.drt.moisture.data.DeviceInfo;
+import com.drt.moisture.data.HumidityParame;
 import com.drt.moisture.data.MeasureParame;
 import com.drt.moisture.data.source.bluetooth.response.ParameterSetResponse;
 
 import com.drt.moisture.data.source.bluetooth.resquest.SetCorrectParameRequest;
+import com.drt.moisture.data.source.bluetooth.resquest.SetHumidityParameRequest;
 import com.drt.moisture.data.source.bluetooth.resquest.SetMeasureParameRequest;
 import com.drt.moisture.data.source.bluetooth.resquest.SetRateRequest;
 import net.yzj.android.common.base.BaseView;
@@ -25,6 +27,8 @@ public interface SettingContract {
 
         void queryCorrectConfig(DataCallback<SetCorrectParameRequest> dataCallback);
 
+        void queryHumidityConfig(DataCallback<SetHumidityParameRequest> dataCallback);
+
         void queryRate(DataCallback<SetRateRequest> dataCallback);
 
         void setTime(long time, DataCallback<ParameterSetResponse> dataCallback);
@@ -32,6 +36,8 @@ public interface SettingContract {
         void setMeasureParame(MeasureParame measureParame, DataCallback<ParameterSetResponse> dataCallback);
 
         void setCorrectParame(CorrectParame measureParame, DataCallback<ParameterSetResponse> dataCallback);
+
+        void setHumidityParame(HumidityParame measureParame, DataCallback<ParameterSetResponse> dataCallback);
 
         void setRateParame(int rate, int ratio, DataCallback<ParameterSetResponse> dataCallback);
     }
@@ -43,6 +49,8 @@ public interface SettingContract {
         void onMeasureConfigSuccess(SetMeasureParameRequest deviceInfo);
 
         void onCorrectConfigSuccess(SetCorrectParameRequest deviceInfo);
+
+        void onHumidityConfigSuccess(SetHumidityParameRequest deviceInfo);
 
         void onRateSuccess(SetRateRequest deviceInfo);
 
@@ -59,6 +67,8 @@ public interface SettingContract {
 
         void queryCorrectConfig();
 
+        void queryHumidityConfig();
+
         void queryRate();
 
         void setTime(long time);
@@ -66,6 +76,8 @@ public interface SettingContract {
         void setMeasureParame(MeasureParame measureParame);
 
         void setCorrectParame(CorrectParame measureParame);
+
+        void setHumidityParame(HumidityParame measureParame);
 
         void setRateParame(int rate,int ratio);
     }
