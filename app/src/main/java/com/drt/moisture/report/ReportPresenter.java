@@ -46,7 +46,9 @@ public class ReportPresenter extends BasePresenter<ReportContract.View> implemen
 
             @Override
             public void measureDone() {
-                mView.onDone();
+                if (isViewAttached()) {
+                    mView.onDone();
+                }
             }
 
             @Override

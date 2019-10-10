@@ -6,6 +6,7 @@ import android.graphics.Point;
 import android.graphics.Rect;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.util.Log;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.ImageButton;
@@ -49,12 +50,17 @@ public class ReportActivity extends BluetoothBaseActivity<ReportPresenter> imple
     @BindView(R.id.mesasureName)
     EditText mesasureName;
 
+    @BindView(R.id.search)
+    View search;
+
     boolean isBleConnected;
+
+    List<MeasureValue> currentData;
+
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
         export.setVisibility(View.VISIBLE);
     }
 
@@ -111,12 +117,14 @@ public class ReportActivity extends BluetoothBaseActivity<ReportPresenter> imple
         });
     }
 
+
     @Override
     public void onSuccess(final List<MeasureValue> measureValues) {
         runOnUiThread(new Runnable() {
             @Override
             public void run() {
-                table.addData(measureValues, true);
+                currentData.addAll(measureValues);
+                table.setData(currentData);
             }
         });
     }
@@ -127,6 +135,8 @@ public class ReportActivity extends BluetoothBaseActivity<ReportPresenter> imple
             @Override
             public void run() {
                 mesasureName.setEnabled(true);
+                search.setEnabled(true);
+                Toast.makeText(getApplicationContext(),"获取结束", Toast.LENGTH_LONG).show();
             }
         });
     }
@@ -150,9 +160,8 @@ public class ReportActivity extends BluetoothBaseActivity<ReportPresenter> imple
     public void export() {
 
         if (AppPermission.isGrantExternalRW(this)) {
-            TableData<MeasureValue> tableData = table.getTableData();
-            if (tableData != null && tableData.getT() != null) {
-                String[] title = {"时间", "样品名称", "温度", "水分活度", "环境值"};
+            if (currentData != null && currentData.size() > 0) {
+                String[] title = {"时间", "样品名称", "温度", "水分活度"};
 
                 File file = new File(ExcelUtil.getSDPath() + "/水分活度测量");
                 ExcelUtil.makeDir(file);
@@ -163,7 +172,7 @@ public class ReportActivity extends BluetoothBaseActivity<ReportPresenter> imple
                 String fileName = file.toString() + "/" + time + ".xls";
 
                 ExcelUtil.initExcel(fileName, title);
-                ExcelUtil.writeObjListToExcel(getRecordData(tableData.getT()), fileName, this);
+                ExcelUtil.writeObjListToExcel(getRecordData(currentData), fileName, this);
 
                 Toast.makeText(this, "数据导出在" + fileName + "中", Toast.LENGTH_LONG).show();
             } else {
@@ -178,7 +187,9 @@ public class ReportActivity extends BluetoothBaseActivity<ReportPresenter> imple
             Toast.makeText(this, "设备尚未连接，请点击右上角蓝牙按钮连接设备", Toast.LENGTH_SHORT).show();
             return;
         }
+        currentData = new ArrayList<>();
         mPresenter.queryReport(mesasureName);
+        search.setEnabled(mesasureName.isEnabled());
     }
 
     /**
@@ -195,7 +206,6 @@ public class ReportActivity extends BluetoothBaseActivity<ReportPresenter> imple
             beanList.add(String.valueOf(measureValue.getName()));
             beanList.add(String.valueOf(measureValue.getTemperature()));
             beanList.add(String.valueOf(measureValue.getActivity()));
-            beanList.add(String.valueOf(measureValue.getHumidity()));
             recordList.add(beanList);
         }
         return recordList;

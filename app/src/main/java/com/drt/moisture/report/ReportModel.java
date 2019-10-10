@@ -17,7 +17,7 @@ import java.util.*;
 public class ReportModel implements ReportContract.Model, SppDataCallback<HisRecordDataResponse> {
 
     @SuppressLint("SimpleDateFormat")
-    private SimpleDateFormat sdf = new SimpleDateFormat("HH:mm:ss");
+    private SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 
     MeasureDataCallback<List<MeasureValue>> report;
 
@@ -42,7 +42,7 @@ public class ReportModel implements ReportContract.Model, SppDataCallback<HisRec
                     App.getInstance().getBluetoothService().queryHisRecord(measureName, i, ReportModel.this);
 
                     try {
-                        Thread.sleep(200);
+                        Thread.sleep(100);
                     } catch (InterruptedException e) {
                         e.printStackTrace();
                     }
@@ -72,13 +72,9 @@ public class ReportModel implements ReportContract.Model, SppDataCallback<HisRec
         }
         List<MeasureValue> values = new ArrayList<>();
         MeasureValue measureValue = new MeasureValue();
-        measureValue.setTemperature(recordDataResponse.getTemperature());
-        measureValue.setActivity(recordDataResponse.getActivity());
-        try {
-            measureValue.setReportTime(sdf.format(new Date(recordDataResponse.getTime() * 1000)));
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
+        measureValue.setTemperature(recordDataResponse.getTemperature() / 100.0);
+        measureValue.setActivity(recordDataResponse.getActivity() / 10000.0);
+        measureValue.setReportTime(sdf.format(new Date(recordDataResponse.getTime() * 1000)));
         measureValue.setName(recordDataResponse.getName());
         values.add(measureValue);
         if (report != null) {

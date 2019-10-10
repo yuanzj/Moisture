@@ -6,8 +6,8 @@ android {
         applicationId "com.drt.moisture"
         minSdkVersion 23
         targetSdkVersion 28
-        versionCode 20191009
-        versionName "1.22"
+        versionCode 20191010
+        versionName "1.24"
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
     }
 

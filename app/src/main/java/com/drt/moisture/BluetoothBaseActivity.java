@@ -107,7 +107,7 @@ public abstract class BluetoothBaseActivity<T extends BasePresenter> extends Bas
             App.getInstance().getBluetoothClient().registerConnectStatusListener(App.getInstance().getConnectMacAddress(), mBleConnectStatusListener);
             setBleConnectStatus(Constants.STATUS_CONNECTED);
             if (!TextUtils.isEmpty(App.getInstance().getDeviceSoc())) {
-                secondTitle.setText("电量:" + App.getInstance().getDeviceSoc() + "%");
+                secondTitle.setText("电量: " + App.getInstance().getDeviceSoc() + "%");
             } else {
                 secondTitle.setText("已连接");
             }
@@ -398,7 +398,6 @@ public abstract class BluetoothBaseActivity<T extends BasePresenter> extends Bas
                 new Handler().postDelayed(new Runnable() {
                     @Override
                     public void run() {
-                        App.getInstance().getBluetoothService().setTime(System.currentTimeMillis() / 1000);
                         App.getInstance().getBluetoothService().querySoc(socResponseSppDataCallback);
                     }
                 }, 100);
@@ -423,6 +422,6 @@ public abstract class BluetoothBaseActivity<T extends BasePresenter> extends Bas
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void onGetMessage(SocResponse socResponse) {
         App.getInstance().setDeviceSoc(String.valueOf(socResponse.getSoc()));
-        secondTitle.setText(App.getInstance().getDeviceSoc());
+        secondTitle.setText("电量: " + App.getInstance().getDeviceSoc() + "%");
     }
 }
