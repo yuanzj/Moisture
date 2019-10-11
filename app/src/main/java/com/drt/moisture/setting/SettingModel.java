@@ -162,7 +162,7 @@ public class SettingModel implements SettingContract.Model {
             public Class<ParameterSetResponse> getEntityType() {
                 return ParameterSetResponse.class;
             }
-        });
+        },false);
     }
 
     @Override
@@ -181,7 +181,7 @@ public class SettingModel implements SettingContract.Model {
             public Class<ParameterSetResponse> getEntityType() {
                 return ParameterSetResponse.class;
             }
-        });
+        },false);
     }
 
     @Override
@@ -219,7 +219,7 @@ public class SettingModel implements SettingContract.Model {
             public Class<ParameterSetResponse> getEntityType() {
                 return ParameterSetResponse.class;
             }
-        });
+        },false);
     }
 
 }

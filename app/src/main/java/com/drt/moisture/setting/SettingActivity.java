@@ -3,12 +3,14 @@ package com.drt.moisture.setting;
 import android.content.DialogInterface;
 import android.os.Bundle;
 import android.os.Handler;
+import android.os.SystemClock;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AlertDialog;
 import android.text.TextUtils;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.AdapterView;
 import android.widget.EditText;
 import android.widget.ListView;
@@ -33,12 +35,14 @@ import com.drt.moisture.data.source.bluetooth.resquest.SetRateRequest;
 import com.inuker.bluetooth.library.Constants;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Calendar;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
 import butterknife.BindView;
+import butterknife.OnClick;
 
 public class SettingActivity extends BluetoothBaseActivity<SettingPresenter> implements SettingContract.View, AdapterView.OnItemClickListener {
 
@@ -244,15 +248,15 @@ public class SettingActivity extends BluetoothBaseActivity<SettingPresenter> imp
         item1.put("title", "时间设置");
         data.add(item1);
 
-        item1 = new HashMap<>();
-        item1.put("icon", R.mipmap.icons_recurring_appointment);
-        item1.put("title", "查询频率");
-        data.add(item1);
-
-        item1 = new HashMap<>();
-        item1.put("icon", R.mipmap.icons_data_configuration);
-        item1.put("title", "参数设置");
-        data.add(item1);
+//        item1 = new HashMap<>();
+//        item1.put("icon", R.mipmap.icons_recurring_appointment);
+//        item1.put("title", "查询频率");
+//        data.add(item1);
+//
+//        item1 = new HashMap<>();
+//        item1.put("icon", R.mipmap.icons_data_configuration);
+//        item1.put("title", "参数设置");
+//        data.add(item1);
 
         listView.setAdapter(new SimpleAdapter(this, data,
                 R.layout.adapter_setting_item, new String[]{"icon", "title"}, new int[]{R.id.icon, R.id.title}));
@@ -282,7 +286,7 @@ public class SettingActivity extends BluetoothBaseActivity<SettingPresenter> imp
     }
 
     @Override
-    public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+    public void onItemClick(final AdapterView<?> parent, final View view, final int position, long id) {
         if (!isBleConnected) {
             Toast.makeText(this, "设备尚未连接，请点击右上角蓝牙按钮连接设备", Toast.LENGTH_SHORT).show();
             return;
@@ -355,6 +359,39 @@ public class SettingActivity extends BluetoothBaseActivity<SettingPresenter> imp
             }
             break;
             case 2: {
+                if (id >= 0) {
+                    final EditText edit = new EditText(this);
+                    AlertDialog.Builder editDialog = new AlertDialog.Builder(this);
+                    editDialog.setTitle("请输入密码");
+                    //设置dialog布局
+                    editDialog.setView(edit);
+                    //设置按钮
+                    editDialog.setPositiveButton("确认"
+                            , new DialogInterface.OnClickListener() {
+                                @Override
+                                public void onClick(DialogInterface dialog, int which) {
+
+                                    if (edit.getText().toString().equals("123456")) {
+                                        onItemClick(parent, view, position, -1);
+                                    } else {
+                                        Toast.makeText(SettingActivity.this, "密码错误", Toast.LENGTH_SHORT).show();
+                                    }
+                                    dialog.dismiss();
+                                    hideInput();
+                                }
+                            })
+                            .setNegativeButton("取消", new DialogInterface.OnClickListener() {
+                                @Override
+                                public void onClick(DialogInterface dialog, int which) {
+                                    // TODO Auto-generated method stub
+                                    dialog.dismiss();
+                                }
+                            })
+                            .setCancelable(false);
+                    editDialog.create().show();
+                    return;
+                }
+
                 dialogRate = LayoutInflater.from(this).inflate(R.layout.dialog_rate, null);
                 final Spinner spinner2 = dialogRate.findViewById(R.id.spinner2);
 
@@ -385,6 +422,38 @@ public class SettingActivity extends BluetoothBaseActivity<SettingPresenter> imp
             }
             break;
             case 3: {
+                if (id >= 0) {
+                    final EditText edit = new EditText(this);
+                    AlertDialog.Builder editDialog = new AlertDialog.Builder(this);
+                    editDialog.setTitle("请输入密码");
+                    //设置dialog布局
+                    editDialog.setView(edit);
+                    //设置按钮
+                    editDialog.setPositiveButton("确认"
+                            , new DialogInterface.OnClickListener() {
+                                @Override
+                                public void onClick(DialogInterface dialog, int which) {
+
+                                    if (edit.getText().toString().equals("123456")) {
+                                        onItemClick(parent, view, position, -1);
+                                    } else {
+                                        Toast.makeText(SettingActivity.this, "密码错误", Toast.LENGTH_SHORT).show();
+                                    }
+                                    dialog.dismiss();
+                                    hideInput();
+                                }
+                            })
+                            .setNegativeButton("取消", new DialogInterface.OnClickListener() {
+                                @Override
+                                public void onClick(DialogInterface dialog, int which) {
+                                    // TODO Auto-generated method stub
+                                    dialog.dismiss();
+                                }
+                            })
+                            .setCancelable(false);
+                    editDialog.create().show();
+                    return;
+                }
                 dialogParameSet = LayoutInflater.from(this).inflate(R.layout.dialog_parame_set, null);
                 final TabHost tabhost = dialogParameSet.findViewById(android.R.id.tabhost);
                 // 必须调用该方法，才能设置tab样式
@@ -454,7 +523,6 @@ public class SettingActivity extends BluetoothBaseActivity<SettingPresenter> imp
                 final EditText csM_2 = dialogParameSet.findViewById(R.id.csM_2);
                 final EditText csN_2 = dialogParameSet.findViewById(R.id.csN_2);
                 final EditText csO_2 = dialogParameSet.findViewById(R.id.csO_2);
-
 
 
                 AlertDialog.Builder builder = new AlertDialog.Builder(this).setTitle("参数设置")
@@ -656,4 +724,61 @@ public class SettingActivity extends BluetoothBaseActivity<SettingPresenter> imp
 //            handler.postDelayed(this, 45000);
         }
     };
+
+
+    private int COUNTS = 6;// 点击次数
+    private long[] mHits = new long[COUNTS];//记录点击次数
+    private long DURATION = 3000;//有效时间
+
+
+    @OnClick(R.id.set_parent)
+    public void onTap5(View view) {
+        //将mHints数组内的所有元素左移一个位置
+        System.arraycopy(mHits, 1, mHits, 0, mHits.length - 1);
+        //获得当前系统已经启动的时间
+        mHits[mHits.length - 1] = SystemClock.uptimeMillis();
+        if (mHits[0] >= (SystemClock.uptimeMillis() - DURATION)) {
+            // 相关逻辑操作
+
+            List<Map<String, Object>> data = new ArrayList<>();
+            Map<String, Object> item1 = new HashMap<>();
+            item1.put("icon", R.mipmap.icons_device_information);
+            item1.put("title", "设备信息");
+            data.add(item1);
+
+            item1 = new HashMap<>();
+            item1.put("icon", R.mipmap.icons_clock_settings);
+            item1.put("title", "时间设置");
+            data.add(item1);
+
+            item1 = new HashMap<>();
+            item1.put("icon", R.mipmap.icons_recurring_appointment);
+            item1.put("title", "查询频率");
+            data.add(item1);
+
+            item1 = new HashMap<>();
+            item1.put("icon", R.mipmap.icons_data_configuration);
+            item1.put("title", "参数设置");
+            data.add(item1);
+
+            listView.setAdapter(new SimpleAdapter(this, data,
+                    R.layout.adapter_setting_item, new String[]{"icon", "title"}, new int[]{R.id.icon, R.id.title}));
+
+            //初始化点击次数
+            mHits = new long[COUNTS];
+        }
+    }
+
+    /**
+     * 隐藏键盘
+     */
+    protected void hideInput() {
+        InputMethodManager imm = (InputMethodManager) getSystemService(INPUT_METHOD_SERVICE);
+        View v = getWindow().peekDecorView();
+        if (null != v) {
+            imm.hideSoftInputFromWindow(v.getWindowToken(), 0);
+        }
+    }
+
+
 }

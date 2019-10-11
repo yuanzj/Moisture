@@ -7,6 +7,7 @@
     android:background="@color/colorDefaultBg"
     android:gravity="center_horizontal"
     android:orientation="vertical"
+    android:id="@+id/set_parent"
     tools:context=".MainActivity">
 
     <include layout="@layout/widget_tool_bar" />

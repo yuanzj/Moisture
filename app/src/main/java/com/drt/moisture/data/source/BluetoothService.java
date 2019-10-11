@@ -101,7 +101,7 @@ public interface BluetoothService {
      * @param measureParame
      * @param sppDataCallback
      */
-    void setMeasureParame(MeasureParame measureParame, SppDataCallback<ParameterSetResponse> sppDataCallback);
+    void setMeasureParame(MeasureParame measureParame, SppDataCallback<ParameterSetResponse> sppDataCallback, boolean retry);
 
 
     /**
@@ -109,7 +109,13 @@ public interface BluetoothService {
      * @param correctParame
      * @param sppDataCallback
      */
-    void setCorrectParame(CorrectParame correctParame, SppDataCallback<ParameterSetResponse> sppDataCallback);
+    void setCorrectParame(CorrectParame correctParame, SppDataCallback<ParameterSetResponse> sppDataCallback, boolean retry);
+
+    /**
+     * 设置频率
+     * @param sppDataCallback
+     */
+    void setRateParam(int rate, int ratio, SppDataCallback<ParameterSetResponse> sppDataCallback, boolean retry);
 
     /**
      *
@@ -143,12 +149,6 @@ public interface BluetoothService {
      * @param sppDataCallback
      */
     void queryRateParame(SppDataCallback<SetRateRequest> sppDataCallback);
-
-    /**
-     * 设置频率
-     * @param sppDataCallback
-     */
-    void setRateParam(int rate, int ratio, SppDataCallback<ParameterSetResponse> sppDataCallback);
 
     /**
      * 查询测量记录

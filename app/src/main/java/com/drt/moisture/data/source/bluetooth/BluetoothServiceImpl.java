@@ -366,7 +366,7 @@ public class BluetoothServiceImpl implements BluetoothService, BleWriteResponse 
     }
 
     @Override
-    public void setMeasureParame(MeasureParame measureParame, SppDataCallback<ParameterSetResponse> sppDataCallback) {
+    public void setMeasureParame(final MeasureParame measureParame, final SppDataCallback<ParameterSetResponse> sppDataCallback, boolean retry) {
         this.sppDataCallback = sppDataCallback;
         SetMeasureParameRequest setMeasureParameRequest = new SetMeasureParameRequest();
         setMeasureParameRequest.setCmdGroup((byte) 0xA2);
@@ -390,13 +390,40 @@ public class BluetoothServiceImpl implements BluetoothService, BleWriteResponse 
 
         try {
             App.getInstance().getBluetoothClient().write(App.getInstance().getConnectMacAddress(), UUIDUtils.makeUUID(0xFFE0), UUIDUtils.makeUUID(0xFFE1), BluetoothDataUtil.encode(setMeasureParameRequest), this);
+
+            if (!retry) {
+                expectResponseCode = 0xA2;
+                currentRetryCount = 0;
+                if (timeoutTimer != null) {
+                    timeoutTimer.cancel();
+                }
+                timeoutTimer = new Timer();
+                timeoutTimer.schedule(new TimerTask() {
+                    @Override
+                    public void run() {
+                        if (currentRetryCount >= 2) {
+                            currentRetryCount = 0;
+                            timeoutTimer.cancel();
+                            timeoutTimer = null;
+                        } else {
+                            if (timeoutTimer != null) {
+                                currentRetryCount++;
+                                setMeasureParame(measureParame, sppDataCallback, true);
+                            }
+                        }
+
+                    }
+                }, 300, 300);
+            }
+
+
         } catch (IllegalAccessException | RkFieldException | FieldConvertException e) {
             e.printStackTrace();
         }
     }
 
     @Override
-    public void setCorrectParame(CorrectParame measureParame, SppDataCallback<ParameterSetResponse> sppDataCallback) {
+    public void setCorrectParame(final CorrectParame measureParame, final SppDataCallback<ParameterSetResponse> sppDataCallback, boolean retry) {
         this.sppDataCallback = sppDataCallback;
         SetCorrectParameRequest setCorrectParameRequest = new SetCorrectParameRequest();
         setCorrectParameRequest.setCmdGroup((byte) 0xA2);
@@ -415,6 +442,32 @@ public class BluetoothServiceImpl implements BluetoothService, BleWriteResponse 
 
         try {
             App.getInstance().getBluetoothClient().write(App.getInstance().getConnectMacAddress(), UUIDUtils.makeUUID(0xFFE0), UUIDUtils.makeUUID(0xFFE1), BluetoothDataUtil.encode(setCorrectParameRequest), this);
+
+            if (!retry) {
+                expectResponseCode = 0xA2;
+                currentRetryCount = 0;
+                if (timeoutTimer != null) {
+                    timeoutTimer.cancel();
+                }
+                timeoutTimer = new Timer();
+                timeoutTimer.schedule(new TimerTask() {
+                    @Override
+                    public void run() {
+                        if (currentRetryCount >= 2) {
+                            currentRetryCount = 0;
+                            timeoutTimer.cancel();
+                            timeoutTimer = null;
+                        } else {
+                            if (timeoutTimer != null) {
+                                currentRetryCount++;
+                                setCorrectParame(measureParame, sppDataCallback, true);
+                            }
+                        }
+
+                    }
+                }, 300, 300);
+            }
+
         } catch (IllegalAccessException | RkFieldException | FieldConvertException e) {
             e.printStackTrace();
         }
@@ -516,7 +569,7 @@ public class BluetoothServiceImpl implements BluetoothService, BleWriteResponse 
     }
 
     @Override
-    public void setRateParam(int rate, int ratio, SppDataCallback<ParameterSetResponse> sppDataCallback) {
+    public void setRateParam(final int rate, final int ratio, final SppDataCallback<ParameterSetResponse> sppDataCallback, boolean retry) {
         this.sppDataCallback = sppDataCallback;
         SetRateRequest setRateRequest = new SetRateRequest();
         setRateRequest.setCmdGroup((byte) 0xA2);
@@ -527,13 +580,38 @@ public class BluetoothServiceImpl implements BluetoothService, BleWriteResponse 
 
         try {
             App.getInstance().getBluetoothClient().write(App.getInstance().getConnectMacAddress(), UUIDUtils.makeUUID(0xFFE0), UUIDUtils.makeUUID(0xFFE1), BluetoothDataUtil.encode(setRateRequest), this);
+
+            if (!retry) {
+                expectResponseCode = 0xA2;
+                currentRetryCount = 0;
+                if (timeoutTimer != null) {
+                    timeoutTimer.cancel();
+                }
+                timeoutTimer = new Timer();
+                timeoutTimer.schedule(new TimerTask() {
+                    @Override
+                    public void run() {
+                        if (currentRetryCount >= 2) {
+                            currentRetryCount = 0;
+                            timeoutTimer.cancel();
+                            timeoutTimer = null;
+                        } else {
+                            if (timeoutTimer != null) {
+                                currentRetryCount++;
+                                setRateParam(rate, ratio, sppDataCallback, true);
+                            }
+                        }
+
+                    }
+                }, 300, 300);
+            }
         } catch (IllegalAccessException | RkFieldException | FieldConvertException e) {
             e.printStackTrace();
         }
     }
 
     @Override
-    public void queryHisRecord(String name ,int index ,SppDataCallback<HisRecordDataResponse> sppDataCallback) {
+    public void queryHisRecord(String name, int index, SppDataCallback<HisRecordDataResponse> sppDataCallback) {
         this.sppDataCallback = sppDataCallback;
 
         HisRecordDataRequest recordDataRequest = new HisRecordDataRequest();

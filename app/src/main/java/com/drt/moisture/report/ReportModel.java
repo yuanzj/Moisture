@@ -66,6 +66,10 @@ public class ReportModel implements ReportContract.Model, SppDataCallback<HisRec
     @Override
     public void delivery(HisRecordDataResponse recordDataResponse) {
 
+        if (recordDataResponse.getTime() == 0 && recordDataResponse.getResponse() == 4) {
+            return;
+        }
+
         if (recordDataResponse.getTime() == 0) {
             running = false;
             return;

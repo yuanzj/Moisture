@@ -2,6 +2,7 @@ package com.drt.moisture.correct;
 
 import android.annotation.SuppressLint;
 
+import android.os.Handler;
 import android.util.Log;
 
 import com.drt.moisture.App;
@@ -140,6 +141,25 @@ public class CorrectModel implements CorrectContract.Model, SppDataCallback<Corr
             clockerTime.cancel();
         }
         if (sendCommand) {
+            App.getInstance().getBluetoothService().stopCorrect(new SppDataCallback<StopMeasureResponse>() {
+
+                @Override
+                public void delivery(StopMeasureResponse stopMeasureResponse) {
+
+                }
+
+                @Override
+                public Class<StopMeasureResponse> getEntityType() {
+                    return StopMeasureResponse.class;
+                }
+            });
+
+            try {
+                Thread.sleep(100);
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
+
             App.getInstance().getBluetoothService().stopCorrect(new SppDataCallback<StopMeasureResponse>() {
 
                 @Override
