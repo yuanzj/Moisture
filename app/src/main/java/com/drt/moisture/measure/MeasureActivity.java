@@ -2,6 +2,9 @@ package com.drt.moisture.measure;
 
 import android.content.DialogInterface;
 import android.graphics.Point;
+import android.media.Ringtone;
+import android.media.RingtoneManager;
+import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AlertDialog;
@@ -227,7 +230,23 @@ public class MeasureActivity extends BluetoothBaseActivity<MeasurePresenter> imp
                     case ERROR:
                     case DONE:
                         if (measureStatus == MeasureStatus.DONE) {
-                            Toast.makeText(getApplicationContext(), "测量完成", Toast.LENGTH_LONG).show();
+                            AlertDialog.Builder builder=new AlertDialog.Builder(MeasureActivity.this);
+                            builder.setTitle("提示");//设置title
+                            builder.setMessage("测量完成");//设置内容
+                            //点击确认按钮事件
+                            builder.setPositiveButton("确认", new DialogInterface.OnClickListener() {
+                                @Override
+                                public void onClick(DialogInterface dialog, int which) {
+                                    dialog.dismiss();
+                                }
+                            });
+                            //创建出AlertDialog对象
+                            AlertDialog alertDialog=builder.create();
+                            //点击对话框之外的地方不消失
+                            alertDialog.setCanceledOnTouchOutside(false);
+                            //设置显示
+                            alertDialog.show();
+                            playSound();
                         }
                         measureName.setEnabled(true);
                         history.setEnabled(true);
@@ -355,8 +374,12 @@ public class MeasureActivity extends BluetoothBaseActivity<MeasurePresenter> imp
         xAxis.setValueFormatter(new ValueFormatter() {
             @Override
             public String getFormattedValue(float value) {
-                Entry entry = chart.getLineData().getDataSetByIndex(0).getEntryForIndex((int) value);
-                return (String) entry.getData();
+                if (chart.getLineData().getDataSetByIndex(0) != null && chart.getLineData().getDataSetByIndex(0).getEntryForIndex((int) value) != null) {
+                    Entry entry = chart.getLineData().getDataSetByIndex(0).getEntryForIndex((int) value);
+                    return (String) entry.getData();
+                } else {
+                    return "";
+                }
             }
         });
 
@@ -373,5 +396,11 @@ public class MeasureActivity extends BluetoothBaseActivity<MeasurePresenter> imp
         rightAxis.setAxisMinimum(0f); // this replaces setStartAtZero(true)
         rightAxis.setAxisMaximum(1.0000f);
 
+    }
+
+    public void playSound() {
+        Uri uri = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION);
+        Ringtone rt = RingtoneManager.getRingtone(getApplicationContext(), uri);
+        rt.play();
     }
 }

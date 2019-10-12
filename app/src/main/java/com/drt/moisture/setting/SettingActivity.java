@@ -1,5 +1,6 @@
 package com.drt.moisture.setting;
 
+import android.content.Context;
 import android.content.DialogInterface;
 import android.os.Bundle;
 import android.os.Handler;
@@ -32,8 +33,16 @@ import com.drt.moisture.data.source.bluetooth.resquest.SetCorrectParameRequest;
 import com.drt.moisture.data.source.bluetooth.resquest.SetHumidityParameRequest;
 import com.drt.moisture.data.source.bluetooth.resquest.SetMeasureParameRequest;
 import com.drt.moisture.data.source.bluetooth.resquest.SetRateRequest;
+import com.drt.moisture.util.ExcelUtil;
 import com.inuker.bluetooth.library.Constants;
 
+import java.io.BufferedReader;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Calendar;
@@ -371,7 +380,7 @@ public class SettingActivity extends BluetoothBaseActivity<SettingPresenter> imp
                                 @Override
                                 public void onClick(DialogInterface dialog, int which) {
 
-                                    if (edit.getText().toString().equals("123456")) {
+                                    if (edit.getText().toString().equals(readFromFile(ExcelUtil.getSDPath() + "/水分活度测量/config.txt"))) {
                                         onItemClick(parent, view, position, -1);
                                     } else {
                                         Toast.makeText(SettingActivity.this, "密码错误", Toast.LENGTH_SHORT).show();
@@ -434,7 +443,7 @@ public class SettingActivity extends BluetoothBaseActivity<SettingPresenter> imp
                                 @Override
                                 public void onClick(DialogInterface dialog, int which) {
 
-                                    if (edit.getText().toString().equals("123456")) {
+                                    if (edit.getText().toString().equals(readFromFile(ExcelUtil.getSDPath() + "/水分活度测量/config.txt"))) {
                                         onItemClick(parent, view, position, -1);
                                     } else {
                                         Toast.makeText(SettingActivity.this, "密码错误", Toast.LENGTH_SHORT).show();
@@ -780,5 +789,58 @@ public class SettingActivity extends BluetoothBaseActivity<SettingPresenter> imp
         }
     }
 
+    private String readFromFile(String path) {
+
+        String ret = "";
+
+        InputStream inputStream = null;
+        InputStreamReader inputStreamReader = null;
+        BufferedReader bufferedReader = null;
+        try {
+            File file = new File(path);
+            if (!file.exists()) {
+                return "123456";
+            }
+            inputStream = new FileInputStream(file);
+            inputStreamReader = new InputStreamReader(inputStream);
+            bufferedReader = new BufferedReader(inputStreamReader);
+
+            String receiveString = "";
+            StringBuilder stringBuilder = new StringBuilder();
+
+            while ((receiveString = bufferedReader.readLine()) != null) {
+                stringBuilder.append(receiveString);
+            }
+            ret = stringBuilder.toString();
+        } catch (FileNotFoundException e) {
+            Log.e("login activity", "File not found: " + e.toString());
+        } catch (IOException e) {
+            Log.e("login activity", "Can not read file: " + e.toString());
+        } finally {
+            if (bufferedReader != null) {
+                try {
+                    bufferedReader.close();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            }
+            if (inputStreamReader != null) {
+                try {
+                    inputStreamReader.close();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            }
+            if (inputStream != null) {
+                try {
+                    inputStream.close();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            }
+        }
+
+        return ret;
+    }
 
 }

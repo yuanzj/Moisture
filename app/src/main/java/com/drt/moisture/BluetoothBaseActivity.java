@@ -111,6 +111,7 @@ public abstract class BluetoothBaseActivity<T extends BasePresenter> extends Bas
             } else {
                 secondTitle.setText("已连接");
             }
+            App.getInstance().getBluetoothService().querySoc(socResponseSppDataCallback);
         } else {
             btnBluetooth.setImageResource(R.mipmap.ic_bluetooth);
             setBleConnectStatus(STATUS_DISCONNECTED);
