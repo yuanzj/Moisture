@@ -1,4 +1,4 @@
-package com.drt.moisture.setting;
+package com.drt.moisture.syssetting;
 
 import com.drt.moisture.App;
 import com.drt.moisture.data.CorrectParame;
@@ -162,7 +162,7 @@ public class SettingModel implements SettingContract.Model {
             public Class<ParameterSetResponse> getEntityType() {
                 return ParameterSetResponse.class;
             }
-        },false, 0x01);
+        },false,0x01);
     }
 
     @Override

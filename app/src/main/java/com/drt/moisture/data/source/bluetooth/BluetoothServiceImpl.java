@@ -366,13 +366,14 @@ public class BluetoothServiceImpl implements BluetoothService, BleWriteResponse 
     }
 
     @Override
-    public void setMeasureParame(final MeasureParame measureParame, final SppDataCallback<ParameterSetResponse> sppDataCallback, boolean retry) {
+    public void setMeasureParame(final MeasureParame measureParame, final SppDataCallback<ParameterSetResponse> sppDataCallback, boolean retry, final int type) {
         this.sppDataCallback = sppDataCallback;
         SetMeasureParameRequest setMeasureParameRequest = new SetMeasureParameRequest();
         setMeasureParameRequest.setCmdGroup((byte) 0xA2);
         setMeasureParameRequest.setCmd((byte) 0x06);
         setMeasureParameRequest.setResponse((byte) 0x01);
         setMeasureParameRequest.setReserved(0);
+        setMeasureParameRequest.setType(type);
         setMeasureParameRequest.setA(measureParame.getA());
         setMeasureParameRequest.setB(measureParame.getB());
         setMeasureParameRequest.setC(measureParame.getC());
@@ -408,7 +409,7 @@ public class BluetoothServiceImpl implements BluetoothService, BleWriteResponse 
                         } else {
                             if (timeoutTimer != null) {
                                 currentRetryCount++;
-                                setMeasureParame(measureParame, sppDataCallback, true);
+                                setMeasureParame(measureParame, sppDataCallback, true, type);
                             }
                         }
 
@@ -423,13 +424,14 @@ public class BluetoothServiceImpl implements BluetoothService, BleWriteResponse 
     }
 
     @Override
-    public void setCorrectParame(final CorrectParame measureParame, final SppDataCallback<ParameterSetResponse> sppDataCallback, boolean retry) {
+    public void setCorrectParame(final CorrectParame measureParame, final SppDataCallback<ParameterSetResponse> sppDataCallback, boolean retry , final int type) {
         this.sppDataCallback = sppDataCallback;
         SetCorrectParameRequest setCorrectParameRequest = new SetCorrectParameRequest();
         setCorrectParameRequest.setCmdGroup((byte) 0xA2);
         setCorrectParameRequest.setCmd((byte) 0x07);
         setCorrectParameRequest.setResponse((byte) 0x01);
         setCorrectParameRequest.setReserved(0);
+        setCorrectParameRequest.setType(type);
         setCorrectParameRequest.setA(measureParame.getA());
         setCorrectParameRequest.setB(measureParame.getB());
         setCorrectParameRequest.setC(measureParame.getC());
@@ -460,7 +462,7 @@ public class BluetoothServiceImpl implements BluetoothService, BleWriteResponse 
                         } else {
                             if (timeoutTimer != null) {
                                 currentRetryCount++;
-                                setCorrectParame(measureParame, sppDataCallback, true);
+                                setCorrectParame(measureParame, sppDataCallback, true, type);
                             }
                         }
 
@@ -505,11 +507,11 @@ public class BluetoothServiceImpl implements BluetoothService, BleWriteResponse 
     }
 
     @Override
-    public void queryMeasureParame(SppDataCallback<SetMeasureParameRequest> sppDataCallback) {
+    public void reset(SppDataCallback<ParameterSetResponse> sppDataCallback) {
         this.sppDataCallback = sppDataCallback;
         QueryParameRequest queryParameRequest = new QueryParameRequest();
-        queryParameRequest.setCmdGroup((byte) 0xA2);
-        queryParameRequest.setCmd((byte) 0x86);
+        queryParameRequest.setCmdGroup((byte) 0xA1);
+        queryParameRequest.setCmd((byte) 0x07);
         queryParameRequest.setResponse((byte) 0x01);
         queryParameRequest.setReserved(0);
 
@@ -521,14 +523,30 @@ public class BluetoothServiceImpl implements BluetoothService, BleWriteResponse 
     }
 
     @Override
-    public void queryCorrectParam(SppDataCallback<SetCorrectParameRequest> sppDataCallback) {
+    public void queryMeasureParame(int type, SppDataCallback<SetMeasureParameRequest> sppDataCallback) {
+        this.sppDataCallback = sppDataCallback;
+        QueryParameRequest queryParameRequest = new QueryParameRequest();
+        queryParameRequest.setCmdGroup((byte) 0xA2);
+        queryParameRequest.setCmd((byte) 0x86);
+        queryParameRequest.setResponse((byte) 0x01);
+        queryParameRequest.setReserved(0);
+        queryParameRequest.setType(type);
+        try {
+            App.getInstance().getBluetoothClient().write(App.getInstance().getConnectMacAddress(), UUIDUtils.makeUUID(0xFFE0), UUIDUtils.makeUUID(0xFFE1), BluetoothDataUtil.encode(queryParameRequest), this);
+        } catch (IllegalAccessException | RkFieldException | FieldConvertException e) {
+            e.printStackTrace();
+        }
+    }
+
+    @Override
+    public void queryCorrectParam(int type, SppDataCallback<SetCorrectParameRequest> sppDataCallback) {
         this.sppDataCallback = sppDataCallback;
         QueryParameRequest queryParameRequest = new QueryParameRequest();
         queryParameRequest.setCmdGroup((byte) 0xA2);
         queryParameRequest.setCmd((byte) 0x87);
         queryParameRequest.setResponse((byte) 0x01);
         queryParameRequest.setReserved(0);
-
+        queryParameRequest.setType(type);
         try {
             App.getInstance().getBluetoothClient().write(App.getInstance().getConnectMacAddress(), UUIDUtils.makeUUID(0xFFE0), UUIDUtils.makeUUID(0xFFE1), BluetoothDataUtil.encode(queryParameRequest), this);
         } catch (IllegalAccessException | RkFieldException | FieldConvertException e) {

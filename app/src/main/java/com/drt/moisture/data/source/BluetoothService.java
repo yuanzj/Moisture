@@ -101,7 +101,7 @@ public interface BluetoothService {
      * @param measureParame
      * @param sppDataCallback
      */
-    void setMeasureParame(MeasureParame measureParame, SppDataCallback<ParameterSetResponse> sppDataCallback, boolean retry);
+    void setMeasureParame(MeasureParame measureParame, SppDataCallback<ParameterSetResponse> sppDataCallback, boolean retry, int type);
 
 
     /**
@@ -109,7 +109,7 @@ public interface BluetoothService {
      * @param correctParame
      * @param sppDataCallback
      */
-    void setCorrectParame(CorrectParame correctParame, SppDataCallback<ParameterSetResponse> sppDataCallback, boolean retry);
+    void setCorrectParame(CorrectParame correctParame, SppDataCallback<ParameterSetResponse> sppDataCallback, boolean retry, int type);
 
     /**
      * 设置频率
@@ -124,18 +124,18 @@ public interface BluetoothService {
      */
     void setHumidityParame(HumidityParame humidityParame, SppDataCallback<ParameterSetResponse> sppDataCallback);
 
-
+    void reset(SppDataCallback<ParameterSetResponse> sppDataCallback);
     /**
      * 查询测量参数
      * @param sppDataCallback
      */
-    void queryMeasureParame(SppDataCallback<SetMeasureParameRequest> sppDataCallback);
+    void queryMeasureParame(int type, SppDataCallback<SetMeasureParameRequest> sppDataCallback);
 
     /**
      * 查询校准参数
      * @param sppDataCallback
      */
-    void queryCorrectParam(SppDataCallback<SetCorrectParameRequest> sppDataCallback);
+    void queryCorrectParam(int type, SppDataCallback<SetCorrectParameRequest> sppDataCallback);
 
     /**
      * 查询湿度

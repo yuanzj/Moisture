@@ -16,31 +16,34 @@ public class SetCorrectParameRequest {
     @RkField(position = 3, length = 2)
     private int Reserved;
 
-    @RkField(position = 5, length = 4)
+    @RkField(position = 5, length = 1)
+    private int type;
+
+    @RkField(position = 6, length = 4)
     private int a;
 
-    @RkField(position = 9, length = 4)
+    @RkField(position = 10, length = 4)
     private int b;
 
-    @RkField(position = 13, length = 4)
+    @RkField(position = 14, length = 4)
     private int c;
 
-    @RkField(position = 17, length = 4)
+    @RkField(position = 18, length = 4)
     private int d;
 
-    @RkField(position = 21, length = 4)
+    @RkField(position = 22, length = 4)
     private int e;
 
-    @RkField(position = 25, length = 4)
+    @RkField(position = 26, length = 4)
     private int f;
 
-    @RkField(position = 29, length = 4)
+    @RkField(position = 30, length = 4)
     private int g;
 
-    @RkField(position = 33, length = 4)
+    @RkField(position = 34, length = 4)
     private int h;
 
-    @RkField(position = 37, length = 4)
+    @RkField(position = 38, length = 4)
     private int i;
 
 
@@ -146,5 +149,13 @@ public class SetCorrectParameRequest {
 
     public void setI(int i) {
         this.i = i;
+    }
+
+    public int getType() {
+        return type;
+    }
+
+    public void setType(int type) {
+        this.type = type;
     }
 }

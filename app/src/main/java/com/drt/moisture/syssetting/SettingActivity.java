@@ -1,14 +1,11 @@
-package com.drt.moisture.setting;
+package com.drt.moisture.syssetting;
 
-import android.content.Context;
 import android.content.DialogInterface;
-import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.SystemClock;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AlertDialog;
-import android.text.TextUtils;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -45,7 +42,6 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Calendar;
 import java.util.HashMap;
 import java.util.List;
@@ -249,24 +245,24 @@ public class SettingActivity extends BluetoothBaseActivity<SettingPresenter> imp
 
         List<Map<String, Object>> data = new ArrayList<>();
         Map<String, Object> item1 = new HashMap<>();
-        item1.put("icon", R.mipmap.icons_device_information);
-        item1.put("title", "设备信息");
-        data.add(item1);
-
-        item1 = new HashMap<>();
-        item1.put("icon", R.mipmap.icons_clock_settings);
-        item1.put("title", "时间设置");
-        data.add(item1);
+//        item1.put("icon", R.mipmap.icons_device_information);
+//        item1.put("title", "设备信息");
+//        data.add(item1);
+//
+//        item1 = new HashMap<>();
+//        item1.put("icon", R.mipmap.icons_clock_settings);
+//        item1.put("title", "时间设置");
+//        data.add(item1);
 
 //        item1 = new HashMap<>();
 //        item1.put("icon", R.mipmap.icons_recurring_appointment);
 //        item1.put("title", "查询频率");
 //        data.add(item1);
 //
-//        item1 = new HashMap<>();
-//        item1.put("icon", R.mipmap.icons_data_configuration);
-//        item1.put("title", "参数设置");
-//        data.add(item1);
+        item1 = new HashMap<>();
+        item1.put("icon", R.mipmap.icons_data_configuration);
+        item1.put("title", "参数设置");
+        data.add(item1);
 
         listView.setAdapter(new SimpleAdapter(this, data,
                 R.layout.adapter_setting_item, new String[]{"icon", "title"}, new int[]{R.id.icon, R.id.title}));
@@ -302,95 +298,73 @@ public class SettingActivity extends BluetoothBaseActivity<SettingPresenter> imp
             return;
         }
         switch (position) {
-            case 0: {
-                // 取得自定义View
-                deviceInfoView = LayoutInflater.from(this).inflate(R.layout.dialog_device_info, null);
-                AlertDialog.Builder builder = new AlertDialog.Builder(this).setTitle("设备信息")
-                        .setView(deviceInfoView)
-                        .setPositiveButton("确认", new DialogInterface.OnClickListener() {
-                            @Override
-                            public void onClick(DialogInterface dialogInterface, int i) {
-
-                            }
-                        })
-                        .setCancelable(false);
-                builder.show();
-                mPresenter.queryDeviceInfo();
-            }
-            break;
-            case 1: {
-                dialogDateTime = LayoutInflater.from(this).inflate(R.layout.dialog_date_time, null);
-                final EditText etYear = dialogDateTime.findViewById(R.id.year);
-                final EditText etMonth = dialogDateTime.findViewById(R.id.month);
-                final EditText etDay = dialogDateTime.findViewById(R.id.day);
-                final EditText etHour = dialogDateTime.findViewById(R.id.hour);
-                final EditText etMinute = dialogDateTime.findViewById(R.id.minute);
-
-                Calendar calendar = Calendar.getInstance();
-                int year = calendar.get(Calendar.YEAR);
-                int month = calendar.get(Calendar.MONTH) + 1;
-                int day = calendar.get(Calendar.DAY_OF_MONTH);
-                int hour = calendar.get(Calendar.HOUR_OF_DAY);
-                int minute = calendar.get(Calendar.MINUTE);
-
-                etYear.setText(String.valueOf(year));
-                etMonth.setText(String.valueOf(month));
-                etDay.setText(String.valueOf(day));
-                etHour.setText(String.valueOf(hour));
-                etMinute.setText(String.valueOf(minute));
-
-                AlertDialog.Builder builder = new AlertDialog.Builder(this).setTitle("时间设置")
-                        .setView(dialogDateTime)
-                        .setPositiveButton("确认", new DialogInterface.OnClickListener() {
-                            @Override
-                            public void onClick(DialogInterface dialogInterface, int i) {
-                                int year = Integer.parseInt(etYear.getText().toString());
-                                int month = Integer.parseInt(etMonth.getText().toString()) - 1;
-                                int day = Integer.parseInt(etDay.getText().toString());
-                                int hour = Integer.parseInt(etHour.getText().toString());
-                                int minute = Integer.parseInt(etMinute.getText().toString());
-
-                                Calendar calendar = Calendar.getInstance();
-                                calendar.set(year, month, day, hour, minute);
-                                long timeValue = calendar.getTime().getTime() / 1000;
-
-                                mPresenter.setTime(timeValue);
-                            }
-                        })
-                        .setNegativeButton("取消", new DialogInterface.OnClickListener() {
-                            @Override
-                            public void onClick(DialogInterface dialog, int which) {
-                                // TODO Auto-generated method stub
-                                dialog.dismiss();
-                            }
-                        })
-                        .setCancelable(false);
-                builder.show();
-            }
-            break;
-            case 2: {
-
-                final String[] items = { "出厂参数设置", "用户参数设置" };
-                AlertDialog.Builder listDialog = new AlertDialog.Builder(this);
-                listDialog.setTitle("请选择参数设置类型");
-                listDialog.setItems(items, new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialog, int which) {
-                        // which 下标从0开始
-                        // ...To-do
-                        switch (which) {
-                            case 0:
-                                startActivity(new Intent(SettingActivity.this, com.drt.moisture.syssetting.SettingActivity.class));
-                                break;
-                            case 1:
-                                startActivity(new Intent(SettingActivity.this, com.drt.moisture.usersetting.SettingActivity.class));
-                                break;
-                            default:
-                                break;
-                        }
-                    }
-                });
-                listDialog.show();
+//            case 0: {
+//                // 取得自定义View
+//                deviceInfoView = LayoutInflater.from(this).inflate(R.layout.dialog_device_info, null);
+//                AlertDialog.Builder builder = new AlertDialog.Builder(this).setTitle("设备信息")
+//                        .setView(deviceInfoView)
+//                        .setPositiveButton("确认", new DialogInterface.OnClickListener() {
+//                            @Override
+//                            public void onClick(DialogInterface dialogInterface, int i) {
+//
+//                            }
+//                        })
+//                        .setCancelable(false);
+//                builder.show();
+//                mPresenter.queryDeviceInfo();
+//            }
+//            break;
+//            case 1: {
+//                dialogDateTime = LayoutInflater.from(this).inflate(R.layout.dialog_date_time, null);
+//                final EditText etYear = dialogDateTime.findViewById(R.id.year);
+//                final EditText etMonth = dialogDateTime.findViewById(R.id.month);
+//                final EditText etDay = dialogDateTime.findViewById(R.id.day);
+//                final EditText etHour = dialogDateTime.findViewById(R.id.hour);
+//                final EditText etMinute = dialogDateTime.findViewById(R.id.minute);
+//
+//                Calendar calendar = Calendar.getInstance();
+//                int year = calendar.get(Calendar.YEAR);
+//                int month = calendar.get(Calendar.MONTH) + 1;
+//                int day = calendar.get(Calendar.DAY_OF_MONTH);
+//                int hour = calendar.get(Calendar.HOUR_OF_DAY);
+//                int minute = calendar.get(Calendar.MINUTE);
+//
+//                etYear.setText(String.valueOf(year));
+//                etMonth.setText(String.valueOf(month));
+//                etDay.setText(String.valueOf(day));
+//                etHour.setText(String.valueOf(hour));
+//                etMinute.setText(String.valueOf(minute));
+//
+//                AlertDialog.Builder builder = new AlertDialog.Builder(this).setTitle("时间设置")
+//                        .setView(dialogDateTime)
+//                        .setPositiveButton("确认", new DialogInterface.OnClickListener() {
+//                            @Override
+//                            public void onClick(DialogInterface dialogInterface, int i) {
+//                                int year = Integer.parseInt(etYear.getText().toString());
+//                                int month = Integer.parseInt(etMonth.getText().toString()) - 1;
+//                                int day = Integer.parseInt(etDay.getText().toString());
+//                                int hour = Integer.parseInt(etHour.getText().toString());
+//                                int minute = Integer.parseInt(etMinute.getText().toString());
+//
+//                                Calendar calendar = Calendar.getInstance();
+//                                calendar.set(year, month, day, hour, minute);
+//                                long timeValue = calendar.getTime().getTime() / 1000;
+//
+//                                mPresenter.setTime(timeValue);
+//                            }
+//                        })
+//                        .setNegativeButton("取消", new DialogInterface.OnClickListener() {
+//                            @Override
+//                            public void onClick(DialogInterface dialog, int which) {
+//                                // TODO Auto-generated method stub
+//                                dialog.dismiss();
+//                            }
+//                        })
+//                        .setCancelable(false);
+//                builder.show();
+//            }
+//            break;
+//            case 2: {
 //                if (id >= 0) {
 //                    final EditText edit = new EditText(this);
 //                    AlertDialog.Builder editDialog = new AlertDialog.Builder(this);
@@ -451,9 +425,9 @@ public class SettingActivity extends BluetoothBaseActivity<SettingPresenter> imp
 //                        .setCancelable(false);
 //                builder.show();
 //                mPresenter.queryRate();
-            }
-            break;
-            case 3: {
+//            }
+//            break;
+            case 0: {
                 if (id >= 0) {
                     final EditText edit = new EditText(this);
                     AlertDialog.Builder editDialog = new AlertDialog.Builder(this);
@@ -466,7 +440,7 @@ public class SettingActivity extends BluetoothBaseActivity<SettingPresenter> imp
                                 @Override
                                 public void onClick(DialogInterface dialog, int which) {
 
-                                    if (edit.getText().toString().equals(readFromFile(ExcelUtil.getSDPath() + "/水分活度测量/config.txt"))) {
+                                    if (edit.getText().toString().equals(readFromFile(ExcelUtil.getSDPath() + "/水分活度测量/configSys.txt"))) {
                                         onItemClick(parent, view, position, -1);
                                     } else {
                                         Toast.makeText(SettingActivity.this, "密码错误", Toast.LENGTH_SHORT).show();
@@ -766,39 +740,39 @@ public class SettingActivity extends BluetoothBaseActivity<SettingPresenter> imp
     @OnClick(R.id.set_parent)
     public void onTap5(View view) {
         //将mHints数组内的所有元素左移一个位置
-        System.arraycopy(mHits, 1, mHits, 0, mHits.length - 1);
-        //获得当前系统已经启动的时间
-        mHits[mHits.length - 1] = SystemClock.uptimeMillis();
-        if (mHits[0] >= (SystemClock.uptimeMillis() - DURATION)) {
-            // 相关逻辑操作
-
-            List<Map<String, Object>> data = new ArrayList<>();
-            Map<String, Object> item1 = new HashMap<>();
-            item1.put("icon", R.mipmap.icons_device_information);
-            item1.put("title", "设备信息");
-            data.add(item1);
-
-            item1 = new HashMap<>();
-            item1.put("icon", R.mipmap.icons_clock_settings);
-            item1.put("title", "时间设置");
-            data.add(item1);
-
+//        System.arraycopy(mHits, 1, mHits, 0, mHits.length - 1);
+//        //获得当前系统已经启动的时间
+//        mHits[mHits.length - 1] = SystemClock.uptimeMillis();
+//        if (mHits[0] >= (SystemClock.uptimeMillis() - DURATION)) {
+//            // 相关逻辑操作
+//
+//            List<Map<String, Object>> data = new ArrayList<>();
+//            Map<String, Object> item1 = new HashMap<>();
+//            item1.put("icon", R.mipmap.icons_device_information);
+//            item1.put("title", "设备信息");
+//            data.add(item1);
+//
+//            item1 = new HashMap<>();
+//            item1.put("icon", R.mipmap.icons_clock_settings);
+//            item1.put("title", "时间设置");
+//            data.add(item1);
+//
 //            item1 = new HashMap<>();
 //            item1.put("icon", R.mipmap.icons_recurring_appointment);
 //            item1.put("title", "查询频率");
 //            data.add(item1);
-
-            item1 = new HashMap<>();
-            item1.put("icon", R.mipmap.icons_data_configuration);
-            item1.put("title", "参数设置");
-            data.add(item1);
-
-            listView.setAdapter(new SimpleAdapter(this, data,
-                    R.layout.adapter_setting_item, new String[]{"icon", "title"}, new int[]{R.id.icon, R.id.title}));
-
-            //初始化点击次数
-            mHits = new long[COUNTS];
-        }
+//
+//            item1 = new HashMap<>();
+//            item1.put("icon", R.mipmap.icons_data_configuration);
+//            item1.put("title", "参数设置");
+//            data.add(item1);
+//
+//            listView.setAdapter(new SimpleAdapter(this, data,
+//                    R.layout.adapter_setting_item, new String[]{"icon", "title"}, new int[]{R.id.icon, R.id.title}));
+//
+//            //初始化点击次数
+//            mHits = new long[COUNTS];
+//        }
     }
 
     /**
@@ -822,7 +796,7 @@ public class SettingActivity extends BluetoothBaseActivity<SettingPresenter> imp
         try {
             File file = new File(path);
             if (!file.exists()) {
-                return "123456";
+                return "667788";
             }
             inputStream = new FileInputStream(file);
             inputStreamReader = new InputStreamReader(inputStream);

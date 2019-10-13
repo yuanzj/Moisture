@@ -16,6 +16,9 @@ public class QueryParameRequest {
     @RkField(position = 3, length = 2)
     private int Reserved;
 
+    @RkField(position = 5, length = 1)
+    private int type;
+
     public byte getCmdGroup() {
         return CmdGroup;
     }
@@ -48,4 +51,11 @@ public class QueryParameRequest {
         Reserved = reserved;
     }
 
+    public int getType() {
+        return type;
+    }
+
+    public void setType(int type) {
+        this.type = type;
+    }
 }

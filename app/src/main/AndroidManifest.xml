@@ -45,7 +45,14 @@
             android:name=".setting.SettingActivity"
             android:label="@string/activity_setting"
             android:screenOrientation="portrait" />
-
+        <activity
+            android:name=".syssetting.SettingActivity"
+            android:label="@string/activity_setting"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".usersetting.SettingActivity"
+            android:label="@string/activity_setting"
+            android:screenOrientation="portrait" />
         <activity
             android:name=".BleScanActivity"
             android:label="@string/activity_scan"

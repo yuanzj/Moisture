@@ -1,4 +1,4 @@
-package com.drt.moisture.setting;
+package com.drt.moisture.usersetting;
 
 import com.drt.moisture.App;
 import com.drt.moisture.data.CorrectParame;
@@ -58,7 +58,7 @@ public class SettingModel implements SettingContract.Model {
     @Override
     public void queryMeasureConfig(DataCallback<SetMeasureParameRequest> _dataCallback) {
         this.setMeasureParameRequestDataCallback = _dataCallback;
-        App.getInstance().getBluetoothService().queryMeasureParame(0x01, new SppDataCallback<SetMeasureParameRequest>() {
+        App.getInstance().getBluetoothService().queryMeasureParame(0x02, new SppDataCallback<SetMeasureParameRequest>() {
             @Override
             public void delivery(SetMeasureParameRequest setMeasureParameRequest) {
                 if (setMeasureParameRequestDataCallback != null) {
@@ -76,7 +76,7 @@ public class SettingModel implements SettingContract.Model {
     @Override
     public void queryCorrectConfig(DataCallback<SetCorrectParameRequest> _dataCallback) {
         this.setCorrectParameRequestDataCallback = _dataCallback;
-        App.getInstance().getBluetoothService().queryCorrectParam(0x01, new SppDataCallback<SetCorrectParameRequest>() {
+        App.getInstance().getBluetoothService().queryCorrectParam(0x02,new SppDataCallback<SetCorrectParameRequest>() {
             @Override
             public void delivery(SetCorrectParameRequest setMeasureParameRequest) {
                 if (setCorrectParameRequestDataCallback != null) {
@@ -162,7 +162,7 @@ public class SettingModel implements SettingContract.Model {
             public Class<ParameterSetResponse> getEntityType() {
                 return ParameterSetResponse.class;
             }
-        },false, 0x01);
+        },false,0x02);
     }
 
     @Override
@@ -181,7 +181,7 @@ public class SettingModel implements SettingContract.Model {
             public Class<ParameterSetResponse> getEntityType() {
                 return ParameterSetResponse.class;
             }
-        },false,0x01);
+        },false,0x02);
     }
 
     @Override
@@ -220,6 +220,25 @@ public class SettingModel implements SettingContract.Model {
                 return ParameterSetResponse.class;
             }
         },false);
+    }
+
+    @Override
+    public void reset(DataCallback<ParameterSetResponse> dataCallback) {
+        this.parameterSetResponseDataCallback = dataCallback;
+        App.getInstance().getBluetoothService().reset( new SppDataCallback<ParameterSetResponse>() {
+
+            @Override
+            public void delivery(ParameterSetResponse parameterSetResponse) {
+                if (parameterSetResponseDataCallback != null) {
+                    parameterSetResponseDataCallback.delivery(parameterSetResponse);
+                }
+            }
+
+            @Override
+            public Class<ParameterSetResponse> getEntityType() {
+                return ParameterSetResponse.class;
+            }
+        });
     }
 
 }

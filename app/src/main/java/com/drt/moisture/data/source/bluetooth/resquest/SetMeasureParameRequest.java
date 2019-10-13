@@ -16,46 +16,49 @@ public class SetMeasureParameRequest {
     @RkField(position = 3, length = 2)
     private int Reserved;
 
-    @RkField(position = 5, length = 4)
+    @RkField(position = 5, length = 1)
+    private int type;
+
+    @RkField(position = 6, length = 4)
     private long a;
 
-    @RkField(position = 9, length = 4)
+    @RkField(position = 10, length = 4)
     private long b;
 
-    @RkField(position = 13, length = 4)
+    @RkField(position = 14, length = 4)
     private long c;
 
-    @RkField(position = 17, length = 4)
+    @RkField(position = 18, length = 4)
     private long d;
 
-    @RkField(position = 21, length = 4)
+    @RkField(position = 22, length = 4)
     private long e;
 
-    @RkField(position = 25, length = 4)
+    @RkField(position = 26, length = 4)
     private long f;
 
-    @RkField(position = 29, length = 4)
+    @RkField(position = 30, length = 4)
     private long g;
 
-    @RkField(position = 33, length = 4)
+    @RkField(position = 34, length = 4)
     private long h;
 
-    @RkField(position = 37, length = 4)
+    @RkField(position = 38, length = 4)
     private long i;
 
-    @RkField(position = 41, length = 4)
+    @RkField(position = 42, length = 4)
     private long j;
 
-    @RkField(position = 45, length = 4)
+    @RkField(position = 46, length = 4)
     private long k;
 
-    @RkField(position = 49, length = 4)
+    @RkField(position = 50, length = 4)
     private long l;
 
-    @RkField(position = 53, length = 4)
+    @RkField(position = 54, length = 4)
     private long m;
 
-    @RkField(position = 57, length = 1)
+    @RkField(position = 58, length = 1)
     private int n;
 
     public byte getCmdGroup() {
@@ -200,5 +203,13 @@ public class SetMeasureParameRequest {
 
     public void setN(int n) {
         this.n = n;
+    }
+
+    public int getType() {
+        return type;
+    }
+
+    public void setType(int type) {
+        this.type = type;
     }
 }
