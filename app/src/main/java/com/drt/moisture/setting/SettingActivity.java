@@ -400,13 +400,10 @@ public class SettingActivity extends BluetoothBaseActivity<SettingPresenter> imp
                         .setPositiveButton("确认", new DialogInterface.OnClickListener() {
                             @Override
                             public void onClick(DialogInterface dialogInterface, int i) {
-                                Log.d("yzj", "查询频率：" + Integer.parseInt(spinner2.getSelectedItem().toString()));
-
                                 AppConfig appConfig = App.getInstance().getLocalDataService().queryAppConfig();
                                 appConfig.setPeriod((int) (Double.parseDouble(spinner2.getSelectedItem().toString()) * 1000));
                                 App.getInstance().getLocalDataService().setAppConfig(appConfig);
                                 mPresenter.setRateParame(appConfig.getPeriod(), appConfig.getRatio());
-
                             }
                         })
                         .setNegativeButton("取消", new DialogInterface.OnClickListener() {
