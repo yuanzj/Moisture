@@ -206,7 +206,7 @@ public class SettingActivity extends BluetoothBaseActivity<SettingPresenter> imp
                         spinner2.setSelection(0, false);
                     }
                     AppConfig appConfig = App.getInstance().getLocalDataService().queryAppConfig();
-                    appConfig.setPeriod(Integer.parseInt(spinner2.getSelectedItem().toString()));
+                    appConfig.setPeriod((int) (Double.parseDouble(spinner2.getSelectedItem().toString()) * 1000));
                     App.getInstance().getLocalDataService().setAppConfig(appConfig);
                 }
             }
