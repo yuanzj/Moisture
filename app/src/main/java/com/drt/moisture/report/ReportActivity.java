@@ -134,6 +134,7 @@ public class ReportActivity extends BluetoothBaseActivity<ReportPresenter> imple
         runOnUiThread(new Runnable() {
             @Override
             public void run() {
+                progress.setVisibility(View.GONE);
                 mesasureName.setEnabled(true);
                 search.setEnabled(true);
                 Toast.makeText(getApplicationContext(),"获取结束", Toast.LENGTH_LONG).show();
