@@ -254,10 +254,10 @@ public class SettingActivity extends BluetoothBaseActivity<SettingPresenter> imp
 //        item1.put("title", "时间设置");
 //        data.add(item1);
 
-//        item1 = new HashMap<>();
-//        item1.put("icon", R.mipmap.icons_recurring_appointment);
-//        item1.put("title", "查询频率");
-//        data.add(item1);
+        item1 = new HashMap<>();
+        item1.put("icon", R.mipmap.icons_recurring_appointment);
+        item1.put("title", "查询频率");
+        data.add(item1);
 //
         item1 = new HashMap<>();
         item1.put("icon", R.mipmap.icons_data_configuration);
@@ -364,70 +364,70 @@ public class SettingActivity extends BluetoothBaseActivity<SettingPresenter> imp
 //                builder.show();
 //            }
 //            break;
-//            case 2: {
-//                if (id >= 0) {
-//                    final EditText edit = new EditText(this);
-//                    AlertDialog.Builder editDialog = new AlertDialog.Builder(this);
-//                    editDialog.setTitle("请输入密码");
-//                    //设置dialog布局
-//                    editDialog.setView(edit);
-//                    //设置按钮
-//                    editDialog.setPositiveButton("确认"
-//                            , new DialogInterface.OnClickListener() {
-//                                @Override
-//                                public void onClick(DialogInterface dialog, int which) {
-//
-//                                    if (edit.getText().toString().equals(readFromFile(ExcelUtil.getSDPath() + "/水分活度测量/config.txt"))) {
-//                                        onItemClick(parent, view, position, -1);
-//                                    } else {
-//                                        Toast.makeText(SettingActivity.this, "密码错误", Toast.LENGTH_SHORT).show();
-//                                    }
-//                                    dialog.dismiss();
-//                                    hideInput();
-//                                }
-//                            })
-//                            .setNegativeButton("取消", new DialogInterface.OnClickListener() {
-//                                @Override
-//                                public void onClick(DialogInterface dialog, int which) {
-//                                    // TODO Auto-generated method stub
-//                                    dialog.dismiss();
-//                                }
-//                            })
-//                            .setCancelable(false);
-//                    editDialog.create().show();
-//                    return;
-//                }
-//
-//                dialogRate = LayoutInflater.from(this).inflate(R.layout.dialog_rate, null);
-//                final Spinner spinner2 = dialogRate.findViewById(R.id.spinner2);
-//
-//                AlertDialog.Builder builder = new AlertDialog.Builder(this).setTitle("查询频率")
-//                        .setView(dialogRate)
-//                        .setPositiveButton("确认", new DialogInterface.OnClickListener() {
-//                            @Override
-//                            public void onClick(DialogInterface dialogInterface, int i) {
-//                                Log.d("yzj", "查询频率：" + Integer.parseInt(spinner2.getSelectedItem().toString()));
-//
-//                                AppConfig appConfig = App.getInstance().getLocalDataService().queryAppConfig();
-//                                appConfig.setPeriod((int) (Double.parseDouble(spinner2.getSelectedItem().toString()) * 1000));
-//                                App.getInstance().getLocalDataService().setAppConfig(appConfig);
-//                                mPresenter.setRateParame(appConfig.getPeriod(), appConfig.getRatio());
-//
-//                            }
-//                        })
-//                        .setNegativeButton("取消", new DialogInterface.OnClickListener() {
-//                            @Override
-//                            public void onClick(DialogInterface dialog, int which) {
-//                                // TODO Auto-generated method stub
-//                                dialog.dismiss();
-//                            }
-//                        })
-//                        .setCancelable(false);
-//                builder.show();
-//                mPresenter.queryRate();
-//            }
-//            break;
             case 0: {
+                if (id >= 0) {
+                    final EditText edit = new EditText(this);
+                    AlertDialog.Builder editDialog = new AlertDialog.Builder(this);
+                    editDialog.setTitle("请输入密码");
+                    //设置dialog布局
+                    editDialog.setView(edit);
+                    //设置按钮
+                    editDialog.setPositiveButton("确认"
+                            , new DialogInterface.OnClickListener() {
+                                @Override
+                                public void onClick(DialogInterface dialog, int which) {
+
+                                    if (edit.getText().toString().equals(readFromFile(ExcelUtil.getSDPath() + "/水分活度测量/config.txt"))) {
+                                        onItemClick(parent, view, position, -1);
+                                    } else {
+                                        Toast.makeText(SettingActivity.this, "密码错误", Toast.LENGTH_SHORT).show();
+                                    }
+                                    dialog.dismiss();
+                                    hideInput();
+                                }
+                            })
+                            .setNegativeButton("取消", new DialogInterface.OnClickListener() {
+                                @Override
+                                public void onClick(DialogInterface dialog, int which) {
+                                    // TODO Auto-generated method stub
+                                    dialog.dismiss();
+                                }
+                            })
+                            .setCancelable(false);
+                    editDialog.create().show();
+                    return;
+                }
+
+                dialogRate = LayoutInflater.from(this).inflate(R.layout.dialog_rate, null);
+                final Spinner spinner2 = dialogRate.findViewById(R.id.spinner2);
+
+                AlertDialog.Builder builder = new AlertDialog.Builder(this).setTitle("查询频率")
+                        .setView(dialogRate)
+                        .setPositiveButton("确认", new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialogInterface, int i) {
+                                Log.d("yzj", "查询频率：" + Integer.parseInt(spinner2.getSelectedItem().toString()));
+
+                                AppConfig appConfig = App.getInstance().getLocalDataService().queryAppConfig();
+                                appConfig.setPeriod((int) (Double.parseDouble(spinner2.getSelectedItem().toString()) * 1000));
+                                App.getInstance().getLocalDataService().setAppConfig(appConfig);
+                                mPresenter.setRateParame(appConfig.getPeriod(), appConfig.getRatio());
+
+                            }
+                        })
+                        .setNegativeButton("取消", new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialog, int which) {
+                                // TODO Auto-generated method stub
+                                dialog.dismiss();
+                            }
+                        })
+                        .setCancelable(false);
+                builder.show();
+                mPresenter.queryRate();
+            }
+            break;
+            case 1: {
                 if (id >= 0) {
                     final EditText edit = new EditText(this);
                     AlertDialog.Builder editDialog = new AlertDialog.Builder(this);

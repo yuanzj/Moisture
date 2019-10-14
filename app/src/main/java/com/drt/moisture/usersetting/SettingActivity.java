@@ -438,38 +438,38 @@ public class SettingActivity extends BluetoothBaseActivity<SettingPresenter> imp
 //            }
 //            break;
             case 0: {
-                if (id >= 0) {
-                    final EditText edit = new EditText(this);
-                    AlertDialog.Builder editDialog = new AlertDialog.Builder(this);
-                    editDialog.setTitle("请输入密码");
-                    //设置dialog布局
-                    editDialog.setView(edit);
-                    //设置按钮
-                    editDialog.setPositiveButton("确认"
-                            , new DialogInterface.OnClickListener() {
-                                @Override
-                                public void onClick(DialogInterface dialog, int which) {
-
-                                    if (edit.getText().toString().equals(readFromFile(ExcelUtil.getSDPath() + "/水分活度测量/config.txt"))) {
-                                        onItemClick(parent, view, position, -1);
-                                    } else {
-                                        Toast.makeText(SettingActivity.this, "密码错误", Toast.LENGTH_SHORT).show();
-                                    }
-                                    dialog.dismiss();
-                                    hideInput();
-                                }
-                            })
-                            .setNegativeButton("取消", new DialogInterface.OnClickListener() {
-                                @Override
-                                public void onClick(DialogInterface dialog, int which) {
-                                    // TODO Auto-generated method stub
-                                    dialog.dismiss();
-                                }
-                            })
-                            .setCancelable(false);
-                    editDialog.create().show();
-                    return;
-                }
+//                if (id >= 0) {
+//                    final EditText edit = new EditText(this);
+//                    AlertDialog.Builder editDialog = new AlertDialog.Builder(this);
+//                    editDialog.setTitle("请输入密码");
+//                    //设置dialog布局
+//                    editDialog.setView(edit);
+//                    //设置按钮
+//                    editDialog.setPositiveButton("确认"
+//                            , new DialogInterface.OnClickListener() {
+//                                @Override
+//                                public void onClick(DialogInterface dialog, int which) {
+//
+//                                    if (edit.getText().toString().equals(readFromFile(ExcelUtil.getSDPath() + "/水分活度测量/config.txt"))) {
+//                                        onItemClick(parent, view, position, -1);
+//                                    } else {
+//                                        Toast.makeText(SettingActivity.this, "密码错误", Toast.LENGTH_SHORT).show();
+//                                    }
+//                                    dialog.dismiss();
+//                                    hideInput();
+//                                }
+//                            })
+//                            .setNegativeButton("取消", new DialogInterface.OnClickListener() {
+//                                @Override
+//                                public void onClick(DialogInterface dialog, int which) {
+//                                    // TODO Auto-generated method stub
+//                                    dialog.dismiss();
+//                                }
+//                            })
+//                            .setCancelable(false);
+//                    editDialog.create().show();
+//                    return;
+//                }
                 dialogParameSet = LayoutInflater.from(this).inflate(R.layout.dialog_parame_set, null);
                 final TabHost tabhost = dialogParameSet.findViewById(android.R.id.tabhost);
                 // 必须调用该方法，才能设置tab样式
@@ -703,8 +703,26 @@ public class SettingActivity extends BluetoothBaseActivity<SettingPresenter> imp
 
                 mPresenter.queryMeasureConfig();
             }
+            break;
             case 1: {
-
+                AlertDialog.Builder builder = new AlertDialog.Builder(this)
+                        .setTitle("提示")
+                        .setMessage("是否确认恢复出厂设置")
+                        .setPositiveButton("确认", new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialogInterface, int i) {
+                                mPresenter.reset();
+                            }
+                        })
+                        .setNegativeButton("取消", new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialog, int which) {
+                                // TODO Auto-generated method stub
+                                dialog.dismiss();
+                            }
+                        })
+                        .setCancelable(false);
+                builder.show();
             }
             break;
             default:
