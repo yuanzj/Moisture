@@ -414,7 +414,7 @@ public class BluetoothServiceImpl implements BluetoothService, BleWriteResponse 
                         }
 
                     }
-                }, 300, 300);
+                }, 800, 800);
             }
 
 
@@ -467,7 +467,7 @@ public class BluetoothServiceImpl implements BluetoothService, BleWriteResponse 
                         }
 
                     }
-                }, 300, 300);
+                }, 800, 800);
             }
 
         } catch (IllegalAccessException | RkFieldException | FieldConvertException e) {
