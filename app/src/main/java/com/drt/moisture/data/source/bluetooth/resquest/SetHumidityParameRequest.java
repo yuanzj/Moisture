@@ -61,6 +61,9 @@ public class SetHumidityParameRequest {
     @RkField(position = 61, length = 4)
     private long o;
 
+    @RkField(position = 65, length = 4)
+    private long p;
+
     public byte getCmdGroup() {
         return CmdGroup;
     }
@@ -211,5 +214,13 @@ public class SetHumidityParameRequest {
 
     public void setO(long o) {
         this.o = o;
+    }
+
+    public long getP() {
+        return p;
+    }
+
+    public void setP(long p) {
+        this.p = p;
     }
 }

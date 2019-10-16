@@ -141,37 +141,12 @@ public class CorrectModel implements CorrectContract.Model, SppDataCallback<Corr
             clockerTime.cancel();
         }
         if (sendCommand) {
-            App.getInstance().getBluetoothService().stopCorrect(new SppDataCallback<StopMeasureResponse>() {
-
+            new Timer().schedule(new TimerTask() {
                 @Override
-                public void delivery(StopMeasureResponse stopMeasureResponse) {
-
+                public void run() {
+                    App.getInstance().getBluetoothService().stopCorrect(stopMeasureResponse);
                 }
-
-                @Override
-                public Class<StopMeasureResponse> getEntityType() {
-                    return StopMeasureResponse.class;
-                }
-            });
-
-            try {
-                Thread.sleep(100);
-            } catch (InterruptedException e) {
-                e.printStackTrace();
-            }
-
-            App.getInstance().getBluetoothService().stopCorrect(new SppDataCallback<StopMeasureResponse>() {
-
-                @Override
-                public void delivery(StopMeasureResponse stopMeasureResponse) {
-
-                }
-
-                @Override
-                public Class<StopMeasureResponse> getEntityType() {
-                    return StopMeasureResponse.class;
-                }
-            });
+            }, 200);
         }
     }
 
@@ -192,4 +167,17 @@ public class CorrectModel implements CorrectContract.Model, SppDataCallback<Corr
     public Class<CorrectDataResponse> getEntityType() {
         return CorrectDataResponse.class;
     }
+
+    private SppDataCallback stopMeasureResponse = new SppDataCallback<StopMeasureResponse>() {
+
+        @Override
+        public void delivery(StopMeasureResponse stopMeasureResponse) {
+
+        }
+
+        @Override
+        public Class<StopMeasureResponse> getEntityType() {
+            return StopMeasureResponse.class;
+        }
+    };
 }

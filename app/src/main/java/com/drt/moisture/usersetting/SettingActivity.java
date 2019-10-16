@@ -470,7 +470,7 @@ public class SettingActivity extends BluetoothBaseActivity<SettingPresenter> imp
 //                    editDialog.create().show();
 //                    return;
 //                }
-                dialogParameSet = LayoutInflater.from(this).inflate(R.layout.dialog_parame_set, null);
+                dialogParameSet = LayoutInflater.from(this).inflate(R.layout.dialog_parame_set_user, null);
                 final TabHost tabhost = dialogParameSet.findViewById(android.R.id.tabhost);
                 // 必须调用该方法，才能设置tab样式
                 tabhost.setup();
@@ -491,11 +491,11 @@ public class SettingActivity extends BluetoothBaseActivity<SettingPresenter> imp
                         .setContent(R.id.tv2));
 
                 // 添加标签tab3
-                tabhost.addTab(tabhost
-                        .newTabSpec("湿度参数")
-                        // 设置tab1标签图片
-                        .setIndicator("湿度参数")
-                        .setContent(R.id.tv3));
+//                tabhost.addTab(tabhost
+//                        .newTabSpec("湿度参数")
+//                        // 设置tab1标签图片
+//                        .setIndicator("湿度参数")
+//                        .setContent(R.id.tv3));
 
                 tabhost.setCurrentTab(0);
 

@@ -133,18 +133,12 @@ public class MeasureModel implements MeasureContract.Model {
         }
 
         if (sendCommand) {
-            App.getInstance().getBluetoothService().stopMeasure(new SppDataCallback<StopMeasureResponse>() {
-
+            new Timer().schedule(new TimerTask() {
                 @Override
-                public void delivery(StopMeasureResponse stopMeasureResponse) {
-
+                public void run() {
+                    App.getInstance().getBluetoothService().stopMeasure(stopMeasureResponse);
                 }
-
-                @Override
-                public Class<StopMeasureResponse> getEntityType() {
-                    return StopMeasureResponse.class;
-                }
-            });
+            }, 200);
         }
     }
 
@@ -189,6 +183,19 @@ public class MeasureModel implements MeasureContract.Model {
         @Override
         public Class<AutoRecordDataResponse> getEntityType() {
             return AutoRecordDataResponse.class;
+        }
+    };
+
+    private SppDataCallback<StopMeasureResponse> stopMeasureResponse = new SppDataCallback<StopMeasureResponse>() {
+
+        @Override
+        public void delivery(StopMeasureResponse stopMeasureResponse) {
+
+        }
+
+        @Override
+        public Class<StopMeasureResponse> getEntityType() {
+            return StopMeasureResponse.class;
         }
     };
 }

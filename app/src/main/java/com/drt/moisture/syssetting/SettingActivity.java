@@ -167,6 +167,7 @@ public class SettingActivity extends BluetoothBaseActivity<SettingPresenter> imp
                     final EditText csM = dialogParameSet.findViewById(R.id.csM_2);
                     final EditText csN = dialogParameSet.findViewById(R.id.csN_2);
                     final EditText csO = dialogParameSet.findViewById(R.id.csO_2);
+                    final EditText csP = dialogParameSet.findViewById(R.id.csP_2);
 
                     csA.setText("" + setMeasureParameRequest.getA() / 1000000.0);
                     csB.setText("" + setMeasureParameRequest.getB() / 1000000.0);
@@ -183,6 +184,8 @@ public class SettingActivity extends BluetoothBaseActivity<SettingPresenter> imp
                     csM.setText("" + setMeasureParameRequest.getM() / 1000000.0);
                     csN.setText("" + setMeasureParameRequest.getN() / 1000000.0);
                     csO.setText("" + setMeasureParameRequest.getO() / 1000000.0);
+                    csP.setText("" + setMeasureParameRequest.getP() / 1000000.0);
+
 
                 }
             }
