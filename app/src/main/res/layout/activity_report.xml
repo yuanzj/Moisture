@@ -15,6 +15,7 @@
         android:layout_height="56dp"
         android:paddingLeft="@dimen/activity_horizontal_margin"
         android:paddingRight="@dimen/activity_horizontal_margin"
+        android:gravity="center_vertical"
     >
         <EditText
                 android:id="@+id/mesasureName"
@@ -33,11 +34,19 @@
                 android:textColor="@color/colorBody"
                 android:textCursorDrawable="@drawable/solid_shape_bottom_line"
                 android:textSize="@dimen/sizeSubTitle" />
+        <ImageButton
+            android:id="@+id/history"
+            android:layout_width="48dp"
+            android:layout_height="48dp"
+            android:src="@mipmap/ic_history"
+            android:background="@drawable/selector_btn_transparent"
+            />
 
         <Button
                 android:layout_width="48dp"
                 android:layout_height="match_parent"
                 android:text="查询"
+                android:layout_marginLeft="16dp"
                 android:id="@+id/search"
                 android:textSize="@dimen/sizeSubTitle"
                 android:textStyle="bold"

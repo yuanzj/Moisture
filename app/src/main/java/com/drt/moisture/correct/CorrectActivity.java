@@ -2,6 +2,9 @@ package com.drt.moisture.correct;
 
 import android.content.DialogInterface;
 import android.graphics.Point;
+import android.media.Ringtone;
+import android.media.RingtoneManager;
+import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AlertDialog;
@@ -17,6 +20,7 @@ import com.drt.moisture.BluetoothBaseActivity;
 import com.drt.moisture.R;
 import com.drt.moisture.data.MeasureStatus;
 import com.drt.moisture.data.MeasureValue;
+import com.drt.moisture.measure.MeasureActivity;
 import com.github.mikephil.charting.charts.LineChart;
 import com.github.mikephil.charting.components.XAxis;
 import com.github.mikephil.charting.components.YAxis;
@@ -229,7 +233,23 @@ public class CorrectActivity extends BluetoothBaseActivity<CorrectPresenter> imp
                     case ERROR:
                     case DONE:
                         if (measureStatus == MeasureStatus.DONE) {
-                            Toast.makeText(getApplicationContext(), "校正完成", Toast.LENGTH_LONG).show();
+                            AlertDialog.Builder builder=new AlertDialog.Builder(CorrectActivity.this);
+                            builder.setTitle("提示");//设置title
+                            builder.setMessage("校正完成");//设置内容
+                            //点击确认按钮事件
+                            builder.setPositiveButton("确认", new DialogInterface.OnClickListener() {
+                                @Override
+                                public void onClick(DialogInterface dialog, int which) {
+                                    dialog.dismiss();
+                                }
+                            });
+                            //创建出AlertDialog对象
+                            AlertDialog alertDialog=builder.create();
+                            //点击对话框之外的地方不消失
+                            alertDialog.setCanceledOnTouchOutside(false);
+                            //设置显示
+                            alertDialog.show();
+                            playSound();
                         }
                         btnStartMeasure.setAlpha(1.0f);
                         btnStopMeasure.setAlpha(0.32f);
@@ -390,5 +410,11 @@ public class CorrectActivity extends BluetoothBaseActivity<CorrectPresenter> imp
         rightAxis.setDrawGridLines(false);
         rightAxis.setAxisMinimum(0f); // this replaces setStartAtZero(true)
         rightAxis.setAxisMaximum(1.0000f);
+    }
+
+    public void playSound() {
+        Uri uri = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION);
+        Ringtone rt = RingtoneManager.getRingtone(getApplicationContext(), uri);
+        rt.play();
     }
 }

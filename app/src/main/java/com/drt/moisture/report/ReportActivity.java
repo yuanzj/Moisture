@@ -1,11 +1,13 @@
 package com.drt.moisture.report;
 
+import android.content.DialogInterface;
 import android.graphics.Canvas;
 import android.graphics.Paint;
 import android.graphics.Point;
 import android.graphics.Rect;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.support.v7.app.AlertDialog;
 import android.util.Log;
 import android.view.View;
 import android.widget.EditText;
@@ -16,6 +18,7 @@ import android.widget.Toast;
 import com.bin.david.form.core.SmartTable;
 import com.bin.david.form.data.format.bg.IBackgroundFormat;
 import com.bin.david.form.data.table.TableData;
+import com.drt.moisture.App;
 import com.drt.moisture.BluetoothBaseActivity;
 import com.drt.moisture.R;
 import com.drt.moisture.data.MeasureStatus;
@@ -27,6 +30,7 @@ import com.inuker.bluetooth.library.Constants;
 import java.io.File;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.Date;
 import java.util.List;
 
@@ -49,6 +53,9 @@ public class ReportActivity extends BluetoothBaseActivity<ReportPresenter> imple
 
     @BindView(R.id.mesasureName)
     EditText mesasureName;
+
+    @BindView(R.id.history)
+    ImageButton history;
 
     @BindView(R.id.search)
     View search;
@@ -134,6 +141,7 @@ public class ReportActivity extends BluetoothBaseActivity<ReportPresenter> imple
         runOnUiThread(new Runnable() {
             @Override
             public void run() {
+                history.setEnabled(true);
                 mesasureName.setEnabled(true);
                 search.setEnabled(true);
                 progress.setVisibility(View.GONE);
@@ -182,6 +190,23 @@ public class ReportActivity extends BluetoothBaseActivity<ReportPresenter> imple
         }
 
     }
+
+    @OnClick(R.id.history)
+    public void onClickHistory() {
+        List<String> historyList = App.getInstance().getLocalDataService().queryHistory();
+        Collections.reverse(historyList);
+        final String[] items = historyList.toArray(new String[historyList.size()]);
+        AlertDialog.Builder builder = new AlertDialog.Builder(this)
+                .setTitle("历史样品名称")
+                .setItems(items, new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialogInterface, int i) {
+                        mesasureName.setText(items[i]);
+                    }
+                });
+        builder.create().show();
+    }
+
     @OnClick(R.id.search)
     public void search(){
         if (!isBleConnected) {
@@ -191,6 +216,7 @@ public class ReportActivity extends BluetoothBaseActivity<ReportPresenter> imple
         currentData = new ArrayList<>();
         mPresenter.queryReport(mesasureName);
         search.setEnabled(mesasureName.isEnabled());
+        history.setEnabled(mesasureName.isEnabled());
     }
 
     /**
