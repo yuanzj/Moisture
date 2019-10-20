@@ -1,9 +1,12 @@
 package com.drt.moisture.measure;
 
 import android.annotation.SuppressLint;
+import android.text.TextUtils;
 
 import com.drt.moisture.App;
+import com.drt.moisture.R;
 import com.drt.moisture.data.AppConfig;
+import com.drt.moisture.data.BleEvent;
 import com.drt.moisture.data.MeasureValue;
 import com.drt.moisture.data.source.MeasureDataCallback;
 import com.drt.moisture.data.source.bluetooth.SppDataCallback;
@@ -12,6 +15,9 @@ import com.drt.moisture.data.source.bluetooth.response.RecordDataResponse;
 import com.drt.moisture.data.source.bluetooth.response.StartMeasureResponse;
 import com.drt.moisture.data.source.bluetooth.response.StopMeasureResponse;
 import com.drt.moisture.util.DateUtil;
+import com.inuker.bluetooth.library.Constants;
+
+import org.greenrobot.eventbus.EventBus;
 
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -79,6 +85,12 @@ public class MeasureModel implements MeasureContract.Model {
         runningTimer.schedule(new TimerTask() {
             @Override
             public void run() {
+
+                if (App.getInstance().getBluetoothClient().getConnectStatus(App.getInstance().getConnectMacAddress()) != Constants.STATUS_DEVICE_CONNECTED) {
+                    EventBus.getDefault().post(new BleEvent());
+                    return;
+                }
+
                 // 发送蓝牙请求
                 if (model == 0) {
                     App.getInstance().getBluetoothService().queryRecord(System.currentTimeMillis() / 1000, sppDataCallback);

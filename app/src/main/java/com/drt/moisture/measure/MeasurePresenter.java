@@ -142,4 +142,7 @@ public class MeasurePresenter extends BasePresenter<MeasureContract.View> implem
     }
 
 
+    public MeasureStatus getMeasureStatus() {
+        return measureStatus;
+    }
 }

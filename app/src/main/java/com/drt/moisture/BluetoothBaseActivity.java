@@ -24,6 +24,7 @@ import android.widget.ImageButton;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.drt.moisture.data.BleEvent;
 import com.drt.moisture.data.source.bluetooth.SppDataCallback;
 import com.drt.moisture.data.source.bluetooth.response.SocResponse;
 import com.drt.moisture.util.StatusBarUtil;
@@ -33,7 +34,10 @@ import com.inuker.bluetooth.library.connect.listener.BluetoothStateListener;
 import com.inuker.bluetooth.library.connect.response.BleConnectResponse;
 import com.inuker.bluetooth.library.connect.response.BleNotifyResponse;
 import com.inuker.bluetooth.library.model.BleGattProfile;
+import com.inuker.bluetooth.library.search.SearchRequest;
 import com.inuker.bluetooth.library.search.SearchResult;
+import com.inuker.bluetooth.library.search.response.SearchResponse;
+import com.inuker.bluetooth.library.utils.BluetoothLog;
 import com.inuker.bluetooth.library.utils.UUIDUtils;
 
 import net.yzj.android.common.base.BaseMvpActivity;
@@ -45,6 +49,7 @@ import org.greenrobot.eventbus.ThreadMode;
 
 import java.sql.Time;
 import java.util.Arrays;
+import java.util.Date;
 import java.util.UUID;
 
 import butterknife.BindView;
@@ -81,6 +86,8 @@ public abstract class BluetoothBaseActivity<T extends BasePresenter> extends Bas
 
     @BindView(R.id.title_rightImage)
     ImageButton btnBluetooth;
+
+    private long lastConnectTime;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -327,6 +334,7 @@ public abstract class BluetoothBaseActivity<T extends BasePresenter> extends Bas
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         if (requestCode == REQUEST_CONNECT_DEVICE) {
             if (resultCode == Activity.RESULT_OK) {
+                lastConnectTime = System.currentTimeMillis();
                 SearchResult searchResult = data.getParcelableExtra("SearchResult");
                 App.getInstance().setConnectMacAddress(searchResult.getAddress());
 
@@ -382,7 +390,7 @@ public abstract class BluetoothBaseActivity<T extends BasePresenter> extends Bas
         public void onNotify(UUID service, UUID character, byte[] value) {
             try {
                 if (value.length > 7) {
-                    value = Arrays.copyOfRange(value, 6 , value.length - 1);
+                    value = Arrays.copyOfRange(value, 6, value.length - 1);
                 }
                 App.getInstance().getBluetoothService().parse(value);
             } catch (Exception e) {
@@ -425,4 +433,46 @@ public abstract class BluetoothBaseActivity<T extends BasePresenter> extends Bas
         App.getInstance().setDeviceSoc(String.valueOf(socResponse.getSoc()));
         secondTitle.setText("电量: " + App.getInstance().getDeviceSoc() + "%");
     }
+
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    public void onBleEvent(BleEvent bleEvent) {
+        if ((System.currentTimeMillis() - lastConnectTime) > 5 * 1000) {
+            lastConnectTime = System.currentTimeMillis();
+            searchDevice();
+        }
+    }
+
+    private void searchDevice() {
+        SearchRequest request = new SearchRequest.Builder()
+                .searchBluetoothLeDevice(5000, 2).build();
+
+        App.getInstance().getBluetoothClient().search(request, mSearchResponse);
+    }
+
+    private final SearchResponse mSearchResponse = new SearchResponse() {
+        @Override
+        public void onSearchStarted() {
+            BluetoothLog.w("BleScanActivity.onSearchStarted");
+        }
+
+        @Override
+        public void onDeviceFounded(SearchResult device) {
+            if (device != null && device.getAddress() != null && device.getAddress().equals(App.getInstance().getConnectMacAddress())) {
+                Intent data = new Intent();
+                data.putExtra("SearchResult", device);
+                onActivityResult(REQUEST_CONNECT_DEVICE, Activity.RESULT_OK, data);
+            }
+        }
+
+        @Override
+        public void onSearchStopped() {
+            BluetoothLog.w("BleScanActivity.onSearchStopped");
+
+        }
+
+        @Override
+        public void onSearchCanceled() {
+            BluetoothLog.w("BleScanActivity.onSearchCanceled");
+        }
+    };
 }

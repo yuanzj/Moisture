@@ -274,7 +274,9 @@ public class MeasureActivity extends BluetoothBaseActivity<MeasurePresenter> imp
         runOnUiThread(new Runnable() {
             @Override
             public void run() {
-                alreadyRunning.setText(time);
+                if (alreadyRunning != null && time != null) {
+                    alreadyRunning.setText(time);
+                }
             }
         });
     }
@@ -288,9 +290,17 @@ public class MeasureActivity extends BluetoothBaseActivity<MeasurePresenter> imp
     @Override
     public void setBleConnectStatus(int status) {
         if (status != Constants.STATUS_CONNECTED) {
-            mPresenter.setMeasureStatus(MeasureStatus.BT_NOT_CONNECT);
+            if (mPresenter.getMeasureStatus() == MeasureStatus.RUNNING) {
+                mPresenter.setMeasureStatus(MeasureStatus.RUNNING);
+            } else {
+                mPresenter.setMeasureStatus(MeasureStatus.BT_NOT_CONNECT);
+            }
         } else {
-            mPresenter.setMeasureStatus(MeasureStatus.NORMAL);
+            if (mPresenter.getMeasureStatus() == MeasureStatus.RUNNING) {
+                mPresenter.setMeasureStatus(MeasureStatus.RUNNING);
+            } else {
+                mPresenter.setMeasureStatus(MeasureStatus.NORMAL);
+            }
         }
     }
 
