@@ -188,6 +188,7 @@ public class CorrectActivity extends BluetoothBaseActivity<CorrectPresenter> imp
                             type = 0x01;
                         }
 
+                        chart.clear();
                         mPresenter.startCorrect(model, type);
                     }
                 }).setNegativeButton("取消", new DialogInterface.OnClickListener() {

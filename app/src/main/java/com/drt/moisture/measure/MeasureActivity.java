@@ -165,6 +165,7 @@ public class MeasureActivity extends BluetoothBaseActivity<MeasurePresenter> imp
 
     @OnClick(R.id.btnStartMeasure)
     public void startMeasure() {
+        chart.clear();
         mPresenter.startMeasure(spMeasureModel.getSelectedItemPosition(), measureName.getText().toString());
     }
 
