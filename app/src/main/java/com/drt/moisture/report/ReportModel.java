@@ -39,8 +39,11 @@ public class ReportModel implements ReportContract.Model, SppDataCallback<HisRec
                         break;
                     }
 
-                    App.getInstance().getBluetoothService().queryHisRecord(measureName, i, ReportModel.this);
-
+//                    App.getInstance().getBluetoothService().queryHisRecord(measureName, i, ReportModel.this);
+                    HisRecordDataResponse recordDataResponse = new HisRecordDataResponse();
+                    recordDataResponse.setName("text");
+                    recordDataResponse.setTime(System.currentTimeMillis()/1000);
+                    delivery( recordDataResponse);
                     try {
                         Thread.sleep(100);
                     } catch (InterruptedException e) {

@@ -29,4 +29,7 @@
     <dimen name="image_list_size">40dp</dimen>
 
     <dimen name="list_item_height_default">56dp</dimen>
+
+    <dimen name="btn_height_default">48dp</dimen>
+    <dimen name="table_cell_height_default">22dp</dimen>
 </resources>

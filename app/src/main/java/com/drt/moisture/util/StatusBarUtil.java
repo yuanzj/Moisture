@@ -1,5 +1,7 @@
 package com.drt.moisture.util;
 
+import android.content.Context;
+import android.content.res.Resources;
 import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
@@ -74,5 +76,17 @@ public class StatusBarUtil {
             }
         }
         return result;
+    }
+
+    /**
+     * 获取状态栏高度
+     * @param context
+     * @return
+     */
+    public static int getStatusBarHeight(Context context) {
+        Resources resources = context.getResources();
+        int resourceId = resources.getIdentifier("status_bar_height", "dimen", "android");
+        int height = resources.getDimensionPixelSize(resourceId);
+        return height;
     }
 }

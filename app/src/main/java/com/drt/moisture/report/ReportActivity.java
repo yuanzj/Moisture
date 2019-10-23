@@ -8,15 +8,15 @@ import android.graphics.Rect;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AlertDialog;
+import android.util.DisplayMetrics;
 import android.util.Log;
+import android.util.TypedValue;
 import android.view.View;
-import android.widget.EditText;
-import android.widget.ImageButton;
-import android.widget.LinearLayout;
-import android.widget.Toast;
+import android.widget.*;
 
 import com.bin.david.form.core.SmartTable;
 import com.bin.david.form.data.format.bg.IBackgroundFormat;
+import com.bin.david.form.data.table.PageTableData;
 import com.bin.david.form.data.table.TableData;
 import com.drt.moisture.App;
 import com.drt.moisture.BluetoothBaseActivity;
@@ -25,6 +25,7 @@ import com.drt.moisture.data.MeasureStatus;
 import com.drt.moisture.data.MeasureValue;
 import com.drt.moisture.util.AppPermission;
 import com.drt.moisture.util.ExcelUtil;
+import com.drt.moisture.util.StatusBarUtil;
 import com.inuker.bluetooth.library.Constants;
 
 import java.io.File;
@@ -60,10 +61,25 @@ public class ReportActivity extends BluetoothBaseActivity<ReportPresenter> imple
     @BindView(R.id.search)
     View search;
 
+    @BindView(R.id.previous)
+    Button previous;
+
+    @BindView(R.id.page)
+    TextView page;
+
+    @BindView(R.id.total)
+    TextView total;
+
+    @BindView(R.id.next)
+    Button next;
+
     boolean isBleConnected;
 
     List<MeasureValue> currentData;
 
+    int pageSize;
+
+    volatile int currentPage;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -92,6 +108,23 @@ public class ReportActivity extends BluetoothBaseActivity<ReportPresenter> imple
 
             }
         });
+        DisplayMetrics dm = new DisplayMetrics();
+        getWindowManager().getDefaultDisplay().getMetrics(dm);
+        int screenHeight = dm.heightPixels;
+        int statusBarHeight = StatusBarUtil.getStatusBarHeight(this);
+        Log.d("yzj", "statusBarHeight" + statusBarHeight);
+        // Calculate ActionBar height
+        TypedValue tv = new TypedValue();
+        int actionBarHeight = 0;
+        if (this.getTheme().resolveAttribute(android.R.attr.actionBarSize, tv, true)) {
+            actionBarHeight = TypedValue.complexToDimensionPixelSize(tv.data, this.getResources().getDisplayMetrics());
+            Log.d("yzj", "actionBarHeight" + actionBarHeight);
+        }
+        int bottomBarHeight = getResources().getDimensionPixelOffset(R.dimen.btn_height_default);
+        int tableViewHeight = screenHeight - statusBarHeight - actionBarHeight - bottomBarHeight;
+
+        Log.d("yzj", "tableViewHeight" + tableViewHeight);
+        pageSize = tableViewHeight / getResources().getDimensionPixelOffset(R.dimen.table_cell_height_default) - 5;
     }
 
     @Override
@@ -124,14 +157,32 @@ public class ReportActivity extends BluetoothBaseActivity<ReportPresenter> imple
         });
     }
 
-
     @Override
     public void onSuccess(final List<MeasureValue> measureValues) {
         runOnUiThread(new Runnable() {
             @Override
             public void run() {
                 currentData.addAll(measureValues);
-                table.setData(currentData);
+                PageTableData<MeasureValue> pageTableData =  table.setData(currentData);
+                pageTableData.setPageSize(pageSize);
+                pageTableData.setCurrentPage(currentPage);
+
+                page.setText((pageTableData.getCurrentPage() + 1) + "/" + pageTableData.getTotalPage());
+                total.setText("共" + currentData.size()  + "条");
+                if (pageTableData.getCurrentPage() == 0) {
+                    previous.setEnabled(false);
+                    previous.setAlpha(0.54f);
+                } else {
+                    previous.setEnabled(true);
+                    previous.setAlpha(1.0f);
+                }
+                if ((pageTableData.getCurrentPage() + 1) == pageTableData.getTotalPage()){
+                    next.setEnabled(false);
+                    next.setAlpha(0.54f);
+                } else {
+                    next.setEnabled(true);
+                    next.setAlpha(1.0f);
+                }
             }
         });
     }
@@ -217,6 +268,69 @@ public class ReportActivity extends BluetoothBaseActivity<ReportPresenter> imple
         mPresenter.queryReport(mesasureName);
         search.setEnabled(mesasureName.isEnabled());
         history.setEnabled(mesasureName.isEnabled());
+    }
+
+    @OnClick(R.id.previous)
+    public void pre(View view) {
+        if(!mesasureName.isEnabled()) {
+            Toast.makeText(this, "数据加载中不能进行页面切换", Toast.LENGTH_SHORT).show();
+            return;
+        }
+
+        PageTableData<MeasureValue> pageTableData =  (PageTableData<MeasureValue>)table.getTableData();
+        pageTableData.setPageSize(pageSize);
+        if (pageTableData.getCurrentPage() == 0) {
+            return;
+        }
+        pageTableData.setCurrentPage(pageTableData.getCurrentPage() - 1);
+        currentPage = pageTableData.getCurrentPage();
+        page.setText((pageTableData.getCurrentPage() + 1) + "/" + pageTableData.getTotalPage());
+        total.setText("共" + currentData.size()  + "条");
+        if (pageTableData.getCurrentPage() == 0) {
+            previous.setEnabled(false);
+            previous.setAlpha(0.54f);
+        } else {
+            previous.setEnabled(true);
+            previous.setAlpha(1.0f);
+        }
+        if ((pageTableData.getCurrentPage() + 1) == pageTableData.getTotalPage()){
+            next.setEnabled(false);
+            next.setAlpha(0.54f);
+        } else {
+            next.setEnabled(true);
+            next.setAlpha(1.0f);
+        }
+    }
+
+    @OnClick(R.id.next)
+    public void next(View view) {
+        if(!mesasureName.isEnabled()) {
+            Toast.makeText(this, "数据加载中不能进行页面切换", Toast.LENGTH_SHORT).show();
+            return;
+        }
+        PageTableData<MeasureValue> pageTableData =  (PageTableData<MeasureValue>)table.getTableData();
+        pageTableData.setPageSize(pageSize);
+        if (currentPage >= (pageTableData.getTotalPage()-1)){
+            return;
+        }
+        pageTableData.setCurrentPage(pageTableData.getCurrentPage() + 1);
+        currentPage = pageTableData.getCurrentPage();
+        page.setText((pageTableData.getCurrentPage() + 1) + "/" + pageTableData.getTotalPage());
+        total.setText("共" + currentData.size()  + "条");
+        if (pageTableData.getCurrentPage() == 0) {
+            previous.setEnabled(false);
+            previous.setAlpha(0.54f);
+        } else {
+            previous.setEnabled(true);
+            previous.setAlpha(1.0f);
+        }
+        if ((pageTableData.getCurrentPage() + 1) == pageTableData.getTotalPage()){
+            next.setEnabled(false);
+            next.setAlpha(0.54f);
+        } else {
+            next.setEnabled(true);
+            next.setAlpha(1.0f);
+        }
     }
 
     /**
