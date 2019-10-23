@@ -170,17 +170,13 @@ public class ReportActivity extends BluetoothBaseActivity<ReportPresenter> imple
                 page.setText((pageTableData.getCurrentPage() + 1) + "/" + pageTableData.getTotalPage());
                 total.setText("共" + currentData.size()  + "条");
                 if (pageTableData.getCurrentPage() == 0) {
-                    previous.setEnabled(false);
                     previous.setAlpha(0.54f);
                 } else {
-                    previous.setEnabled(true);
                     previous.setAlpha(1.0f);
                 }
                 if ((pageTableData.getCurrentPage() + 1) == pageTableData.getTotalPage()){
-                    next.setEnabled(false);
                     next.setAlpha(0.54f);
                 } else {
-                    next.setEnabled(true);
                     next.setAlpha(1.0f);
                 }
             }
@@ -195,6 +191,8 @@ public class ReportActivity extends BluetoothBaseActivity<ReportPresenter> imple
                 history.setEnabled(true);
                 mesasureName.setEnabled(true);
                 search.setEnabled(true);
+                next.setEnabled(true);
+                previous.setEnabled(true);
                 progress.setVisibility(View.GONE);
                 Toast.makeText(getApplicationContext(),"获取结束", Toast.LENGTH_LONG).show();
             }
@@ -268,6 +266,11 @@ public class ReportActivity extends BluetoothBaseActivity<ReportPresenter> imple
         mPresenter.queryReport(mesasureName);
         search.setEnabled(mesasureName.isEnabled());
         history.setEnabled(mesasureName.isEnabled());
+        if (!mesasureName.isEnabled()) {
+            Toast.makeText(this, "开始加载数据过程中不能进行底部分页切换!", Toast.LENGTH_LONG).show();
+            previous.setEnabled(false);
+            next.setEnabled(false);
+        }
     }
 
     @OnClick(R.id.previous)
@@ -278,7 +281,6 @@ public class ReportActivity extends BluetoothBaseActivity<ReportPresenter> imple
         }
 
         PageTableData<MeasureValue> pageTableData =  (PageTableData<MeasureValue>)table.getTableData();
-        pageTableData.setPageSize(pageSize);
         if (pageTableData.getCurrentPage() == 0) {
             return;
         }
@@ -287,17 +289,15 @@ public class ReportActivity extends BluetoothBaseActivity<ReportPresenter> imple
         page.setText((pageTableData.getCurrentPage() + 1) + "/" + pageTableData.getTotalPage());
         total.setText("共" + currentData.size()  + "条");
         if (pageTableData.getCurrentPage() == 0) {
-            previous.setEnabled(false);
+
             previous.setAlpha(0.54f);
         } else {
-            previous.setEnabled(true);
             previous.setAlpha(1.0f);
         }
         if ((pageTableData.getCurrentPage() + 1) == pageTableData.getTotalPage()){
-            next.setEnabled(false);
+
             next.setAlpha(0.54f);
         } else {
-            next.setEnabled(true);
             next.setAlpha(1.0f);
         }
     }
@@ -308,9 +308,9 @@ public class ReportActivity extends BluetoothBaseActivity<ReportPresenter> imple
             Toast.makeText(this, "数据加载中不能进行页面切换", Toast.LENGTH_SHORT).show();
             return;
         }
+
         PageTableData<MeasureValue> pageTableData =  (PageTableData<MeasureValue>)table.getTableData();
-        pageTableData.setPageSize(pageSize);
-        if (currentPage >= (pageTableData.getTotalPage()-1)){
+        if (pageTableData.getCurrentPage() >= (pageTableData.getTotalPage()-1)){
             return;
         }
         pageTableData.setCurrentPage(pageTableData.getCurrentPage() + 1);
@@ -318,17 +318,13 @@ public class ReportActivity extends BluetoothBaseActivity<ReportPresenter> imple
         page.setText((pageTableData.getCurrentPage() + 1) + "/" + pageTableData.getTotalPage());
         total.setText("共" + currentData.size()  + "条");
         if (pageTableData.getCurrentPage() == 0) {
-            previous.setEnabled(false);
             previous.setAlpha(0.54f);
         } else {
-            previous.setEnabled(true);
             previous.setAlpha(1.0f);
         }
         if ((pageTableData.getCurrentPage() + 1) == pageTableData.getTotalPage()){
-            next.setEnabled(false);
             next.setAlpha(0.54f);
         } else {
-            next.setEnabled(true);
             next.setAlpha(1.0f);
         }
     }
