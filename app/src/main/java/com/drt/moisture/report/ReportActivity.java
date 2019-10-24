@@ -1,5 +1,7 @@
 package com.drt.moisture.report;
 
+import android.app.DatePickerDialog;
+import android.app.TimePickerDialog;
 import android.content.DialogInterface;
 import android.graphics.Canvas;
 import android.graphics.Paint;
@@ -17,11 +19,9 @@ import android.widget.*;
 import com.bin.david.form.core.SmartTable;
 import com.bin.david.form.data.format.bg.IBackgroundFormat;
 import com.bin.david.form.data.table.PageTableData;
-import com.bin.david.form.data.table.TableData;
 import com.drt.moisture.App;
 import com.drt.moisture.BluetoothBaseActivity;
 import com.drt.moisture.R;
-import com.drt.moisture.data.MeasureStatus;
 import com.drt.moisture.data.MeasureValue;
 import com.drt.moisture.util.AppPermission;
 import com.drt.moisture.util.ExcelUtil;
@@ -29,11 +29,9 @@ import com.drt.moisture.util.StatusBarUtil;
 import com.inuker.bluetooth.library.Constants;
 
 import java.io.File;
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Date;
-import java.util.List;
+import java.util.*;
 
 import butterknife.BindView;
 import butterknife.OnClick;
@@ -42,6 +40,8 @@ import butterknife.OnClick;
 public class ReportActivity extends BluetoothBaseActivity<ReportPresenter> implements ReportContract.View {
 
     private static final String TAG = ReportActivity.class.getSimpleName();
+
+    private SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 
     @BindView(R.id.export)
     ImageButton export;
@@ -72,6 +72,14 @@ public class ReportActivity extends BluetoothBaseActivity<ReportPresenter> imple
 
     @BindView(R.id.next)
     Button next;
+
+
+    @BindView(R.id.startTime)
+    Button startTime;
+
+
+    @BindView(R.id.endTime)
+    Button endTime;
 
     boolean isBleConnected;
 
@@ -121,10 +129,13 @@ public class ReportActivity extends BluetoothBaseActivity<ReportPresenter> imple
             Log.d("yzj", "actionBarHeight" + actionBarHeight);
         }
         int bottomBarHeight = getResources().getDimensionPixelOffset(R.dimen.btn_height_default);
-        int tableViewHeight = screenHeight - statusBarHeight - actionBarHeight - bottomBarHeight;
+        int tableViewHeight = screenHeight - statusBarHeight - actionBarHeight - bottomBarHeight * 3 - getResources().getDimensionPixelOffset(R.dimen.padding_default) * 2;
 
         Log.d("yzj", "tableViewHeight" + tableViewHeight);
-        pageSize = tableViewHeight / getResources().getDimensionPixelOffset(R.dimen.table_cell_height_default) - 5;
+        pageSize = tableViewHeight / getResources().getDimensionPixelOffset(R.dimen.table_cell_height_default) - 3;
+
+        startTime.setText(sdf.format(new Date(System.currentTimeMillis() - 7 * 24 * 60 * 60 * 1000)));
+        endTime.setText(sdf.format(new Date()));
     }
 
     @Override
@@ -163,18 +174,18 @@ public class ReportActivity extends BluetoothBaseActivity<ReportPresenter> imple
             @Override
             public void run() {
                 currentData.addAll(measureValues);
-                PageTableData<MeasureValue> pageTableData =  table.setData(currentData);
+                PageTableData<MeasureValue> pageTableData = table.setData(currentData);
                 pageTableData.setPageSize(pageSize);
                 pageTableData.setCurrentPage(currentPage);
 
                 page.setText((pageTableData.getCurrentPage() + 1) + "/" + pageTableData.getTotalPage());
-                total.setText("共" + currentData.size()  + "条");
+                total.setText("共" + currentData.size() + "条");
                 if (pageTableData.getCurrentPage() == 0) {
                     previous.setAlpha(0.54f);
                 } else {
                     previous.setAlpha(1.0f);
                 }
-                if ((pageTableData.getCurrentPage() + 1) == pageTableData.getTotalPage()){
+                if ((pageTableData.getCurrentPage() + 1) == pageTableData.getTotalPage()) {
                     next.setAlpha(0.54f);
                 } else {
                     next.setAlpha(1.0f);
@@ -194,7 +205,7 @@ public class ReportActivity extends BluetoothBaseActivity<ReportPresenter> imple
                 next.setEnabled(true);
                 previous.setEnabled(true);
                 progress.setVisibility(View.GONE);
-                Toast.makeText(getApplicationContext(),"获取结束", Toast.LENGTH_LONG).show();
+                Toast.makeText(getApplicationContext(), "获取结束", Toast.LENGTH_LONG).show();
             }
         });
     }
@@ -257,13 +268,18 @@ public class ReportActivity extends BluetoothBaseActivity<ReportPresenter> imple
     }
 
     @OnClick(R.id.search)
-    public void search(){
+    public void search() {
         if (!isBleConnected) {
             Toast.makeText(this, "设备尚未连接，请点击右上角蓝牙按钮连接设备", Toast.LENGTH_SHORT).show();
             return;
         }
         currentData = new ArrayList<>();
-        mPresenter.queryReport(mesasureName);
+
+        try {
+            mPresenter.queryReport(mesasureName, sdf.parse(startTime.getText().toString()), sdf.parse(endTime.getText().toString()));
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
         search.setEnabled(mesasureName.isEnabled());
         history.setEnabled(mesasureName.isEnabled());
         if (!mesasureName.isEnabled()) {
@@ -275,26 +291,26 @@ public class ReportActivity extends BluetoothBaseActivity<ReportPresenter> imple
 
     @OnClick(R.id.previous)
     public void pre(View view) {
-        if(!mesasureName.isEnabled()) {
+        if (!mesasureName.isEnabled()) {
             Toast.makeText(this, "数据加载中不能进行页面切换", Toast.LENGTH_SHORT).show();
             return;
         }
 
-        PageTableData<MeasureValue> pageTableData =  (PageTableData<MeasureValue>)table.getTableData();
+        PageTableData<MeasureValue> pageTableData = (PageTableData<MeasureValue>) table.getTableData();
         if (pageTableData.getCurrentPage() == 0) {
             return;
         }
         pageTableData.setCurrentPage(pageTableData.getCurrentPage() - 1);
         currentPage = pageTableData.getCurrentPage();
         page.setText((pageTableData.getCurrentPage() + 1) + "/" + pageTableData.getTotalPage());
-        total.setText("共" + currentData.size()  + "条");
+        total.setText("共" + currentData.size() + "条");
         if (pageTableData.getCurrentPage() == 0) {
 
             previous.setAlpha(0.54f);
         } else {
             previous.setAlpha(1.0f);
         }
-        if ((pageTableData.getCurrentPage() + 1) == pageTableData.getTotalPage()){
+        if ((pageTableData.getCurrentPage() + 1) == pageTableData.getTotalPage()) {
 
             next.setAlpha(0.54f);
         } else {
@@ -304,29 +320,106 @@ public class ReportActivity extends BluetoothBaseActivity<ReportPresenter> imple
 
     @OnClick(R.id.next)
     public void next(View view) {
-        if(!mesasureName.isEnabled()) {
+        if (!mesasureName.isEnabled()) {
             Toast.makeText(this, "数据加载中不能进行页面切换", Toast.LENGTH_SHORT).show();
             return;
         }
 
-        PageTableData<MeasureValue> pageTableData =  (PageTableData<MeasureValue>)table.getTableData();
-        if (pageTableData.getCurrentPage() >= (pageTableData.getTotalPage()-1)){
+        PageTableData<MeasureValue> pageTableData = (PageTableData<MeasureValue>) table.getTableData();
+        if (pageTableData.getCurrentPage() >= (pageTableData.getTotalPage() - 1)) {
             return;
         }
         pageTableData.setCurrentPage(pageTableData.getCurrentPage() + 1);
         currentPage = pageTableData.getCurrentPage();
         page.setText((pageTableData.getCurrentPage() + 1) + "/" + pageTableData.getTotalPage());
-        total.setText("共" + currentData.size()  + "条");
+        total.setText("共" + currentData.size() + "条");
         if (pageTableData.getCurrentPage() == 0) {
             previous.setAlpha(0.54f);
         } else {
             previous.setAlpha(1.0f);
         }
-        if ((pageTableData.getCurrentPage() + 1) == pageTableData.getTotalPage()){
+        if ((pageTableData.getCurrentPage() + 1) == pageTableData.getTotalPage()) {
             next.setAlpha(0.54f);
         } else {
             next.setAlpha(1.0f);
         }
+    }
+
+
+    String startDateTime, endDateTime;
+
+    @OnClick(R.id.startTime)
+    public void onStartTime() {
+        Calendar ca = Calendar.getInstance();
+        try {
+            ca.setTime(sdf.parse(startTime.getText().toString()));
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
+        int mYear = ca.get(Calendar.YEAR);
+        int mMonth = ca.get(Calendar.MONTH);
+        int mDay = ca.get(Calendar.DAY_OF_MONTH);
+
+        final int hour = ca.get(Calendar.HOUR_OF_DAY);
+        final int minute = ca.get(Calendar.MINUTE);
+        final int second = ca.get(Calendar.SECOND);
+        DatePickerDialog datePickerDialog = new DatePickerDialog(this,
+                new DatePickerDialog.OnDateSetListener() {
+                    @Override
+                    public void onDateSet(DatePicker view, int year, int month, int dayOfMonth) {
+
+                        startDateTime = year + "-" + (month + 1) + "-" + dayOfMonth;
+
+                        new TimePickerDialog(ReportActivity.this, new TimePickerDialog.OnTimeSetListener() {
+                            @Override
+                            public void onTimeSet(TimePicker view, int hourOfDay, int minute) {
+
+                                startDateTime += (" " + String.format("%2d", hourOfDay).replace(" ", "0") + ":" + String.format("%2d", minute).replace(" ", "0")  + ":" + String.format("%2d", second).replace(" ", "0"));
+
+                                startTime.setText(startDateTime);
+                            }
+                        }, hour, minute, true).show();
+                    }
+                },
+                mYear, mMonth, mDay);
+        datePickerDialog.show();
+    }
+
+    @OnClick(R.id.endTime)
+    public void onEndTime()  {
+        Calendar ca = Calendar.getInstance();
+        try {
+            ca.setTime(sdf.parse(endTime.getText().toString()));
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
+        int mYear = ca.get(Calendar.YEAR);
+        int mMonth = ca.get(Calendar.MONTH);
+        int mDay = ca.get(Calendar.DAY_OF_MONTH);
+
+        final int hour = ca.get(Calendar.HOUR_OF_DAY);
+        final int minute = ca.get(Calendar.MINUTE);
+        final int second = ca.get(Calendar.SECOND);
+        DatePickerDialog datePickerDialog = new DatePickerDialog(this,
+                new DatePickerDialog.OnDateSetListener() {
+                    @Override
+                    public void onDateSet(DatePicker view, int year, int month, int dayOfMonth) {
+
+                        endDateTime = year + "-" + (month + 1) + "-" + dayOfMonth;
+
+                        new TimePickerDialog(ReportActivity.this, new TimePickerDialog.OnTimeSetListener() {
+                            @Override
+                            public void onTimeSet(TimePicker view, int hourOfDay, int minute) {
+
+                                endDateTime += (" " + String.format("%2d", hourOfDay).replace(" ", "0") + ":" + String.format("%2d", minute).replace(" ", "0")  + ":" + String.format("%2d", second).replace(" ", "0"));
+
+                                endTime.setText(endDateTime);
+                            }
+                        }, hour, minute, true).show();
+                    }
+                },
+                mYear, mMonth, mDay);
+        datePickerDialog.show();
     }
 
     /**

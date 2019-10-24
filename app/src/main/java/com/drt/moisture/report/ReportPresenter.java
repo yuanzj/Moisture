@@ -8,6 +8,7 @@ import com.drt.moisture.data.source.MeasureDataCallback;
 
 import net.yzj.android.common.base.BasePresenter;
 
+import java.util.Date;
 import java.util.List;
 
 public class ReportPresenter extends BasePresenter<ReportContract.View> implements ReportContract.Presenter {
@@ -19,7 +20,7 @@ public class ReportPresenter extends BasePresenter<ReportContract.View> implemen
     }
 
     @Override
-    public void queryReport(EditText measureName) {
+    public void queryReport(EditText measureName, Date startTime, Date endTime) {
 
         if (TextUtils.isEmpty(measureName.getText())) {
             mView.onError(new Exception("请输入样品名称"));
@@ -30,7 +31,7 @@ public class ReportPresenter extends BasePresenter<ReportContract.View> implemen
             return;
         }
         mView.showLoading();
-        model.queryReport(measureName.getText().toString(), new MeasureDataCallback<List<MeasureValue>>() {
+        model.queryReport(measureName.getText().toString(),startTime, endTime, new MeasureDataCallback<List<MeasureValue>>() {
             @Override
             public void runningTime(String time) {
 

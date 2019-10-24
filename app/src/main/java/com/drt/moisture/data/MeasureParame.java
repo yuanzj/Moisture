@@ -8,45 +8,45 @@ public class MeasureParame {
     private int n;
 
     @RkField(position = 6, length = 4)
-    private long a;
+    private int a;
 
     @RkField(position = 10, length = 4)
-    private long b;
+    private int b;
 
     @RkField(position = 14, length = 4)
-    private long c;
+    private int c;
 
     @RkField(position = 18, length = 4)
-    private long d;
+    private int d;
 
     @RkField(position = 22, length = 4)
-    private long e;
+    private int e;
 
     @RkField(position = 26, length = 4)
-    private long f;
+    private int f;
 
     @RkField(position = 30, length = 4)
-    private long g;
+    private int g;
 
     @RkField(position = 34, length = 4)
-    private long h;
+    private int h;
 
     @RkField(position = 38, length = 4)
-    private long i;
+    private int i;
 
     @RkField(position = 42, length = 4)
-    private long j;
+    private int j;
 
     @RkField(position = 46, length = 4)
-    private long k;
+    private int k;
 
     @RkField(position = 50, length = 4)
-    private long l;
+    private int l;
 
     @RkField(position = 54, length = 4)
-    private long m;
+    private int m;
 
-    private long o;
+    private int o;
 
     public int getN() {
         return n;
@@ -56,115 +56,115 @@ public class MeasureParame {
         this.n = n;
     }
 
-    public long getA() {
+    public int getA() {
         return a;
     }
 
-    public void setA(long a) {
+    public void setA(int a) {
         this.a = a;
     }
 
-    public long getB() {
+    public int getB() {
         return b;
     }
 
-    public void setB(long b) {
+    public void setB(int b) {
         this.b = b;
     }
 
-    public long getC() {
+    public int getC() {
         return c;
     }
 
-    public void setC(long c) {
+    public void setC(int c) {
         this.c = c;
     }
 
-    public long getD() {
+    public int getD() {
         return d;
     }
 
-    public void setD(long d) {
+    public void setD(int d) {
         this.d = d;
     }
 
-    public long getE() {
+    public int getE() {
         return e;
     }
 
-    public void setE(long e) {
+    public void setE(int e) {
         this.e = e;
     }
 
-    public long getF() {
+    public int getF() {
         return f;
     }
 
-    public void setF(long f) {
+    public void setF(int f) {
         this.f = f;
     }
 
-    public long getG() {
+    public int getG() {
         return g;
     }
 
-    public void setG(long g) {
+    public void setG(int g) {
         this.g = g;
     }
 
-    public long getH() {
+    public int getH() {
         return h;
     }
 
-    public void setH(long h) {
+    public void setH(int h) {
         this.h = h;
     }
 
-    public long getI() {
+    public int getI() {
         return i;
     }
 
-    public void setI(long i) {
+    public void setI(int i) {
         this.i = i;
     }
 
-    public long getJ() {
+    public int getJ() {
         return j;
     }
 
-    public void setJ(long j) {
+    public void setJ(int j) {
         this.j = j;
     }
 
-    public long getK() {
+    public int getK() {
         return k;
     }
 
-    public void setK(long k) {
+    public void setK(int k) {
         this.k = k;
     }
 
-    public long getL() {
+    public int getL() {
         return l;
     }
 
-    public void setL(long l) {
+    public void setL(int l) {
         this.l = l;
     }
 
-    public long getM() {
+    public int getM() {
         return m;
     }
 
-    public void setM(long m) {
+    public void setM(int m) {
         this.m = m;
     }
 
-    public long getO() {
+    public int getO() {
         return o;
     }
 
-    public void setO(long o) {
+    public void setO(int o) {
         this.o = o;
     }
 }

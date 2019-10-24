@@ -6,12 +6,13 @@ import com.drt.moisture.data.source.MeasureDataCallback;
 
 import net.yzj.android.common.base.BaseView;
 
+import java.util.Date;
 import java.util.List;
 
 public interface ReportContract {
 
     interface Model {
-        void queryReport(String measureName, final MeasureDataCallback<List<MeasureValue>> report);
+        void queryReport(String measureName, Date startTime, Date endTime, final MeasureDataCallback<List<MeasureValue>> report);
 
         void stop();
     }
@@ -25,7 +26,7 @@ public interface ReportContract {
     }
 
     interface Presenter {
-        void queryReport(EditText measureName);
+        void queryReport(EditText measureName, Date startTime, Date endTime);
 
         void stop();
     }

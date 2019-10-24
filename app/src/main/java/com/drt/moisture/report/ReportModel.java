@@ -21,13 +21,16 @@ public class ReportModel implements ReportContract.Model, SppDataCallback<HisRec
 
     MeasureDataCallback<List<MeasureValue>> report;
 
+    Date startTime, endTime;
+
     volatile boolean running;
 
     @Override
-    public void queryReport(final String measureName, final MeasureDataCallback<List<MeasureValue>> report) {
+    public void queryReport(final String measureName, final Date startTime, final Date endTime, final MeasureDataCallback<List<MeasureValue>> report) {
 
         this.report = report;
-
+        this.startTime = startTime;
+        this.endTime = endTime;
         Runnable runnable = new Runnable() {
             @Override
             public void run() {
@@ -77,15 +80,19 @@ public class ReportModel implements ReportContract.Model, SppDataCallback<HisRec
             running = false;
             return;
         }
-        List<MeasureValue> values = new ArrayList<>();
-        MeasureValue measureValue = new MeasureValue();
-        measureValue.setTemperature(recordDataResponse.getTemperature() / 100.0);
-        measureValue.setActivity(recordDataResponse.getActivity() / 10000.0);
-        measureValue.setReportTime(sdf.format(new Date(recordDataResponse.getTime() * 1000)));
-        measureValue.setName(recordDataResponse.getName());
-        values.add(measureValue);
-        if (report != null) {
-            report.success(values);
+
+        Date reportDate = new Date(recordDataResponse.getTime() * 1000);
+        if (reportDate.after(startTime) && reportDate.before(endTime)) {
+            List<MeasureValue> values = new ArrayList<>();
+            MeasureValue measureValue = new MeasureValue();
+            measureValue.setTemperature(recordDataResponse.getTemperature() / 100.0);
+            measureValue.setActivity(recordDataResponse.getActivity() / 10000.0);
+            measureValue.setReportTime(sdf.format(reportDate));
+            measureValue.setName(recordDataResponse.getName());
+            values.add(measureValue);
+            if (report != null) {
+                report.success(values);
+            }
         }
     }
 
