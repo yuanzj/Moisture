@@ -50,7 +50,7 @@ public class ReportModel implements ReportContract.Model, SppDataCallback<HisRec
 //                    recordDataResponse.setTime(System.currentTimeMillis()/1000);
 //                    delivery( recordDataResponse);
                     try {
-                        Thread.sleep(100);
+                        Thread.sleep(200);
                     } catch (InterruptedException e) {
                         e.printStackTrace();
                     }

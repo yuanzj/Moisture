@@ -173,6 +173,9 @@ public class ReportActivity extends BluetoothBaseActivity<ReportPresenter> imple
         runOnUiThread(new Runnable() {
             @Override
             public void run() {
+                if (table.getVisibility() != View.VISIBLE) {
+                    table.setVisibility(View.VISIBLE);
+                }
                 currentData.addAll(measureValues);
                 PageTableData<MeasureValue> pageTableData = table.setData(currentData);
                 pageTableData.setPageSize(pageSize);
@@ -273,7 +276,13 @@ public class ReportActivity extends BluetoothBaseActivity<ReportPresenter> imple
             Toast.makeText(this, "设备尚未连接，请点击右上角蓝牙按钮连接设备", Toast.LENGTH_SHORT).show();
             return;
         }
+        table.setVisibility(View.INVISIBLE);
         currentData = new ArrayList<>();
+        currentPage = 0;
+        page.setText( "0/0");
+        total.setText("共0条");
+        previous.setAlpha(0.54f);
+        next.setAlpha(0.54f);
 
         try {
             mPresenter.queryReport(mesasureName, sdf.parse(startTime.getText().toString()), sdf.parse(endTime.getText().toString()));
