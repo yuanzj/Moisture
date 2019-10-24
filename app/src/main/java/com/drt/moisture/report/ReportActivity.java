@@ -301,6 +301,7 @@ public class ReportActivity extends BluetoothBaseActivity<ReportPresenter> imple
             return;
         }
         pageTableData.setCurrentPage(pageTableData.getCurrentPage() - 1);
+        table.notifyDataChanged();
         currentPage = pageTableData.getCurrentPage();
         page.setText((pageTableData.getCurrentPage() + 1) + "/" + pageTableData.getTotalPage());
         total.setText("共" + currentData.size() + "条");
@@ -330,6 +331,7 @@ public class ReportActivity extends BluetoothBaseActivity<ReportPresenter> imple
             return;
         }
         pageTableData.setCurrentPage(pageTableData.getCurrentPage() + 1);
+        table.notifyDataChanged();
         currentPage = pageTableData.getCurrentPage();
         page.setText((pageTableData.getCurrentPage() + 1) + "/" + pageTableData.getTotalPage());
         total.setText("共" + currentData.size() + "条");

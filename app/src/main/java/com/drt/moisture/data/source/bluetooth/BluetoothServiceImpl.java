@@ -640,6 +640,11 @@ public class BluetoothServiceImpl implements BluetoothService, BleWriteResponse 
         recordDataRequest.setTime(ByteConvert.uintToBytes(System.currentTimeMillis() / 1000));
         recordDataRequest.setName(name);
         recordDataRequest.setIndex(index);
+        if ("".equals(name)) {
+            recordDataRequest.setQueryModel(0x02);
+        } else {
+            recordDataRequest.setQueryModel(0x03);
+        }
         try {
             App.getInstance().getBluetoothClient().write(App.getInstance().getConnectMacAddress(), UUIDUtils.makeUUID(0xFFE0), UUIDUtils.makeUUID(0xFFE1), BluetoothDataUtil.encode(recordDataRequest), this);
 

@@ -21,6 +21,7 @@ public class ReportModel implements ReportContract.Model, SppDataCallback<HisRec
 
     MeasureDataCallback<List<MeasureValue>> report;
 
+    String measureName;
     Date startTime, endTime;
 
     volatile boolean running;
@@ -28,6 +29,7 @@ public class ReportModel implements ReportContract.Model, SppDataCallback<HisRec
     @Override
     public void queryReport(final String measureName, final Date startTime, final Date endTime, final MeasureDataCallback<List<MeasureValue>> report) {
 
+        this.measureName = measureName;
         this.report = report;
         this.startTime = startTime;
         this.endTime = endTime;

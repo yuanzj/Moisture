@@ -28,6 +28,9 @@ public class HisRecordDataRequest {
     @RkField(position = 39, length = 2)
     private int index;
 
+    @RkField(position = 41, length = 1)
+    private int queryModel;
+
     public byte getCmdGroup() {
         return CmdGroup;
     }
@@ -82,5 +85,13 @@ public class HisRecordDataRequest {
 
     public void setIndex(int index) {
         this.index = index;
+    }
+
+    public int getQueryModel() {
+        return queryModel;
+    }
+
+    public void setQueryModel(int queryModel) {
+        this.queryModel = queryModel;
     }
 }

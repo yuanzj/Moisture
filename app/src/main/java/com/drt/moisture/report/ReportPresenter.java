@@ -22,10 +22,10 @@ public class ReportPresenter extends BasePresenter<ReportContract.View> implemen
     @Override
     public void queryReport(EditText measureName, Date startTime, Date endTime) {
 
-        if (TextUtils.isEmpty(measureName.getText())) {
-            mView.onError(new Exception("请输入样品名称"));
-            return;
-        }
+//        if (TextUtils.isEmpty(measureName.getText())) {
+//            mView.onError(new Exception("请输入样品名称"));
+//            return;
+//        }
 
         if (!isViewAttached()) {
             return;
