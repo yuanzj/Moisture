@@ -18,7 +18,7 @@ public class MeasureValue {
     @SmartColumn(id =4,name = "水分活度")
     private double activity;
 
-//    @SmartColumn(id =5,name = "环境值")
+    @SmartColumn(id =5,name = "环境值")
     private double humidity;
 
     private int measureStatus;

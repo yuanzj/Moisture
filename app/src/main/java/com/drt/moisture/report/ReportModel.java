@@ -91,6 +91,7 @@ public class ReportModel implements ReportContract.Model, SppDataCallback<HisRec
             measureValue.setActivity(recordDataResponse.getActivity() / 10000.0);
             measureValue.setReportTime(sdf.format(reportDate));
             measureValue.setName(recordDataResponse.getName());
+            measureValue.setHumidity(recordDataResponse.getHumidity() / 10000.0);
             values.add(measureValue);
             if (report != null) {
                 report.success(values);

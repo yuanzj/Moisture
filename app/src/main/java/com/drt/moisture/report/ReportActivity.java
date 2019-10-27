@@ -233,7 +233,7 @@ public class ReportActivity extends BluetoothBaseActivity<ReportPresenter> imple
 
         if (AppPermission.isGrantExternalRW(this)) {
             if (currentData != null && currentData.size() > 0) {
-                String[] title = {"时间", "样品名称", "温度", "水分活度"};
+                String[] title = {"时间", "样品名称", "温度", "水分活度", "环境值"};
 
                 File file = new File(ExcelUtil.getSDPath() + "/水分活度测量");
                 ExcelUtil.makeDir(file);
@@ -447,6 +447,7 @@ public class ReportActivity extends BluetoothBaseActivity<ReportPresenter> imple
             beanList.add(String.valueOf(measureValue.getName()));
             beanList.add(String.valueOf(measureValue.getTemperature()));
             beanList.add(String.valueOf(measureValue.getActivity()));
+            beanList.add(String.valueOf(measureValue.getHumidity()));
             recordList.add(beanList);
         }
         return recordList;

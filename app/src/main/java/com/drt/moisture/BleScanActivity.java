@@ -16,10 +16,14 @@ import com.inuker.bluetooth.library.search.SearchResult;
 import com.inuker.bluetooth.library.search.response.SearchResponse;
 import com.inuker.bluetooth.library.utils.BluetoothLog;
 
+import net.yzj.android.common.base.BaseMvpActivity;
+
 import java.util.ArrayList;
 import java.util.List;
 
-public class BleScanActivity extends Activity {
+import butterknife.OnClick;
+
+public class BleScanActivity extends CustomActionBarActivity {
 
 
     private ListView mListView;
@@ -29,8 +33,18 @@ public class BleScanActivity extends Activity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_ble_scan);
+        // 初始化蓝牙按钮
+        initBack();
+        findViewById(R.id.second_title).setVisibility(View.GONE);
+    }
 
+    @Override
+    public int getLayoutId() {
+        return R.layout.activity_ble_scan;
+    }
+
+    @Override
+    public void initView() {
         mDevices = new ArrayList<>();
 
         mListView = findViewById(R.id.list_view);
@@ -48,7 +62,6 @@ public class BleScanActivity extends Activity {
         });
 
         searchDevice();
-
     }
 
     private void searchDevice() {
@@ -127,6 +140,21 @@ public class BleScanActivity extends Activity {
             return convertView;
         }
     };
+
+    @Override
+    public void showLoading() {
+
+    }
+
+    @Override
+    public void hideLoading() {
+
+    }
+
+    @Override
+    public void onError(Throwable throwable) {
+
+    }
 
     static class ViewHolder {
         TextView tvName;

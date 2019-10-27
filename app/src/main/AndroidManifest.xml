@@ -57,7 +57,7 @@
             android:name=".BleScanActivity"
             android:label="@string/activity_scan"
             android:screenOrientation="portrait"
-            android:theme="@style/Theme.ActivityDialogStyle" />
+            />
 
         <service android:name="com.inuker.bluetooth.library.BluetoothService" />
     </application>

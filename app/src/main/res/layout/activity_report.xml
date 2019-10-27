@@ -149,16 +149,17 @@
             android:orientation="horizontal"
     >
         <Button
-                android:layout_width="wrap_content"
-                android:paddingLeft="16dp"
-                android:paddingRight="16dp"
-                android:layout_height="match_parent"
-                android:text="上一页"
-                android:id="@+id/previous"
-                android:textSize="@dimen/sizeSubTitle"
-                android:textStyle="bold"
-                android:textColor="@color/colorPrimary"
-                android:background="@drawable/selector_btn_transparent"
+            android:enabled="false"
+            android:layout_width="wrap_content"
+            android:paddingLeft="16dp"
+            android:paddingRight="16dp"
+            android:layout_height="match_parent"
+            android:text="上一页"
+            android:id="@+id/previous"
+            android:textSize="@dimen/sizeSubTitle"
+            android:textStyle="bold"
+            android:textColor="@color/colorPrimary"
+            android:background="@drawable/selector_btn_transparent"
         />
         <LinearLayout
                 android:layout_width="0dp"
@@ -187,16 +188,17 @@
             />
         </LinearLayout>
         <Button
-                android:layout_width="wrap_content"
-                android:paddingLeft="16dp"
-                android:paddingRight="16dp"
-                android:layout_height="match_parent"
-                android:text="下一页"
-                android:id="@+id/next"
-                android:textSize="@dimen/sizeSubTitle"
-                android:textStyle="bold"
-                android:textColor="@color/colorPrimary"
-                android:background="@drawable/selector_btn_transparent"
+            android:enabled="false"
+            android:layout_width="wrap_content"
+            android:paddingLeft="16dp"
+            android:paddingRight="16dp"
+            android:layout_height="match_parent"
+            android:text="下一页"
+            android:id="@+id/next"
+            android:textSize="@dimen/sizeSubTitle"
+            android:textStyle="bold"
+            android:textColor="@color/colorPrimary"
+            android:background="@drawable/selector_btn_transparent"
         />
     </LinearLayout>
 </LinearLayout>

@@ -28,6 +28,9 @@ public class HisRecordDataResponse {
     @RkField(position = 41, length = 2)
     private int activity;
 
+    @RkField(position = 43, length = 2)
+    private int humidity;
+
     public byte getCmdGroup() {
         return CmdGroup;
     }
@@ -92,6 +95,14 @@ public class HisRecordDataResponse {
         this.activity = activity;
     }
 
+    public int getHumidity() {
+        return humidity;
+    }
+
+    public void setHumidity(int humidity) {
+        this.humidity = humidity;
+    }
+
     @Override
     public String toString() {
         return "RecordDataResponse{" +
@@ -102,6 +113,7 @@ public class HisRecordDataResponse {
                 ", time=" + time +
                 ", temperature=" + temperature +
                 ", activity=" + activity +
+                ", humidity=" + humidity +
                 '}';
     }
 }

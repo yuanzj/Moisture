@@ -339,7 +339,7 @@ public class MeasureActivity extends BluetoothBaseActivity<MeasurePresenter> imp
         //chart.setVisibleYRangeMaximum(15, AxisDependency.LEFT);
 //
 //            // this automatically refreshes the chart (calls invalidate())
-        chart.moveViewTo(data.getEntryCount() - 31, 50f, YAxis.AxisDependency.LEFT);
+        chart.moveViewTo(data.getEntryCount() - 31, (float) measureValue.getActivity(), YAxis.AxisDependency.LEFT);
     }
 
 //    private LineDataSet createTemperatureSet() {
@@ -385,7 +385,10 @@ public class MeasureActivity extends BluetoothBaseActivity<MeasurePresenter> imp
         xAxis.setValueFormatter(new ValueFormatter() {
             @Override
             public String getFormattedValue(float value) {
-                if (chart.getLineData().getDataSetByIndex(0) != null && chart.getLineData().getDataSetByIndex(0).getEntryForIndex((int) value) != null) {
+                if (chart.getLineData() != null
+                        && chart.getLineData().getDataSetByIndex(0) != null
+                        && chart.getLineData().getDataSetByIndex(0).getEntryCount() > (int) value
+                        && chart.getLineData().getDataSetByIndex(0).getEntryForIndex((int) value) != null) {
                     Entry entry = chart.getLineData().getDataSetByIndex(0).getEntryForIndex((int) value);
                     return (String) entry.getData();
                 } else {
