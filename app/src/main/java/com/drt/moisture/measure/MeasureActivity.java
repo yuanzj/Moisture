@@ -6,6 +6,7 @@ import android.media.Ringtone;
 import android.media.RingtoneManager;
 import android.net.Uri;
 import android.os.Bundle;
+import android.os.Handler;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AlertDialog;
 import android.util.Log;
@@ -166,7 +167,16 @@ public class MeasureActivity extends BluetoothBaseActivity<MeasurePresenter> imp
     @OnClick(R.id.btnStartMeasure)
     public void startMeasure() {
         chart.clear();
-        mPresenter.startMeasure(spMeasureModel.getSelectedItemPosition(), measureName.getText().toString());
+        
+        App.getInstance().getBluetoothService().setTime(System.currentTimeMillis() / 1000);
+
+        new Handler().postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                mPresenter.startMeasure(spMeasureModel.getSelectedItemPosition(), measureName.getText().toString());
+            }
+        }, 200);
+
     }
 
     @OnClick(R.id.btnStopMeasure)

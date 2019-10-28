@@ -29,7 +29,7 @@ public class HisRecordDataResponse {
     private int activity;
 
     @RkField(position = 43, length = 2)
-    private int humidity;
+    private short humidity;
 
     public byte getCmdGroup() {
         return CmdGroup;
@@ -95,11 +95,11 @@ public class HisRecordDataResponse {
         this.activity = activity;
     }
 
-    public int getHumidity() {
+    public short getHumidity() {
         return humidity;
     }
 
-    public void setHumidity(int humidity) {
+    public void setHumidity(short humidity) {
         this.humidity = humidity;
     }
 
