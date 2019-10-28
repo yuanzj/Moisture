@@ -23,7 +23,7 @@ public class HisRecordDataResponse {
     private String name;
 
     @RkField(position = 39, length = 2)
-    private int temperature;
+    private short temperature;
 
     @RkField(position = 41, length = 2)
     private int activity;
@@ -79,11 +79,11 @@ public class HisRecordDataResponse {
         this.name = name;
     }
 
-    public int getTemperature() {
+    public short getTemperature() {
         return temperature;
     }
 
-    public void setTemperature(int temperature) {
+    public void setTemperature(short temperature) {
         this.temperature = temperature;
     }
 
