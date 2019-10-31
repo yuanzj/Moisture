@@ -77,6 +77,14 @@ public class SettingActivity extends BluetoothBaseActivity<SettingPresenter> imp
                     ((TextView) deviceInfoView.findViewById(R.id.title4)).setText(deviceInfo.getName());
                     ((TextView) deviceInfoView.findViewById(R.id.title5)).setText(deviceInfo.getBattery());
                 }
+
+                if (dialogSetDeviceInfo != null) {
+                    ((EditText) dialogSetDeviceInfo.findViewById(R.id.xlh)).setText(deviceInfo.getSN());
+                    ((EditText) dialogSetDeviceInfo.findViewById(R.id.bb)).setText(deviceInfo.getVersion());
+                    ((EditText) dialogSetDeviceInfo.findViewById(R.id.xh)).setText(deviceInfo.getModel());
+                    ((EditText) dialogSetDeviceInfo.findViewById(R.id.mc)).setText(deviceInfo.getName());
+                    ((EditText) dialogSetDeviceInfo.findViewById(R.id.dc)).setText(deviceInfo.getBattery());
+                }
             }
         });
     }
@@ -517,6 +525,8 @@ public class SettingActivity extends BluetoothBaseActivity<SettingPresenter> imp
                         })
                         .setCancelable(false);
                 builder.show();
+
+                mPresenter.queryDeviceInfo();
             }
             break;
             default:
@@ -626,7 +636,7 @@ public class SettingActivity extends BluetoothBaseActivity<SettingPresenter> imp
         try {
             File file = new File(path);
             if (!file.exists()) {
-                return "123456";
+                return "667788";
             }
             inputStream = new FileInputStream(file);
             inputStreamReader = new InputStreamReader(inputStream);

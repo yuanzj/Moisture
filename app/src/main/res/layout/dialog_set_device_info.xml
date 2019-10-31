@@ -55,6 +55,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginLeft="@dimen/padding_default"
+            android:enabled="false"
             android:background="@drawable/edittext_bg_selector"
             android:focusableInTouchMode="true"
             android:hint="请输入版本"
