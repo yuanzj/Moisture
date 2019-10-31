@@ -1,5 +1,6 @@
 package com.drt.moisture.usersetting;
 
+import android.app.ProgressDialog;
 import android.content.DialogInterface;
 import android.os.Bundle;
 import android.os.Handler;
@@ -57,6 +58,8 @@ public class SettingActivity extends BluetoothBaseActivity<SettingPresenter> imp
     ListView listView;
 
     View deviceInfoView, dialogDateTime, dialogRate, dialogParameSet;
+
+    ProgressDialog progressdialog;
 
     boolean isBleConnected;
 
@@ -244,6 +247,20 @@ public class SettingActivity extends BluetoothBaseActivity<SettingPresenter> imp
     }
 
     @Override
+    public void showRestDialog() {
+        runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                progressdialog = new ProgressDialog(SettingActivity.this);
+                progressdialog.setTitle("提示");
+                progressdialog.setMessage("重置进行中，请稍后...");
+                progressdialog.setCancelable(false);
+                progressdialog.show();
+            }
+        });
+    }
+
+    @Override
     public int getLayoutId() {
         return R.layout.activity_setting;
     }
@@ -288,7 +305,14 @@ public class SettingActivity extends BluetoothBaseActivity<SettingPresenter> imp
 
     @Override
     public void hideLoading() {
-
+        runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                if (progressdialog != null) {
+                    progressdialog.dismiss();
+                }
+            }
+        });
     }
 
     @Override

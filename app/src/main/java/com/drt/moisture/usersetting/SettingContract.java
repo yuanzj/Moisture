@@ -61,6 +61,8 @@ public interface SettingContract {
         void onSetParameSuccess();
 
         void onResetSuccess();
+
+        void showRestDialog();
     }
 
     interface Presenter {

@@ -7,6 +7,7 @@ import com.drt.moisture.App;
 import com.drt.moisture.data.CorrectParame;
 import com.drt.moisture.data.HumidityParame;
 import com.drt.moisture.data.MeasureParame;
+import com.drt.moisture.data.SetDeviceInfoParame;
 import com.drt.moisture.data.source.BluetoothService;
 import com.drt.moisture.data.source.bluetooth.response.*;
 import com.drt.moisture.data.source.bluetooth.resquest.*;
@@ -324,6 +325,29 @@ public class BluetoothServiceImpl implements BluetoothService, BleWriteResponse 
         deviceInfoRequest.setCmd((byte) 0x05);
         deviceInfoRequest.setResponse((byte) 0x01);
         deviceInfoRequest.setReserved(0);
+
+        try {
+            App.getInstance().getBluetoothClient().write(App.getInstance().getConnectMacAddress(), UUIDUtils.makeUUID(0xFFE0), UUIDUtils.makeUUID(0xFFE1), BluetoothDataUtil.encode(deviceInfoRequest), this);
+        } catch (IllegalAccessException | RkFieldException | FieldConvertException e) {
+            e.printStackTrace();
+        }
+    }
+
+    @Override
+    public void setDeviceInfo(SetDeviceInfoParame setDeviceInfoRequest, SppDataCallback<ParameterSetResponse> sppDataCallback) {
+        this.sppDataCallback = sppDataCallback;
+
+        SetDeviceInfoRequest deviceInfoRequest = new SetDeviceInfoRequest();
+        deviceInfoRequest.setCmdGroup((byte) 0xA1);
+        deviceInfoRequest.setCmd((byte) 0x85);
+        deviceInfoRequest.setResponse((byte) 0x01);
+        deviceInfoRequest.setReserved(0);
+
+        deviceInfoRequest.setSN(setDeviceInfoRequest.getSN());
+        deviceInfoRequest.setBattery(setDeviceInfoRequest.getBattery());
+        deviceInfoRequest.setVersion(setDeviceInfoRequest.getVersion());
+        deviceInfoRequest.setModel(setDeviceInfoRequest.getModel());
+        deviceInfoRequest.setName(setDeviceInfoRequest.getName());
 
         try {
             App.getInstance().getBluetoothClient().write(App.getInstance().getConnectMacAddress(), UUIDUtils.makeUUID(0xFFE0), UUIDUtils.makeUUID(0xFFE1), BluetoothDataUtil.encode(deviceInfoRequest), this);

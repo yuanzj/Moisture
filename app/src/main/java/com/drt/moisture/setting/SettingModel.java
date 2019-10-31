@@ -6,6 +6,7 @@ import com.drt.moisture.data.DataCallback;
 import com.drt.moisture.data.DeviceInfo;
 import com.drt.moisture.data.HumidityParame;
 import com.drt.moisture.data.MeasureParame;
+import com.drt.moisture.data.SetDeviceInfoParame;
 import com.drt.moisture.data.source.bluetooth.SppDataCallback;
 import com.drt.moisture.data.source.bluetooth.response.DeviceInfoResponse;
 import com.drt.moisture.data.source.bluetooth.response.ParameterSetResponse;
@@ -53,6 +54,25 @@ public class SettingModel implements SettingContract.Model {
             }
         });
 
+    }
+
+    @Override
+    public void setDeviceInfo(SetDeviceInfoParame setDeviceInfoParame, DataCallback<ParameterSetResponse> dataCallback) {
+        this.parameterSetResponseDataCallback = dataCallback;
+        App.getInstance().getBluetoothService().setDeviceInfo(setDeviceInfoParame, new SppDataCallback<ParameterSetResponse>() {
+
+            @Override
+            public void delivery(ParameterSetResponse parameterSetResponse) {
+                if (parameterSetResponseDataCallback != null) {
+                    parameterSetResponseDataCallback.delivery(parameterSetResponse);
+                }
+            }
+
+            @Override
+            public Class<ParameterSetResponse> getEntityType() {
+                return ParameterSetResponse.class;
+            }
+        });
     }
 
     @Override

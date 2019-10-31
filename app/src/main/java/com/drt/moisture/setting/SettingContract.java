@@ -5,6 +5,7 @@ import com.drt.moisture.data.DataCallback;
 import com.drt.moisture.data.DeviceInfo;
 import com.drt.moisture.data.HumidityParame;
 import com.drt.moisture.data.MeasureParame;
+import com.drt.moisture.data.SetDeviceInfoParame;
 import com.drt.moisture.data.source.bluetooth.response.ParameterSetResponse;
 
 import com.drt.moisture.data.source.bluetooth.resquest.SetCorrectParameRequest;
@@ -22,6 +23,8 @@ public interface SettingContract {
          * @param dataCallback
          */
         void queryDeviceInfo(DataCallback<DeviceInfo> dataCallback);
+
+        void setDeviceInfo(SetDeviceInfoParame setDeviceInfoParame, DataCallback<ParameterSetResponse> dataCallback);
 
         void queryMeasureConfig(DataCallback<SetMeasureParameRequest> dataCallback);
 
@@ -62,6 +65,8 @@ public interface SettingContract {
 
     interface Presenter {
         void queryDeviceInfo();
+
+        void setDeviceInfo(SetDeviceInfoParame setDeviceInfoParame);
 
         void queryMeasureConfig();
 

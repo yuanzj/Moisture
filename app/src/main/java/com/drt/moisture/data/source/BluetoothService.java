@@ -3,9 +3,11 @@ package com.drt.moisture.data.source;
 import com.drt.moisture.data.CorrectParame;
 import com.drt.moisture.data.HumidityParame;
 import com.drt.moisture.data.MeasureParame;
+import com.drt.moisture.data.SetDeviceInfoParame;
 import com.drt.moisture.data.source.bluetooth.SppDataCallback;
 import com.drt.moisture.data.source.bluetooth.response.*;
 import com.drt.moisture.data.source.bluetooth.resquest.SetCorrectParameRequest;
+import com.drt.moisture.data.source.bluetooth.resquest.SetDeviceInfoRequest;
 import com.drt.moisture.data.source.bluetooth.resquest.SetHumidityParameRequest;
 import com.drt.moisture.data.source.bluetooth.resquest.SetMeasureParameRequest;
 import com.drt.moisture.data.source.bluetooth.resquest.SetRateRequest;
@@ -83,6 +85,12 @@ public interface BluetoothService {
 
 
     /**
+     * 设置设备信息
+     * @param setDeviceInfoRequest
+     * @param sppDataCallback
+     */
+    void setDeviceInfo(SetDeviceInfoParame setDeviceInfoRequest, SppDataCallback<ParameterSetResponse> sppDataCallback);
+    /**
      * 设置时间
      * @param time
      * @param sppDataCallback
@@ -124,7 +132,12 @@ public interface BluetoothService {
      */
     void setHumidityParame(HumidityParame humidityParame, SppDataCallback<ParameterSetResponse> sppDataCallback);
 
+    /**
+     * 重置
+     * @param sppDataCallback
+     */
     void reset(SppDataCallback<ParameterSetResponse> sppDataCallback);
+
     /**
      * 查询测量参数
      * @param sppDataCallback

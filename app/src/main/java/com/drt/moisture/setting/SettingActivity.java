@@ -30,6 +30,7 @@ import com.drt.moisture.data.CorrectParame;
 import com.drt.moisture.data.DeviceInfo;
 import com.drt.moisture.data.HumidityParame;
 import com.drt.moisture.data.MeasureParame;
+import com.drt.moisture.data.SetDeviceInfoParame;
 import com.drt.moisture.data.source.bluetooth.resquest.SetCorrectParameRequest;
 import com.drt.moisture.data.source.bluetooth.resquest.SetHumidityParameRequest;
 import com.drt.moisture.data.source.bluetooth.resquest.SetMeasureParameRequest;
@@ -60,7 +61,7 @@ public class SettingActivity extends BluetoothBaseActivity<SettingPresenter> imp
     @BindView(R.id.list_view)
     ListView listView;
 
-    View deviceInfoView, dialogDateTime, dialogRate, dialogParameSet;
+    View deviceInfoView, dialogDateTime, dialogRate, dialogParameSet, dialogSetDeviceInfo;
 
     boolean isBleConnected;
 
@@ -486,213 +487,25 @@ public class SettingActivity extends BluetoothBaseActivity<SettingPresenter> imp
                     editDialog.create().show();
                     return;
                 }
-                dialogParameSet = LayoutInflater.from(this).inflate(R.layout.dialog_parame_set, null);
-                final TabHost tabhost = dialogParameSet.findViewById(android.R.id.tabhost);
-                // 必须调用该方法，才能设置tab样式
-                tabhost.setup();
+                dialogSetDeviceInfo = LayoutInflater.from(this).inflate(R.layout.dialog_set_device_info, null);
+                final EditText xlh = dialogSetDeviceInfo.findViewById(R.id.xlh);
+                final EditText bb = dialogSetDeviceInfo.findViewById(R.id.bb);
+                final EditText xh = dialogSetDeviceInfo.findViewById(R.id.xh);
+                final EditText mc = dialogSetDeviceInfo.findViewById(R.id.mc);
+                final EditText dc = dialogSetDeviceInfo.findViewById(R.id.dc);
 
-                // 添加标签tab1
-                tabhost.addTab(tabhost
-                        .newTabSpec("测量参数")
-                        // 设置tab1标签图片
-                        .setIndicator("测量参数")
-                        .setContent(R.id.tv1));
-
-
-                // 添加标签tab2
-                tabhost.addTab(tabhost
-                        .newTabSpec("校准参数")
-                        // 设置tab1标签图片
-                        .setIndicator("校准参数")
-                        .setContent(R.id.tv2));
-
-                // 添加标签tab3
-                tabhost.addTab(tabhost
-                        .newTabSpec("湿度参数")
-                        // 设置tab1标签图片
-                        .setIndicator("湿度参数")
-                        .setContent(R.id.tv3));
-
-                tabhost.setCurrentTab(0);
-
-                final EditText csA = dialogParameSet.findViewById(R.id.csA);
-                final EditText csB = dialogParameSet.findViewById(R.id.csB);
-                final EditText csC = dialogParameSet.findViewById(R.id.csC);
-                final EditText csD = dialogParameSet.findViewById(R.id.csD);
-                final EditText csE = dialogParameSet.findViewById(R.id.csE);
-                final EditText csF = dialogParameSet.findViewById(R.id.csF);
-                final EditText csG = dialogParameSet.findViewById(R.id.csG);
-                final EditText csH = dialogParameSet.findViewById(R.id.csH);
-                final EditText csI = dialogParameSet.findViewById(R.id.csI);
-                final EditText csJ = dialogParameSet.findViewById(R.id.csJ);
-                final EditText csK = dialogParameSet.findViewById(R.id.csK);
-                final EditText csL = dialogParameSet.findViewById(R.id.csL);
-                final EditText csM = dialogParameSet.findViewById(R.id.csM);
-                final EditText csN = dialogParameSet.findViewById(R.id.csN);
-
-                final EditText csA_1 = dialogParameSet.findViewById(R.id.csA_1);
-                final EditText csB_1 = dialogParameSet.findViewById(R.id.csB_1);
-                final EditText csC_1 = dialogParameSet.findViewById(R.id.csC_1);
-                final EditText csD_1 = dialogParameSet.findViewById(R.id.csD_1);
-                final EditText csE_1 = dialogParameSet.findViewById(R.id.csE_1);
-                final EditText csF_1 = dialogParameSet.findViewById(R.id.csF_1);
-                final EditText csG_1 = dialogParameSet.findViewById(R.id.csG_1);
-                final EditText csH_1 = dialogParameSet.findViewById(R.id.csH_1);
-                final EditText csI_1 = dialogParameSet.findViewById(R.id.csI_1);
-
-                final EditText csA_2 = dialogParameSet.findViewById(R.id.csA_2);
-                final EditText csB_2 = dialogParameSet.findViewById(R.id.csB_2);
-                final EditText csC_2 = dialogParameSet.findViewById(R.id.csC_2);
-                final EditText csD_2 = dialogParameSet.findViewById(R.id.csD_2);
-                final EditText csE_2 = dialogParameSet.findViewById(R.id.csE_2);
-                final EditText csF_2 = dialogParameSet.findViewById(R.id.csF_2);
-                final EditText csG_2 = dialogParameSet.findViewById(R.id.csG_2);
-                final EditText csH_2 = dialogParameSet.findViewById(R.id.csH_2);
-                final EditText csI_2 = dialogParameSet.findViewById(R.id.csI_2);
-                final EditText csJ_2 = dialogParameSet.findViewById(R.id.csJ_2);
-                final EditText csK_2 = dialogParameSet.findViewById(R.id.csK_2);
-                final EditText csL_2 = dialogParameSet.findViewById(R.id.csL_2);
-                final EditText csM_2 = dialogParameSet.findViewById(R.id.csM_2);
-                final EditText csN_2 = dialogParameSet.findViewById(R.id.csN_2);
-                final EditText csO_2 = dialogParameSet.findViewById(R.id.csO_2);
-
-
-                AlertDialog.Builder builder = new AlertDialog.Builder(this).setTitle("参数设置")
-                        .setView(dialogParameSet)
+                AlertDialog.Builder builder = new AlertDialog.Builder(this).setTitle("信息设置")
+                        .setView(dialogSetDeviceInfo)
                         .setPositiveButton("确认", new DialogInterface.OnClickListener() {
                             @Override
                             public void onClick(DialogInterface dialogInterface, int i) {
-                                if (tabhost.getCurrentTab() == 0) {
-                                    MeasureParame measureParame = new MeasureParame();
-
-                                    if (csA.getText().length() > 0) {
-                                        measureParame.setA((int) (Double.parseDouble(csA.getText().toString()) * 1000000));
-                                    }
-                                    if (csB.getText().length() > 0) {
-                                        measureParame.setB((int) (Double.parseDouble(csB.getText().toString()) * 1000000));
-                                    }
-                                    if (csC.getText().length() > 0) {
-                                        measureParame.setC((int) (Double.parseDouble(csC.getText().toString()) * 1000000));
-                                    }
-                                    if (csD.getText().length() > 0) {
-                                        measureParame.setD((int) (Double.parseDouble(csD.getText().toString()) * 1000000));
-                                    }
-                                    if (csE.getText().length() > 0) {
-                                        measureParame.setE((int) (Double.parseDouble(csE.getText().toString()) * 1000000));
-                                    }
-                                    if (csF.getText().length() > 0) {
-                                        measureParame.setF((int) (Double.parseDouble(csF.getText().toString()) * 1000000));
-                                    }
-                                    if (csG.getText().length() > 0) {
-                                        measureParame.setG((int) (Double.parseDouble(csG.getText().toString()) * 1000000));
-                                    }
-                                    if (csH.getText().length() > 0) {
-                                        measureParame.setH((int) (Double.parseDouble(csH.getText().toString()) * 1000000));
-                                    }
-                                    if (csI.getText().length() > 0) {
-                                        measureParame.setI((int) (Double.parseDouble(csI.getText().toString()) * 1000000));
-                                    }
-                                    if (csJ.getText().length() > 0) {
-                                        measureParame.setJ((int) (Double.parseDouble(csJ.getText().toString()) * 1000000));
-                                    }
-                                    if (csK.getText().length() > 0) {
-                                        measureParame.setK((int) (Double.parseDouble(csK.getText().toString()) * 1000000));
-                                    }
-                                    if (csL.getText().length() > 0) {
-                                        measureParame.setL((int) (Double.parseDouble(csL.getText().toString()) * 1000000));
-                                    }
-                                    if (csM.getText().length() > 0) {
-                                        measureParame.setM((int) (Double.parseDouble(csM.getText().toString()) * 1000000));
-                                    }
-                                    if (csN.getText().length() > 0) {
-                                        measureParame.setN((int) (Double.parseDouble(csN.getText().toString())));
-                                    }
-
-                                    mPresenter.setMeasureParame(measureParame);
-                                } else if (tabhost.getCurrentTab() == 1) {
-                                    CorrectParame correctParame = new CorrectParame();
-
-                                    if (csA_1.getText().length() > 0) {
-                                        correctParame.setA((int) (Double.parseDouble(csA_1.getText().toString()) * 1000000));
-                                    }
-                                    if (csB_1.getText().length() > 0) {
-                                        correctParame.setB((int) (Double.parseDouble(csB_1.getText().toString()) * 1000000));
-                                    }
-                                    if (csC_1.getText().length() > 0) {
-                                        correctParame.setC((int) (Double.parseDouble(csC_1.getText().toString()) * 1000000));
-                                    }
-                                    if (csD_1.getText().length() > 0) {
-                                        correctParame.setD((int) (Double.parseDouble(csD_1.getText().toString()) * 1000000));
-                                    }
-                                    if (csE_1.getText().length() > 0) {
-                                        correctParame.setE((int) (Double.parseDouble(csE_1.getText().toString()) * 1000000));
-                                    }
-                                    if (csF_1.getText().length() > 0) {
-                                        correctParame.setF((int) (Double.parseDouble(csF_1.getText().toString()) * 1000000));
-                                    }
-                                    if (csG_1.getText().length() > 0) {
-                                        correctParame.setG((int) (Double.parseDouble(csG_1.getText().toString()) * 1000000));
-                                    }
-                                    if (csH_1.getText().length() > 0) {
-                                        correctParame.setH((int) (Double.parseDouble(csH_1.getText().toString()) * 1000000));
-                                    }
-                                    if (csI_1.getText().length() > 0) {
-                                        correctParame.setI((int) (Double.parseDouble(csI_1.getText().toString()) * 1000000));
-                                    }
-
-                                    mPresenter.setCorrectParame(correctParame);
-                                } else {
-                                    HumidityParame humidityParame = new HumidityParame();
-
-
-                                    if (csA_2.getText().length() > 0) {
-                                        humidityParame.setA((int) (Double.parseDouble(csA_2.getText().toString()) * 1000000));
-                                    }
-                                    if (csB_2.getText().length() > 0) {
-                                        humidityParame.setB((int) (Double.parseDouble(csB_2.getText().toString()) * 1000000));
-                                    }
-                                    if (csC_2.getText().length() > 0) {
-                                        humidityParame.setC((int) (Double.parseDouble(csC_2.getText().toString()) * 1000000));
-                                    }
-                                    if (csD_2.getText().length() > 0) {
-                                        humidityParame.setD((int) (Double.parseDouble(csD_2.getText().toString()) * 1000000));
-                                    }
-                                    if (csE_2.getText().length() > 0) {
-                                        humidityParame.setE((int) (Double.parseDouble(csE_2.getText().toString()) * 1000000));
-                                    }
-                                    if (csF_2.getText().length() > 0) {
-                                        humidityParame.setF((int) (Double.parseDouble(csF_2.getText().toString()) * 1000000));
-                                    }
-                                    if (csG_2.getText().length() > 0) {
-                                        humidityParame.setG((int) (Double.parseDouble(csG_2.getText().toString()) * 1000000));
-                                    }
-                                    if (csH_2.getText().length() > 0) {
-                                        humidityParame.setH((int) (Double.parseDouble(csH_2.getText().toString()) * 1000000));
-                                    }
-                                    if (csI_2.getText().length() > 0) {
-                                        humidityParame.setI((int) (Double.parseDouble(csI_2.getText().toString()) * 1000000));
-                                    }
-                                    if (csJ_2.getText().length() > 0) {
-                                        humidityParame.setJ((int) (Double.parseDouble(csJ_2.getText().toString()) * 1000000));
-                                    }
-                                    if (csK_2.getText().length() > 0) {
-                                        humidityParame.setK((int) (Double.parseDouble(csK_2.getText().toString()) * 1000000));
-                                    }
-                                    if (csL_2.getText().length() > 0) {
-                                        humidityParame.setL((int) (Double.parseDouble(csL_2.getText().toString()) * 1000000));
-                                    }
-                                    if (csM_2.getText().length() > 0) {
-                                        humidityParame.setM((int) (Double.parseDouble(csM_2.getText().toString()) * 1000000));
-                                    }
-                                    if (csN_2.getText().length() > 0) {
-                                        humidityParame.setN((int) (Double.parseDouble(csN_2.getText().toString())) * 1000000);
-                                    }
-                                    if (csO_2.getText().length() > 0) {
-                                        humidityParame.setO((int) (Double.parseDouble(csO_2.getText().toString())) * 1000000);
-                                    }
-//                                    mPresenter.setHumidityParame(humidityParame);
-                                }
-
+                                SetDeviceInfoParame mSetDeviceInfoParame = new SetDeviceInfoParame();
+                                mSetDeviceInfoParame.setBattery(dc.getText().toString());
+                                mSetDeviceInfoParame.setModel(xh.getText().toString());
+                                mSetDeviceInfoParame.setName(mc.getText().toString());
+                                mSetDeviceInfoParame.setSN(xlh.getText().toString());
+                                mSetDeviceInfoParame.setVersion(bb.getText().toString());
+                                mPresenter.setDeviceInfo(mSetDeviceInfoParame);
                             }
                         })
                         .setNegativeButton("取消", new DialogInterface.OnClickListener() {
@@ -704,20 +517,6 @@ public class SettingActivity extends BluetoothBaseActivity<SettingPresenter> imp
                         })
                         .setCancelable(false);
                 builder.show();
-                tabhost.setOnTabChangedListener(new TabHost.OnTabChangeListener() {
-                    @Override
-                    public void onTabChanged(String tabId) {
-                        if (tabId.equals("测量参数")) {
-                            mPresenter.queryMeasureConfig();
-                        } else if (tabId.equals("校准参数")) {
-                            mPresenter.queryCorrectConfig();
-                        } else if (tabId.equals("湿度参数")) {
-                            mPresenter.queryHumidityConfig();
-                        }
-                    }
-                });
-
-                mPresenter.queryMeasureConfig();
             }
             break;
             default:
@@ -791,6 +590,11 @@ public class SettingActivity extends BluetoothBaseActivity<SettingPresenter> imp
             item1 = new HashMap<>();
             item1.put("icon", R.mipmap.icons_data_configuration);
             item1.put("title", "参数设置");
+            data.add(item1);
+
+            item1 = new HashMap<>();
+            item1.put("icon", R.mipmap.icons_data_configuration);
+            item1.put("title", "信息设置");
             data.add(item1);
 
             listView.setAdapter(new SimpleAdapter(this, data,

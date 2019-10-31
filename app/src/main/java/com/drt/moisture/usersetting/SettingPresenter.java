@@ -197,7 +197,7 @@ public class SettingPresenter extends BasePresenter<SettingContract.View> implem
         if (!isViewAttached()) {
             return;
         }
-        mView.showLoading();
+        mView.showRestDialog();
         model.reset( new DataCallback<ParameterSetResponse>() {
             @Override
             public void delivery(ParameterSetResponse deviceInfo) {
