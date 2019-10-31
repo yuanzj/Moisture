@@ -79,11 +79,64 @@ public class SettingActivity extends BluetoothBaseActivity<SettingPresenter> imp
                 }
 
                 if (dialogSetDeviceInfo != null) {
-                    ((EditText) dialogSetDeviceInfo.findViewById(R.id.xlh)).setText(deviceInfo.getSN());
-                    ((EditText) dialogSetDeviceInfo.findViewById(R.id.bb)).setText(deviceInfo.getVersion());
-                    ((EditText) dialogSetDeviceInfo.findViewById(R.id.xh)).setText(deviceInfo.getModel());
-                    ((EditText) dialogSetDeviceInfo.findViewById(R.id.mc)).setText(deviceInfo.getName());
-                    ((EditText) dialogSetDeviceInfo.findViewById(R.id.dc)).setText(deviceInfo.getBattery());
+
+                    byte[] snTemp = deviceInfo.getSN().getBytes();
+
+                    ArrayList<Byte> sn = new ArrayList<>();
+                    for (int i = 0 ; i < snTemp.length ; i ++){
+                        if (snTemp[i] != 0) {
+                            sn.add(snTemp[i]);
+                        }
+                    }
+                    byte[] snFinal = new byte[sn.size()];
+                    for (int i = 0 ; i < snFinal.length ; i ++) {
+                        snFinal[i] = sn.get(i);
+                    }
+
+                    ((EditText) dialogSetDeviceInfo.findViewById(R.id.xlh)).setText(new String(snFinal));
+
+                    byte[] modelTemp = deviceInfo.getModel().getBytes();
+
+                    ArrayList<Byte> model = new ArrayList<>();
+                    for (int i = 0 ; i < modelTemp.length ; i ++){
+                        if (modelTemp[i] != 0) {
+                            model.add(modelTemp[i]);
+                        }
+                    }
+                    byte[] modelFinal = new byte[model.size()];
+                    for (int i = 0 ; i < modelFinal.length ; i ++) {
+                        modelFinal[i] = model.get(i);
+                    }
+
+                    ((EditText) dialogSetDeviceInfo.findViewById(R.id.xh)).setText(new String(modelFinal));
+
+                    byte[] NameTemp = deviceInfo.getName().getBytes();
+
+                    ArrayList<Byte> Name = new ArrayList<>();
+                    for (int i = 0 ; i < NameTemp.length ; i ++){
+                        if (NameTemp[i] != 0) {
+                            Name.add(NameTemp[i]);
+                        }
+                    }
+                    byte[] NameFinal = new byte[Name.size()];
+                    for (int i = 0 ; i < NameFinal.length ; i ++) {
+                        NameFinal[i] = Name.get(i);
+                    }
+                    ((EditText) dialogSetDeviceInfo.findViewById(R.id.mc)).setText(new String(NameFinal));
+
+                    byte[] getBatteryTemp = deviceInfo.getBattery().getBytes();
+
+                    ArrayList<Byte> getBattery = new ArrayList<>();
+                    for (int i = 0 ; i < getBatteryTemp.length ; i ++){
+                        if (getBatteryTemp[i] != 0) {
+                            getBattery.add(getBatteryTemp[i]);
+                        }
+                    }
+                    byte[] getBatteryFinal = new byte[getBattery.size()];
+                    for (int i = 0 ; i < getBatteryFinal.length ; i ++) {
+                        getBatteryFinal[i] = getBattery.get(i);
+                    }
+                    ((EditText) dialogSetDeviceInfo.findViewById(R.id.dc)).setText(new String(getBatteryFinal));
                 }
             }
         });
@@ -497,7 +550,6 @@ public class SettingActivity extends BluetoothBaseActivity<SettingPresenter> imp
                 }
                 dialogSetDeviceInfo = LayoutInflater.from(this).inflate(R.layout.dialog_set_device_info, null);
                 final EditText xlh = dialogSetDeviceInfo.findViewById(R.id.xlh);
-                final EditText bb = dialogSetDeviceInfo.findViewById(R.id.bb);
                 final EditText xh = dialogSetDeviceInfo.findViewById(R.id.xh);
                 final EditText mc = dialogSetDeviceInfo.findViewById(R.id.mc);
                 final EditText dc = dialogSetDeviceInfo.findViewById(R.id.dc);
@@ -512,7 +564,6 @@ public class SettingActivity extends BluetoothBaseActivity<SettingPresenter> imp
                                 mSetDeviceInfoParame.setModel(xh.getText().toString());
                                 mSetDeviceInfoParame.setName(mc.getText().toString());
                                 mSetDeviceInfoParame.setSN(xlh.getText().toString());
-                                mSetDeviceInfoParame.setVersion(bb.getText().toString());
                                 mPresenter.setDeviceInfo(mSetDeviceInfoParame);
                             }
                         })

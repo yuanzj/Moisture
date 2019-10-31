@@ -19,19 +19,16 @@ public class SetDeviceInfoRequest {
     private int Reserved;
 
     @RkField(position = 5, length = 16)
-    private String SN;
+    private byte[] SN;
 
     @RkField(position = 21, length = 16)
-    private String version;
+    private byte[] model;
 
     @RkField(position = 37, length = 16)
-    private String model;
+    private byte[] name;
 
     @RkField(position = 53, length = 16)
-    private String name;
-
-    @RkField(position = 69, length = 16)
-    private String battery;
+    private byte[] battery;
 
     public byte getCmdGroup() {
         return CmdGroup;
@@ -65,43 +62,35 @@ public class SetDeviceInfoRequest {
         Reserved = reserved;
     }
 
-    public String getSN() {
+    public byte[] getSN() {
         return SN;
     }
 
-    public void setSN(String SN) {
+    public void setSN(byte[] SN) {
         this.SN = SN;
     }
 
-    public String getVersion() {
-        return version;
-    }
-
-    public void setVersion(String version) {
-        this.version = version;
-    }
-
-    public String getModel() {
+    public byte[] getModel() {
         return model;
     }
 
-    public void setModel(String model) {
+    public void setModel(byte[] model) {
         this.model = model;
     }
 
-    public String getName() {
+    public byte[] getName() {
         return name;
     }
 
-    public void setName(String name) {
+    public void setName(byte[] name) {
         this.name = name;
     }
 
-    public String getBattery() {
+    public byte[] getBattery() {
         return battery;
     }
 
-    public void setBattery(String battery) {
+    public void setBattery(byte[] battery) {
         this.battery = battery;
     }
 
@@ -113,7 +102,6 @@ public class SetDeviceInfoRequest {
                 ", Response=" + Response +
                 ", Reserved=" + Reserved +
                 ", SN='" + SN + '\'' +
-                ", version='" + version + '\'' +
                 ", model='" + model + '\'' +
                 ", name='" + name + '\'' +
                 ", battery='" + battery + '\'' +

@@ -37,35 +37,7 @@
             android:textSize="@dimen/sizeSubTitle" />
     </LinearLayout>
 
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="48dp"
-        android:gravity="center_vertical"
-        android:orientation="horizontal">
 
-        <TextView
-            android:layout_width="60dp"
-            android:layout_height="wrap_content"
-            android:text="版本"
-            android:textColor="@color/colorSecondBody"
-            android:textSize="@dimen/sizeBody" />
-
-        <EditText
-            android:id="@+id/bb"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginLeft="@dimen/padding_default"
-            android:enabled="false"
-            android:background="@drawable/edittext_bg_selector"
-            android:focusableInTouchMode="true"
-            android:hint="请输入版本"
-            android:inputType="textEmailAddress"
-            android:digits="0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ"
-            android:singleLine="true"
-            android:textColor="@color/colorBody"
-            android:textCursorDrawable="@drawable/solid_shape_bottom_line"
-            android:textSize="@dimen/sizeSubTitle" />
-    </LinearLayout>
 
     <LinearLayout
         android:layout_width="match_parent"

@@ -851,7 +851,7 @@ public class SettingActivity extends BluetoothBaseActivity<SettingPresenter> imp
         try {
             File file = new File(path);
             if (!file.exists()) {
-                return "123456";
+                return "667788";
             }
             inputStream = new FileInputStream(file);
             inputStreamReader = new InputStreamReader(inputStream);

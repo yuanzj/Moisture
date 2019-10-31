@@ -343,11 +343,55 @@ public class BluetoothServiceImpl implements BluetoothService, BleWriteResponse 
         deviceInfoRequest.setResponse((byte) 0x01);
         deviceInfoRequest.setReserved(0);
 
-        deviceInfoRequest.setSN(setDeviceInfoRequest.getSN());
-        deviceInfoRequest.setBattery(setDeviceInfoRequest.getBattery());
-        deviceInfoRequest.setVersion(setDeviceInfoRequest.getVersion());
-        deviceInfoRequest.setModel(setDeviceInfoRequest.getModel());
-        deviceInfoRequest.setName(setDeviceInfoRequest.getName());
+
+        byte[] sn = new byte[16];
+        byte[] snTemp = setDeviceInfoRequest.getSN().getBytes();
+
+        for (int i = 0; i < 16; i++) {
+            if (i < snTemp.length) {
+                sn[i] = snTemp[i];
+            } else {
+                sn[i] = 0;
+            }
+        }
+
+        byte[] battery = new byte[16];
+        byte[] batteryTemp = setDeviceInfoRequest.getBattery().getBytes();
+
+        for (int i = 0; i < 16; i++) {
+            if (i < batteryTemp.length) {
+                battery[i] = batteryTemp[i];
+            } else {
+                battery[i] = 0;
+            }
+        }
+
+        byte[] model = new byte[16];
+        byte[] modelTemp = setDeviceInfoRequest.getModel().getBytes();
+
+        for (int i = 0; i < 16; i++) {
+            if (i < modelTemp.length) {
+                model[i] = modelTemp[i];
+            } else {
+                model[i] = 0;
+            }
+        }
+
+        byte[] name = new byte[16];
+        byte[] nameTemp = setDeviceInfoRequest.getName().getBytes();
+
+        for (int i = 0; i < 16; i++) {
+            if (i < nameTemp.length) {
+                name[i] = nameTemp[i];
+            } else {
+                name[i] = 0;
+            }
+        }
+
+        deviceInfoRequest.setSN(sn);
+        deviceInfoRequest.setBattery(battery);
+        deviceInfoRequest.setModel(model);
+        deviceInfoRequest.setName(name);
 
         try {
             App.getInstance().getBluetoothClient().write(App.getInstance().getConnectMacAddress(), UUIDUtils.makeUUID(0xFFE0), UUIDUtils.makeUUID(0xFFE1), BluetoothDataUtil.encode(deviceInfoRequest), this);
@@ -448,7 +492,7 @@ public class BluetoothServiceImpl implements BluetoothService, BleWriteResponse 
     }
 
     @Override
-    public void setCorrectParame(final CorrectParame measureParame, final SppDataCallback<ParameterSetResponse> sppDataCallback, boolean retry , final int type) {
+    public void setCorrectParame(final CorrectParame measureParame, final SppDataCallback<ParameterSetResponse> sppDataCallback, boolean retry, final int type) {
         this.sppDataCallback = sppDataCallback;
         SetCorrectParameRequest setCorrectParameRequest = new SetCorrectParameRequest();
         setCorrectParameRequest.setCmdGroup((byte) 0xA2);
