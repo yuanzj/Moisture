@@ -12,7 +12,7 @@
         android:theme="@style/AppTheme">
         <activity
             android:name=".MainActivity"
-            android:screenOrientation="portrait">
+            android:screenOrientation="landscape">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
                 <category android:name="android.intent.category.LAUNCHER" />
@@ -22,41 +22,41 @@
         <activity
             android:name=".measure.MeasureActivity"
             android:label="@string/activity_measure"
-            android:screenOrientation="portrait" />
+            android:screenOrientation="landscape" />
 
         <activity
             android:name=".correct.CorrectActivity"
 
             android:label="@string/activity_correct"
-            android:screenOrientation="portrait" />
+            android:screenOrientation="landscape" />
 
         <activity
             android:name=".report.ReportActivity"
 
             android:label="@string/activity_query"
-            android:screenOrientation="portrait" />
+            android:screenOrientation="landscape" />
 
         <activity
             android:name="com.zhjian.bluetooth.spp.DeviceList"
-            android:screenOrientation="portrait"
+            android:screenOrientation="landscape"
             android:theme="@style/Theme.ActivityDialogStyle" />
 
         <activity
             android:name=".setting.SettingActivity"
             android:label="@string/activity_setting"
-            android:screenOrientation="portrait" />
+            android:screenOrientation="landscape" />
         <activity
             android:name=".syssetting.SettingActivity"
             android:label="@string/activity_setting"
-            android:screenOrientation="portrait" />
+            android:screenOrientation="landscape" />
         <activity
             android:name=".usersetting.SettingActivity"
             android:label="@string/activity_setting"
-            android:screenOrientation="portrait" />
+            android:screenOrientation="landscape" />
         <activity
             android:name=".BleScanActivity"
             android:label="@string/activity_scan"
-            android:screenOrientation="portrait"
+            android:screenOrientation="landscape"
             />
 
         <service android:name="com.inuker.bluetooth.library.BluetoothService" />

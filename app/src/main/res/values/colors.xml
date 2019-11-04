@@ -24,5 +24,9 @@
     <color name="colorBtnPress">#123d78</color>
     <color name="colorBtnUnPress">#219EF3</color>
 
+    <color name="navBarColor">#D2EEFE</color>
+
+    <color name="navBarTitleColor">#042B85</color>
+    <color name="navBarTitleShadowColor">#7f042B85</color>
 
 </resources>

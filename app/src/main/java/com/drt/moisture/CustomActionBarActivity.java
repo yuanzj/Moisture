@@ -41,7 +41,7 @@ public abstract class CustomActionBarActivity<T extends BasePresenter> extends B
         // 系统 6.0 以上 状态栏白底黑字的实现方法
         StatusBarUtil.setLightStatusBar(this.getWindow());
         // 竖屏
-        setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
+        setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE);
         initToolbar();
     }
 

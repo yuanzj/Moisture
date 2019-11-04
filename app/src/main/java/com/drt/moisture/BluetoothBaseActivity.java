@@ -96,7 +96,7 @@ public abstract class BluetoothBaseActivity<T extends BasePresenter> extends Bas
         // 系统 6.0 以上 状态栏白底黑字的实现方法
         StatusBarUtil.setLightStatusBar(this.getWindow());
         // 竖屏
-        setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
+        setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE);
         initToolbar();
 
         // 初始化蓝牙按钮

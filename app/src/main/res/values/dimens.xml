@@ -21,7 +21,7 @@
     <!--三级文字大小-->
     <dimen name="sizeThreeBody">10sp</dimen>
 
-    <dimen name="home_card_width">260dp</dimen>
+    <dimen name="home_card_width">240dp</dimen>
     <dimen name="home_card_height">72dp</dimen>
     <dimen name="home_card_margin">32dp</dimen>
     <dimen name="home_card_radius">4dp</dimen>

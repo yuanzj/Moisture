@@ -10,11 +10,11 @@
 
         <!-- Customize your theme here. -->
         <item name="colorPrimary">@color/colorPrimary</item>
-        <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
+        <item name="colorPrimaryDark">@color/navBarColor</item>
         <item name="colorAccent">@color/colorPrimary</item>
 
         <!--自定义字体-->
-        <item name="android:fontFamily">@font/fzbiaoysk</item>
+<!--        <item name="android:fontFamily">@font/fzbiaoysk</item>-->
 
     </style>
 

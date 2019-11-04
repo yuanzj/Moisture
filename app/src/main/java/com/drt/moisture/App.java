@@ -70,7 +70,7 @@ public class App extends Application {
         super.onCreate();
         app = this;
         bluetoothSPP = new BluetoothSPP(this);
-        bluetoothSPP.setupService();
+//        bluetoothSPP.setupService();
         localDataService = new LocalDataServiceImpl(this);
         bluetoothService = new BluetoothServiceImpl(this);
 
