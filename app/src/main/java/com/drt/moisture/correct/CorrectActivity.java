@@ -381,13 +381,14 @@ public class CorrectActivity extends BluetoothBaseActivity<CorrectPresenter> imp
     private void initChartView() {
         Point outSize = new Point();
         this.getWindowManager().getDefaultDisplay().getSize(outSize);
-        chart.setMinimumHeight((outSize.x - getResources().getDimensionPixelSize(R.dimen.padding_default) * 2) / 2);
+//        chart.setMinimumHeight((outSize.x - getResources().getDimensionPixelSize(R.dimen.padding_default) * 2) / 2);
 
         // apply styling
         // holder.chart.setValueTypeface(mTf);
         chart.getDescription().setEnabled(false);
         chart.setDrawGridBackground(false);
         chart.setNoDataText("没有校正数据。请点击右上角蓝牙按钮连接设备后开始校正!");
+        chart.setNoDataTextColor(getColor(R.color.colorSecondBody));
 
         XAxis xAxis = chart.getXAxis();
         xAxis.setPosition(XAxis.XAxisPosition.BOTTOM);

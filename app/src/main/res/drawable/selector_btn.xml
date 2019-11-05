@@ -1,12 +1,20 @@
 <?xml version="1.0" encoding="utf-8"?>
 <ripple xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
-    android:color="@color/colorDisableBody"
+    android:color="@color/navBarTitleShadowColor"
     tools:targetApi="lollipop">
     <item>
-        <shape android:shape="oval">
-            <solid android:color="@color/colorWhite" />
-            <corners android:radius="0dp" />
+
+        <shape
+            android:shape="rectangle">
+
+            <corners android:radius="8dp" />
+
+            <gradient
+                android:angle="90"
+                android:endColor="@color/startBlueColor"
+                android:startColor="@color/navBarTitleColor"
+                android:type="linear" />
         </shape>
     </item>
 </ripple>

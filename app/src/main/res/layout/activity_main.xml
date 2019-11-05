@@ -80,7 +80,7 @@
                     android:singleLine="true"
                     android:layout_marginRight="16dp"
                     android:text="蓝牙未连接"
-                    android:textColor="@color/colorSecondBody"
+                    android:textColor="@color/colorBody"
                     android:textSize="@dimen/sizeBody"
                     />
                 <TextView

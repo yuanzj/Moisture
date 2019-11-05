@@ -26,7 +26,11 @@
 
     <color name="navBarColor">#D2EEFE</color>
 
+    <color name="startBlueColor">#1080FF</color>
     <color name="navBarTitleColor">#042B85</color>
     <color name="navBarTitleShadowColor">#7f042B85</color>
+
+    <color name="mainBgColor1">#8CCFFF</color>
+    <color name="mainBgColor2">#4CABE7</color>
 
 </resources>
