@@ -8,6 +8,7 @@ import android.graphics.Paint;
 import android.graphics.Point;
 import android.graphics.Rect;
 import android.os.Bundle;
+import android.os.Handler;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AlertDialog;
 import android.util.DisplayMetrics;
@@ -210,7 +211,26 @@ public class ReportActivity extends BluetoothBaseActivity<ReportPresenter> imple
                 next.setEnabled(true);
                 previous.setEnabled(true);
                 progress.setVisibility(View.GONE);
-                Toast.makeText(getApplicationContext(), "获取结束", Toast.LENGTH_LONG).show();
+
+                AlertDialog.Builder builder = new AlertDialog.Builder(ReportActivity.this).setIcon(R.mipmap.ic_launcher).setTitle("提示")
+                        .setMessage("获取结束").setPositiveButton("确认", new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialogInterface, int i) {
+                                dialogInterface.dismiss();
+                            }
+                        });
+                final AlertDialog alertDialog = builder.create();
+
+                alertDialog.show();
+
+                new Handler().postDelayed(new Runnable() {
+                    @Override
+                    public void run() {
+                        if (alertDialog.isShowing()) {
+                            alertDialog.dismiss();
+                        }
+                    }
+                }, 3000);
             }
         });
     }

@@ -12,14 +12,14 @@ public interface MeasureContract {
     interface Model {
 
         /**
-         * 获取测量时长
+         * 获取测量耗时
          *
          * @return
          */
         int getMeasureTime();
 
         /**
-         * 设置测量时长
+         * 设置测量耗时
          *
          * @param period
          */
@@ -49,14 +49,14 @@ public interface MeasureContract {
     interface Presenter {
 
         /**
-         * 获取测量时长
+         * 获取测量耗时
          *
          * @return
          */
         int getMeasureTime();
 
         /**
-         * 设置测量时长
+         * 设置测量耗时
          *
          * @param period
          */

@@ -25,6 +25,7 @@ import com.drt.moisture.R;
 import com.drt.moisture.data.MeasureStatus;
 import com.drt.moisture.data.MeasureValue;
 import com.github.mikephil.charting.charts.LineChart;
+import com.github.mikephil.charting.components.AxisBase;
 import com.github.mikephil.charting.components.XAxis;
 import com.github.mikephil.charting.components.YAxis;
 import com.github.mikephil.charting.data.Entry;
@@ -34,6 +35,8 @@ import com.github.mikephil.charting.formatter.ValueFormatter;
 import com.github.mikephil.charting.interfaces.datasets.ILineDataSet;
 import com.inuker.bluetooth.library.Constants;
 
+import java.math.RoundingMode;
+import java.text.DecimalFormat;
 import java.util.Collections;
 import java.util.List;
 
@@ -129,6 +132,8 @@ public class MeasureActivity extends BluetoothBaseActivity<MeasurePresenter> imp
                 Log.d(TAG, "spMeasureTime:onNothingSelected:view:" + parent);
             }
         });
+
+        measureName.setText(App.getInstance().getLocalDataService().queryHistory().get(0));
     }
 
     @Override
@@ -148,8 +153,8 @@ public class MeasureActivity extends BluetoothBaseActivity<MeasurePresenter> imp
             public void run() {
                 addEntry(measureValue);
                 time.setText(measureValue.getReportTime());
-                temperature.setText(measureValue.getTemperature() + "°C");
-                activeness.setText(measureValue.getActivity() + "");
+                temperature.setText(String.format("%.2f", measureValue.getTemperature()) + "°C");
+                activeness.setText(String.format("%.4f", measureValue.getActivity()));
             }
         });
     }
@@ -181,7 +186,25 @@ public class MeasureActivity extends BluetoothBaseActivity<MeasurePresenter> imp
 
     @OnClick(R.id.btnStopMeasure)
     public void stopMeasure() {
-        mPresenter.stopMeasure(true);
+
+        AlertDialog.Builder builder = new AlertDialog.Builder(this).setTitle("提示")
+                .setMessage("是否确认停止测量？")
+                .setPositiveButton("确认", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialogInterface, int i) {
+                        mPresenter.stopMeasure(true);
+                    }
+                })
+                .setNegativeButton("取消", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        // TODO Auto-generated method stub
+                        dialog.dismiss();
+                    }
+                })
+                .setCancelable(false);
+        builder.show();
+
     }
 
     @OnClick(R.id.history)
@@ -339,7 +362,7 @@ public class MeasureActivity extends BluetoothBaseActivity<MeasurePresenter> imp
             set = createActivitySet();
             data.addDataSet(set);
         }
-        data.addEntry(new Entry(set.getEntryCount(), (float) measureValue.getActivity(), measureValue.getReportTime()), 0);
+        data.addEntry(new Entry(set.getEntryCount(), (float) measureValue.getActivity() , measureValue.getReportTime()), 0);
         data.notifyDataChanged();
 
         // let the chart know it's data has changed
@@ -374,6 +397,13 @@ public class MeasureActivity extends BluetoothBaseActivity<MeasurePresenter> imp
         d2.setCircleColor(getResources().getColor(R.color.colorGreen, getTheme()));
         d2.setDrawValues(true);
         d2.setMode(LineDataSet.Mode.CUBIC_BEZIER);
+        d2.setValueFormatter(new ValueFormatter(){
+            public String getFormattedValue(float value) {
+                DecimalFormat df = new DecimalFormat("0.00");
+                df.setRoundingMode(RoundingMode.DOWN);
+                return df.format(value);
+            }
+        });
         return d2;
     }
 
@@ -410,14 +440,13 @@ public class MeasureActivity extends BluetoothBaseActivity<MeasurePresenter> imp
 
         YAxis leftAxis = chart.getAxisLeft();
         leftAxis.setLabelCount(5, false);
-        leftAxis.setAxisMinimum(0f); // this replaces setStartAtZero(true)
+        leftAxis.setDrawGridLines(false);
         leftAxis.setAxisMinimum(0f); // this replaces setStartAtZero(true)
         leftAxis.setAxisMaximum(1.0000f);
 
         YAxis rightAxis = chart.getAxisRight();
         rightAxis.setLabelCount(5, false);
         rightAxis.setDrawGridLines(false);
-        rightAxis.setAxisMinimum(0f); // this replaces setStartAtZero(true)
         rightAxis.setAxisMinimum(0f); // this replaces setStartAtZero(true)
         rightAxis.setAxisMaximum(1.0000f);
 

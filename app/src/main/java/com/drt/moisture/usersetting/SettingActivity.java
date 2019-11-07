@@ -735,6 +735,7 @@ public class SettingActivity extends BluetoothBaseActivity<SettingPresenter> imp
                         .setPositiveButton("确认", new DialogInterface.OnClickListener() {
                             @Override
                             public void onClick(DialogInterface dialogInterface, int i) {
+                                App.getInstance().getLocalDataService().clearAll();
                                 mPresenter.reset();
                             }
                         })

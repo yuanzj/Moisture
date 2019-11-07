@@ -90,6 +90,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginLeft="@dimen/padding_default"
+            android:text=""
             android:textColor="@color/colorBody"
             android:textSize="@dimen/sizeBody" />
     </LinearLayout>
@@ -97,6 +98,7 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="48dp"
+        android:visibility="gone"
         android:gravity="center_vertical"
         android:orientation="horizontal">
 

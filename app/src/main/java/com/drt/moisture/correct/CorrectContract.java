@@ -13,14 +13,14 @@ public interface CorrectContract {
     interface Model {
 
         /**
-         * 获取测量时长
+         * 获取测量耗时
          *
          * @return
          */
         int getCorrectTime();
 
         /**
-         * 设置测量时长
+         * 设置测量耗时
          *
          * @param period
          */
@@ -52,14 +52,14 @@ public interface CorrectContract {
     interface Presenter {
 
         /**
-         * 获取测量时长
+         * 获取测量耗时
          *
          * @return
          */
         int getCorrectTime();
 
         /**
-         * 设置测量时长
+         * 设置测量耗时
          *
          * @param period
          */

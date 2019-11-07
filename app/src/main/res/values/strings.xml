@@ -1,13 +1,13 @@
 <resources>
     <string name="app_name">水分活度测量仪</string>
 
-    <string name="activity_measure">测量</string>
+    <string name="activity_measure">水分活度测量</string>
 
-    <string name="activity_correct">校正</string>
+    <string name="activity_correct">数据校正</string>
 
-    <string name="activity_query">查询</string>
+    <string name="activity_query">历史查询</string>
 
-    <string name="activity_setting">设置</string>
+    <string name="activity_setting">应用设置</string>
 
     <string name="activity_scan">扫描设备</string>
 </resources>

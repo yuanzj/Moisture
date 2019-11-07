@@ -20,16 +20,12 @@
     </string-array>
 
     <string-array name="correct_model">
-        <item>氯化钠校正</item>
-        <item>氯化镁校正</item>
+        <item>氯化钠饱和溶液校正</item>
+        <item>氯化镁饱和溶液校正</item>
         <item>双点校正</item>
     </string-array>
 
     <string-array name="measure_time_array">
-        <item>1 分钟</item>
-        <item>2 分钟</item>
-        <item>3 分钟</item>
-        <item>4 分钟</item>
         <item>5 分钟</item>
         <item>6 分钟</item>
         <item>7 分钟</item>
@@ -92,6 +88,26 @@
         <item>59 分钟</item>
         <item>60 分钟</item>
 
+    </string-array>
+
+    <string-array name="correct_time_array">
+        <item>15 分钟</item>
+        <item>16 分钟</item>
+        <item>17 分钟</item>
+        <item>18 分钟</item>
+        <item>19 分钟</item>
+        <item>20 分钟</item>
+
+        <item>21 分钟</item>
+        <item>22 分钟</item>
+        <item>23 分钟</item>
+        <item>24 分钟</item>
+        <item>25 分钟</item>
+        <item>26 分钟</item>
+        <item>27 分钟</item>
+        <item>28 分钟</item>
+        <item>29 分钟</item>
+        <item>30 分钟</item>
     </string-array>
 
     <string-array name="setting_rate">

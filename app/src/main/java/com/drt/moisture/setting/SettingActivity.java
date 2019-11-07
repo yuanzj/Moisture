@@ -74,7 +74,7 @@ public class SettingActivity extends BluetoothBaseActivity<SettingPresenter> imp
                     ((TextView) deviceInfoView.findViewById(R.id.title1)).setText(deviceInfo.getSN());
                     ((TextView) deviceInfoView.findViewById(R.id.title2)).setText(deviceInfo.getVersion());
                     ((TextView) deviceInfoView.findViewById(R.id.title3)).setText(deviceInfo.getModel());
-                    ((TextView) deviceInfoView.findViewById(R.id.title4)).setText(deviceInfo.getName());
+                    ((TextView) deviceInfoView.findViewById(R.id.title4)).setText("水分活度测量仪");
                     ((TextView) deviceInfoView.findViewById(R.id.title5)).setText(deviceInfo.getBattery());
                 }
 

@@ -27,8 +27,8 @@ public class LocalDataServiceImpl implements LocalDataService {
     public synchronized AppConfig queryAppConfig() {
         SharedPreferences sp = context.getSharedPreferences("SP", MODE_PRIVATE);
         AppConfig appConfig = new AppConfig();
-        appConfig.setMeasuringTime(sp.getInt("measuringTime", 10));
-        appConfig.setCorrectTime(sp.getInt("correctTime", 10));
+        appConfig.setMeasuringTime(sp.getInt("measuringTime", 5));
+        appConfig.setCorrectTime(sp.getInt("correctTime", 0));
         appConfig.setPeriod(sp.getInt("period", 1500));
         appConfig.setRatio(sp.getInt("ratio", 0));
         return appConfig;
@@ -50,7 +50,7 @@ public class LocalDataServiceImpl implements LocalDataService {
     @Override
     public List<String> queryHistory() {
         SharedPreferences sp = context.getSharedPreferences("SP", MODE_PRIVATE);
-        String listJson = sp.getString("historyList", "");
+        String listJson = sp.getString("historyList", "[\"样品1\"]");
         if (listJson != null && listJson.length() > 0) {
             return new Gson().fromJson(listJson, new TypeToken<List<String>>() {
             }.getType());
@@ -78,6 +78,14 @@ public class LocalDataServiceImpl implements LocalDataService {
         SharedPreferences.Editor editor = sp.edit();
         editor.putString("historyList", new Gson().toJson(historyList));
 
+        editor.apply();
+    }
+
+    @Override
+    public void clearAll() {
+        SharedPreferences sp = context.getSharedPreferences("SP", MODE_PRIVATE);
+        SharedPreferences.Editor editor = sp.edit();
+        editor.clear();
         editor.apply();
     }
 }

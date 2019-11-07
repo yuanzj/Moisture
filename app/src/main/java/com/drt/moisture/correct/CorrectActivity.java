@@ -31,6 +31,9 @@ import com.github.mikephil.charting.formatter.ValueFormatter;
 import com.github.mikephil.charting.interfaces.datasets.ILineDataSet;
 import com.inuker.bluetooth.library.Constants;
 
+import java.math.RoundingMode;
+import java.text.DecimalFormat;
+
 import butterknife.BindView;
 import butterknife.OnClick;
 
@@ -140,8 +143,8 @@ public class CorrectActivity extends BluetoothBaseActivity<CorrectPresenter> imp
             public void run() {
                 addEntry(measureValue);
                 time.setText(measureValue.getReportTime());
-                temperature.setText(measureValue.getTemperature() + "°C");
-                activeness.setText(measureValue.getActivity() + "");
+                temperature.setText(String.format("%.2f", measureValue.getTemperature()) + "°C");
+                activeness.setText(String.format("%.4f", measureValue.getActivity()) + "");
             }
         });
     }
@@ -203,7 +206,23 @@ public class CorrectActivity extends BluetoothBaseActivity<CorrectPresenter> imp
 
     @OnClick(R.id.btnStopMeasure)
     public void stopMeasure() {
-        mPresenter.stopCorrect(true);
+        AlertDialog.Builder builder = new AlertDialog.Builder(this).setTitle("提示")
+                .setMessage("是否确认停止校正？")
+                .setPositiveButton("确认", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialogInterface, int i) {
+                        mPresenter.stopCorrect(true);
+                    }
+                })
+                .setNegativeButton("取消", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        // TODO Auto-generated method stub
+                        dialog.dismiss();
+                    }
+                })
+                .setCancelable(false);
+        builder.show();
     }
 
     @Override
@@ -234,7 +253,7 @@ public class CorrectActivity extends BluetoothBaseActivity<CorrectPresenter> imp
                     case ERROR:
                     case DONE:
                         if (measureStatus == MeasureStatus.DONE) {
-                            AlertDialog.Builder builder=new AlertDialog.Builder(CorrectActivity.this);
+                            AlertDialog.Builder builder = new AlertDialog.Builder(CorrectActivity.this);
                             builder.setTitle("提示");//设置title
                             builder.setMessage("校正完成");//设置内容
                             //点击确认按钮事件
@@ -245,7 +264,7 @@ public class CorrectActivity extends BluetoothBaseActivity<CorrectPresenter> imp
                                 }
                             });
                             //创建出AlertDialog对象
-                            AlertDialog alertDialog=builder.create();
+                            AlertDialog alertDialog = builder.create();
                             //点击对话框之外的地方不消失
                             alertDialog.setCanceledOnTouchOutside(false);
                             //设置显示
@@ -375,6 +394,13 @@ public class CorrectActivity extends BluetoothBaseActivity<CorrectPresenter> imp
         d2.setCircleColor(getResources().getColor(R.color.colorGreen, getTheme()));
         d2.setDrawValues(true);
         d2.setMode(LineDataSet.Mode.CUBIC_BEZIER);
+        d2.setValueFormatter(new ValueFormatter(){
+            public String getFormattedValue(float value) {
+                DecimalFormat df = new DecimalFormat("0.00");
+                df.setRoundingMode(RoundingMode.DOWN);
+                return df.format(value);
+            }
+        });
         return d2;
     }
 

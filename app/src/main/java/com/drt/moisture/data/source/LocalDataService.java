@@ -15,4 +15,6 @@ public interface LocalDataService {
 
     void setHistory(String name);
 
+    void clearAll();
+
 }

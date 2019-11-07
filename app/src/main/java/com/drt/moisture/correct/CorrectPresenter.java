@@ -79,10 +79,11 @@ public class CorrectPresenter extends BasePresenter<CorrectContract.View> implem
 
                     @Override
                     public void correctDone(int step) {
-                        setMeasureStatus(MeasureStatus.DONE);
                         if (isViewAttached()) {
                             if (measureModel == 2 && step == 0) {
                                 mView.updateStep("请接着放置氯化镁饱和液");
+                            } else {
+                                setMeasureStatus(MeasureStatus.DONE);
                             }
                         }
                     }
