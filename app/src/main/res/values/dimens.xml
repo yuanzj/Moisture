@@ -24,7 +24,7 @@
     <dimen name="home_card_width">240dp</dimen>
     <dimen name="home_card_height">72dp</dimen>
     <dimen name="home_card_margin">32dp</dimen>
-    <dimen name="home_card_radius">4dp</dimen>
+    <dimen name="home_card_radius">8dp</dimen>
 
     <dimen name="image_list_size">40dp</dimen>
 

@@ -125,7 +125,9 @@
                     android:focusable="true"
                     android:foreground="?android:attr/selectableItemBackground"
                     android:onClick="onClick"
-                    app:cardCornerRadius="@dimen/home_card_radius">
+                    app:cardCornerRadius="@dimen/home_card_radius"
+                    app:cardElevation="20dp"
+                    >
 
                     <LinearLayout
                         android:layout_width="match_parent"
@@ -180,7 +182,9 @@
                     android:focusable="true"
                     android:foreground="?android:attr/selectableItemBackground"
                     android:onClick="onClick"
-                    app:cardCornerRadius="@dimen/home_card_radius">
+                    app:cardCornerRadius="@dimen/home_card_radius"
+                    app:cardElevation="20dp"
+                    >
 
                     <LinearLayout
                         android:layout_width="match_parent"
@@ -251,7 +255,8 @@
                     android:focusable="true"
                     android:foreground="?android:attr/selectableItemBackground"
                     android:onClick="onClick"
-                    app:cardCornerRadius="@dimen/home_card_radius">
+                    app:cardCornerRadius="@dimen/home_card_radius"
+                    app:cardElevation="20dp">
 
                     <LinearLayout
                         android:layout_width="match_parent"
@@ -306,7 +311,8 @@
                     android:focusable="true"
                     android:foreground="?android:attr/selectableItemBackground"
                     android:onClick="onClick"
-                    app:cardCornerRadius="@dimen/home_card_radius">
+                    app:cardCornerRadius="@dimen/home_card_radius"
+                    app:cardElevation="20dp">
 
                     <LinearLayout
                         android:layout_width="match_parent"
