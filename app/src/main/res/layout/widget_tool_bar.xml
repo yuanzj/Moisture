@@ -62,7 +62,7 @@
             android:layout_width="?attr/actionBarSize"
             android:layout_height="match_parent"
             android:src="@mipmap/ic_export"
-            android:background="@drawable/selector_btn"
+            android:background="@drawable/selector_btn_transparent"
             android:visibility="gone"
             />
         <ImageButton

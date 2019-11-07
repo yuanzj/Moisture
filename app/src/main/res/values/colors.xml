@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <color name="colorPrimary">#219EF3</color>
+    <color name="colorPrimary">#042B85</color>
     <color name="colorPrimaryDark">#FFFFFF</color>
-    <color name="colorAccent">#219EF3</color>
+    <color name="colorAccent">#042B85</color>
 
     <color name="colorRed">#DB4F47</color>
     <color name="colorWhite">#FFFFFF</color>
@@ -20,9 +20,9 @@
     <color name="colorDisableBody">#3F000000</color>
 
 
-    <color name="colorBtnDisable">#7F219EF3</color>
-    <color name="colorBtnPress">#123d78</color>
-    <color name="colorBtnUnPress">#219EF3</color>
+    <color name="colorBtnDisable">#7f042B85</color>
+    <color name="colorBtnPress">#1080FF</color>
+    <color name="colorBtnUnPress">#042B85</color>
 
     <color name="navBarColor">#D2EEFE</color>
 

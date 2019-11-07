@@ -9,196 +9,224 @@
     tools:context=".MainActivity">
 
     <include layout="@layout/widget_tool_bar" />
-    <LinearLayout
-        android:layout_marginTop="16dp"
 
+    <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="48dp"
-        android:paddingLeft="@dimen/activity_horizontal_margin"
-        android:paddingRight="@dimen/activity_horizontal_margin"
-        android:gravity="center_vertical"
+        android:layout_height="match_parent"
+        android:orientation="horizontal"
         >
-        <Button
-            android:paddingLeft="8dp"
+        <RelativeLayout
             android:layout_width="0dp"
-            android:layout_weight="1"
             android:layout_height="match_parent"
-            android:text="2019-10-23 00:00:00"
-            android:id="@+id/startTime"
-            android:gravity="left|center_vertical"
-            android:textSize="@dimen/sizeBody"
-            android:textStyle="bold"
-            android:textColor="@color/colorPrimary"
-            android:background="@drawable/selector_btn_transparent"
-            />
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="match_parent"
-            android:textSize="@dimen/sizeBody"
-            android:textColor="@color/colorSecondBody"
-            android:gravity="center"
-            android:text="~"
-            />
-        <Button
-            android:paddingRight="8dp"
-            android:layout_width="0dp"
-            android:layout_weight="1"
-            android:layout_height="match_parent"
-            android:text="2019-10-23 00:00:00"
-            android:id="@+id/endTime"
-            android:gravity="right|center_vertical"
-            android:textSize="@dimen/sizeBody"
-            android:textStyle="bold"
-            android:textColor="@color/colorPrimary"
-            android:background="@drawable/selector_btn_transparent"
-            />
+            android:layout_weight="1.5"
+            >
 
-
-    </LinearLayout>
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="48dp"
-        android:paddingLeft="@dimen/activity_horizontal_margin"
-        android:paddingRight="@dimen/activity_horizontal_margin"
-        android:gravity="center_vertical"
-    >
-        <EditText
-                android:id="@+id/mesasureName"
-                android:layout_width="0dp"
-                android:layout_height="match_parent"
-                android:paddingLeft="8dp"
-                android:maxLength="10"
-                android:layout_weight="1"
-                android:background="@drawable/edittext_bg_selector"
-                android:focusableInTouchMode="true"
-                android:hint="请输入测量样品名称"
-                android:singleLine="true"
-                android:textColor="@color/colorBody"
-                android:textCursorDrawable="@drawable/solid_shape_bottom_line"
-                android:textSize="@dimen/sizeSubTitle" />
-        <ImageButton
-            android:id="@+id/history"
-            android:layout_width="48dp"
-            android:layout_height="48dp"
-            android:gravity="center"
-            android:src="@mipmap/ic_history"
-            android:background="@drawable/selector_btn_transparent"
-            />
-
-
-        <Button
-            android:layout_marginLeft="16dp"
-            android:layout_width="48dp"
-            android:layout_height="48dp"
-            android:text="查询"
-            android:id="@+id/search"
-            android:textSize="@dimen/sizeSubTitle"
-            android:gravity="center"
-            android:textStyle="bold"
-            android:textColor="@color/colorPrimary"
-            android:background="@drawable/selector_btn_transparent"
-            />
-    </LinearLayout>
-
-
-
-
-    <RelativeLayout
-        android:layout_marginTop="16dp"
-        android:layout_width="match_parent"
-        android:layout_height="0dp"
-        android:layout_weight="1"
-    >
-
-        <com.bin.david.form.core.SmartTable
+            <com.bin.david.form.core.SmartTable
                 android:id="@+id/table"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"/>
-        <LinearLayout
-            android:id="@+id/progress"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_centerInParent="true"
-            android:gravity="center"
-            android:visibility="gone"
-            android:orientation="vertical">
-
-
-            <ProgressBar
-                android:id="@+id/progressBar"
-                style="?android:attr/progressBarStyle"
+            <LinearLayout
+                android:id="@+id/progress"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:indeterminateTint="@color/colorAccent"
-                android:indeterminateTintMode="src_atop" />
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="@dimen/padding_default_half"
-                android:text="加载中请稍后..."
-                android:textColor="@color/colorSecondBody"
-                android:textSize="@dimen/sizeBody" />
-        </LinearLayout>
-    </RelativeLayout>
-    <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="48dp"
-            android:paddingLeft="16dp"
-            android:paddingRight="16dp"
-            android:orientation="horizontal"
-    >
-        <Button
-            android:enabled="false"
-            android:layout_width="wrap_content"
-            android:paddingLeft="16dp"
-            android:paddingRight="16dp"
-            android:layout_height="match_parent"
-            android:text="上一页"
-            android:id="@+id/previous"
-            android:textSize="@dimen/sizeSubTitle"
-            android:textStyle="bold"
-            android:textColor="@color/colorPrimary"
-            android:background="@drawable/selector_btn_transparent"
-        />
-        <LinearLayout
-                android:layout_width="0dp"
-                android:layout_height="match_parent"
-                android:layout_weight="1"
+                android:layout_centerInParent="true"
                 android:gravity="center"
-        >
-            <TextView
+                android:visibility="gone"
+                android:orientation="vertical">
+
+
+                <ProgressBar
+                    android:id="@+id/progressBar"
+                    style="?android:attr/progressBarStyle"
                     android:layout_width="wrap_content"
-                    android:layout_height="match_parent"
-                    android:gravity="center"
-                    android:id="@+id/page"
-                    android:textSize="@dimen/sizeBody"
-                    android:textColor="@color/colorSecondBody"
-                    android:text="0/0"
-            />
-            <TextView
-                    android:id="@+id/total"
-                    android:layout_marginLeft="16dp"
+                    android:layout_height="wrap_content"
+                    android:indeterminateTint="@color/colorAccent"
+                    android:indeterminateTintMode="src_atop" />
+
+                <TextView
                     android:layout_width="wrap_content"
-                    android:layout_height="match_parent"
-                    android:textSize="@dimen/sizeBody"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/padding_default_half"
+                    android:text="加载中请稍后..."
                     android:textColor="@color/colorSecondBody"
-                    android:gravity="center"
-                    android:text="共0条"
-            />
-        </LinearLayout>
-        <Button
-            android:enabled="false"
-            android:layout_width="wrap_content"
-            android:paddingLeft="16dp"
-            android:paddingRight="16dp"
+                    android:textSize="@dimen/sizeBody" />
+            </LinearLayout>
+        </RelativeLayout>
+        <View
+            android:layout_width="0.8dp"
             android:layout_height="match_parent"
-            android:text="下一页"
-            android:id="@+id/next"
-            android:textSize="@dimen/sizeSubTitle"
-            android:textStyle="bold"
-            android:textColor="@color/colorPrimary"
-            android:background="@drawable/selector_btn_transparent"
-        />
+            android:layout_marginTop="16dp"
+            android:layout_marginBottom="16dp"
+            android:background="@color/colorDisableBody"
+            />
+        <LinearLayout
+
+            android:layout_width="0dp"
+            android:layout_weight="1"
+            android:layout_height="match_parent"
+            android:orientation="vertical"
+            android:gravity="center_horizontal"
+            >
+            <LinearLayout
+                android:layout_marginTop="16dp"
+
+                android:layout_width="match_parent"
+                android:layout_height="48dp"
+                android:paddingLeft="@dimen/activity_horizontal_margin"
+                android:paddingRight="@dimen/activity_horizontal_margin"
+                android:gravity="center_vertical"
+                >
+                <Button
+                    android:paddingLeft="8dp"
+                    android:layout_width="0dp"
+                    android:layout_weight="1"
+                    android:layout_height="match_parent"
+                    android:text="2019-10-23 00:00:00"
+                    android:id="@+id/startTime"
+                    android:gravity="left|center_vertical"
+                    android:textSize="@dimen/sizeBody"
+                    android:textStyle="bold"
+                    android:textColor="@color/colorPrimary"
+                    android:background="@drawable/selector_btn_transparent"
+                    />
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:textSize="@dimen/sizeBody"
+                    android:textColor="@color/colorSecondBody"
+                    android:gravity="center"
+                    android:text="~"
+                    />
+                <Button
+                    android:paddingRight="8dp"
+                    android:layout_width="0dp"
+                    android:layout_weight="1"
+                    android:layout_height="match_parent"
+                    android:text="2019-10-23 00:00:00"
+                    android:id="@+id/endTime"
+                    android:gravity="right|center_vertical"
+                    android:textSize="@dimen/sizeBody"
+                    android:textStyle="bold"
+                    android:textColor="@color/colorPrimary"
+                    android:background="@drawable/selector_btn_transparent"
+                    />
+
+
+            </LinearLayout>
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="48dp"
+                android:paddingLeft="@dimen/activity_horizontal_margin"
+                android:paddingRight="@dimen/activity_horizontal_margin"
+                android:gravity="center_vertical"
+                >
+                <EditText
+                    android:id="@+id/mesasureName"
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:paddingLeft="8dp"
+                    android:maxLength="10"
+                    android:layout_weight="1"
+                    android:background="@drawable/edittext_bg_selector"
+                    android:focusableInTouchMode="true"
+                    android:hint="请输入测量样品名称"
+                    android:singleLine="true"
+                    android:textColor="@color/colorBody"
+                    android:textCursorDrawable="@drawable/solid_shape_bottom_line"
+                    android:textSize="@dimen/sizeSubTitle" />
+                <ImageButton
+                    android:id="@+id/history"
+                    android:layout_width="48dp"
+                    android:layout_height="48dp"
+                    android:gravity="center"
+                    android:src="@mipmap/ic_history"
+                    android:background="@drawable/selector_btn_transparent"
+                    />
+
+
+
+            </LinearLayout>
+
+            <Button
+                android:layout_margin="16dp"
+                android:layout_width="match_parent"
+                android:layout_height="48dp"
+                android:text="查询"
+                android:id="@+id/search"
+                android:textSize="@dimen/sizeSubTitle"
+                android:gravity="center"
+                android:textStyle="bold"
+                android:textColor="@color/colorPrimary"
+                android:background="@drawable/selector_btn_transparent"
+                />
+
+            <Space
+                android:layout_width="match_parent"
+                android:layout_height="0dp"
+                android:layout_weight="1"
+                />
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="48dp"
+                android:paddingLeft="16dp"
+                android:paddingRight="16dp"
+                android:orientation="horizontal"
+                >
+                <Button
+                    android:enabled="false"
+                    android:layout_width="wrap_content"
+                    android:paddingLeft="16dp"
+                    android:paddingRight="16dp"
+                    android:layout_height="match_parent"
+                    android:text="上一页"
+                    android:id="@+id/previous"
+                    android:textSize="@dimen/sizeSubTitle"
+                    android:textStyle="bold"
+                    android:textColor="@color/colorPrimary"
+                    android:background="@drawable/selector_btn_transparent"
+                    />
+                <LinearLayout
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_weight="1"
+                    android:gravity="center"
+                    >
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="match_parent"
+                        android:gravity="center"
+                        android:id="@+id/page"
+                        android:textSize="@dimen/sizeBody"
+                        android:textColor="@color/colorSecondBody"
+                        android:text="0/0"
+                        />
+                    <TextView
+                        android:id="@+id/total"
+                        android:layout_marginLeft="16dp"
+                        android:layout_width="wrap_content"
+                        android:layout_height="match_parent"
+                        android:textSize="@dimen/sizeBody"
+                        android:textColor="@color/colorSecondBody"
+                        android:gravity="center"
+                        android:text="共0条"
+                        />
+                </LinearLayout>
+                <Button
+                    android:enabled="false"
+                    android:layout_width="wrap_content"
+                    android:paddingLeft="16dp"
+                    android:paddingRight="16dp"
+                    android:layout_height="match_parent"
+                    android:text="下一页"
+                    android:id="@+id/next"
+                    android:textSize="@dimen/sizeSubTitle"
+                    android:textStyle="bold"
+                    android:textColor="@color/colorPrimary"
+                    android:background="@drawable/selector_btn_transparent"
+                    />
+            </LinearLayout>
+        </LinearLayout>
     </LinearLayout>
+
+
 </LinearLayout>

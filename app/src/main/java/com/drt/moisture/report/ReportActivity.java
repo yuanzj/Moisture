@@ -119,6 +119,8 @@ public class ReportActivity extends BluetoothBaseActivity<ReportPresenter> imple
         DisplayMetrics dm = new DisplayMetrics();
         getWindowManager().getDefaultDisplay().getMetrics(dm);
         int screenHeight = dm.heightPixels;
+        Log.d("yzj", "widthPixels" + dm.widthPixels);
+        Log.d("yzj", "screenHeight" + screenHeight);
         int statusBarHeight = StatusBarUtil.getStatusBarHeight(this);
         Log.d("yzj", "statusBarHeight" + statusBarHeight);
         // Calculate ActionBar height
@@ -129,7 +131,7 @@ public class ReportActivity extends BluetoothBaseActivity<ReportPresenter> imple
             Log.d("yzj", "actionBarHeight" + actionBarHeight);
         }
         int bottomBarHeight = getResources().getDimensionPixelOffset(R.dimen.btn_height_default);
-        int tableViewHeight = screenHeight - statusBarHeight - actionBarHeight - bottomBarHeight * 3 - getResources().getDimensionPixelOffset(R.dimen.padding_default) * 2;
+        int tableViewHeight = screenHeight - statusBarHeight - actionBarHeight;
 
         Log.d("yzj", "tableViewHeight" + tableViewHeight);
         pageSize = tableViewHeight / getResources().getDimensionPixelOffset(R.dimen.table_cell_height_default) - 3;
