@@ -28,7 +28,7 @@ public class LocalDataServiceImpl implements LocalDataService {
         SharedPreferences sp = context.getSharedPreferences("SP", MODE_PRIVATE);
         AppConfig appConfig = new AppConfig();
         appConfig.setMeasuringTime(sp.getInt("measuringTime", 5));
-        appConfig.setCorrectTime(sp.getInt("correctTime", 0));
+        appConfig.setCorrectTime(sp.getInt("correctTime", 15));
         appConfig.setPeriod(sp.getInt("period", 1500));
         appConfig.setRatio(sp.getInt("ratio", 0));
         return appConfig;

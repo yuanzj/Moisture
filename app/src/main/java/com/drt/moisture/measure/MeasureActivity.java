@@ -88,7 +88,7 @@ public class MeasureActivity extends BluetoothBaseActivity<MeasurePresenter> imp
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        spMeasureTime.setSelection(mPresenter.getMeasureTime() - 1);
+        spMeasureTime.setSelection(mPresenter.getMeasureTime() - 5);
     }
 
     @Override
@@ -124,7 +124,7 @@ public class MeasureActivity extends BluetoothBaseActivity<MeasurePresenter> imp
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
                 Log.d(TAG, "spMeasureTime:spMeasureModelonItemSelected:position:" + position);
-                mPresenter.setMeasureTime(position + 1);
+                mPresenter.setMeasureTime(position + 5);
             }
 
             @Override

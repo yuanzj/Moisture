@@ -78,7 +78,7 @@ public class CorrectActivity extends BluetoothBaseActivity<CorrectPresenter> imp
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        spMeasureTime.setSelection(mPresenter.getCorrectTime() - 1);
+        spMeasureTime.setSelection(mPresenter.getCorrectTime() - 15);
     }
 
     @Override
@@ -116,7 +116,7 @@ public class CorrectActivity extends BluetoothBaseActivity<CorrectPresenter> imp
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
                 Log.d(TAG, "spMeasureTime:spMeasureModelonItemSelected:position:" + position);
-                mPresenter.setCorrectTime(position + 1);
+                mPresenter.setCorrectTime(position + 15);
             }
 
             @Override
