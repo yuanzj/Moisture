@@ -276,6 +276,12 @@ public class CorrectActivity extends BluetoothBaseActivity<CorrectPresenter> imp
                         spMeasureModel.setEnabled(true);
                         spMeasureTime.setEnabled(true);
                         break;
+                    case STEP_ONE_DONE:
+                        btnStartMeasure.setAlpha(1.0f);
+                        btnStopMeasure.setAlpha(0.32f);
+                        spMeasureModel.setEnabled(true);
+                        spMeasureTime.setEnabled(true);
+                        break;
                     default:
                         break;
                 }

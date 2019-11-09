@@ -28,6 +28,10 @@ public enum MeasureStatus {
     /**
      * 测试结束
      */
-    DONE
+    DONE,
+    /**
+     * 第一阶段测试结束
+     */
+    STEP_ONE_DONE
 
 }
