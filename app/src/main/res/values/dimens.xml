@@ -10,6 +10,7 @@
     <!--首页内容间距-->
     <dimen name="padding_home_content">1dp</dimen>
 
+    <dimen name="sizeBigTitle">32sp</dimen>
     <!--标题大小-->
     <dimen name="sizeTitle">20sp</dimen>
     <!--标题大小-->

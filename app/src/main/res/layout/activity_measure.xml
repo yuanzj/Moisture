@@ -57,83 +57,95 @@
                 android:background="@drawable/selector_btn"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:padding="8dp"
+                android:paddingLeft="16dp"
+                android:paddingRight="16dp"
+                android:paddingTop="8dp"
+                android:paddingBottom="8dp"
                 android:gravity="center"
                 android:orientation="horizontal">
 
                 <TextView
-                    android:layout_width="120dp"
+                    android:layout_width="160dp"
                     android:layout_height="wrap_content"
                     android:text="温度"
                     android:gravity="left"
                     android:textColor="@color/colorWhite"
-                    android:textSize="@dimen/sizeSubTitle" />
+                    android:textSize="@dimen/sizeTitle" />
 
                 <TextView
                     android:id="@+id/temperature"
-                    android:layout_width="120dp"
+                    android:layout_width="160dp"
                     android:layout_height="wrap_content"
                     android:layout_marginLeft="@dimen/padding_default"
                     android:gravity="right"
                     android:text="--"
+                    android:textStyle="bold"
                     android:textColor="@color/colorWhite"
-                    android:textSize="@dimen/sizeTitle" />
+                    android:textSize="@dimen/sizeBigTitle" />
             </LinearLayout>
 
             <LinearLayout
-                android:layout_marginTop="16dp"
+                android:layout_marginTop="32dp"
                 android:background="@drawable/selector_btn"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:padding="8dp"
+                android:paddingLeft="16dp"
+                android:paddingRight="16dp"
+                android:paddingTop="8dp"
+                android:paddingBottom="8dp"
                 android:gravity="center"
                 android:orientation="horizontal">
 
                 <TextView
-                    android:layout_width="120dp"
+                    android:layout_width="160dp"
                     android:layout_height="wrap_content"
                     android:text="水分活度"
                     android:gravity="left"
                     android:textColor="@color/colorWhite"
-                    android:textSize="@dimen/sizeSubTitle" />
+                    android:textSize="@dimen/sizeTitle" />
 
                 <TextView
                     android:id="@+id/activeness"
-                    android:layout_width="120dp"
+                    android:layout_width="160dp"
                     android:gravity="right"
                     android:layout_height="wrap_content"
                     android:layout_marginLeft="@dimen/padding_default"
                     android:text="--"
+                    android:textStyle="bold"
                     android:textColor="@color/colorWhite"
-                    android:textSize="@dimen/sizeTitle" />
+                    android:textSize="@dimen/sizeBigTitle" />
             </LinearLayout>
 
             <LinearLayout
-                android:layout_marginTop="16dp"
+                android:layout_marginTop="32dp"
                 android:background="@drawable/selector_btn"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:padding="8dp"
+                android:paddingLeft="16dp"
+                android:paddingRight="16dp"
+                android:paddingTop="8dp"
+                android:paddingBottom="8dp"
                 android:gravity="center"
                 android:orientation="horizontal"
                 >
                 <TextView
-                    android:layout_width="120dp"
+                    android:layout_width="160dp"
                     android:layout_height="wrap_content"
                     android:text="测量耗时"
                     android:gravity="left"
                     android:textColor="@color/colorWhite"
-                    android:textSize="@dimen/sizeSubTitle" />
+                    android:textSize="@dimen/sizeTitle" />
 
                 <TextView
                     android:id="@+id/alreadyRunning"
-                    android:layout_width="120dp"
+                    android:layout_width="160dp"
                     android:gravity="right"
                     android:layout_height="wrap_content"
                     android:layout_marginLeft="@dimen/padding_default"
                     android:text="--"
+                    android:textStyle="bold"
                     android:textColor="@color/colorWhite"
-                    android:textSize="@dimen/sizeTitle" />
+                    android:textSize="@dimen/sizeBigTitle" />
             </LinearLayout>
 
             <Space
@@ -155,8 +167,8 @@
 
                 <LinearLayout
                     android:id="@+id/btnStartMeasure"
-                    android:layout_width="56dp"
-                    android:layout_height="56dp"
+                    android:layout_width="72dp"
+                    android:layout_height="72dp"
                     android:background="@drawable/selector_btn"
                     android:gravity="center"
                     android:orientation="vertical">
@@ -167,7 +179,7 @@
                         android:text="开始\n测量"
                         android:gravity="center"
                         android:textColor="@color/colorWhite"
-                        android:textSize="@dimen/sizeSubTitle" />
+                        android:textSize="@dimen/sizeTitle" />
                 </LinearLayout>
                 <Space
                     android:layout_width="0dp"
@@ -175,8 +187,8 @@
                     android:layout_weight="1" />
                 <LinearLayout
                     android:id="@+id/btnStopMeasure"
-                    android:layout_width="56dp"
-                    android:layout_height="56dp"
+                    android:layout_width="72dp"
+                    android:layout_height="72dp"
                     android:layout_marginLeft="@dimen/padding_default"
                     android:alpha="0.32"
                     android:background="@drawable/selector_btn"
@@ -189,7 +201,7 @@
                         android:text="停止\n测量"
                         android:gravity="center"
                         android:textColor="@color/colorWhite"
-                        android:textSize="@dimen/sizeSubTitle" />
+                        android:textSize="@dimen/sizeTitle" />
                 </LinearLayout>
                 <Space
                     android:layout_width="0dp"
