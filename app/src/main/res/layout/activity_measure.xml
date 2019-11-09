@@ -143,9 +143,8 @@
                     android:layout_height="wrap_content"
                     android:layout_marginLeft="@dimen/padding_default"
                     android:text="--"
-                    android:textStyle="bold"
                     android:textColor="@color/colorWhite"
-                    android:textSize="@dimen/sizeBigTitle" />
+                    android:textSize="@dimen/sizeTitle" />
             </LinearLayout>
 
             <Space
