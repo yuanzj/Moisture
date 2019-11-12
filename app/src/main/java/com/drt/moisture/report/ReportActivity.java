@@ -108,7 +108,7 @@ public class ReportActivity extends BluetoothBaseActivity<ReportPresenter> imple
 
         Point outSize = new Point();
         this.getWindowManager().getDefaultDisplay().getSize(outSize);
-        table.getConfig().setMinTableWidth(outSize.x);
+        table.getConfig().setMinTableWidth((int)(outSize.x * 1.5 / 2.5) - getResources().getDimensionPixelSize(R.dimen.dividing_line));
 
         table.getConfig().setContentBackground(new IBackgroundFormat() {
 

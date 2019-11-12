@@ -35,6 +35,7 @@ import com.drt.moisture.data.source.bluetooth.resquest.SetCorrectParameRequest;
 import com.drt.moisture.data.source.bluetooth.resquest.SetHumidityParameRequest;
 import com.drt.moisture.data.source.bluetooth.resquest.SetMeasureParameRequest;
 import com.drt.moisture.data.source.bluetooth.resquest.SetRateRequest;
+import com.drt.moisture.util.AndroidUtil;
 import com.drt.moisture.util.ExcelUtil;
 import com.inuker.bluetooth.library.Constants;
 
@@ -60,6 +61,9 @@ public class SettingActivity extends BluetoothBaseActivity<SettingPresenter> imp
 
     @BindView(R.id.list_view)
     ListView listView;
+
+    @BindView(R.id.version)
+    TextView version;
 
     View deviceInfoView, dialogDateTime, dialogRate, dialogParameSet, dialogSetDeviceInfo;
 
@@ -334,6 +338,8 @@ public class SettingActivity extends BluetoothBaseActivity<SettingPresenter> imp
                 R.layout.adapter_setting_item, new String[]{"icon", "title"}, new int[]{R.id.icon, R.id.title}));
 
         listView.setOnItemClickListener(this);
+
+        version.setText( "V"+ AndroidUtil.packageName(this) + "-B" + AndroidUtil.packageCode(this));
 
     }
 
