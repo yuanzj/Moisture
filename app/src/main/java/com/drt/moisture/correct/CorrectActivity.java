@@ -211,7 +211,7 @@ public class CorrectActivity extends BluetoothBaseActivity<CorrectPresenter> imp
                 .setPositiveButton("确认", new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialogInterface, int i) {
-                        mPresenter.stopCorrect(true);
+                        mPresenter.stopCorrect(false);
                     }
                 })
                 .setNegativeButton("取消", new DialogInterface.OnClickListener() {
