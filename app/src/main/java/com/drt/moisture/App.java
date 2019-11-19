@@ -1,6 +1,8 @@
 package com.drt.moisture;
 
 import android.app.Application;
+import android.content.Context;
+import android.content.SharedPreferences;
 
 import com.drt.moisture.data.source.BluetoothService;
 import com.drt.moisture.data.source.LocalDataService;
@@ -50,11 +52,22 @@ public class App extends Application {
     }
 
     public String getConnectMacAddress() {
+        if (connectMacAddress == null) {
+            SharedPreferences sharedPreferences = getSharedPreferences("data", Context.MODE_PRIVATE);
+            connectMacAddress = sharedPreferences.getString("connectMacAddress", null);
+        }
         return connectMacAddress;
     }
 
     public void setConnectMacAddress(String connectMacAddress) {
         this.connectMacAddress = connectMacAddress;
+        SharedPreferences sharedPreferences = getSharedPreferences("data", Context.MODE_PRIVATE);
+        //步骤2： 实例化SharedPreferences.Editor对象
+        SharedPreferences.Editor editor = sharedPreferences.edit();
+        //步骤3：将获取过来的值放入文件
+        editor.putString("connectMacAddress", connectMacAddress);
+        //步骤4：提交
+        editor.commit();
     }
 
     public String getDeviceSoc() {

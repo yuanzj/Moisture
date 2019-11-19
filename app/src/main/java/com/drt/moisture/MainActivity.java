@@ -8,9 +8,16 @@ import android.view.View;
 import android.widget.Toast;
 
 import com.drt.moisture.correct.CorrectActivity;
+import com.drt.moisture.data.BleEvent;
 import com.drt.moisture.measure.MeasureActivity;
 import com.drt.moisture.report.ReportActivity;
 import com.drt.moisture.setting.SettingActivity;
+import com.inuker.bluetooth.library.Constants;
+
+import org.greenrobot.eventbus.EventBus;
+
+import java.util.Timer;
+import java.util.TimerTask;
 
 
 public class MainActivity extends BluetoothBaseActivity<MainPresenter> {
@@ -93,5 +100,34 @@ public class MainActivity extends BluetoothBaseActivity<MainPresenter> {
     @Override
     public void setBleConnectStatus(int status) {
 
+    }
+
+    private Timer timer;
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        if (timer != null) {
+            timer.cancel();
+            timer = null;
+        }
+        timer = new Timer();
+        timer.schedule(new TimerTask() {
+            @Override
+            public void run() {
+                if (App.getInstance().getBluetoothClient().getConnectStatus(App.getInstance().getConnectMacAddress()) != Constants.STATUS_DEVICE_CONNECTED) {
+                    EventBus.getDefault().post(new BleEvent());
+                }
+            }
+        },0, 3000);
+    }
+
+    @Override
+    protected void onStop() {
+        super.onStop();
+        if (timer != null) {
+            timer.cancel();
+            timer = null;
+        }
     }
 }

@@ -154,7 +154,9 @@ public class MeasureActivity extends BluetoothBaseActivity<MeasurePresenter> imp
                 addEntry(measureValue);
                 time.setText(measureValue.getReportTime());
                 temperature.setText(String.format("%.2f", measureValue.getTemperature()) + "°C");
-                activeness.setText(String.format("%.4f", measureValue.getActivity()));
+                DecimalFormat df = new DecimalFormat("0.0000");
+                df.setRoundingMode(RoundingMode.DOWN);
+                activeness.setText(df.format(measureValue.getActivity()));
             }
         });
     }
