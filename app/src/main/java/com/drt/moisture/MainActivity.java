@@ -115,7 +115,7 @@ public class MainActivity extends BluetoothBaseActivity<MainPresenter> {
         timer.schedule(new TimerTask() {
             @Override
             public void run() {
-                if (App.getInstance().getBluetoothClient().getConnectStatus(App.getInstance().getConnectMacAddress()) != Constants.STATUS_DEVICE_CONNECTED) {
+                if (App.getInstance().getConnectMacAddress() != null && App.getInstance().getBluetoothClient().getConnectStatus(App.getInstance().getConnectMacAddress()) != Constants.STATUS_DEVICE_CONNECTED) {
                     EventBus.getDefault().post(new BleEvent());
                 }
             }

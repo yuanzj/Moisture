@@ -132,6 +132,8 @@ public class MeasureModel implements MeasureContract.Model {
         }
     }
 
+    private volatile long stopTime = 0;
+
     @Override
     public void stopQuery(boolean sendCommand) {
         if (runningTimer != null) {
@@ -148,6 +150,14 @@ public class MeasureModel implements MeasureContract.Model {
             new Timer().schedule(new TimerTask() {
                 @Override
                 public void run() {
+                    if ((System.currentTimeMillis() - stopTime) < 200) {
+                        try {
+                            Thread.sleep(200);
+                        } catch (InterruptedException e) {
+                            e.printStackTrace();
+                        }
+                    }
+                    stopTime = System.currentTimeMillis();
                     App.getInstance().getBluetoothService().stopMeasure(stopMeasureResponse);
                 }
             }, 200);

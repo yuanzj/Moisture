@@ -377,7 +377,7 @@ public class CorrectActivity extends BluetoothBaseActivity<CorrectPresenter> imp
         //chart.setVisibleYRangeMaximum(15, AxisDependency.LEFT);
 //
 //            // this automatically refreshes the chart (calls invalidate())
-        chart.moveViewTo(data.getEntryCount() - 31, (float) measureValue.getActivity(), YAxis.AxisDependency.LEFT);
+        chart.moveViewTo(data.getEntryCount() - 1, (float) measureValue.getActivity(), YAxis.AxisDependency.LEFT);
     }
 
 //    private LineDataSet createTemperatureSet() {

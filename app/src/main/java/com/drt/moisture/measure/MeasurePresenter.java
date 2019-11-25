@@ -86,6 +86,7 @@ public class MeasurePresenter extends BasePresenter<MeasureContract.View> implem
                         if (value.getMeasureStatus() == 0x02) {
                             stopMeasure(true);
                             model.stopQuery(true);
+                            setMeasureStatus(MeasureStatus.DONE);
                         }
                     }
 

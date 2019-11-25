@@ -174,7 +174,7 @@ public class MeasureActivity extends BluetoothBaseActivity<MeasurePresenter> imp
     @OnClick(R.id.btnStartMeasure)
     public void startMeasure() {
         chart.clear();
-        
+
         App.getInstance().getBluetoothService().setTime(System.currentTimeMillis() / 1000);
 
         new Handler().postDelayed(new Runnable() {
@@ -374,7 +374,7 @@ public class MeasureActivity extends BluetoothBaseActivity<MeasurePresenter> imp
         //chart.setVisibleYRangeMaximum(15, AxisDependency.LEFT);
 //
 //            // this automatically refreshes the chart (calls invalidate())
-        chart.moveViewTo(data.getEntryCount() - 31, (float) measureValue.getActivity(), YAxis.AxisDependency.LEFT);
+        chart.moveViewTo(data.getEntryCount() - 1, (float) measureValue.getActivity(), YAxis.AxisDependency.LEFT);
     }
 
 //    private LineDataSet createTemperatureSet() {
@@ -451,7 +451,6 @@ public class MeasureActivity extends BluetoothBaseActivity<MeasurePresenter> imp
         rightAxis.setDrawGridLines(false);
         rightAxis.setAxisMinimum(0f); // this replaces setStartAtZero(true)
         rightAxis.setAxisMaximum(1.0000f);
-
     }
 
     public void playSound() {
