@@ -2,7 +2,7 @@ package com.drt.moisture.data.source.bluetooth.resquest;
 
 import com.rokyinfo.convert.RkField;
 
-public class StartMeasureRequest {
+public class DashboardRecordDataRequest {
 
     @RkField(position = 0, length = 1)
     private byte CmdGroup;
@@ -16,19 +16,10 @@ public class StartMeasureRequest {
     @RkField(position = 3, length = 2)
     private int Reserved;
 
-    @RkField(position = 5, length = 30)
-    private String name;
+    @RkField(position = 5, length = 4)
+    private byte[] time;
 
-    @RkField(position = 35, length = 1)
-    private byte interval;
-
-    @RkField(position = 36, length = 1)
-    private byte model;
-
-    @RkField(position = 37, length = 1)
-    private byte time;
-
-    @RkField(position = 38, length = 2)
+    @RkField(position = 9, length = 2)
     private int index;
 
     public byte getCmdGroup() {
@@ -63,35 +54,11 @@ public class StartMeasureRequest {
         Reserved = reserved;
     }
 
-    public String getName() {
-        return name;
-    }
-
-    public void setName(String name) {
-        this.name = name;
-    }
-
-    public byte getInterval() {
-        return interval;
-    }
-
-    public void setInterval(byte interval) {
-        this.interval = interval;
-    }
-
-    public byte getModel() {
-        return model;
-    }
-
-    public void setModel(byte model) {
-        this.model = model;
-    }
-
-    public byte getTime() {
+    public byte[] getTime() {
         return time;
     }
 
-    public void setTime(byte time) {
+    public void setTime(byte[] time) {
         this.time = time;
     }
 

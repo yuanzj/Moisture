@@ -78,6 +78,7 @@ public class BluetoothServiceImpl implements BluetoothService, BleWriteResponse 
         startMeasureRequest.setCmd((byte) 0x05);
         startMeasureRequest.setResponse((byte) 0x01);
         startMeasureRequest.setReserved(0);
+        startMeasureRequest.setIndex(1);
         startMeasureRequest.setName(name);
 
 //        测量方式<br/>0x01：自动测量<br/>0x02：定时测量，为该参数时，需要发送接下来的1字节定时时间
@@ -245,6 +246,25 @@ public class BluetoothServiceImpl implements BluetoothService, BleWriteResponse 
         recordDataRequest.setResponse((byte) 0x01);
         recordDataRequest.setReserved(0);
         recordDataRequest.setTime(ByteConvert.uintToBytes(time));
+        try {
+            App.getInstance().getBluetoothClient().write(App.getInstance().getConnectMacAddress(), UUIDUtils.makeUUID(0xFFE0), UUIDUtils.makeUUID(0xFFE1), BluetoothDataUtil.encode(recordDataRequest), this);
+
+        } catch (IllegalAccessException | RkFieldException | FieldConvertException e) {
+            e.printStackTrace();
+        }
+    }
+
+    @Override
+    public void queryDashboardRecord(long time, SppDataCallback<RecordDataResponse> sppDataCallback) {
+        this.sppDataCallback = sppDataCallback;
+
+        DashboardRecordDataRequest recordDataRequest = new DashboardRecordDataRequest();
+        recordDataRequest.setCmdGroup((byte) 0xA3);
+        recordDataRequest.setCmd((byte) 0x0A);
+        recordDataRequest.setResponse((byte) 0x01);
+        recordDataRequest.setReserved(0);
+        recordDataRequest.setTime(ByteConvert.uintToBytes(time));
+        recordDataRequest.setIndex(1);
         try {
             App.getInstance().getBluetoothClient().write(App.getInstance().getConnectMacAddress(), UUIDUtils.makeUUID(0xFFE0), UUIDUtils.makeUUID(0xFFE1), BluetoothDataUtil.encode(recordDataRequest), this);
 

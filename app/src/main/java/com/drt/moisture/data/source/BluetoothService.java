@@ -61,6 +61,14 @@ public interface BluetoothService {
      */
     void queryRecord(long time, SppDataCallback<RecordDataResponse> sppDataCallback);
 
+    /**
+     * 查询测量记录
+     *
+     * @param time
+     * @param sppDataCallback
+     */
+    void queryDashboardRecord(long time, SppDataCallback<RecordDataResponse> sppDataCallback);
+
 
     /**
      * 查询自动测量
