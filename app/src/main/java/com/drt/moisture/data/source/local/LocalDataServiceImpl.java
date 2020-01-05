@@ -31,6 +31,8 @@ public class LocalDataServiceImpl implements LocalDataService {
         appConfig.setCorrectTime(sp.getInt("correctTime", 15));
         appConfig.setPeriod(sp.getInt("period", 1500));
         appConfig.setRatio(sp.getInt("ratio", 0));
+        appConfig.setPointCount(sp.getInt("pointCount", 1));
+
         return appConfig;
     }
 
@@ -44,6 +46,8 @@ public class LocalDataServiceImpl implements LocalDataService {
         editor.putInt("period", appConfig.getPeriod());
         editor.putInt("correctTime", appConfig.getCorrectTime());
         editor.putInt("ratio", appConfig.getRatio());
+        editor.putInt("pointCount", appConfig.getPointCount());
+
         editor.apply();
     }
 

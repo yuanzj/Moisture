@@ -31,6 +31,9 @@ public interface BluetoothService {
      */
     void startMeasure(String name, int measureModel, int interval, int time, SppDataCallback<StartMeasureResponse> sppDataCallback,final boolean retry);
 
+    void startMeasure(String name, int measureModel, int interval, int time, int index, SppDataCallback<StartMeasureResponse> sppDataCallback,final boolean retry);
+
+
     /**
      * 开始校准
      * @param mode
@@ -46,6 +49,12 @@ public interface BluetoothService {
      * @param sppDataCallback
      */
     void stopMeasure(SppDataCallback<StopMeasureResponse> sppDataCallback);
+
+    /**
+     * 停止测量
+     * @param sppDataCallback
+     */
+    void stopMeasure(int index, SppDataCallback<StopMeasureResponse> sppDataCallback);
 
     /**
      * 停止校准
@@ -67,7 +76,7 @@ public interface BluetoothService {
      * @param time
      * @param sppDataCallback
      */
-    void queryDashboardRecord(long time, SppDataCallback<RecordDataResponse> sppDataCallback);
+    void queryDashboardRecord(long time, int pointCount, SppDataCallback<DashboardRecordDataResponse> sppDataCallback);
 
 
     /**

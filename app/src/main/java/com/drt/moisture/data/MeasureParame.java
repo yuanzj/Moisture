@@ -48,6 +48,9 @@ public class MeasureParame {
 
     private int o;
 
+    @RkField(position = 58, length = 1)
+    private int cdsl;
+
     public int getN() {
         return n;
     }
@@ -166,5 +169,13 @@ public class MeasureParame {
 
     public void setO(int o) {
         this.o = o;
+    }
+
+    public int getCdsl() {
+        return cdsl;
+    }
+
+    public void setCdsl(int cdsl) {
+        this.cdsl = cdsl;
     }
 }

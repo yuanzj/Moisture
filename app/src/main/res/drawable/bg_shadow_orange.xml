@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ripple xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:color="@color/colorSecondWhite"
+    tools:targetApi="lollipop">
+    <item>
+        <layer-list>
+            <!-- 第一层阴影：左偏移2dp，上偏移4dp -->
+            <item
+                android:left="2dp"
+                android:top="4dp">
+                <shape>
+                    <solid android:color="@color/btnOrangeProcess" />
+                    <!--圆角-->
+                    <corners android:radius="10dp" />
+                </shape>
+            </item>
+
+            <!-- 第二层前景：：底偏移4dp，右偏移2dp -->
+            <item
+                android:bottom="4dp"
+                android:right="2dp">
+                <shape>
+                    <solid android:color="@color/btnOrange" />
+                    <!--圆角-->
+                    <corners android:radius="10dp" />
+                </shape>
+            </item>
+        </layer-list>
+    </item>
+</ripple>

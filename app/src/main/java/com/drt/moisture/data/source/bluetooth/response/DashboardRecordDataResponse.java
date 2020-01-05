@@ -1,8 +1,8 @@
-package com.drt.moisture.data.source.bluetooth.resquest;
+package com.drt.moisture.data.source.bluetooth.response;
 
 import com.rokyinfo.convert.RkField;
 
-public class StopMeasureRequest {
+public class DashboardRecordDataResponse {
 
     @RkField(position = 0, length = 1)
     private byte CmdGroup;
@@ -16,8 +16,11 @@ public class StopMeasureRequest {
     @RkField(position = 3, length = 2)
     private int Reserved;
 
-    @RkField(position = 5, length = 1)
-    private byte index;
+    @RkField(position = 5, length = 4)
+    private long time;
+
+    @RkField(position = 9, length = 2)
+    private short index;
 
     public byte getCmdGroup() {
         return CmdGroup;
@@ -51,11 +54,31 @@ public class StopMeasureRequest {
         Reserved = reserved;
     }
 
-    public byte getIndex() {
+    public long getTime() {
+        return time;
+    }
+
+    public void setTime(long time) {
+        this.time = time;
+    }
+
+    public short getIndex() {
         return index;
     }
 
-    public void setIndex(byte index) {
+    public void setIndex(short index) {
         this.index = index;
+    }
+
+    @Override
+    public String toString() {
+        return "DashboardRecordDataResponse{" +
+                "CmdGroup=" + CmdGroup +
+                ", Cmd=" + Cmd +
+                ", Response=" + Response +
+                ", Reserved=" + Reserved +
+                ", time=" + time +
+                ", index=" + index +
+                '}';
     }
 }

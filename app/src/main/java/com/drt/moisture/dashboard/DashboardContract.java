@@ -7,6 +7,8 @@ import com.drt.moisture.data.source.bluetooth.response.StartMeasureResponse;
 
 import net.yzj.android.common.base.BaseView;
 
+import java.util.List;
+
 
 public interface DashboardContract {
     interface Model {
@@ -25,11 +27,11 @@ public interface DashboardContract {
          */
         void setMeasureTime(int period);
 
-        void startMeasure(String name, int model, MeasureDataCallback<StartMeasureResponse> callback);
+        void startMeasure(String name, int model, int index,MeasureDataCallback<StartMeasureResponse> callback);
 
-        void startQuery(int model, MeasureDataCallback<MeasureValue> callback);
+        void startQuery(int model, int pointCount, MeasureDataCallback<List<MeasureValue>> callback);
 
-        void stopQuery(boolean sendCommand);
+        void stopQuery(boolean sendCommand, int index);
 
     }
 
@@ -39,7 +41,7 @@ public interface DashboardContract {
 
         void alreadyRunning(String time);
 
-        void onSuccess(MeasureValue measureValue);
+        void onSuccess(List<MeasureValue> measureValue);
 
         @Override
         void onError(Throwable throwable);
@@ -68,8 +70,11 @@ public interface DashboardContract {
          * @param model       测试模式 0 定时，1： 自动
          * @param measureName 测量项目名称
          */
-        void startMeasure(int model, String measureName);
+        void startMeasure(int model, String measureName, int index);
 
-        void stopMeasure(boolean sendCommand);
+        void stopMeasure(boolean sendCommand, int index);
+
+        void queryMeasureResult(int pointCount);
+
     }
 }

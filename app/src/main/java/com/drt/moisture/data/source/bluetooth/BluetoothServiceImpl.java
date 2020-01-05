@@ -71,6 +71,11 @@ public class BluetoothServiceImpl implements BluetoothService, BleWriteResponse 
 
     @Override
     public void startMeasure(final String name, final int measureModel, final int interval, final int time, final SppDataCallback<StartMeasureResponse> sppDataCallback, final boolean retry) {
+        startMeasure(name, measureModel, interval, time, 1, sppDataCallback, retry);
+    }
+
+    @Override
+    public void startMeasure(final String name, final int measureModel, final int interval, final int time, final int index, final SppDataCallback<StartMeasureResponse> sppDataCallback, final boolean retry) {
         this.sppDataCallback = sppDataCallback;
 
         StartMeasureRequest startMeasureRequest = new StartMeasureRequest();
@@ -78,7 +83,7 @@ public class BluetoothServiceImpl implements BluetoothService, BleWriteResponse 
         startMeasureRequest.setCmd((byte) 0x05);
         startMeasureRequest.setResponse((byte) 0x01);
         startMeasureRequest.setReserved(0);
-        startMeasureRequest.setIndex(1);
+        startMeasureRequest.setIndex(index);
         startMeasureRequest.setName(name);
 
 //        测量方式<br/>0x01：自动测量<br/>0x02：定时测量，为该参数时，需要发送接下来的1字节定时时间
@@ -133,8 +138,6 @@ public class BluetoothServiceImpl implements BluetoothService, BleWriteResponse 
         } catch (IllegalAccessException | RkFieldException | FieldConvertException e) {
             e.printStackTrace();
         }
-
-
     }
 
     @Override
@@ -196,6 +199,11 @@ public class BluetoothServiceImpl implements BluetoothService, BleWriteResponse 
 
     @Override
     public void stopMeasure(SppDataCallback<StopMeasureResponse> sppDataCallback) {
+        stopMeasure(1, sppDataCallback);
+    }
+
+    @Override
+    public void stopMeasure(int index, SppDataCallback<StopMeasureResponse> sppDataCallback) {
         if (timeoutTimer != null) {
             timeoutTimer.cancel();
             timeoutTimer = null;
@@ -255,7 +263,7 @@ public class BluetoothServiceImpl implements BluetoothService, BleWriteResponse 
     }
 
     @Override
-    public void queryDashboardRecord(long time, SppDataCallback<RecordDataResponse> sppDataCallback) {
+    public void queryDashboardRecord(long time, int pointCount, SppDataCallback<DashboardRecordDataResponse> sppDataCallback) {
         this.sppDataCallback = sppDataCallback;
 
         DashboardRecordDataRequest recordDataRequest = new DashboardRecordDataRequest();
@@ -264,7 +272,27 @@ public class BluetoothServiceImpl implements BluetoothService, BleWriteResponse 
         recordDataRequest.setResponse((byte) 0x01);
         recordDataRequest.setReserved(0);
         recordDataRequest.setTime(ByteConvert.uintToBytes(time));
-        recordDataRequest.setIndex(1);
+//        节点索引：<br>用每一位表示一个节点，且可以组合使用<br>0x0001：1号节点<br>0x0002：2号节点<br>0x0010：5号节点<br>0x001f：1~5，共5个节点
+        switch (pointCount) {
+            case 1:
+                recordDataRequest.setIndex(0x01);
+                break;
+            case 2:
+                recordDataRequest.setIndex(0x03);
+                break;
+            case 3:
+                recordDataRequest.setIndex(0x07);
+                break;
+            case 4:
+                recordDataRequest.setIndex(0x0F);
+                break;
+            case 5:
+                recordDataRequest.setIndex(0x1F);
+                break;
+            default:
+                recordDataRequest.setIndex(0x01);
+                break;
+        }
         try {
             App.getInstance().getBluetoothClient().write(App.getInstance().getConnectMacAddress(), UUIDUtils.makeUUID(0xFFE0), UUIDUtils.makeUUID(0xFFE1), BluetoothDataUtil.encode(recordDataRequest), this);
 

@@ -33,4 +33,25 @@
     <color name="mainBgColor1">#8CCFFF</color>
     <color name="mainBgColor2">#4CABE7</color>
 
+    <color name="btnRed">#E91E63</color>
+    <color name="btnRedPress">#880E4F</color>
+
+    <color name="btnRed1">#9C27B0</color>
+    <color name="btnRed1Press">#4A148C</color>
+
+    <color name="btnBlue">#2196F3</color>
+    <color name="btnBlueProcess">#1A237E</color>
+
+    <color name="btnGreen">#4CAF50</color>
+    <color name="btnGreenProcess">#1B5E20</color>
+
+    <color name="btnOrange">#FF5722</color>
+    <color name="btnOrangeProcess">#BF360C</color>
+
+    <color name="btnYellow">#FFC107</color>
+    <color name="btnYellowProcess">#FF6F00</color>
+
+
+
+
 </resources>

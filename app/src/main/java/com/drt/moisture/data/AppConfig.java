@@ -17,7 +17,15 @@ public class AppConfig {
      */
     private int correctTime;
 
+    /**
+     * 查询频率
+     */
     private int ratio;
+
+    /**
+     * 测量点数量
+     */
+    private int pointCount;
 
     public int getPeriod() {
         return period;
@@ -49,5 +57,24 @@ public class AppConfig {
 
     public void setRatio(int ratio) {
         this.ratio = ratio;
+    }
+
+    public int getPointCount() {
+        return pointCount;
+    }
+
+    public void setPointCount(int pointCount) {
+        this.pointCount = pointCount;
+    }
+
+    @Override
+    public String toString() {
+        return "AppConfig{" +
+                "period=" + period +
+                ", measuringTime=" + measuringTime +
+                ", correctTime=" + correctTime +
+                ", ratio=" + ratio +
+                ", pointCount=" + pointCount +
+                '}';
     }
 }

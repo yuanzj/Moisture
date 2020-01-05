@@ -8,6 +8,7 @@ import android.os.Handler;
 import android.os.SystemClock;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AlertDialog;
+import android.text.InputType;
 import android.text.TextUtils;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -87,13 +88,13 @@ public class SettingActivity extends BluetoothBaseActivity<SettingPresenter> imp
                     byte[] snTemp = deviceInfo.getSN().getBytes();
 
                     ArrayList<Byte> sn = new ArrayList<>();
-                    for (int i = 0 ; i < snTemp.length ; i ++){
+                    for (int i = 0; i < snTemp.length; i++) {
                         if (snTemp[i] != 0) {
                             sn.add(snTemp[i]);
                         }
                     }
                     byte[] snFinal = new byte[sn.size()];
-                    for (int i = 0 ; i < snFinal.length ; i ++) {
+                    for (int i = 0; i < snFinal.length; i++) {
                         snFinal[i] = sn.get(i);
                     }
 
@@ -102,13 +103,13 @@ public class SettingActivity extends BluetoothBaseActivity<SettingPresenter> imp
                     byte[] modelTemp = deviceInfo.getModel().getBytes();
 
                     ArrayList<Byte> model = new ArrayList<>();
-                    for (int i = 0 ; i < modelTemp.length ; i ++){
+                    for (int i = 0; i < modelTemp.length; i++) {
                         if (modelTemp[i] != 0) {
                             model.add(modelTemp[i]);
                         }
                     }
                     byte[] modelFinal = new byte[model.size()];
-                    for (int i = 0 ; i < modelFinal.length ; i ++) {
+                    for (int i = 0; i < modelFinal.length; i++) {
                         modelFinal[i] = model.get(i);
                     }
 
@@ -117,13 +118,13 @@ public class SettingActivity extends BluetoothBaseActivity<SettingPresenter> imp
                     byte[] NameTemp = deviceInfo.getName().getBytes();
 
                     ArrayList<Byte> Name = new ArrayList<>();
-                    for (int i = 0 ; i < NameTemp.length ; i ++){
+                    for (int i = 0; i < NameTemp.length; i++) {
                         if (NameTemp[i] != 0) {
                             Name.add(NameTemp[i]);
                         }
                     }
                     byte[] NameFinal = new byte[Name.size()];
-                    for (int i = 0 ; i < NameFinal.length ; i ++) {
+                    for (int i = 0; i < NameFinal.length; i++) {
                         NameFinal[i] = Name.get(i);
                     }
                     ((EditText) dialogSetDeviceInfo.findViewById(R.id.mc)).setText(new String(NameFinal));
@@ -131,13 +132,13 @@ public class SettingActivity extends BluetoothBaseActivity<SettingPresenter> imp
                     byte[] getBatteryTemp = deviceInfo.getBattery().getBytes();
 
                     ArrayList<Byte> getBattery = new ArrayList<>();
-                    for (int i = 0 ; i < getBatteryTemp.length ; i ++){
+                    for (int i = 0; i < getBatteryTemp.length; i++) {
                         if (getBatteryTemp[i] != 0) {
                             getBattery.add(getBatteryTemp[i]);
                         }
                     }
                     byte[] getBatteryFinal = new byte[getBattery.size()];
-                    for (int i = 0 ; i < getBatteryFinal.length ; i ++) {
+                    for (int i = 0; i < getBatteryFinal.length; i++) {
                         getBatteryFinal[i] = getBattery.get(i);
                     }
                     ((EditText) dialogSetDeviceInfo.findViewById(R.id.dc)).setText(new String(getBatteryFinal));
@@ -339,7 +340,7 @@ public class SettingActivity extends BluetoothBaseActivity<SettingPresenter> imp
 
         listView.setOnItemClickListener(this);
 
-        version.setText( "V"+ AndroidUtil.packageName(this) + "-B" + AndroidUtil.packageCode(this));
+        version.setText("V" + AndroidUtil.packageName(this) + "-B" + AndroidUtil.packageCode(this));
 
     }
 
@@ -438,7 +439,7 @@ public class SettingActivity extends BluetoothBaseActivity<SettingPresenter> imp
             break;
             case 2: {
 
-                final String[] items = { "出厂参数设置", "用户参数设置" };
+                final String[] items = {"出厂参数设置", "用户参数设置"};
                 AlertDialog.Builder listDialog = new AlertDialog.Builder(this);
                 listDialog.setTitle("请选择参数设置类型");
                 listDialog.setItems(items, new DialogInterface.OnClickListener() {
@@ -586,6 +587,32 @@ public class SettingActivity extends BluetoothBaseActivity<SettingPresenter> imp
                 mPresenter.queryDeviceInfo();
             }
             break;
+            case 4: {
+                final EditText et = new EditText(this);
+                et.setInputType(InputType.TYPE_CLASS_NUMBER);
+                int pointCount = App.getInstance().getLocalDataService().queryAppConfig().getPointCount();
+                et.setText("" + pointCount);
+                new AlertDialog.Builder(this).setTitle("请输入测点数量")
+                        .setView(et)
+                        .setPositiveButton("确定", new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialogInterface, int i) {
+                                if (et.getText().length() > 0) {
+                                    AppConfig appConfig = App.getInstance().getLocalDataService().queryAppConfig();
+                                    appConfig.setPointCount(Integer.parseInt(et.getText().toString()));
+                                    if (appConfig.getPointCount() > 0 && appConfig.getPointCount() < 6) {
+                                        App.getInstance().getLocalDataService().setAppConfig(appConfig);
+                                    } else {
+                                        Toast.makeText(SettingActivity.this, "最多只能支持5个测点，请输入1~5的数字！", Toast.LENGTH_SHORT).show();
+                                    }
+                                } else {
+                                    Toast.makeText(SettingActivity.this, "请输入测点数量！", Toast.LENGTH_SHORT).show();
+                                }
+
+                            }
+                        }).setNegativeButton("取消", null).show();
+            }
+            break;
             default:
                 break;
         }
@@ -663,6 +690,11 @@ public class SettingActivity extends BluetoothBaseActivity<SettingPresenter> imp
             item1.put("icon", R.mipmap.icons_data_configuration);
             item1.put("title", "信息设置");
             data.add(item1);
+
+//            item1 = new HashMap<>();
+//            item1.put("icon", R.mipmap.icons_data_configuration);
+//            item1.put("title", "测点设置");
+//            data.add(item1);
 
             listView.setAdapter(new SimpleAdapter(this, data,
                     R.layout.adapter_setting_item, new String[]{"icon", "title"}, new int[]{R.id.icon, R.id.title}));

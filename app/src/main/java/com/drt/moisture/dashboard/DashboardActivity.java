@@ -1,16 +1,17 @@
 package com.drt.moisture.dashboard;
 
+import android.app.ProgressDialog;
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.graphics.Point;
 import android.media.Ringtone;
 import android.media.RingtoneManager;
 import android.net.Uri;
 import android.os.Bundle;
-import android.os.Handler;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AlertDialog;
 import android.util.Log;
-import android.widget.ImageButton;
+import android.view.View;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -18,8 +19,10 @@ import android.widget.Toast;
 import com.drt.moisture.App;
 import com.drt.moisture.BluetoothBaseActivity;
 import com.drt.moisture.R;
+import com.drt.moisture.data.AppConfig;
 import com.drt.moisture.data.MeasureStatus;
 import com.drt.moisture.data.MeasureValue;
+import com.drt.moisture.measure.MeasureActivity;
 import com.github.mikephil.charting.charts.LineChart;
 import com.github.mikephil.charting.components.XAxis;
 import com.github.mikephil.charting.components.YAxis;
@@ -32,9 +35,11 @@ import com.inuker.bluetooth.library.Constants;
 
 import java.math.RoundingMode;
 import java.text.DecimalFormat;
+import java.util.List;
 
 import butterknife.BindView;
 import butterknife.OnClick;
+
 
 /**
  * @author yuanzhijian
@@ -42,6 +47,9 @@ import butterknife.OnClick;
 public class DashboardActivity extends BluetoothBaseActivity<DashboardPresenter> implements DashboardContract.View {
 
     private static final String TAG = DashboardActivity.class.getSimpleName();
+
+    int[] colors = new int[]{R.color.btnOrange, R.color.btnGreen, R.color.btnBlue, R.color.btnRed1, R.color.btnRed};
+
 
     @BindView(R.id.chart)
     LineChart chart;
@@ -52,20 +60,94 @@ public class DashboardActivity extends BluetoothBaseActivity<DashboardPresenter>
     @BindView(R.id.btnStopMeasure)
     LinearLayout btnStopMeasure;
 
-    @BindView(R.id.alreadyRunning)
-    TextView alreadyRunning;
-
     @BindView(R.id.temperature)
     TextView temperature;
 
     @BindView(R.id.activeness)
     TextView activeness;
 
+    @BindView(R.id.alreadyRunning)
+    TextView alreadyRunning;
+
+    @BindView(R.id.temperature1)
+    TextView temperature1;
+
+    @BindView(R.id.activeness1)
+    TextView activeness1;
+
+    @BindView(R.id.alreadyRunning1)
+    TextView alreadyRunning1;
+
+    @BindView(R.id.temperature2)
+    TextView temperature2;
+
+    @BindView(R.id.activeness2)
+    TextView activeness2;
+
+    @BindView(R.id.alreadyRunning2)
+    TextView alreadyRunning2;
+
+    @BindView(R.id.temperature3)
+    TextView temperature3;
+
+    @BindView(R.id.activeness3)
+    TextView activeness3;
+
+    @BindView(R.id.alreadyRunning3)
+    TextView alreadyRunning3;
+
+    @BindView(R.id.temperature4)
+    TextView temperature4;
+
+    @BindView(R.id.activeness4)
+    TextView activeness4;
+
+    @BindView(R.id.alreadyRunning4)
+    TextView alreadyRunning4;
+
+    @BindView(R.id.point1)
+    View point1;
+
+    @BindView(R.id.point2)
+    View point2;
+
+    @BindView(R.id.point3)
+    View point3;
+
+    @BindView(R.id.point4)
+    View point4;
+
+    @BindView(R.id.point5)
+    View point5;
+
+    ProgressDialog progressdialog;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        AppConfig appConfig = App.getInstance().getLocalDataService().queryAppConfig();
 
+        View[] pointViews = new View[]{point1, point2, point3, point4, point5};
+        int pointCount = appConfig.getPointCount();
+        for (int i = 0; i < pointViews.length; i++) {
+            View point = pointViews[i];
+            if (i < pointCount) {
+                point.setAlpha(1f);
+                point.setEnabled(true);
+            } else {
+                point.setAlpha(0.32f);
+                point.setEnabled(false);
+            }
+            final int currentIndex = i;
+            point.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    Intent intent = new Intent(DashboardActivity.this, MeasureActivity.class);
+                    intent.putExtra("index", currentIndex);
+                    startActivity(intent);
+                }
+            });
+        }
     }
 
     @Override
@@ -88,19 +170,68 @@ public class DashboardActivity extends BluetoothBaseActivity<DashboardPresenter>
 
     @Override
     public void hideLoading() {
-
-    }
-
-    @Override
-    public void onSuccess(final MeasureValue measureValue) {
         runOnUiThread(new Runnable() {
             @Override
             public void run() {
-                addEntry(measureValue);
-                temperature.setText(String.format("%.2f", measureValue.getTemperature()) + "°C");
+                if (progressdialog != null) {
+                    progressdialog.dismiss();
+                }
+            }
+        });
+    }
+
+    @Override
+    public void onSuccess(final List<MeasureValue> measureValueList) {
+        runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                addEntry(measureValueList);
                 DecimalFormat df = new DecimalFormat("0.0000");
                 df.setRoundingMode(RoundingMode.DOWN);
-                activeness.setText(df.format(measureValue.getActivity()));
+
+                switch (measureValueList.size()) {
+                    case 1:
+                        temperature.setText(String.format("%.2f", measureValueList.get(0).getTemperature()) + "°C");
+                        activeness.setText(df.format(measureValueList.get(0).getActivity()));
+                        break;
+                    case 2:
+                        temperature.setText(String.format("%.2f", measureValueList.get(0).getTemperature()) + "°C");
+                        activeness.setText(df.format(measureValueList.get(0).getActivity()));
+                        temperature1.setText(String.format("%.2f", measureValueList.get(1).getTemperature()) + "°C");
+                        activeness1.setText(df.format(measureValueList.get(1).getActivity()));
+                        break;
+                    case 3:
+                        temperature.setText(String.format("%.2f", measureValueList.get(0).getTemperature()) + "°C");
+                        activeness.setText(df.format(measureValueList.get(0).getActivity()));
+                        temperature1.setText(String.format("%.2f", measureValueList.get(1).getTemperature()) + "°C");
+                        activeness1.setText(df.format(measureValueList.get(1).getActivity()));
+                        temperature2.setText(String.format("%.2f", measureValueList.get(2).getTemperature()) + "°C");
+                        activeness2.setText(df.format(measureValueList.get(2).getActivity()));
+                        break;
+                    case 4:
+                        temperature.setText(String.format("%.2f", measureValueList.get(0).getTemperature()) + "°C");
+                        activeness.setText(df.format(measureValueList.get(0).getActivity()));
+                        temperature1.setText(String.format("%.2f", measureValueList.get(1).getTemperature()) + "°C");
+                        activeness1.setText(df.format(measureValueList.get(1).getActivity()));
+                        temperature2.setText(String.format("%.2f", measureValueList.get(2).getTemperature()) + "°C");
+                        activeness2.setText(df.format(measureValueList.get(2).getActivity()));
+                        temperature3.setText(String.format("%.2f", measureValueList.get(3).getTemperature()) + "°C");
+                        activeness3.setText(df.format(measureValueList.get(3).getActivity()));
+                        break;
+                    case 5:
+                        temperature.setText(String.format("%.2f", measureValueList.get(0).getTemperature()) + "°C");
+                        activeness.setText(df.format(measureValueList.get(0).getActivity()));
+                        temperature1.setText(String.format("%.2f", measureValueList.get(1).getTemperature()) + "°C");
+                        activeness1.setText(df.format(measureValueList.get(1).getActivity()));
+                        temperature2.setText(String.format("%.2f", measureValueList.get(2).getTemperature()) + "°C");
+                        activeness2.setText(df.format(measureValueList.get(2).getActivity()));
+                        temperature3.setText(String.format("%.2f", measureValueList.get(3).getTemperature()) + "°C");
+                        activeness3.setText(df.format(measureValueList.get(3).getActivity()));
+                        temperature4.setText(String.format("%.2f", measureValueList.get(4).getTemperature()) + "°C");
+                        activeness4.setText(df.format(measureValueList.get(4).getActivity()));
+                        break;
+                }
+
             }
         });
     }
@@ -119,14 +250,54 @@ public class DashboardActivity extends BluetoothBaseActivity<DashboardPresenter>
     public void startMeasure() {
         chart.clear();
 
-        App.getInstance().getBluetoothService().setTime(System.currentTimeMillis() / 1000);
-
-        new Handler().postDelayed(new Runnable() {
+        switch (mPresenter.getMeasureStatus()) {
+            case STOP:
+            case ERROR:
+            case NORMAL:
+            case DONE:
+                break;
+            case RUNNING:
+                onError(new Exception("测量中..."));
+                return;
+            case BT_NOT_CONNECT:
+                onError(new Exception("设备尚未连接，请点击右上角蓝牙按钮连接设备"));
+                return;
+            default:
+                return;
+        }
+        runOnUiThread(new Runnable() {
             @Override
             public void run() {
-                mPresenter.startMeasure(0, "样品1");
+                progressdialog = new ProgressDialog(DashboardActivity.this);
+                progressdialog.setTitle("提示");
+                progressdialog.setMessage("启动所有测量，请稍后...");
+                progressdialog.setCancelable(false);
+                progressdialog.show();
             }
-        }, 200);
+        });
+        // 校准时间
+        App.getInstance().getBluetoothService().setTime(System.currentTimeMillis() / 1000);
+        // 根据测点数量发送开始指令
+        final int pointCount = App.getInstance().getLocalDataService().queryAppConfig().getPointCount();
+        new Thread(new Runnable() {
+            public void run() {
+                for (int i = 0; i < pointCount; i++) {
+                    try {
+                        Thread.sleep(200);
+                    } catch (InterruptedException e) {
+                        e.printStackTrace();
+                    }
+                    mPresenter.startMeasure(0, "样品1", i + 1);
+                }
+                try {
+                    Thread.sleep(200);
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
+                mPresenter.queryMeasureResult(pointCount);
+                hideLoading();
+            }
+        }).start();
 
     }
 
@@ -138,7 +309,31 @@ public class DashboardActivity extends BluetoothBaseActivity<DashboardPresenter>
                 .setPositiveButton("确认", new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialogInterface, int i) {
-                        mPresenter.stopMeasure(true);
+                        runOnUiThread(new Runnable() {
+                            @Override
+                            public void run() {
+                                progressdialog = new ProgressDialog(DashboardActivity.this);
+                                progressdialog.setTitle("提示");
+                                progressdialog.setMessage("停止所有测量，请稍后...");
+                                progressdialog.setCancelable(false);
+                                progressdialog.show();
+                            }
+                        });
+                        // 根据测点数量发送停止指令
+                        final int pointCount = App.getInstance().getLocalDataService().queryAppConfig().getPointCount();
+                        new Thread(new Runnable() {
+                            public void run() {
+                                for (int i = 0; i < pointCount; i++) {
+                                    try {
+                                        Thread.sleep(200);
+                                    } catch (InterruptedException e) {
+                                        e.printStackTrace();
+                                    }
+                                    mPresenter.stopMeasure(true, i + 1);
+                                }
+                                hideLoading();
+                            }
+                        }).start();
                     }
                 })
                 .setNegativeButton("取消", new DialogInterface.OnClickListener() {
@@ -175,7 +370,7 @@ public class DashboardActivity extends BluetoothBaseActivity<DashboardPresenter>
                     case ERROR:
                     case DONE:
                         if (measureStatus == MeasureStatus.DONE) {
-                            AlertDialog.Builder builder=new AlertDialog.Builder(DashboardActivity.this);
+                            AlertDialog.Builder builder = new AlertDialog.Builder(DashboardActivity.this);
                             builder.setTitle("提示");//设置title
                             builder.setMessage("测量完成");//设置内容
                             //点击确认按钮事件
@@ -186,7 +381,7 @@ public class DashboardActivity extends BluetoothBaseActivity<DashboardPresenter>
                                 }
                             });
                             //创建出AlertDialog对象
-                            AlertDialog alertDialog=builder.create();
+                            AlertDialog alertDialog = builder.create();
                             //点击对话框之外的地方不消失
                             alertDialog.setCanceledOnTouchOutside(false);
                             //设置显示
@@ -211,16 +406,81 @@ public class DashboardActivity extends BluetoothBaseActivity<DashboardPresenter>
         runOnUiThread(new Runnable() {
             @Override
             public void run() {
-                if (alreadyRunning != null && time != null) {
-                    alreadyRunning.setText(time);
+
+                final int pointCount = App.getInstance().getLocalDataService().queryAppConfig().getPointCount();
+                switch (pointCount) {
+                    case 1:
+                        if (alreadyRunning != null && time != null) {
+                            alreadyRunning.setText(time);
+                        }
+                        break;
+                    case 2:
+                        if (alreadyRunning != null && time != null) {
+                            alreadyRunning.setText(time);
+                        }
+                        if (alreadyRunning1 != null && time != null) {
+                            alreadyRunning1.setText(time);
+                        }
+                        break;
+                    case 3:
+                        if (alreadyRunning != null && time != null) {
+                            alreadyRunning.setText(time);
+                        }
+                        if (alreadyRunning1 != null && time != null) {
+                            alreadyRunning1.setText(time);
+                        }
+                        if (alreadyRunning2 != null && time != null) {
+                            alreadyRunning2.setText(time);
+                        }
+                        break;
+                    case 4:
+                        if (alreadyRunning != null && time != null) {
+                            alreadyRunning.setText(time);
+                        }
+                        if (alreadyRunning1 != null && time != null) {
+                            alreadyRunning1.setText(time);
+                        }
+                        if (alreadyRunning2 != null && time != null) {
+                            alreadyRunning2.setText(time);
+                        }
+                        if (alreadyRunning3 != null && time != null) {
+                            alreadyRunning3.setText(time);
+                        }
+                        break;
+                    case 5:
+                        if (alreadyRunning != null && time != null) {
+                            alreadyRunning.setText(time);
+                        }
+                        if (alreadyRunning1 != null && time != null) {
+                            alreadyRunning1.setText(time);
+                        }
+                        if (alreadyRunning2 != null && time != null) {
+                            alreadyRunning2.setText(time);
+                        }
+                        if (alreadyRunning3 != null && time != null) {
+                            alreadyRunning3.setText(time);
+                        }
+                        if (alreadyRunning4 != null && time != null) {
+                            alreadyRunning4.setText(time);
+                        }
+                        break;
+                    default:
+                        if (alreadyRunning != null && time != null) {
+                            alreadyRunning.setText(time);
+                        }
+                        break;
                 }
+
             }
         });
     }
 
     @Override
     protected void onDestroy() {
-        mPresenter.stopMeasure(false);
+        final int pointCount = App.getInstance().getLocalDataService().queryAppConfig().getPointCount();
+        for (int i = 0; i < pointCount; i++) {
+            mPresenter.stopMeasure(false, i + 1);
+        }
         super.onDestroy();
     }
 
@@ -241,7 +501,7 @@ public class DashboardActivity extends BluetoothBaseActivity<DashboardPresenter>
         }
     }
 
-    private void addEntry(MeasureValue measureValue) {
+    private void addEntry(List<MeasureValue> measureValueList) {
 
         LineData data = chart.getData();
 
@@ -250,22 +510,16 @@ public class DashboardActivity extends BluetoothBaseActivity<DashboardPresenter>
             chart.setData(data);
         }
 
-        ILineDataSet
+        for (int i = 0; i < measureValueList.size(); i++) {
 
-//        set = data.getDataSetByIndex(0);
-//        if (set == null) {
-//            set = createTemperatureSet();
-//            data.addDataSet(set);
-//        }
-//        data.addEntry(new Entry(set.getEntryCount(), (float) measureValue.getTemperature(), measureValue.getReportTime()), 0);
-//        data.notifyDataChanged();
-
-        set = data.getDataSetByIndex(0);
-        if (set == null) {
-            set = createActivitySet();
-            data.addDataSet(set);
+            MeasureValue measureValue = measureValueList.get(i);
+            ILineDataSet set = data.getDataSetByIndex(i);
+            if (set == null) {
+                set = createActivitySet(i);
+                data.addDataSet(set);
+            }
+            data.addEntry(new Entry(set.getEntryCount(), (float) measureValue.getActivity(), measureValue.getReportTime()), i);
         }
-        data.addEntry(new Entry(set.getEntryCount(), (float) measureValue.getActivity() , measureValue.getReportTime()), 0);
         data.notifyDataChanged();
 
         // let the chart know it's data has changed
@@ -275,32 +529,21 @@ public class DashboardActivity extends BluetoothBaseActivity<DashboardPresenter>
         //chart.setVisibleYRangeMaximum(15, AxisDependency.LEFT);
 //
 //            // this automatically refreshes the chart (calls invalidate())
-        chart.moveViewTo(data.getEntryCount() - 1, (float) measureValue.getActivity(), YAxis.AxisDependency.LEFT);
+        chart.moveViewToX((float) (data.getEntryCount() - 1));
     }
 
-//    private LineDataSet createTemperatureSet() {
-//
-//        LineDataSet d1 = new LineDataSet(null, "温度");
-//        d1.setLineWidth(2.5f);
-//        d1.setCircleRadius(4.5f);
-//        d1.setHighLightColor(getResources().getColor(R.color.colorAccent, getTheme()));
-//        d1.setColor(getResources().getColor(R.color.colorAccent, getTheme()));
-//        d1.setCircleColor(getResources().getColor(R.color.colorAccent, getTheme()));
-//        d1.setDrawValues(true);
-//        return d1;
-//    }
+    private LineDataSet createActivitySet(int i) {
 
-    private LineDataSet createActivitySet() {
 
-        LineDataSet d2 = new LineDataSet(null, "水分活度");
+        LineDataSet d2 = new LineDataSet(null, "测点" + (i + 1) + "水分活度");
         d2.setLineWidth(2.5f);
         d2.setCircleRadius(4.5f);
-        d2.setHighLightColor(getResources().getColor(R.color.colorGreen, getTheme()));
-        d2.setColor(getResources().getColor(R.color.colorGreen, getTheme()));
-        d2.setCircleColor(getResources().getColor(R.color.colorGreen, getTheme()));
+        d2.setHighLightColor(getResources().getColor(colors[i], getTheme()));
+        d2.setColor(getResources().getColor(colors[i], getTheme()));
+        d2.setCircleColor(getResources().getColor(colors[i], getTheme()));
         d2.setDrawValues(true);
         d2.setMode(LineDataSet.Mode.CUBIC_BEZIER);
-        d2.setValueFormatter(new ValueFormatter(){
+        d2.setValueFormatter(new ValueFormatter() {
             public String getFormattedValue(float value) {
                 DecimalFormat df = new DecimalFormat("0.00");
                 df.setRoundingMode(RoundingMode.DOWN);

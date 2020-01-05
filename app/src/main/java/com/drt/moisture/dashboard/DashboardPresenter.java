@@ -10,6 +10,8 @@ import com.drt.moisture.data.source.bluetooth.response.StartMeasureResponse;
 
 import net.yzj.android.common.base.BasePresenter;
 
+import java.util.List;
+
 public class DashboardPresenter extends BasePresenter<DashboardContract.View> implements DashboardContract.Presenter {
 
     private DashboardContract.Model model;
@@ -32,25 +34,9 @@ public class DashboardPresenter extends BasePresenter<DashboardContract.View> im
     }
 
     @Override
-    public void startMeasure(final int measureModel, String measureName) {
+    public void startMeasure(final int measureModel, String measureName, final int index) {
         if (!isViewAttached()) {
             return;
-        }
-
-        switch (measureStatus) {
-            case STOP:
-            case ERROR:
-            case NORMAL:
-            case DONE:
-                break;
-            case RUNNING:
-                mView.onError(new Exception("测量中..."));
-                return;
-            case BT_NOT_CONNECT:
-                mView.onError(new Exception("设备尚未连接，请点击右上角蓝牙按钮连接设备"));
-                return;
-            default:
-                return;
         }
 
         if (TextUtils.isEmpty(measureName)) {
@@ -60,7 +46,7 @@ public class DashboardPresenter extends BasePresenter<DashboardContract.View> im
 
         App.getInstance().getLocalDataService().setHistory(measureName);
 
-        model.startMeasure(measureName, measureModel, new MeasureDataCallback<StartMeasureResponse>() {
+        model.startMeasure(measureName, measureModel, index,new MeasureDataCallback<StartMeasureResponse>() {
             @Override
             public void runningTime(String time) {
 
@@ -68,44 +54,9 @@ public class DashboardPresenter extends BasePresenter<DashboardContract.View> im
 
             @Override
             public void success(StartMeasureResponse value) {
-                model.startQuery(measureModel, new MeasureDataCallback<MeasureValue>() {
-
-                    @Override
-                    public void runningTime(String time) {
-                        if (isViewAttached()) {
-                            mView.alreadyRunning(time);
-                        }
-                    }
-
-                    @Override
-                    public void success(MeasureValue value) {
-                        if (isViewAttached()) {
-                            // 绑定数据
-                            mView.onSuccess(value);
-                        }
-                        if (value.getMeasureStatus() == 0x02) {
-                            stopMeasure(true);
-                            model.stopQuery(true);
-                            setMeasureStatus(MeasureStatus.DONE);
-                        }
-                    }
-
-                    @Override
-                    public void measureDone() {
-                        if (isViewAttached()) {
-                            setMeasureStatus(MeasureStatus.DONE);
-                        }
-                    }
-
-                    @Override
-                    public void error(Throwable e) {
-                        setMeasureStatus(MeasureStatus.ERROR);
-                        if (isViewAttached()) {
-                            mView.onError(e);
-                        }
-                    }
-                });
-                setMeasureStatus(MeasureStatus.RUNNING);
+                if (isViewAttached()) {
+                    mView.onError(new Exception("测点"+ index + "启动成功。"));
+                }
             }
 
             @Override
@@ -124,15 +75,52 @@ public class DashboardPresenter extends BasePresenter<DashboardContract.View> im
     }
 
     @Override
-    public void stopMeasure(boolean sendCommand) {
+    public void stopMeasure(boolean sendCommand, int index) {
         if (measureStatus == MeasureStatus.RUNNING) {
-            model.stopQuery(sendCommand);
+            model.stopQuery(sendCommand, index);
             setMeasureStatus(MeasureStatus.STOP);
         } else {
             if (isViewAttached()) {
                 mView.onError(new Exception("尚未开始测量"));
             }
         }
+    }
+
+    @Override
+    public void queryMeasureResult(int pointCount) {
+        model.startQuery(0, pointCount, new MeasureDataCallback<List<MeasureValue>>() {
+
+            @Override
+            public void runningTime(String time) {
+                if (isViewAttached()) {
+                    mView.alreadyRunning(time);
+                }
+            }
+
+            @Override
+            public void success(List<MeasureValue> value) {
+                if (isViewAttached()) {
+                    // 绑定数据
+                    mView.onSuccess(value);
+                }
+            }
+
+            @Override
+            public void measureDone() {
+                if (isViewAttached()) {
+                    setMeasureStatus(MeasureStatus.DONE);
+                }
+            }
+
+            @Override
+            public void error(Throwable e) {
+                setMeasureStatus(MeasureStatus.ERROR);
+                if (isViewAttached()) {
+                    mView.onError(e);
+                }
+            }
+        });
+        setMeasureStatus(MeasureStatus.RUNNING);
     }
 
     public void setMeasureStatus(MeasureStatus measureStatus) {
