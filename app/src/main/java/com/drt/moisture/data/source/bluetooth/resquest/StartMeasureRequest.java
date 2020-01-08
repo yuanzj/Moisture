@@ -28,7 +28,7 @@ public class StartMeasureRequest {
     @RkField(position = 37, length = 1)
     private byte time;
 
-    @RkField(position = 38, length = 2)
+    @RkField(position = 38, length = 1)
     private int index;
 
     public byte getCmdGroup() {
