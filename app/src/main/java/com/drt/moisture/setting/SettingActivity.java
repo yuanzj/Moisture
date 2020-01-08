@@ -602,6 +602,7 @@ public class SettingActivity extends BluetoothBaseActivity<SettingPresenter> imp
                                     appConfig.setPointCount(Integer.parseInt(et.getText().toString()));
                                     if (appConfig.getPointCount() > 0 && appConfig.getPointCount() < 6) {
                                         App.getInstance().getLocalDataService().setAppConfig(appConfig);
+                                        mPresenter.setCdsl(appConfig.getPointCount());
                                     } else {
                                         Toast.makeText(SettingActivity.this, "最多只能支持5个测点，请输入1~5的数字！", Toast.LENGTH_SHORT).show();
                                     }
@@ -691,10 +692,10 @@ public class SettingActivity extends BluetoothBaseActivity<SettingPresenter> imp
             item1.put("title", "信息设置");
             data.add(item1);
 
-//            item1 = new HashMap<>();
-//            item1.put("icon", R.mipmap.icons_data_configuration);
-//            item1.put("title", "测点设置");
-//            data.add(item1);
+            item1 = new HashMap<>();
+            item1.put("icon", R.mipmap.icons_data_configuration);
+            item1.put("title", "测点设置");
+            data.add(item1);
 
             listView.setAdapter(new SimpleAdapter(this, data,
                     R.layout.adapter_setting_item, new String[]{"icon", "title"}, new int[]{R.id.icon, R.id.title}));

@@ -46,6 +46,8 @@ public class SetCorrectParameRequest {
     @RkField(position = 38, length = 4)
     private int i;
 
+    @RkField(position = 42, length = 1)
+    private int j;
 
     public byte getCmdGroup() {
         return CmdGroup;
@@ -157,5 +159,13 @@ public class SetCorrectParameRequest {
 
     public void setType(int type) {
         this.type = type;
+    }
+
+    public int getJ() {
+        return j;
+    }
+
+    public void setJ(int j) {
+        this.j = j;
     }
 }

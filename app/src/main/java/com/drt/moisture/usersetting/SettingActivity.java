@@ -115,9 +115,7 @@ public class SettingActivity extends BluetoothBaseActivity<SettingPresenter> imp
                     csL.setText("" + setMeasureParameRequest.getL() / 1000000.0);
                     csM.setText("" + setMeasureParameRequest.getM() / 1000000.0);
                     csN.setText("" + setMeasureParameRequest.getN());
-
-                    int pointCount = App.getInstance().getLocalDataService().queryAppConfig().getPointCount();
-                    csCDSL.setText("" + pointCount);
+                    csCDSL.setText("" + setMeasureParameRequest.getO());
                 }
             }
         });
@@ -138,6 +136,7 @@ public class SettingActivity extends BluetoothBaseActivity<SettingPresenter> imp
                     final EditText csG_1 = dialogParameSet.findViewById(R.id.csG_1);
                     final EditText csH_1 = dialogParameSet.findViewById(R.id.csH_1);
                     final EditText csI_1 = dialogParameSet.findViewById(R.id.csI_1);
+                    final EditText csCDSL_1 = dialogParameSet.findViewById(R.id.csCDSL_1);
 
                     csA_1.setText("" + setCorrectParameRequest.getA() / 1000000.0);
                     csB_1.setText("" + setCorrectParameRequest.getB() / 1000000.0);
@@ -148,6 +147,8 @@ public class SettingActivity extends BluetoothBaseActivity<SettingPresenter> imp
                     csG_1.setText("" + setCorrectParameRequest.getG() / 1000000.0);
                     csH_1.setText("" + setCorrectParameRequest.getH() / 1000000.0);
                     csI_1.setText("" + setCorrectParameRequest.getI() / 1000000.0);
+                    csCDSL_1.setText("" + setCorrectParameRequest.getJ());
+
                 }
             }
         });
@@ -553,6 +554,7 @@ public class SettingActivity extends BluetoothBaseActivity<SettingPresenter> imp
                 final EditText csG_1 = dialogParameSet.findViewById(R.id.csG_1);
                 final EditText csH_1 = dialogParameSet.findViewById(R.id.csH_1);
                 final EditText csI_1 = dialogParameSet.findViewById(R.id.csI_1);
+                final EditText csCDSL_1 = dialogParameSet.findViewById(R.id.csCDSL_1);
 
                 final EditText csA_2 = dialogParameSet.findViewById(R.id.csA_2);
                 final EditText csB_2 = dialogParameSet.findViewById(R.id.csB_2);
@@ -622,16 +624,13 @@ public class SettingActivity extends BluetoothBaseActivity<SettingPresenter> imp
                                         measureParame.setN((int) (Double.parseDouble(csN.getText().toString())));
                                     }
 
-                                    AppConfig appConfig = App.getInstance().getLocalDataService().queryAppConfig();
                                     if (csCDSL.getText().length() > 0) {
-                                        if (appConfig.getPointCount() > 0 && appConfig.getPointCount() < 6) {
-                                            appConfig.setPointCount(Integer.parseInt(csCDSL.getText().toString()));
-                                            App.getInstance().getLocalDataService().setAppConfig(appConfig);
+                                        if (Integer.parseInt(csCDSL.getText().toString()) > 0 && Integer.parseInt(csCDSL.getText().toString()) < 6) {
+                                            measureParame.setCdsl(Integer.parseInt(csCDSL.getText().toString()));
                                         } else {
                                             Toast.makeText(SettingActivity.this, "最多只能支持5个测点，请输入1~5的数字！", Toast.LENGTH_SHORT).show();
                                         }
                                     }
-                                    measureParame.setCdsl(appConfig.getPointCount());
 
 
                                     mPresenter.setMeasureParame(measureParame);
@@ -664,6 +663,13 @@ public class SettingActivity extends BluetoothBaseActivity<SettingPresenter> imp
                                     }
                                     if (csI_1.getText().length() > 0) {
                                         correctParame.setI((int) (Double.parseDouble(csI_1.getText().toString()) * 1000000));
+                                    }
+                                    if (csCDSL_1.getText().length() > 0) {
+                                        if (Integer.parseInt(csCDSL_1.getText().toString()) > 0 && Integer.parseInt(csCDSL_1.getText().toString()) < 6) {
+                                            correctParame.setJ(Integer.parseInt(csCDSL_1.getText().toString()));
+                                        } else {
+                                            Toast.makeText(SettingActivity.this, "最多只能支持5个测点，请输入1~5的数字！", Toast.LENGTH_SHORT).show();
+                                        }
                                     }
 
                                     mPresenter.setCorrectParame(correctParame);

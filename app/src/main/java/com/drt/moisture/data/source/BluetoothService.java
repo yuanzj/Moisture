@@ -115,6 +115,13 @@ public interface BluetoothService {
     void setTime(long time, SppDataCallback<ParameterSetResponse> sppDataCallback);
 
     /**
+     * 设置测点数量
+     * @param count
+     * @param sppDataCallback
+     */
+    void setCdsl(int count, SppDataCallback<CdslSetResponse> sppDataCallback);
+
+    /**
      * 设置时间
      * @param time
      */

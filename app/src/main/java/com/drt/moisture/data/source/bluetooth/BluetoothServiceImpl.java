@@ -466,6 +466,23 @@ public class BluetoothServiceImpl implements BluetoothService, BleWriteResponse 
     }
 
     @Override
+    public void setCdsl(int count, SppDataCallback<CdslSetResponse> sppDataCallback) {
+        this.sppDataCallback = sppDataCallback;
+        SetCdslRequest setTimeRequest = new SetCdslRequest();
+        setTimeRequest.setCmdGroup((byte) 0xA2);
+        setTimeRequest.setCmd((byte) 0x0A);
+        setTimeRequest.setResponse((byte) 0x01);
+        setTimeRequest.setReserved(0);
+        setTimeRequest.setCount(count);
+
+        try {
+            App.getInstance().getBluetoothClient().write(App.getInstance().getConnectMacAddress(), UUIDUtils.makeUUID(0xFFE0), UUIDUtils.makeUUID(0xFFE1), BluetoothDataUtil.encode(setTimeRequest), this);
+        } catch (IllegalAccessException | RkFieldException | FieldConvertException e) {
+            e.printStackTrace();
+        }
+    }
+
+    @Override
     public void setTime(long time) {
         SetTimeRequest setTimeRequest = new SetTimeRequest();
         setTimeRequest.setCmdGroup((byte) 0xA2);
@@ -504,6 +521,7 @@ public class BluetoothServiceImpl implements BluetoothService, BleWriteResponse 
         setMeasureParameRequest.setL(measureParame.getL());
         setMeasureParameRequest.setM(measureParame.getM());
         setMeasureParameRequest.setN(measureParame.getN());
+        setMeasureParameRequest.setO(measureParame.getCdsl());
 
         try {
             App.getInstance().getBluetoothClient().write(App.getInstance().getConnectMacAddress(), UUIDUtils.makeUUID(0xFFE0), UUIDUtils.makeUUID(0xFFE1), BluetoothDataUtil.encode(setMeasureParameRequest), this);
@@ -557,6 +575,7 @@ public class BluetoothServiceImpl implements BluetoothService, BleWriteResponse 
         setCorrectParameRequest.setG(measureParame.getG());
         setCorrectParameRequest.setH(measureParame.getH());
         setCorrectParameRequest.setI(measureParame.getI());
+        setCorrectParameRequest.setJ(measureParame.getJ());
 
         try {
             App.getInstance().getBluetoothClient().write(App.getInstance().getConnectMacAddress(), UUIDUtils.makeUUID(0xFFE0), UUIDUtils.makeUUID(0xFFE1), BluetoothDataUtil.encode(setCorrectParameRequest), this);

@@ -6,6 +6,8 @@ import com.drt.moisture.data.DeviceInfo;
 import com.drt.moisture.data.HumidityParame;
 import com.drt.moisture.data.MeasureParame;
 import com.drt.moisture.data.SetDeviceInfoParame;
+import com.drt.moisture.data.source.bluetooth.SppDataCallback;
+import com.drt.moisture.data.source.bluetooth.response.CdslSetResponse;
 import com.drt.moisture.data.source.bluetooth.response.ParameterSetResponse;
 
 import com.drt.moisture.data.source.bluetooth.resquest.SetCorrectParameRequest;
@@ -43,6 +45,9 @@ public interface SettingContract {
         void setHumidityParame(HumidityParame measureParame, DataCallback<ParameterSetResponse> dataCallback);
 
         void setRateParame(int rate, int ratio, DataCallback<ParameterSetResponse> dataCallback);
+
+        void setCdsl(int count, DataCallback<CdslSetResponse> sppDataCallback);
+
     }
 
     interface View extends BaseView {
@@ -85,5 +90,7 @@ public interface SettingContract {
         void setHumidityParame(HumidityParame measureParame);
 
         void setRateParame(int rate,int ratio);
+
+        void setCdsl(int count);
     }
 }

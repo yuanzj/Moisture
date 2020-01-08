@@ -30,6 +30,9 @@ public class CorrectParame {
     @RkField(position = 37, length = 4)
     private int i;
 
+    @RkField(position = 41, length = 1)
+    private int j;
+
     public int getA() {
         return a;
     }
@@ -100,5 +103,13 @@ public class CorrectParame {
 
     public void setI(int i) {
         this.i = i;
+    }
+
+    public int getJ() {
+        return j;
+    }
+
+    public void setJ(int j) {
+        this.j = j;
     }
 }

@@ -6,6 +6,7 @@ import com.drt.moisture.data.DeviceInfo;
 import com.drt.moisture.data.HumidityParame;
 import com.drt.moisture.data.MeasureParame;
 import com.drt.moisture.data.SetDeviceInfoParame;
+import com.drt.moisture.data.source.bluetooth.response.CdslSetResponse;
 import com.drt.moisture.data.source.bluetooth.response.ParameterSetResponse;
 
 import com.drt.moisture.data.source.bluetooth.resquest.SetCorrectParameRequest;
@@ -202,6 +203,23 @@ public class SettingPresenter extends BasePresenter<SettingContract.View> implem
         model.setRateParame(rate,ratio, new DataCallback<ParameterSetResponse>() {
             @Override
             public void delivery(ParameterSetResponse deviceInfo) {
+                if (isViewAttached()) {
+                    mView.hideLoading();
+                    mView.onSetParameSuccess();
+                }
+            }
+        });
+    }
+
+    @Override
+    public void setCdsl(int count) {
+        if (!isViewAttached()) {
+            return;
+        }
+        mView.showLoading();
+        model.setCdsl(count, new DataCallback<CdslSetResponse>() {
+            @Override
+            public void delivery(CdslSetResponse deviceInfo) {
                 if (isViewAttached()) {
                     mView.hideLoading();
                     mView.onSetParameSuccess();

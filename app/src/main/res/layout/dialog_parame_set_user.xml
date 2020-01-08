@@ -479,7 +479,7 @@
                     <TextView
                         android:layout_width="60dp"
                         android:layout_height="wrap_content"
-                        android:text="测点数量"
+                        android:text="节点号"
                         android:textColor="@color/colorSecondBody"
                         android:textSize="@dimen/sizeBody" />
 
@@ -783,6 +783,38 @@
 
                         <EditText
                             android:id="@+id/csI_1"
+                            android:layout_width="0dp"
+                            android:layout_height="match_parent"
+                            android:layout_marginLeft="@dimen/padding_default"
+                            android:layout_marginTop="8dp"
+                            android:layout_marginRight="@dimen/padding_default"
+                            android:layout_marginBottom="8dp"
+                            android:layout_weight="1"
+                            android:background="@drawable/edittext_bg_selector"
+                            android:focusableInTouchMode="true"
+                            android:hint="请输入参数"
+                            android:inputType="numberSigned|numberDecimal"
+                            android:singleLine="true"
+                            android:textColor="@color/colorBody"
+                            android:textCursorDrawable="@drawable/solid_shape_bottom_line"
+                            android:textSize="@dimen/sizeSubTitle" />
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="48dp"
+                        android:gravity="center_vertical"
+                        android:orientation="horizontal">
+
+                        <TextView
+                            android:layout_width="60dp"
+                            android:layout_height="wrap_content"
+                            android:text="节点号"
+                            android:textColor="@color/colorSecondBody"
+                            android:textSize="@dimen/sizeBody" />
+
+                        <EditText
+                            android:id="@+id/csCDSL_1"
                             android:layout_width="0dp"
                             android:layout_height="match_parent"
                             android:layout_marginLeft="@dimen/padding_default"

@@ -8,6 +8,7 @@ import com.drt.moisture.data.HumidityParame;
 import com.drt.moisture.data.MeasureParame;
 import com.drt.moisture.data.SetDeviceInfoParame;
 import com.drt.moisture.data.source.bluetooth.SppDataCallback;
+import com.drt.moisture.data.source.bluetooth.response.CdslSetResponse;
 import com.drt.moisture.data.source.bluetooth.response.DeviceInfoResponse;
 import com.drt.moisture.data.source.bluetooth.response.ParameterSetResponse;
 import com.drt.moisture.data.source.bluetooth.resquest.SetCorrectParameRequest;
@@ -28,6 +29,8 @@ public class SettingModel implements SettingContract.Model {
     private DataCallback<ParameterSetResponse> parameterSetResponseDataCallback;
 
     private DataCallback<SetRateRequest> setRateRequestDataCallback;
+
+    private DataCallback<CdslSetResponse> cdslSetResponseDataCallback;
 
     private DeviceInfo deviceInfo = new DeviceInfo();
 
@@ -240,6 +243,25 @@ public class SettingModel implements SettingContract.Model {
                 return ParameterSetResponse.class;
             }
         },false);
+    }
+
+    @Override
+    public void setCdsl(int count, DataCallback<CdslSetResponse> sppDataCallback) {
+        this.cdslSetResponseDataCallback = sppDataCallback;
+        App.getInstance().getBluetoothService().setCdsl(count, new SppDataCallback<CdslSetResponse>() {
+
+            @Override
+            public void delivery(CdslSetResponse parameterSetResponse) {
+                if (cdslSetResponseDataCallback != null) {
+                    cdslSetResponseDataCallback.delivery(parameterSetResponse);
+                }
+            }
+
+            @Override
+            public Class<CdslSetResponse> getEntityType() {
+                return CdslSetResponse.class;
+            }
+        });
     }
 
 }
