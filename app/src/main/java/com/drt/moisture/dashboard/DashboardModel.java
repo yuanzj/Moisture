@@ -24,7 +24,9 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Date;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 import java.util.Timer;
 import java.util.TimerTask;
 
@@ -39,6 +41,8 @@ public class DashboardModel implements DashboardContract.Model {
     private Date startTime;
 
     private volatile MeasureDataCallback<List<MeasureValue>> measureDataCallback;
+
+    private volatile Set<MeasureDataCallback<List<MeasureValue>>> measureDataCallbackList = new HashSet<>();
 
 
     @SuppressLint("SimpleDateFormat")
@@ -59,6 +63,7 @@ public class DashboardModel implements DashboardContract.Model {
 
     @Override
     public void startMeasure(String name, int model, int index, final MeasureDataCallback<StartMeasureResponse> callback) {
+
         AppConfig appConfig = App.getInstance().getLocalDataService().queryAppConfig();
         int period = appConfig.getPeriod();
         int measuringTime = appConfig.getMeasuringTime();
@@ -117,6 +122,25 @@ public class DashboardModel implements DashboardContract.Model {
                         App.getInstance().getBluetoothService().queryDashboardRecord(System.currentTimeMillis() / 1000, pointCount, point1CallBack);
                         break;
                 }
+//                DashboardRecordDataResponse3 mDashboardRecordDataResponse3 = new DashboardRecordDataResponse3();
+//                mDashboardRecordDataResponse3.setTime(System.currentTimeMillis()/1000);
+//
+//                mDashboardRecordDataResponse3.setActivity1((int) (Math.random() * 10000));
+//                mDashboardRecordDataResponse3.setHumidity1((short) 100);
+//                mDashboardRecordDataResponse3.setStatus1(0);
+//                mDashboardRecordDataResponse3.setTemperature1((short) (60 * 100));
+//
+//                mDashboardRecordDataResponse3.setActivity2((int) (Math.random() * 10000));
+//                mDashboardRecordDataResponse3.setHumidity2((short) 100);
+//                mDashboardRecordDataResponse3.setStatus2(0);
+//                mDashboardRecordDataResponse3.setTemperature2((short) (60 * 100));
+//
+//                mDashboardRecordDataResponse3.setActivity3((int) (Math.random() * 10000));
+//                mDashboardRecordDataResponse3.setHumidity3((short) 100);
+//                mDashboardRecordDataResponse3.setStatus3(0);
+//                mDashboardRecordDataResponse3.setTemperature3((short) (60 * 100));
+//
+//                point3CallBack.delivery(mDashboardRecordDataResponse3);
 
             }
         }, 0, period);

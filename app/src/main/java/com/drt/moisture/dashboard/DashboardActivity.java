@@ -8,6 +8,7 @@ import android.media.Ringtone;
 import android.media.RingtoneManager;
 import android.net.Uri;
 import android.os.Bundle;
+import android.os.Handler;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AlertDialog;
 import android.util.Log;
@@ -122,6 +123,12 @@ public class DashboardActivity extends BluetoothBaseActivity<DashboardPresenter>
 
     ProgressDialog progressdialog;
 
+    private static DashboardPresenter mDashboardPresenter;
+
+    public static DashboardPresenter getDashboardPresenter() {
+        return DashboardActivity.mDashboardPresenter;
+    }
+
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -138,7 +145,7 @@ public class DashboardActivity extends BluetoothBaseActivity<DashboardPresenter>
                 point.setAlpha(0.32f);
                 point.setEnabled(false);
             }
-            final int currentIndex = i;
+            final int currentIndex = i + 1;
             point.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
@@ -159,6 +166,7 @@ public class DashboardActivity extends BluetoothBaseActivity<DashboardPresenter>
     public void initView() {
         mPresenter = new DashboardPresenter();
         mPresenter.attachView(this);
+        DashboardActivity.mDashboardPresenter = mPresenter;
 
         initChartView();
     }
@@ -287,7 +295,8 @@ public class DashboardActivity extends BluetoothBaseActivity<DashboardPresenter>
                     } catch (InterruptedException e) {
                         e.printStackTrace();
                     }
-                    mPresenter.startMeasure(0, "样品1", i + 1);
+                    String name = App.getInstance().getLocalDataService().queryHistory(i + 1).get(0);
+                    mPresenter.startMeasure(0, name, i + 1);
                 }
                 try {
                     Thread.sleep(200);
@@ -473,6 +482,19 @@ public class DashboardActivity extends BluetoothBaseActivity<DashboardPresenter>
 
             }
         });
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        mPresenter.attachView(this);
+
+        new Handler().postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                mPresenter.attachView(DashboardActivity.this);
+            }
+        }, 500);
     }
 
     @Override

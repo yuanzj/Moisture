@@ -44,7 +44,7 @@ public class DashboardPresenter extends BasePresenter<DashboardContract.View> im
             return;
         }
 
-        App.getInstance().getLocalDataService().setHistory(measureName);
+        App.getInstance().getLocalDataService().setHistory(index, measureName);
 
         model.startMeasure(measureName, measureModel, index,new MeasureDataCallback<StartMeasureResponse>() {
             @Override

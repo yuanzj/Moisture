@@ -27,6 +27,16 @@ public class AppConfig {
      */
     private int pointCount;
 
+    /**
+     * 启动时间
+     */
+    private long startTime;
+
+    /**
+     * 运行状态
+     */
+    private boolean runStatus;
+
     public int getPeriod() {
         return period;
     }
@@ -65,6 +75,22 @@ public class AppConfig {
 
     public void setPointCount(int pointCount) {
         this.pointCount = pointCount;
+    }
+
+    public long getStartTime() {
+        return startTime;
+    }
+
+    public void setStartTime(long startTime) {
+        this.startTime = startTime;
+    }
+
+    public boolean isRunStatus() {
+        return runStatus;
+    }
+
+    public void setRunStatus(boolean runStatus) {
+        this.runStatus = runStatus;
     }
 
     @Override

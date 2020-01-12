@@ -1,5 +1,6 @@
 package com.drt.moisture.measure;
 
+import android.app.ProgressDialog;
 import android.content.DialogInterface;
 import android.graphics.Point;
 import android.media.Ringtone;
@@ -22,6 +23,9 @@ import android.widget.Toast;
 import com.drt.moisture.App;
 import com.drt.moisture.BluetoothBaseActivity;
 import com.drt.moisture.R;
+import com.drt.moisture.dashboard.DashboardActivity;
+import com.drt.moisture.dashboard.DashboardContract;
+import com.drt.moisture.dashboard.DashboardPresenter;
 import com.drt.moisture.data.MeasureStatus;
 import com.drt.moisture.data.MeasureValue;
 import com.github.mikephil.charting.charts.LineChart;
@@ -46,7 +50,7 @@ import butterknife.OnClick;
 /**
  * @author yuanzhijian
  */
-public class MeasureActivity extends BluetoothBaseActivity<MeasurePresenter> implements MeasureContract.View {
+public class MeasureActivity extends BluetoothBaseActivity<DashboardPresenter> implements DashboardContract.View {
 
     private static final String TAG = MeasureActivity.class.getSimpleName();
 
@@ -83,11 +87,16 @@ public class MeasureActivity extends BluetoothBaseActivity<MeasurePresenter> imp
     @BindView(R.id.history)
     ImageButton history;
 
+    ProgressDialog progressdialog;
+
+
+    int index;
+
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
+        index = getIntent().getIntExtra("index", 1);
         spMeasureTime.setSelection(mPresenter.getMeasureTime() - 5);
     }
 
@@ -98,7 +107,7 @@ public class MeasureActivity extends BluetoothBaseActivity<MeasurePresenter> imp
 
     @Override
     public void initView() {
-        mPresenter = new MeasurePresenter();
+        mPresenter = DashboardActivity.getDashboardPresenter();
         mPresenter.attachView(this);
 
         initChartView();
@@ -143,11 +152,20 @@ public class MeasureActivity extends BluetoothBaseActivity<MeasurePresenter> imp
 
     @Override
     public void hideLoading() {
-
+        runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                if (progressdialog != null) {
+                    progressdialog.dismiss();
+                }
+            }
+        });
     }
 
     @Override
-    public void onSuccess(final MeasureValue measureValue) {
+    public void onSuccess(final List<MeasureValue> measureValueList) {
+
+        final MeasureValue measureValue = measureValueList.get(index - 1);
         runOnUiThread(new Runnable() {
             @Override
             public void run() {
@@ -175,14 +193,47 @@ public class MeasureActivity extends BluetoothBaseActivity<MeasurePresenter> imp
     public void startMeasure() {
         chart.clear();
 
-        App.getInstance().getBluetoothService().setTime(System.currentTimeMillis() / 1000);
-
-        new Handler().postDelayed(new Runnable() {
+        switch (mPresenter.getMeasureStatus()) {
+            case STOP:
+            case ERROR:
+            case NORMAL:
+            case DONE:
+                break;
+            case RUNNING:
+                onError(new Exception("测量中..."));
+                return;
+            case BT_NOT_CONNECT:
+                onError(new Exception("设备尚未连接，请点击右上角蓝牙按钮连接设备"));
+                return;
+            default:
+                return;
+        }
+        runOnUiThread(new Runnable() {
             @Override
             public void run() {
-                mPresenter.startMeasure(spMeasureModel.getSelectedItemPosition(), measureName.getText().toString());
+                progressdialog = new ProgressDialog(MeasureActivity.this);
+                progressdialog.setTitle("提示");
+                progressdialog.setMessage("启动所有测量，请稍后...");
+                progressdialog.setCancelable(false);
+                progressdialog.show();
             }
-        }, 200);
+        });
+        // 校准时间
+        App.getInstance().getBluetoothService().setTime(System.currentTimeMillis() / 1000);
+        // 根据测点数量发送开始指令
+        final int pointCount = App.getInstance().getLocalDataService().queryAppConfig().getPointCount();
+        new Thread(new Runnable() {
+            public void run() {
+                mPresenter.startMeasure(spMeasureModel.getSelectedItemPosition(), measureName.getText().toString(), index);
+                try {
+                    Thread.sleep(200);
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
+                mPresenter.queryMeasureResult(pointCount);
+                hideLoading();
+            }
+        }).start();
 
     }
 
@@ -194,7 +245,7 @@ public class MeasureActivity extends BluetoothBaseActivity<MeasurePresenter> imp
                 .setPositiveButton("确认", new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialogInterface, int i) {
-                        mPresenter.stopMeasure(true);
+                        mPresenter.stopMeasure(true, index);
                     }
                 })
                 .setNegativeButton("取消", new DialogInterface.OnClickListener() {
@@ -211,7 +262,7 @@ public class MeasureActivity extends BluetoothBaseActivity<MeasurePresenter> imp
 
     @OnClick(R.id.history)
     public void onClickHistory() {
-        List<String> historyList = App.getInstance().getLocalDataService().queryHistory();
+        List<String> historyList = App.getInstance().getLocalDataService().queryHistory(index);
         Collections.reverse(historyList);
         final String[] items = historyList.toArray(new String[historyList.size()]);
         AlertDialog.Builder builder = new AlertDialog.Builder(this)
@@ -266,7 +317,7 @@ public class MeasureActivity extends BluetoothBaseActivity<MeasurePresenter> imp
                     case ERROR:
                     case DONE:
                         if (measureStatus == MeasureStatus.DONE) {
-                            AlertDialog.Builder builder=new AlertDialog.Builder(MeasureActivity.this);
+                            AlertDialog.Builder builder = new AlertDialog.Builder(MeasureActivity.this);
                             builder.setTitle("提示");//设置title
                             builder.setMessage("测量完成");//设置内容
                             //点击确认按钮事件
@@ -277,7 +328,7 @@ public class MeasureActivity extends BluetoothBaseActivity<MeasurePresenter> imp
                                 }
                             });
                             //创建出AlertDialog对象
-                            AlertDialog alertDialog=builder.create();
+                            AlertDialog alertDialog = builder.create();
                             //点击对话框之外的地方不消失
                             alertDialog.setCanceledOnTouchOutside(false);
                             //设置显示
@@ -319,7 +370,7 @@ public class MeasureActivity extends BluetoothBaseActivity<MeasurePresenter> imp
 
     @Override
     protected void onDestroy() {
-        mPresenter.stopMeasure(false);
+//        mPresenter.stopMeasure(false, index);
         super.onDestroy();
     }
 
@@ -359,12 +410,12 @@ public class MeasureActivity extends BluetoothBaseActivity<MeasurePresenter> imp
 //        data.addEntry(new Entry(set.getEntryCount(), (float) measureValue.getTemperature(), measureValue.getReportTime()), 0);
 //        data.notifyDataChanged();
 
-        set = data.getDataSetByIndex(0);
+                set = data.getDataSetByIndex(0);
         if (set == null) {
             set = createActivitySet();
             data.addDataSet(set);
         }
-        data.addEntry(new Entry(set.getEntryCount(), (float) measureValue.getActivity() , measureValue.getReportTime()), 0);
+        data.addEntry(new Entry(set.getEntryCount(), (float) measureValue.getActivity(), measureValue.getReportTime()), 0);
         data.notifyDataChanged();
 
         // let the chart know it's data has changed
@@ -374,7 +425,7 @@ public class MeasureActivity extends BluetoothBaseActivity<MeasurePresenter> imp
         //chart.setVisibleYRangeMaximum(15, AxisDependency.LEFT);
 //
 //            // this automatically refreshes the chart (calls invalidate())
-        chart.moveViewTo(data.getEntryCount() - 1, (float) measureValue.getActivity(), YAxis.AxisDependency.LEFT);
+        chart.moveViewToX((float) (data.getEntryCount() - 1));
     }
 
 //    private LineDataSet createTemperatureSet() {
@@ -399,7 +450,7 @@ public class MeasureActivity extends BluetoothBaseActivity<MeasurePresenter> imp
         d2.setCircleColor(getResources().getColor(R.color.colorGreen, getTheme()));
         d2.setDrawValues(true);
         d2.setMode(LineDataSet.Mode.CUBIC_BEZIER);
-        d2.setValueFormatter(new ValueFormatter(){
+        d2.setValueFormatter(new ValueFormatter() {
             public String getFormattedValue(float value) {
                 DecimalFormat df = new DecimalFormat("0.00");
                 df.setRoundingMode(RoundingMode.DOWN);

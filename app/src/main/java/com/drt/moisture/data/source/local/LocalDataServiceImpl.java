@@ -25,36 +25,56 @@ public class LocalDataServiceImpl implements LocalDataService {
 
     @Override
     public synchronized AppConfig queryAppConfig() {
+        return queryAppConfig(1);
+    }
+
+    @Override
+    public synchronized void setAppConfig(AppConfig appConfig) {
+        setAppConfig(1, appConfig);
+    }
+
+    @Override
+    public List<String> queryHistory() {
+        return queryHistory(1);
+    }
+
+    @Override
+    public void setHistory(String name) {
+        setHistory(1, name);
+    }
+
+    @Override
+    public AppConfig queryAppConfig(int index) {
         SharedPreferences sp = context.getSharedPreferences("SP", MODE_PRIVATE);
         AppConfig appConfig = new AppConfig();
-        appConfig.setMeasuringTime(sp.getInt("measuringTime", 5));
-        appConfig.setCorrectTime(sp.getInt("correctTime", 15));
-        appConfig.setPeriod(sp.getInt("period", 1500));
-        appConfig.setRatio(sp.getInt("ratio", 0));
+        appConfig.setMeasuringTime(sp.getInt("measuringTime" + index, 5));
+        appConfig.setCorrectTime(sp.getInt("correctTime" + index, 15));
+        appConfig.setPeriod(sp.getInt("period" + index, 1500));
+        appConfig.setRatio(sp.getInt("ratio" + index, 0));
         appConfig.setPointCount(sp.getInt("pointCount", 1));
 
         return appConfig;
     }
 
     @Override
-    public synchronized void setAppConfig(AppConfig appConfig) {
+    public void setAppConfig(int index, AppConfig appConfig) {
         SharedPreferences sp = context.getSharedPreferences("SP", MODE_PRIVATE);
 
         //存入数据
         SharedPreferences.Editor editor = sp.edit();
-        editor.putInt("measuringTime", appConfig.getMeasuringTime());
-        editor.putInt("period", appConfig.getPeriod());
-        editor.putInt("correctTime", appConfig.getCorrectTime());
-        editor.putInt("ratio", appConfig.getRatio());
+        editor.putInt("measuringTime" + index, appConfig.getMeasuringTime());
+        editor.putInt("period" + index, appConfig.getPeriod());
+        editor.putInt("correctTime" + index, appConfig.getCorrectTime());
+        editor.putInt("ratio" + index, appConfig.getRatio());
         editor.putInt("pointCount", appConfig.getPointCount());
 
         editor.apply();
     }
 
     @Override
-    public List<String> queryHistory() {
+    public List<String> queryHistory(int index) {
         SharedPreferences sp = context.getSharedPreferences("SP", MODE_PRIVATE);
-        String listJson = sp.getString("historyList", "[\"样品1\"]");
+        String listJson = sp.getString("historyList" + index, "[\"样品1\"]");
         if (listJson != null && listJson.length() > 0) {
             return new Gson().fromJson(listJson, new TypeToken<List<String>>() {
             }.getType());
@@ -63,7 +83,7 @@ public class LocalDataServiceImpl implements LocalDataService {
     }
 
     @Override
-    public void setHistory(String name) {
+    public void setHistory(int index, String name) {
         List<String> historyList = queryHistory();
         if (historyList.size() >= 20) {
             historyList.remove(0);
@@ -80,7 +100,7 @@ public class LocalDataServiceImpl implements LocalDataService {
 
         //存入数据
         SharedPreferences.Editor editor = sp.edit();
-        editor.putString("historyList", new Gson().toJson(historyList));
+        editor.putString("historyList" + index, new Gson().toJson(historyList));
 
         editor.apply();
     }

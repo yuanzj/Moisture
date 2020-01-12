@@ -15,6 +15,14 @@ public interface LocalDataService {
 
     void setHistory(String name);
 
+    AppConfig queryAppConfig(int index);
+
+    void setAppConfig(int index, AppConfig appConfig);
+
+    List<String> queryHistory(int index);
+
+    void setHistory(int index, String name);
+
     void clearAll();
 
 }
