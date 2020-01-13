@@ -11,6 +11,7 @@ import com.drt.moisture.data.source.bluetooth.response.StartMeasureResponse;
 import net.yzj.android.common.base.BasePresenter;
 
 import java.util.List;
+import java.util.Map;
 
 public class DashboardPresenter extends BasePresenter<DashboardContract.View> implements DashboardContract.Presenter {
 
@@ -24,13 +25,18 @@ public class DashboardPresenter extends BasePresenter<DashboardContract.View> im
     }
 
     @Override
-    public int getMeasureTime() {
-        return model.getMeasureTime();
+    public int getMeasureTime(int index) {
+        return model.getMeasureTime(index);
     }
 
     @Override
-    public void setMeasureTime(int period) {
-        model.setMeasureTime(period);
+    public void setMeasureTime(int period, int index) {
+        model.setMeasureTime(period, index);
+    }
+
+    @Override
+    public void setMeasureModel(int index, int _model) {
+        model.setMeasureModel(index, _model);
     }
 
     @Override
@@ -46,16 +52,21 @@ public class DashboardPresenter extends BasePresenter<DashboardContract.View> im
 
         App.getInstance().getLocalDataService().setHistory(index, measureName);
 
-        model.startMeasure(measureName, measureModel, index,new MeasureDataCallback<StartMeasureResponse>() {
+        model.startMeasure(measureName, measureModel, index, new MeasureDataCallback<StartMeasureResponse>() {
             @Override
             public void runningTime(String time) {
 
             }
 
             @Override
+            public void runningTime(Map<Integer, DashboardModel.MeasureRunningStatus> measureRunningStatusMap, String time) {
+
+            }
+
+            @Override
             public void success(StartMeasureResponse value) {
                 if (isViewAttached()) {
-                    mView.onError(new Exception("测点"+ index + "启动成功。"));
+                    mView.onStartMeasureSuccess(index);
                 }
             }
 
@@ -72,6 +83,11 @@ public class DashboardPresenter extends BasePresenter<DashboardContract.View> im
 
 
         setMeasureStatus(MeasureStatus.RUNNING);
+    }
+
+    @Override
+    public void startAutoStopTimer(int index) {
+        model.startAutoStopTimer(index);
     }
 
     @Override
@@ -92,8 +108,13 @@ public class DashboardPresenter extends BasePresenter<DashboardContract.View> im
 
             @Override
             public void runningTime(String time) {
+
+            }
+
+            @Override
+            public void runningTime(Map<Integer, DashboardModel.MeasureRunningStatus> measureRunningStatusMap, String time) {
                 if (isViewAttached()) {
-                    mView.alreadyRunning(time);
+                    mView.alreadyRunning(measureRunningStatusMap, time);
                 }
             }
 

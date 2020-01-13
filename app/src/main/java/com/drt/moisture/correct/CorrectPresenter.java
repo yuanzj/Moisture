@@ -1,6 +1,7 @@
 package com.drt.moisture.correct;
 
 
+import com.drt.moisture.dashboard.DashboardModel;
 import com.drt.moisture.data.MeasureStatus;
 import com.drt.moisture.data.MeasureValue;
 import com.drt.moisture.data.source.CorrectDataCallback;
@@ -8,6 +9,8 @@ import com.drt.moisture.data.source.CorrectDataCallback;
 import com.drt.moisture.data.source.MeasureDataCallback;
 import com.drt.moisture.data.source.bluetooth.response.StartMeasureResponse;
 import net.yzj.android.common.base.BasePresenter;
+
+import java.util.Map;
 
 public class CorrectPresenter extends BasePresenter<CorrectContract.View> implements CorrectContract.Presenter {
 
@@ -56,6 +59,11 @@ public class CorrectPresenter extends BasePresenter<CorrectContract.View> implem
             @Override
             public void runningTime(String time) {
 
+            }
+
+            @Override
+            public void runningTime(Map<Integer, DashboardModel.MeasureRunningStatus> measureRunningStatusMap, String time) {
+                
             }
 
             @Override

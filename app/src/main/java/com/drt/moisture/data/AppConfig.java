@@ -37,6 +37,11 @@ public class AppConfig {
      */
     private boolean runStatus;
 
+    /**
+     * 测量模式
+     */
+    private int measureMode;
+
     public int getPeriod() {
         return period;
     }
@@ -91,6 +96,14 @@ public class AppConfig {
 
     public void setRunStatus(boolean runStatus) {
         this.runStatus = runStatus;
+    }
+
+    public int getMeasureMode() {
+        return measureMode;
+    }
+
+    public void setMeasureMode(int measureMode) {
+        this.measureMode = measureMode;
     }
 
     @Override

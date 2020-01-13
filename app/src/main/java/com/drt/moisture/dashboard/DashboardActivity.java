@@ -37,6 +37,10 @@ import com.inuker.bluetooth.library.Constants;
 import java.math.RoundingMode;
 import java.text.DecimalFormat;
 import java.util.List;
+import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.CountDownLatch;
+import java.util.concurrent.TimeUnit;
 
 import butterknife.BindView;
 import butterknife.OnClick;
@@ -123,6 +127,9 @@ public class DashboardActivity extends BluetoothBaseActivity<DashboardPresenter>
 
     ProgressDialog progressdialog;
 
+    CountDownLatch countDownLatch;
+    Map<Integer, Boolean> startStatus = new ConcurrentHashMap<>();
+
     private static DashboardPresenter mDashboardPresenter;
 
     public static DashboardPresenter getDashboardPresenter() {
@@ -193,50 +200,83 @@ public class DashboardActivity extends BluetoothBaseActivity<DashboardPresenter>
         runOnUiThread(new Runnable() {
             @Override
             public void run() {
+
                 addEntry(measureValueList);
                 DecimalFormat df = new DecimalFormat("0.0000");
                 df.setRoundingMode(RoundingMode.DOWN);
 
                 switch (measureValueList.size()) {
                     case 1:
-                        temperature.setText(String.format("%.2f", measureValueList.get(0).getTemperature()) + "°C");
-                        activeness.setText(df.format(measureValueList.get(0).getActivity()));
+                        if (measureValueList.get(0).getMeasureStatus() != 0) {
+                            temperature.setText(String.format("%.2f", measureValueList.get(0).getTemperature()) + "°C");
+                            activeness.setText(df.format(measureValueList.get(0).getActivity()));
+                        }
                         break;
                     case 2:
-                        temperature.setText(String.format("%.2f", measureValueList.get(0).getTemperature()) + "°C");
-                        activeness.setText(df.format(measureValueList.get(0).getActivity()));
-                        temperature1.setText(String.format("%.2f", measureValueList.get(1).getTemperature()) + "°C");
-                        activeness1.setText(df.format(measureValueList.get(1).getActivity()));
+                        if (measureValueList.get(0).getMeasureStatus() != 0) {
+                            temperature.setText(String.format("%.2f", measureValueList.get(0).getTemperature()) + "°C");
+                            activeness.setText(df.format(measureValueList.get(0).getActivity()));
+                        }
+                        if (measureValueList.get(1).getMeasureStatus() != 0) {
+                            temperature1.setText(String.format("%.2f", measureValueList.get(1).getTemperature()) + "°C");
+                            activeness1.setText(df.format(measureValueList.get(1).getActivity()));
+                        }
                         break;
                     case 3:
-                        temperature.setText(String.format("%.2f", measureValueList.get(0).getTemperature()) + "°C");
-                        activeness.setText(df.format(measureValueList.get(0).getActivity()));
-                        temperature1.setText(String.format("%.2f", measureValueList.get(1).getTemperature()) + "°C");
-                        activeness1.setText(df.format(measureValueList.get(1).getActivity()));
-                        temperature2.setText(String.format("%.2f", measureValueList.get(2).getTemperature()) + "°C");
-                        activeness2.setText(df.format(measureValueList.get(2).getActivity()));
+                        if (measureValueList.get(0).getMeasureStatus() != 0) {
+                            temperature.setText(String.format("%.2f", measureValueList.get(0).getTemperature()) + "°C");
+                            activeness.setText(df.format(measureValueList.get(0).getActivity()));
+                        }
+                        if (measureValueList.get(1).getMeasureStatus() != 0) {
+                            temperature1.setText(String.format("%.2f", measureValueList.get(1).getTemperature()) + "°C");
+                            activeness1.setText(df.format(measureValueList.get(1).getActivity()));
+                        }
+                        if (measureValueList.get(2).getMeasureStatus() != 0) {
+                            temperature2.setText(String.format("%.2f", measureValueList.get(2).getTemperature()) + "°C");
+                            activeness2.setText(df.format(measureValueList.get(2).getActivity()));
+                        }
                         break;
                     case 4:
-                        temperature.setText(String.format("%.2f", measureValueList.get(0).getTemperature()) + "°C");
-                        activeness.setText(df.format(measureValueList.get(0).getActivity()));
-                        temperature1.setText(String.format("%.2f", measureValueList.get(1).getTemperature()) + "°C");
-                        activeness1.setText(df.format(measureValueList.get(1).getActivity()));
-                        temperature2.setText(String.format("%.2f", measureValueList.get(2).getTemperature()) + "°C");
-                        activeness2.setText(df.format(measureValueList.get(2).getActivity()));
-                        temperature3.setText(String.format("%.2f", measureValueList.get(3).getTemperature()) + "°C");
-                        activeness3.setText(df.format(measureValueList.get(3).getActivity()));
+                        if (measureValueList.get(0).getMeasureStatus() != 0) {
+                            temperature.setText(String.format("%.2f", measureValueList.get(0).getTemperature()) + "°C");
+                            activeness.setText(df.format(measureValueList.get(0).getActivity()));
+                        }
+                        if (measureValueList.get(1).getMeasureStatus() != 0) {
+                            temperature1.setText(String.format("%.2f", measureValueList.get(1).getTemperature()) + "°C");
+                            activeness1.setText(df.format(measureValueList.get(1).getActivity()));
+                        }
+                        if (measureValueList.get(2).getMeasureStatus() != 0) {
+                            temperature2.setText(String.format("%.2f", measureValueList.get(2).getTemperature()) + "°C");
+                            activeness2.setText(df.format(measureValueList.get(2).getActivity()));
+                        }
+                        if (measureValueList.get(3).getMeasureStatus() != 0) {
+                            temperature3.setText(String.format("%.2f", measureValueList.get(3).getTemperature()) + "°C");
+                            activeness3.setText(df.format(measureValueList.get(3).getActivity()));
+                        }
+
                         break;
                     case 5:
-                        temperature.setText(String.format("%.2f", measureValueList.get(0).getTemperature()) + "°C");
-                        activeness.setText(df.format(measureValueList.get(0).getActivity()));
-                        temperature1.setText(String.format("%.2f", measureValueList.get(1).getTemperature()) + "°C");
-                        activeness1.setText(df.format(measureValueList.get(1).getActivity()));
-                        temperature2.setText(String.format("%.2f", measureValueList.get(2).getTemperature()) + "°C");
-                        activeness2.setText(df.format(measureValueList.get(2).getActivity()));
-                        temperature3.setText(String.format("%.2f", measureValueList.get(3).getTemperature()) + "°C");
-                        activeness3.setText(df.format(measureValueList.get(3).getActivity()));
-                        temperature4.setText(String.format("%.2f", measureValueList.get(4).getTemperature()) + "°C");
-                        activeness4.setText(df.format(measureValueList.get(4).getActivity()));
+                        if (measureValueList.get(0).getMeasureStatus() != 0) {
+                            temperature.setText(String.format("%.2f", measureValueList.get(0).getTemperature()) + "°C");
+                            activeness.setText(df.format(measureValueList.get(0).getActivity()));
+                        }
+                        if (measureValueList.get(1).getMeasureStatus() != 0) {
+                            temperature1.setText(String.format("%.2f", measureValueList.get(1).getTemperature()) + "°C");
+                            activeness1.setText(df.format(measureValueList.get(1).getActivity()));
+                        }
+                        if (measureValueList.get(2).getMeasureStatus() != 0) {
+                            temperature2.setText(String.format("%.2f", measureValueList.get(2).getTemperature()) + "°C");
+                            activeness2.setText(df.format(measureValueList.get(2).getActivity()));
+                        }
+                        if (measureValueList.get(3).getMeasureStatus() != 0) {
+                            temperature3.setText(String.format("%.2f", measureValueList.get(3).getTemperature()) + "°C");
+                            activeness3.setText(df.format(measureValueList.get(3).getActivity()));
+                        }
+                        if (measureValueList.get(4).getMeasureStatus() != 0) {
+                            temperature4.setText(String.format("%.2f", measureValueList.get(4).getTemperature()) + "°C");
+                            activeness4.setText(df.format(measureValueList.get(4).getActivity()));
+                        }
+
                         break;
                 }
 
@@ -287,23 +327,28 @@ public class DashboardActivity extends BluetoothBaseActivity<DashboardPresenter>
         App.getInstance().getBluetoothService().setTime(System.currentTimeMillis() / 1000);
         // 根据测点数量发送开始指令
         final int pointCount = App.getInstance().getLocalDataService().queryAppConfig().getPointCount();
+        countDownLatch = new CountDownLatch(pointCount);
         new Thread(new Runnable() {
             public void run() {
+
+                startStatus.clear();
                 for (int i = 0; i < pointCount; i++) {
-                    try {
-                        Thread.sleep(200);
-                    } catch (InterruptedException e) {
-                        e.printStackTrace();
-                    }
-                    String name = App.getInstance().getLocalDataService().queryHistory(i + 1).get(0);
-                    mPresenter.startMeasure(0, name, i + 1);
+                    startStatus.put(i + 1, false);
                 }
+
+                int index = 1;
+                String name = App.getInstance().getLocalDataService().queryHistory(index).get(0);
+                AppConfig appConfig = App.getInstance().getLocalDataService().queryAppConfig(index);
+                mPresenter.startMeasure(appConfig.getMeasureMode(), name, index);
+
                 try {
-                    Thread.sleep(200);
+                    countDownLatch.await(5, TimeUnit.SECONDS);
+                    mPresenter.queryMeasureResult(pointCount);
                 } catch (InterruptedException e) {
                     e.printStackTrace();
+                    mPresenter.setMeasureStatus(MeasureStatus.NORMAL);
+                    onError(new Exception("启动超时，请重试"));
                 }
-                mPresenter.queryMeasureResult(pointCount);
                 hideLoading();
             }
         }).start();
@@ -410,66 +455,82 @@ public class DashboardActivity extends BluetoothBaseActivity<DashboardPresenter>
     }
 
     @Override
-    public void alreadyRunning(final String time) {
+    public void alreadyRunning(final Map<Integer, DashboardModel.MeasureRunningStatus> measureRunningStatusMap, final String time) {
         Log.d(TAG, "alreadyRunning" + time);
         runOnUiThread(new Runnable() {
             @Override
             public void run() {
 
                 final int pointCount = App.getInstance().getLocalDataService().queryAppConfig().getPointCount();
+                DashboardModel.MeasureRunningStatus measureRunningStatus = null;
                 switch (pointCount) {
                     case 1:
-                        if (alreadyRunning != null && time != null) {
+                        measureRunningStatus = measureRunningStatusMap.get(1);
+                        if (measureRunningStatus != null && measureRunningStatus.isRunning && alreadyRunning != null && time != null) {
                             alreadyRunning.setText(time);
                         }
                         break;
                     case 2:
-                        if (alreadyRunning != null && time != null) {
+                        measureRunningStatus = measureRunningStatusMap.get(1);
+                        if (measureRunningStatus != null && measureRunningStatus.isRunning && alreadyRunning != null && time != null) {
                             alreadyRunning.setText(time);
                         }
-                        if (alreadyRunning1 != null && time != null) {
+                        measureRunningStatus = measureRunningStatusMap.get(2);
+                        if (measureRunningStatus != null && measureRunningStatus.isRunning && alreadyRunning1 != null && time != null) {
                             alreadyRunning1.setText(time);
                         }
                         break;
                     case 3:
-                        if (alreadyRunning != null && time != null) {
+                        measureRunningStatus = measureRunningStatusMap.get(1);
+                        if (measureRunningStatus != null && measureRunningStatus.isRunning && alreadyRunning != null && time != null) {
                             alreadyRunning.setText(time);
                         }
-                        if (alreadyRunning1 != null && time != null) {
+                        measureRunningStatus = measureRunningStatusMap.get(2);
+                        if (measureRunningStatus != null && measureRunningStatus.isRunning && alreadyRunning1 != null && time != null) {
                             alreadyRunning1.setText(time);
                         }
-                        if (alreadyRunning2 != null && time != null) {
+                        measureRunningStatus = measureRunningStatusMap.get(3);
+                        if (measureRunningStatus != null && measureRunningStatus.isRunning && alreadyRunning2 != null && time != null) {
                             alreadyRunning2.setText(time);
                         }
                         break;
                     case 4:
-                        if (alreadyRunning != null && time != null) {
+                        measureRunningStatus = measureRunningStatusMap.get(1);
+                        if (measureRunningStatus != null && measureRunningStatus.isRunning && alreadyRunning != null && time != null) {
                             alreadyRunning.setText(time);
                         }
-                        if (alreadyRunning1 != null && time != null) {
+                        measureRunningStatus = measureRunningStatusMap.get(2);
+                        if (measureRunningStatus != null && measureRunningStatus.isRunning && alreadyRunning1 != null && time != null) {
                             alreadyRunning1.setText(time);
                         }
-                        if (alreadyRunning2 != null && time != null) {
+                        measureRunningStatus = measureRunningStatusMap.get(3);
+                        if (measureRunningStatus != null && measureRunningStatus.isRunning && alreadyRunning2 != null && time != null) {
                             alreadyRunning2.setText(time);
                         }
-                        if (alreadyRunning3 != null && time != null) {
+                        measureRunningStatus = measureRunningStatusMap.get(4);
+                        if (measureRunningStatus != null && measureRunningStatus.isRunning && alreadyRunning3 != null && time != null) {
                             alreadyRunning3.setText(time);
                         }
                         break;
                     case 5:
-                        if (alreadyRunning != null && time != null) {
+                        measureRunningStatus = measureRunningStatusMap.get(1);
+                        if (measureRunningStatus != null && measureRunningStatus.isRunning && alreadyRunning != null && time != null) {
                             alreadyRunning.setText(time);
                         }
-                        if (alreadyRunning1 != null && time != null) {
+                        measureRunningStatus = measureRunningStatusMap.get(2);
+                        if (measureRunningStatus != null && measureRunningStatus.isRunning && alreadyRunning1 != null && time != null) {
                             alreadyRunning1.setText(time);
                         }
-                        if (alreadyRunning2 != null && time != null) {
+                        measureRunningStatus = measureRunningStatusMap.get(3);
+                        if (measureRunningStatus != null && measureRunningStatus.isRunning && alreadyRunning2 != null && time != null) {
                             alreadyRunning2.setText(time);
                         }
-                        if (alreadyRunning3 != null && time != null) {
+                        measureRunningStatus = measureRunningStatusMap.get(4);
+                        if (measureRunningStatus != null && measureRunningStatus.isRunning && alreadyRunning3 != null && time != null) {
                             alreadyRunning3.setText(time);
                         }
-                        if (alreadyRunning4 != null && time != null) {
+                        measureRunningStatus = measureRunningStatusMap.get(5);
+                        if (measureRunningStatus != null && measureRunningStatus.isRunning && alreadyRunning4 != null && time != null) {
                             alreadyRunning4.setText(time);
                         }
                         break;
@@ -480,6 +541,34 @@ public class DashboardActivity extends BluetoothBaseActivity<DashboardPresenter>
                         break;
                 }
 
+            }
+        });
+    }
+
+    @Override
+    public void onStartMeasureSuccess(final int index) {
+        runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                Boolean indexFlag = startStatus.get(index);
+                // 未启动
+                if (indexFlag != null && !indexFlag) {
+                    startStatus.put(index, true);
+                    mPresenter.startAutoStopTimer(index);
+
+                    // 启动下一个节点
+                    int nextIndex = (index + 1);
+                    if (startStatus.get(nextIndex) != null && !startStatus.get(nextIndex)) {
+                        String name = App.getInstance().getLocalDataService().queryHistory(nextIndex).get(0);
+                        AppConfig appConfig = App.getInstance().getLocalDataService().queryAppConfig(nextIndex);
+                        mPresenter.startMeasure(appConfig.getMeasureMode(), name, nextIndex);
+                    }
+
+                    // 释放节点
+                    if (countDownLatch != null) {
+                        countDownLatch.countDown();
+                    }
+                }
             }
         });
     }
@@ -540,7 +629,9 @@ public class DashboardActivity extends BluetoothBaseActivity<DashboardPresenter>
                 set = createActivitySet(i);
                 data.addDataSet(set);
             }
-            data.addEntry(new Entry(set.getEntryCount(), (float) measureValue.getActivity(), measureValue.getReportTime()), i);
+            if (measureValue.getMeasureStatus() == 0x01) {
+                data.addEntry(new Entry(set.getEntryCount(), (float) measureValue.getActivity(), measureValue.getReportTime()), i);
+            }
         }
         data.notifyDataChanged();
 

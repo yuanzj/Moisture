@@ -23,6 +23,8 @@ public class MeasureValue {
 
     private int measureStatus;
 
+    private boolean running;
+
     public String getReportTime() {
         return reportTime;
     }
@@ -69,6 +71,14 @@ public class MeasureValue {
 
     public void setMeasureStatus(int measureStatus) {
         this.measureStatus = measureStatus;
+    }
+
+    public boolean isRunning() {
+        return running;
+    }
+
+    public void setRunning(boolean running) {
+        this.running = running;
     }
 
     @Override

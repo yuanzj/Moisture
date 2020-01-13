@@ -25,7 +25,9 @@ import com.drt.moisture.BluetoothBaseActivity;
 import com.drt.moisture.R;
 import com.drt.moisture.dashboard.DashboardActivity;
 import com.drt.moisture.dashboard.DashboardContract;
+import com.drt.moisture.dashboard.DashboardModel;
 import com.drt.moisture.dashboard.DashboardPresenter;
+import com.drt.moisture.data.AppConfig;
 import com.drt.moisture.data.MeasureStatus;
 import com.drt.moisture.data.MeasureValue;
 import com.github.mikephil.charting.charts.LineChart;
@@ -43,6 +45,7 @@ import java.math.RoundingMode;
 import java.text.DecimalFormat;
 import java.util.Collections;
 import java.util.List;
+import java.util.Map;
 
 import butterknife.BindView;
 import butterknife.OnClick;
@@ -89,7 +92,6 @@ public class MeasureActivity extends BluetoothBaseActivity<DashboardPresenter> i
 
     ProgressDialog progressdialog;
 
-
     int index;
 
 
@@ -97,7 +99,7 @@ public class MeasureActivity extends BluetoothBaseActivity<DashboardPresenter> i
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         index = getIntent().getIntExtra("index", 1);
-        spMeasureTime.setSelection(mPresenter.getMeasureTime() - 5);
+        spMeasureTime.setSelection(mPresenter.getMeasureTime(index) - 5);
     }
 
     @Override
@@ -121,6 +123,7 @@ public class MeasureActivity extends BluetoothBaseActivity<DashboardPresenter> i
                 } else {
                     spMeasureTime.setEnabled(false);
                 }
+                mPresenter.setMeasureModel(index, position);
             }
 
             @Override
@@ -133,7 +136,7 @@ public class MeasureActivity extends BluetoothBaseActivity<DashboardPresenter> i
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
                 Log.d(TAG, "spMeasureTime:spMeasureModelonItemSelected:position:" + position);
-                mPresenter.setMeasureTime(position + 5);
+                mPresenter.setMeasureTime(position + 5, index);
             }
 
             @Override
@@ -169,12 +172,16 @@ public class MeasureActivity extends BluetoothBaseActivity<DashboardPresenter> i
         runOnUiThread(new Runnable() {
             @Override
             public void run() {
-                addEntry(measureValue);
-                time.setText(measureValue.getReportTime());
-                temperature.setText(String.format("%.2f", measureValue.getTemperature()) + "°C");
-                DecimalFormat df = new DecimalFormat("0.0000");
-                df.setRoundingMode(RoundingMode.DOWN);
-                activeness.setText(df.format(measureValue.getActivity()));
+                if (measureValue.getMeasureStatus() == 0x01) {
+                    addEntry(measureValue);
+                }
+                if (measureValue.getMeasureStatus() != 0) {
+                    time.setText(measureValue.getReportTime());
+                    temperature.setText(String.format("%.2f", measureValue.getTemperature()) + "°C");
+                    DecimalFormat df = new DecimalFormat("0.0000");
+                    df.setRoundingMode(RoundingMode.DOWN);
+                    activeness.setText(df.format(measureValue.getActivity()));
+                }
             }
         });
     }
@@ -356,7 +363,7 @@ public class MeasureActivity extends BluetoothBaseActivity<DashboardPresenter> i
     }
 
     @Override
-    public void alreadyRunning(final String time) {
+    public void alreadyRunning(Map<Integer, DashboardModel.MeasureRunningStatus> measureRunningStatusMap, final String time) {
         Log.d(TAG, "alreadyRunning" + time);
         runOnUiThread(new Runnable() {
             @Override
@@ -364,6 +371,16 @@ public class MeasureActivity extends BluetoothBaseActivity<DashboardPresenter> i
                 if (alreadyRunning != null && time != null) {
                     alreadyRunning.setText(time);
                 }
+            }
+        });
+    }
+
+    @Override
+    public void onStartMeasureSuccess(final int _index) {
+        runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                mPresenter.startAutoStopTimer(index);
             }
         });
     }

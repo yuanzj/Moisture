@@ -8,6 +8,7 @@ import com.drt.moisture.data.source.bluetooth.response.StartMeasureResponse;
 import net.yzj.android.common.base.BaseView;
 
 import java.util.List;
+import java.util.Map;
 
 
 public interface DashboardContract {
@@ -18,16 +19,24 @@ public interface DashboardContract {
          *
          * @return
          */
-        int getMeasureTime();
+        int getMeasureTime(int index);
 
         /**
          * 设置测量耗时
          *
          * @param period
          */
-        void setMeasureTime(int period);
+        void setMeasureTime(int period, int index);
+
+        /**
+         * 设置测量模式
+         * @param model
+         */
+        void setMeasureModel(int index, int model);
 
         void startMeasure(String name, int model, int index,MeasureDataCallback<StartMeasureResponse> callback);
+
+        void startAutoStopTimer(final int index);
 
         void startQuery(int model, int pointCount, MeasureDataCallback<List<MeasureValue>> callback);
 
@@ -39,7 +48,9 @@ public interface DashboardContract {
 
         void updateUI(MeasureStatus measureStatus);
 
-        void alreadyRunning(String time);
+        void alreadyRunning(Map<Integer, DashboardModel.MeasureRunningStatus> measureRunningStatusMap, String time);
+
+        void onStartMeasureSuccess(int index);
 
         void onSuccess(List<MeasureValue> measureValue);
 
@@ -55,14 +66,20 @@ public interface DashboardContract {
          *
          * @return
          */
-        int getMeasureTime();
+        int getMeasureTime(int index);
 
         /**
          * 设置测量耗时
          *
          * @param period
          */
-        void setMeasureTime(int period);
+        void setMeasureTime(int period, int index);
+
+        /**
+         * 设置测量模式
+         * @param model
+         */
+        void setMeasureModel(int index, int model);
 
         /**
          * 启动测量
@@ -71,6 +88,8 @@ public interface DashboardContract {
          * @param measureName 测量项目名称
          */
         void startMeasure(int model, String measureName, int index);
+
+        void startAutoStopTimer(final int index);
 
         void stopMeasure(boolean sendCommand, int index);
 

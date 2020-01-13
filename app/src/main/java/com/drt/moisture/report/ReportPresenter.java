@@ -3,6 +3,8 @@ package com.drt.moisture.report;
 import android.text.TextUtils;
 import android.widget.EditText;
 import android.widget.Toast;
+
+import com.drt.moisture.dashboard.DashboardModel;
 import com.drt.moisture.data.MeasureValue;
 import com.drt.moisture.data.source.MeasureDataCallback;
 
@@ -10,6 +12,7 @@ import net.yzj.android.common.base.BasePresenter;
 
 import java.util.Date;
 import java.util.List;
+import java.util.Map;
 
 public class ReportPresenter extends BasePresenter<ReportContract.View> implements ReportContract.Presenter {
 
@@ -34,6 +37,11 @@ public class ReportPresenter extends BasePresenter<ReportContract.View> implemen
         model.queryReport(measureName.getText().toString(),startTime, endTime, new MeasureDataCallback<List<MeasureValue>>() {
             @Override
             public void runningTime(String time) {
+
+            }
+
+            @Override
+            public void runningTime(Map<Integer, DashboardModel.MeasureRunningStatus> measureRunningStatusMap, String time) {
 
             }
 

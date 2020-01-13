@@ -3,12 +3,15 @@ package com.drt.moisture.measure;
 import android.text.TextUtils;
 
 import com.drt.moisture.App;
+import com.drt.moisture.dashboard.DashboardModel;
 import com.drt.moisture.data.MeasureStatus;
 import com.drt.moisture.data.MeasureValue;
 import com.drt.moisture.data.source.MeasureDataCallback;
 import com.drt.moisture.data.source.bluetooth.response.StartMeasureResponse;
 
 import net.yzj.android.common.base.BasePresenter;
+
+import java.util.Map;
 
 public class MeasurePresenter extends BasePresenter<MeasureContract.View> implements MeasureContract.Presenter {
 
@@ -67,6 +70,11 @@ public class MeasurePresenter extends BasePresenter<MeasureContract.View> implem
             }
 
             @Override
+            public void runningTime(Map<Integer, DashboardModel.MeasureRunningStatus> measureRunningStatusMap, String time) {
+
+            }
+
+            @Override
             public void success(StartMeasureResponse value) {
                 model.startQuery(measureModel, new MeasureDataCallback<MeasureValue>() {
 
@@ -75,6 +83,11 @@ public class MeasurePresenter extends BasePresenter<MeasureContract.View> implem
                         if (isViewAttached()) {
                             mView.alreadyRunning(time);
                         }
+                    }
+
+                    @Override
+                    public void runningTime(Map<Integer, DashboardModel.MeasureRunningStatus> measureRunningStatusMap, String time) {
+
                     }
 
                     @Override
