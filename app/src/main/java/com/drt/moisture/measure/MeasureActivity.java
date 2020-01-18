@@ -100,6 +100,8 @@ public class MeasureActivity extends BluetoothBaseActivity<DashboardPresenter> i
         super.onCreate(savedInstanceState);
         index = getIntent().getIntExtra("index", 1);
         spMeasureTime.setSelection(mPresenter.getMeasureTime(index) - 5);
+        List<String> names = App.getInstance().getLocalDataService().queryHistory(index);
+        measureName.setText(names.get(names.size() - 1));
     }
 
     @Override
@@ -144,8 +146,6 @@ public class MeasureActivity extends BluetoothBaseActivity<DashboardPresenter> i
                 Log.d(TAG, "spMeasureTime:onNothingSelected:view:" + parent);
             }
         });
-
-        measureName.setText(App.getInstance().getLocalDataService().queryHistory().get(0));
     }
 
     @Override
@@ -168,11 +168,19 @@ public class MeasureActivity extends BluetoothBaseActivity<DashboardPresenter> i
     @Override
     public void onSuccess(final List<MeasureValue> measureValueList) {
 
+        if (DashboardActivity.getDashboardActivity() != null) {
+            DashboardActivity.getDashboardActivity().onSuccess(measureValueList);
+        }
+        if (index == 0) {
+            return;
+        }
+
         final MeasureValue measureValue = measureValueList.get(index - 1);
         runOnUiThread(new Runnable() {
             @Override
             public void run() {
                 if (measureValue.getMeasureStatus() == 0x01) {
+                    updateUI(MeasureStatus.RUNNING, index);
                     addEntry(measureValue);
                 }
                 if (measureValue.getMeasureStatus() != 0) {
@@ -181,6 +189,9 @@ public class MeasureActivity extends BluetoothBaseActivity<DashboardPresenter> i
                     DecimalFormat df = new DecimalFormat("0.0000");
                     df.setRoundingMode(RoundingMode.DOWN);
                     activeness.setText(df.format(measureValue.getActivity()));
+                } else {
+                    updateUI(MeasureStatus.NORMAL, index);
+
                 }
             }
         });
@@ -198,9 +209,8 @@ public class MeasureActivity extends BluetoothBaseActivity<DashboardPresenter> i
 
     @OnClick(R.id.btnStartMeasure)
     public void startMeasure() {
-        chart.clear();
 
-        switch (mPresenter.getMeasureStatus()) {
+        switch (mPresenter.getMeasureStatus(index)) {
             case STOP:
             case ERROR:
             case NORMAL:
@@ -215,16 +225,13 @@ public class MeasureActivity extends BluetoothBaseActivity<DashboardPresenter> i
             default:
                 return;
         }
-        runOnUiThread(new Runnable() {
-            @Override
-            public void run() {
-                progressdialog = new ProgressDialog(MeasureActivity.this);
-                progressdialog.setTitle("提示");
-                progressdialog.setMessage("启动所有测量，请稍后...");
-                progressdialog.setCancelable(false);
-                progressdialog.show();
-            }
-        });
+        progressdialog = new ProgressDialog(MeasureActivity.this);
+        progressdialog.setTitle("提示");
+        progressdialog.setMessage("启动所有测量，请稍后...");
+        progressdialog.setCancelable(false);
+        progressdialog.show();
+
+        chart.clear();
         // 校准时间
         App.getInstance().getBluetoothService().setTime(System.currentTimeMillis() / 1000);
         // 根据测点数量发送开始指令
@@ -284,7 +291,7 @@ public class MeasureActivity extends BluetoothBaseActivity<DashboardPresenter> i
     }
 
     @Override
-    public void updateUI(final MeasureStatus measureStatus) {
+    public void updateUI(final MeasureStatus measureStatus, int index) {
         runOnUiThread(new Runnable() {
             @Override
             public void run() {
@@ -363,12 +370,16 @@ public class MeasureActivity extends BluetoothBaseActivity<DashboardPresenter> i
     }
 
     @Override
-    public void alreadyRunning(Map<Integer, DashboardModel.MeasureRunningStatus> measureRunningStatusMap, final String time) {
+    public void alreadyRunning(final Map<Integer, DashboardModel.MeasureRunningStatus> measureRunningStatusMap, final String time) {
         Log.d(TAG, "alreadyRunning" + time);
+        if (DashboardActivity.getDashboardActivity() != null) {
+            DashboardActivity.getDashboardActivity().alreadyRunning(measureRunningStatusMap, time);
+        }
         runOnUiThread(new Runnable() {
             @Override
             public void run() {
-                if (alreadyRunning != null && time != null) {
+                DashboardModel.MeasureRunningStatus measureRunningStatus = measureRunningStatusMap.get(index);
+                if (measureRunningStatus != null && measureRunningStatus.isRunning() && alreadyRunning != null && time != null) {
                     alreadyRunning.setText(time);
                 }
             }
@@ -380,9 +391,15 @@ public class MeasureActivity extends BluetoothBaseActivity<DashboardPresenter> i
         runOnUiThread(new Runnable() {
             @Override
             public void run() {
-                mPresenter.startAutoStopTimer(index);
+//                Toast.makeText(MeasureActivity.this, "测点" + _index + "启动成功", Toast.LENGTH_SHORT).show();
             }
         });
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        updateUI(mPresenter.getMeasureStatus(index), index);
     }
 
     @Override

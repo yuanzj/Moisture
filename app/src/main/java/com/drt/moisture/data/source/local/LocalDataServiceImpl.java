@@ -86,7 +86,7 @@ public class LocalDataServiceImpl implements LocalDataService {
 
     @Override
     public void setHistory(int index, String name) {
-        List<String> historyList = queryHistory();
+        List<String> historyList = queryHistory(index);
         if (historyList.size() >= 20) {
             historyList.remove(0);
         }

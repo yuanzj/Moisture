@@ -215,6 +215,7 @@ public class BluetoothServiceImpl implements BluetoothService, BleWriteResponse 
         request.setCmd((byte) 0x07);
         request.setResponse((byte) 0x01);
         request.setReserved(0);
+        request.setIndex((byte) index);
 
         try {
             App.getInstance().getBluetoothClient().write(App.getInstance().getConnectMacAddress(), UUIDUtils.makeUUID(0xFFE0), UUIDUtils.makeUUID(0xFFE1), BluetoothDataUtil.encode(request), this);

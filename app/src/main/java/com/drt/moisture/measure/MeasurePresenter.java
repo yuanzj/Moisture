@@ -104,7 +104,7 @@ public class MeasurePresenter extends BasePresenter<MeasureContract.View> implem
                     }
 
                     @Override
-                    public void measureDone() {
+                    public void measureDone(int index) {
                         if (isViewAttached()) {
                             setMeasureStatus(MeasureStatus.DONE);
                         }
@@ -122,7 +122,7 @@ public class MeasurePresenter extends BasePresenter<MeasureContract.View> implem
             }
 
             @Override
-            public void measureDone() {
+            public void measureDone(int index) {
 
             }
 

@@ -124,7 +124,7 @@ public class MeasureModel implements MeasureContract.Model {
                 @Override
                 public void run() {
                     stopQuery(true);
-                    measureDataCallback.measureDone();
+                    measureDataCallback.measureDone(1);
                 }
             }, measuringTime * 60 * 1000);
         } else {

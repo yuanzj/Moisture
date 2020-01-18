@@ -55,6 +55,7 @@ public class DashboardActivity extends BluetoothBaseActivity<DashboardPresenter>
 
     int[] colors = new int[]{R.color.btnOrange, R.color.btnGreen, R.color.btnBlue, R.color.btnRed1, R.color.btnRed};
 
+    boolean isFront = false;
 
     @BindView(R.id.chart)
     LineChart chart;
@@ -132,14 +133,26 @@ public class DashboardActivity extends BluetoothBaseActivity<DashboardPresenter>
 
     private static DashboardPresenter mDashboardPresenter;
 
+    private static DashboardActivity dashboardActivity;
+
     public static DashboardPresenter getDashboardPresenter() {
         return DashboardActivity.mDashboardPresenter;
+    }
+
+    public static DashboardActivity getDashboardActivity() {
+        return dashboardActivity;
     }
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        dashboardActivity = this;
         AppConfig appConfig = App.getInstance().getLocalDataService().queryAppConfig();
+        point1.setTag(1);
+        point2.setTag(2);
+        point3.setTag(3);
+        point4.setTag(4);
+        point5.setTag(5);
 
         View[] pointViews = new View[]{point1, point2, point3, point4, point5};
         int pointCount = appConfig.getPointCount();
@@ -152,12 +165,11 @@ public class DashboardActivity extends BluetoothBaseActivity<DashboardPresenter>
                 point.setAlpha(0.32f);
                 point.setEnabled(false);
             }
-            final int currentIndex = i + 1;
             point.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
                     Intent intent = new Intent(DashboardActivity.this, MeasureActivity.class);
-                    intent.putExtra("index", currentIndex);
+                    intent.putExtra("index", (Integer) view.getTag());
                     startActivity(intent);
                 }
             });
@@ -200,6 +212,23 @@ public class DashboardActivity extends BluetoothBaseActivity<DashboardPresenter>
         runOnUiThread(new Runnable() {
             @Override
             public void run() {
+
+                boolean noRunning = true;
+                for (int i = 0; i < measureValueList.size(); i++) {
+
+                    MeasureValue measureValue = measureValueList.get(i);
+
+                    if (measureValue.getMeasureStatus() == 0x01) {
+                        noRunning = false;
+                        break;
+                    }
+                }
+
+                if (noRunning) {
+                    updateUI(MeasureStatus.NORMAL, 1);
+                    return;
+                }
+                updateUI(MeasureStatus.RUNNING, 1);
 
                 addEntry(measureValueList);
                 DecimalFormat df = new DecimalFormat("0.0000");
@@ -279,7 +308,6 @@ public class DashboardActivity extends BluetoothBaseActivity<DashboardPresenter>
 
                         break;
                 }
-
             }
         });
     }
@@ -296,7 +324,6 @@ public class DashboardActivity extends BluetoothBaseActivity<DashboardPresenter>
 
     @OnClick(R.id.btnStartMeasure)
     public void startMeasure() {
-        chart.clear();
 
         switch (mPresenter.getMeasureStatus()) {
             case STOP:
@@ -313,16 +340,13 @@ public class DashboardActivity extends BluetoothBaseActivity<DashboardPresenter>
             default:
                 return;
         }
-        runOnUiThread(new Runnable() {
-            @Override
-            public void run() {
-                progressdialog = new ProgressDialog(DashboardActivity.this);
-                progressdialog.setTitle("提示");
-                progressdialog.setMessage("启动所有测量，请稍后...");
-                progressdialog.setCancelable(false);
-                progressdialog.show();
-            }
-        });
+        progressdialog = new ProgressDialog(DashboardActivity.this);
+        progressdialog.setTitle("提示");
+        progressdialog.setMessage("启动所有测量，请稍后...");
+        progressdialog.setCancelable(false);
+        progressdialog.show();
+
+        chart.clear();
         // 校准时间
         App.getInstance().getBluetoothService().setTime(System.currentTimeMillis() / 1000);
         // 根据测点数量发送开始指令
@@ -374,17 +398,9 @@ public class DashboardActivity extends BluetoothBaseActivity<DashboardPresenter>
                             }
                         });
                         // 根据测点数量发送停止指令
-                        final int pointCount = App.getInstance().getLocalDataService().queryAppConfig().getPointCount();
                         new Thread(new Runnable() {
                             public void run() {
-                                for (int i = 0; i < pointCount; i++) {
-                                    try {
-                                        Thread.sleep(200);
-                                    } catch (InterruptedException e) {
-                                        e.printStackTrace();
-                                    }
-                                    mPresenter.stopMeasure(true, i + 1);
-                                }
+                                mPresenter.stopAll();
                                 hideLoading();
                             }
                         }).start();
@@ -403,7 +419,7 @@ public class DashboardActivity extends BluetoothBaseActivity<DashboardPresenter>
     }
 
     @Override
-    public void updateUI(final MeasureStatus measureStatus) {
+    public void updateUI(final MeasureStatus measureStatus, final int index) {
         runOnUiThread(new Runnable() {
             @Override
             public void run() {
@@ -423,28 +439,29 @@ public class DashboardActivity extends BluetoothBaseActivity<DashboardPresenter>
                     case STOP:
                     case ERROR:
                     case DONE:
-                        if (measureStatus == MeasureStatus.DONE) {
-                            AlertDialog.Builder builder = new AlertDialog.Builder(DashboardActivity.this);
-                            builder.setTitle("提示");//设置title
-                            builder.setMessage("测量完成");//设置内容
-                            //点击确认按钮事件
-                            builder.setPositiveButton("确认", new DialogInterface.OnClickListener() {
-                                @Override
-                                public void onClick(DialogInterface dialog, int which) {
-                                    dialog.dismiss();
-                                }
-                            });
-                            //创建出AlertDialog对象
-                            AlertDialog alertDialog = builder.create();
-                            //点击对话框之外的地方不消失
-                            alertDialog.setCanceledOnTouchOutside(false);
-                            //设置显示
-                            alertDialog.show();
-                            playSound();
-                        }
                         btnStartMeasure.setAlpha(1.0f);
                         btnStopMeasure.setAlpha(0.32f);
-
+                        if (measureStatus == MeasureStatus.DONE && index > 0) {
+                            if (isFront) {
+                                AlertDialog.Builder builder = new AlertDialog.Builder(DashboardActivity.this);
+                                builder.setTitle("提示");//设置title
+                                builder.setMessage("测点"+ index + "测量完成");//设置内容
+                                //点击确认按钮事件
+                                builder.setPositiveButton("确认", new DialogInterface.OnClickListener() {
+                                    @Override
+                                    public void onClick(DialogInterface dialog, int which) {
+                                        dialog.dismiss();
+                                    }
+                                });
+                                //创建出AlertDialog对象
+                                AlertDialog alertDialog = builder.create();
+                                //点击对话框之外的地方不消失
+                                alertDialog.setCanceledOnTouchOutside(false);
+                                //设置显示
+                                alertDialog.show();
+                                playSound();
+                            }
+                        }
                         break;
                     default:
                         break;
@@ -554,7 +571,6 @@ public class DashboardActivity extends BluetoothBaseActivity<DashboardPresenter>
                 // 未启动
                 if (indexFlag != null && !indexFlag) {
                     startStatus.put(index, true);
-                    mPresenter.startAutoStopTimer(index);
 
                     // 启动下一个节点
                     int nextIndex = (index + 1);
@@ -576,22 +592,34 @@ public class DashboardActivity extends BluetoothBaseActivity<DashboardPresenter>
     @Override
     protected void onResume() {
         super.onResume();
+        isFront = true;
         mPresenter.attachView(this);
 
         new Handler().postDelayed(new Runnable() {
             @Override
             public void run() {
                 mPresenter.attachView(DashboardActivity.this);
+                if (mPresenter.isRunning()) {
+                    updateUI(MeasureStatus.RUNNING, 0);
+                } else {
+                    updateUI(MeasureStatus.NORMAL, 0);
+
+                }
+
             }
         }, 500);
     }
 
     @Override
+    protected void onPause() {
+        super.onPause();
+        isFront = false;
+    }
+
+    @Override
     protected void onDestroy() {
-        final int pointCount = App.getInstance().getLocalDataService().queryAppConfig().getPointCount();
-        for (int i = 0; i < pointCount; i++) {
-            mPresenter.stopMeasure(false, i + 1);
-        }
+        mPresenter.stopAll();
+        mPresenter.onDestroy();
         super.onDestroy();
     }
 
@@ -631,6 +659,8 @@ public class DashboardActivity extends BluetoothBaseActivity<DashboardPresenter>
             }
             if (measureValue.getMeasureStatus() == 0x01) {
                 data.addEntry(new Entry(set.getEntryCount(), (float) measureValue.getActivity(), measureValue.getReportTime()), i);
+            } else {
+                data.addEntry(new Entry(set.getEntryCount(), -1, measureValue.getReportTime()), i);
             }
         }
         data.notifyDataChanged();

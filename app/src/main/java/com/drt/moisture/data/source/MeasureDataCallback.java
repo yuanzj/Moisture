@@ -15,7 +15,7 @@ public interface MeasureDataCallback<T> {
 
     void success(T value);
 
-    void measureDone();
+    void measureDone(int index);
 
     void error(Throwable e);
 }

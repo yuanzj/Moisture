@@ -58,7 +58,7 @@ public class ReportModel implements ReportContract.Model, SppDataCallback<HisRec
 
                 }
 
-                report.measureDone();
+                report.measureDone(1);
 
             }
         };

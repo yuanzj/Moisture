@@ -14,39 +14,29 @@ import java.util.Map;
 public interface DashboardContract {
     interface Model {
 
-        /**
-         * 获取测量耗时
-         *
-         * @return
-         */
         int getMeasureTime(int index);
 
-        /**
-         * 设置测量耗时
-         *
-         * @param period
-         */
         void setMeasureTime(int period, int index);
 
-        /**
-         * 设置测量模式
-         * @param model
-         */
         void setMeasureModel(int index, int model);
 
-        void startMeasure(String name, int model, int index,MeasureDataCallback<StartMeasureResponse> callback);
-
-        void startAutoStopTimer(final int index);
+        void startMeasure(String name, int model, int index, MeasureDataCallback<StartMeasureResponse> callback);
 
         void startQuery(int model, int pointCount, MeasureDataCallback<List<MeasureValue>> callback);
 
         void stopQuery(boolean sendCommand, int index);
 
+        void stopAll();
+
+        void onDestroy();
+
+        DashboardModel.MeasureRunningStatus getMeasureRunningStatus(int index);
+
     }
 
     interface View extends BaseView {
 
-        void updateUI(MeasureStatus measureStatus);
+        void updateUI(MeasureStatus measureStatus, int index);
 
         void alreadyRunning(Map<Integer, DashboardModel.MeasureRunningStatus> measureRunningStatusMap, String time);
 
@@ -77,6 +67,7 @@ public interface DashboardContract {
 
         /**
          * 设置测量模式
+         *
          * @param model
          */
         void setMeasureModel(int index, int model);
@@ -89,11 +80,13 @@ public interface DashboardContract {
          */
         void startMeasure(int model, String measureName, int index);
 
-        void startAutoStopTimer(final int index);
-
         void stopMeasure(boolean sendCommand, int index);
 
+        void stopAll();
+
         void queryMeasureResult(int pointCount);
+
+        void onDestroy();
 
     }
 }

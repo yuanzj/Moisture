@@ -110,7 +110,7 @@ public class CorrectPresenter extends BasePresenter<CorrectContract.View> implem
             }
 
             @Override
-            public void measureDone() {
+            public void measureDone(int index) {
 
             }
 
