@@ -30,7 +30,7 @@ public class SettingModel implements SettingContract.Model {
 
     private DataCallback<SetRateRequest> setRateRequestDataCallback;
 
-    private DataCallback<CdslSetResponse> cdslSetResponseDataCallback;
+    private DataCallback<ParameterSetResponse> cdslSetResponseDataCallback;
 
     private DeviceInfo deviceInfo = new DeviceInfo();
 
@@ -246,20 +246,20 @@ public class SettingModel implements SettingContract.Model {
     }
 
     @Override
-    public void setCdsl(int count, DataCallback<CdslSetResponse> sppDataCallback) {
+    public void setCdsl(int count, DataCallback<ParameterSetResponse> sppDataCallback) {
         this.cdslSetResponseDataCallback = sppDataCallback;
-        App.getInstance().getBluetoothService().setCdsl(count, new SppDataCallback<CdslSetResponse>() {
+        App.getInstance().getBluetoothService().setCdsl(count, new SppDataCallback<ParameterSetResponse>() {
 
             @Override
-            public void delivery(CdslSetResponse parameterSetResponse) {
+            public void delivery(ParameterSetResponse parameterSetResponse) {
                 if (cdslSetResponseDataCallback != null) {
                     cdslSetResponseDataCallback.delivery(parameterSetResponse);
                 }
             }
 
             @Override
-            public Class<CdslSetResponse> getEntityType() {
-                return CdslSetResponse.class;
+            public Class<ParameterSetResponse> getEntityType() {
+                return ParameterSetResponse.class;
             }
         });
     }

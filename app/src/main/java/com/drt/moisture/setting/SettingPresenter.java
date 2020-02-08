@@ -217,9 +217,9 @@ public class SettingPresenter extends BasePresenter<SettingContract.View> implem
             return;
         }
         mView.showLoading();
-        model.setCdsl(count, new DataCallback<CdslSetResponse>() {
+        model.setCdsl(count, new DataCallback<ParameterSetResponse>() {
             @Override
-            public void delivery(CdslSetResponse deviceInfo) {
+            public void delivery(ParameterSetResponse deviceInfo) {
                 if (isViewAttached()) {
                     mView.hideLoading();
                     mView.onSetParameSuccess();

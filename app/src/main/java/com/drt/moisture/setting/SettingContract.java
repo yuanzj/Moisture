@@ -46,7 +46,7 @@ public interface SettingContract {
 
         void setRateParame(int rate, int ratio, DataCallback<ParameterSetResponse> dataCallback);
 
-        void setCdsl(int count, DataCallback<CdslSetResponse> sppDataCallback);
+        void setCdsl(int count, DataCallback<ParameterSetResponse> sppDataCallback);
 
     }
 

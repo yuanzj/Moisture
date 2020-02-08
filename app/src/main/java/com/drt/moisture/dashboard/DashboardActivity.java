@@ -349,11 +349,19 @@ public class DashboardActivity extends BluetoothBaseActivity<DashboardPresenter>
         chart.clear();
         // 校准时间
         App.getInstance().getBluetoothService().setTime(System.currentTimeMillis() / 1000);
-        // 根据测点数量发送开始指令
-        final int pointCount = App.getInstance().getLocalDataService().queryAppConfig().getPointCount();
-        countDownLatch = new CountDownLatch(pointCount);
+
         new Thread(new Runnable() {
             public void run() {
+
+                try {
+                    Thread.sleep(200);
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
+
+                // 根据测点数量发送开始指令
+                int pointCount = App.getInstance().getLocalDataService().queryAppConfig().getPointCount();
+                countDownLatch = new CountDownLatch(pointCount);
 
                 startStatus.clear();
                 for (int i = 0; i < pointCount; i++) {
@@ -366,7 +374,7 @@ public class DashboardActivity extends BluetoothBaseActivity<DashboardPresenter>
                 mPresenter.startMeasure(appConfig.getMeasureMode(), name, index);
 
                 try {
-                    countDownLatch.await(5, TimeUnit.SECONDS);
+                    countDownLatch.await(8, TimeUnit.SECONDS);
                     mPresenter.queryMeasureResult(pointCount);
                 } catch (InterruptedException e) {
                     e.printStackTrace();
@@ -445,7 +453,7 @@ public class DashboardActivity extends BluetoothBaseActivity<DashboardPresenter>
                             if (isFront) {
                                 AlertDialog.Builder builder = new AlertDialog.Builder(DashboardActivity.this);
                                 builder.setTitle("提示");//设置title
-                                builder.setMessage("测点"+ index + "测量完成");//设置内容
+                                builder.setMessage("测点" + index + "测量完成");//设置内容
                                 //点击确认按钮事件
                                 builder.setPositiveButton("确认", new DialogInterface.OnClickListener() {
                                     @Override
@@ -564,13 +572,19 @@ public class DashboardActivity extends BluetoothBaseActivity<DashboardPresenter>
 
     @Override
     public void onStartMeasureSuccess(final int index) {
-        runOnUiThread(new Runnable() {
+        new Thread(new Runnable() {
             @Override
             public void run() {
                 Boolean indexFlag = startStatus.get(index);
                 // 未启动
                 if (indexFlag != null && !indexFlag) {
                     startStatus.put(index, true);
+
+                    try {
+                        Thread.sleep(300);
+                    } catch (InterruptedException e) {
+                        e.printStackTrace();
+                    }
 
                     // 启动下一个节点
                     int nextIndex = (index + 1);
@@ -586,7 +600,7 @@ public class DashboardActivity extends BluetoothBaseActivity<DashboardPresenter>
                     }
                 }
             }
-        });
+        }).start();
     }
 
     @Override

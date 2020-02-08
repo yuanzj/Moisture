@@ -119,7 +119,7 @@ public interface BluetoothService {
      * @param count
      * @param sppDataCallback
      */
-    void setCdsl(int count, SppDataCallback<CdslSetResponse> sppDataCallback);
+    void setCdsl(int count, SppDataCallback<ParameterSetResponse> sppDataCallback);
 
     /**
      * 设置时间

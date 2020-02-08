@@ -467,7 +467,7 @@ public class BluetoothServiceImpl implements BluetoothService, BleWriteResponse 
     }
 
     @Override
-    public void setCdsl(int count, SppDataCallback<CdslSetResponse> sppDataCallback) {
+    public void setCdsl(int count, SppDataCallback<ParameterSetResponse> sppDataCallback) {
         this.sppDataCallback = sppDataCallback;
         SetCdslRequest setTimeRequest = new SetCdslRequest();
         setTimeRequest.setCmdGroup((byte) 0xA2);

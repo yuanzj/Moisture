@@ -4,6 +4,24 @@ import com.rokyinfo.convert.RkField;
 
 public class DashboardRecordDataResponse1 extends DashboardRecordDataResponse {
 
+    @RkField(position = 0, length = 1)
+    private byte CmdGroup;
+
+    @RkField(position = 1, length = 1)
+    private byte Cmd;
+
+    @RkField(position = 2, length = 1)
+    private byte Response;
+
+    @RkField(position = 3, length = 2)
+    private int Reserved;
+
+    @RkField(position = 5, length = 4)
+    private long time;
+
+    @RkField(position = 9, length = 2)
+    private short index;
+
     @RkField(position = 11, length = 2)
     private short temperature1;
 
@@ -16,6 +34,65 @@ public class DashboardRecordDataResponse1 extends DashboardRecordDataResponse {
     @RkField(position = 16, length = 2)
     private short humidity1;
 
+    
+    public byte getCmdGroup() {
+        return CmdGroup;
+    }
+
+    
+    public void setCmdGroup(byte cmdGroup) {
+        CmdGroup = cmdGroup;
+    }
+
+    
+    public byte getCmd() {
+        return Cmd;
+    }
+
+    
+    public void setCmd(byte cmd) {
+        Cmd = cmd;
+    }
+
+    
+    public byte getResponse() {
+        return Response;
+    }
+
+    
+    public void setResponse(byte response) {
+        Response = response;
+    }
+
+    
+    public int getReserved() {
+        return Reserved;
+    }
+
+    
+    public void setReserved(int reserved) {
+        Reserved = reserved;
+    }
+
+    
+    public long getTime() {
+        return time;
+    }
+
+    
+    public void setTime(long time) {
+        this.time = time;
+    }
+
+    
+    public short getIndex() {
+        return index;
+    }
+
+    
+    public void setIndex(short index) {
+        this.index = index;
+    }
 
     public short getTemperature1() {
         return temperature1;

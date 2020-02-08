@@ -2,6 +2,7 @@ package com.drt.moisture.dashboard;
 
 
 import android.annotation.SuppressLint;
+import android.util.Log;
 
 import com.drt.moisture.App;
 import com.drt.moisture.data.AppConfig;
@@ -514,6 +515,8 @@ public class DashboardModel implements DashboardContract.Model {
         public void delivery(DashboardRecordDataResponse5 recordDataResponse) {
             if (measureDataCallback != null) {
 
+                Log.d("yzj","point5CallBack" + recordDataResponse.getTime());
+
                 List<MeasureValue> measureValues = new ArrayList<>();
 
                 MeasureValue measureValue = new MeasureValue();
@@ -671,8 +674,8 @@ public class DashboardModel implements DashboardContract.Model {
             while (isRunning) {
                 try {
                     long interval = System.currentTimeMillis() - preRunTime;
-                    if (interval < 200) {
-                        Thread.sleep((200 - interval));
+                    if (interval < 300) {
+                        Thread.sleep((300 - interval));
                     }
 
                     CommandEntity commandEntity = commandQueue.take();
@@ -698,36 +701,6 @@ public class DashboardModel implements DashboardContract.Model {
                                 App.getInstance().getBluetoothService().queryDashboardRecord(System.currentTimeMillis() / 1000, pointCount, point1CallBack);
                                 break;
                         }
-
-//                        DashboardRecordDataResponse5 mDashboardRecordDataResponse3 = new DashboardRecordDataResponse5();
-//                        mDashboardRecordDataResponse3.setTime(System.currentTimeMillis() / 1000);
-//
-//                        mDashboardRecordDataResponse3.setActivity1((int) (Math.random() * 10000));
-//                        mDashboardRecordDataResponse3.setHumidity1((short) 100);
-//                        mDashboardRecordDataResponse3.setStatus1(0);
-//                        mDashboardRecordDataResponse3.setTemperature1((short) (60 * 100));
-//
-//                        mDashboardRecordDataResponse3.setActivity2((int) (Math.random() * 10000));
-//                        mDashboardRecordDataResponse3.setHumidity2((short) 100);
-//                        mDashboardRecordDataResponse3.setStatus2(0);
-//                        mDashboardRecordDataResponse3.setTemperature2((short) (60 * 100));
-//
-//                        mDashboardRecordDataResponse3.setActivity3((int) (Math.random() * 10000));
-//                        mDashboardRecordDataResponse3.setHumidity3((short) 100);
-//                        mDashboardRecordDataResponse3.setStatus3(0);
-//                        mDashboardRecordDataResponse3.setTemperature3((short) (60 * 100));
-//
-//                        mDashboardRecordDataResponse3.setActivity4((int) (Math.random() * 10000));
-//                        mDashboardRecordDataResponse3.setHumidity4((short) 100);
-//                        mDashboardRecordDataResponse3.setStatus4(0);
-//                        mDashboardRecordDataResponse3.setTemperature4((short) (60 * 100));
-//
-//                        mDashboardRecordDataResponse3.setActivity5((int) (Math.random() * 10000));
-//                        mDashboardRecordDataResponse3.setHumidity5((short) 100);
-//                        mDashboardRecordDataResponse3.setStatus5(0);
-//                        mDashboardRecordDataResponse3.setTemperature5((short) (60 * 100));
-//
-//                        point5CallBack.delivery(mDashboardRecordDataResponse3);
 
                     } else {
                         App.getInstance().getBluetoothService().stopMeasure(commandEntity.getIndex(), stopMeasureResponse);
