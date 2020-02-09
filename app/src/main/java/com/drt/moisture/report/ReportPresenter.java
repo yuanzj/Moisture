@@ -35,13 +35,9 @@ public class ReportPresenter extends BasePresenter<ReportContract.View> implemen
         }
         mView.showLoading();
         model.queryReport(measureName.getText().toString(),startTime, endTime, new MeasureDataCallback<List<MeasureValue>>() {
-            @Override
-            public void runningTime(String time) {
-
-            }
 
             @Override
-            public void runningTime(Map<Integer, DashboardModel.MeasureRunningStatus> measureRunningStatusMap, String time) {
+            public void runningStatus(Map<Integer, DashboardModel.MeasureRunningStatus> measureRunningStatusMap) {
 
             }
 

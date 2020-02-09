@@ -7,7 +7,6 @@ import android.media.Ringtone;
 import android.media.RingtoneManager;
 import android.net.Uri;
 import android.os.Bundle;
-import android.os.Handler;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AlertDialog;
 import android.util.Log;
@@ -27,11 +26,9 @@ import com.drt.moisture.dashboard.DashboardActivity;
 import com.drt.moisture.dashboard.DashboardContract;
 import com.drt.moisture.dashboard.DashboardModel;
 import com.drt.moisture.dashboard.DashboardPresenter;
-import com.drt.moisture.data.AppConfig;
 import com.drt.moisture.data.MeasureStatus;
 import com.drt.moisture.data.MeasureValue;
 import com.github.mikephil.charting.charts.LineChart;
-import com.github.mikephil.charting.components.AxisBase;
 import com.github.mikephil.charting.components.XAxis;
 import com.github.mikephil.charting.components.YAxis;
 import com.github.mikephil.charting.data.Entry;
@@ -180,7 +177,7 @@ public class MeasureActivity extends BluetoothBaseActivity<DashboardPresenter> i
             @Override
             public void run() {
                 if (measureValue.getMeasureStatus() == 0x01) {
-                    updateUI(MeasureStatus.RUNNING, index);
+                    updateUI(MeasureStatus.RUNNING);
                     addEntry(measureValue);
                 }
                 if (measureValue.getMeasureStatus() != 0) {
@@ -190,9 +187,35 @@ public class MeasureActivity extends BluetoothBaseActivity<DashboardPresenter> i
                     df.setRoundingMode(RoundingMode.DOWN);
                     activeness.setText(df.format(measureValue.getActivity()));
                 } else {
-                    updateUI(MeasureStatus.NORMAL, index);
+                    updateUI(MeasureStatus.NORMAL);
 
                 }
+            }
+        });
+    }
+
+    @Override
+    public void onDone(final int index) {
+        runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                AlertDialog.Builder builder = new AlertDialog.Builder(MeasureActivity.this);
+                builder.setTitle("提示");//设置title
+                builder.setMessage("测点" + index + "测量完成");//设置内容
+                //点击确认按钮事件
+                builder.setPositiveButton("确认", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        dialog.dismiss();
+                    }
+                });
+                //创建出AlertDialog对象
+                AlertDialog alertDialog = builder.create();
+                //点击对话框之外的地方不消失
+                alertDialog.setCanceledOnTouchOutside(false);
+                //设置显示
+                alertDialog.show();
+                playSound();
             }
         });
     }
@@ -291,7 +314,7 @@ public class MeasureActivity extends BluetoothBaseActivity<DashboardPresenter> i
     }
 
     @Override
-    public void updateUI(final MeasureStatus measureStatus, int index) {
+    public void updateUI(final MeasureStatus measureStatus) {
         runOnUiThread(new Runnable() {
             @Override
             public void run() {
@@ -305,19 +328,6 @@ public class MeasureActivity extends BluetoothBaseActivity<DashboardPresenter> i
                         spMeasureModel.setEnabled(false);
                         spMeasureTime.setEnabled(false);
                         break;
-                    case NORMAL:
-                        measureName.setEnabled(true);
-                        history.setEnabled(true);
-                        history.setAlpha(1.0f);
-                        btnStartMeasure.setAlpha(1.0f);
-                        btnStopMeasure.setAlpha(0.32f);
-                        spMeasureModel.setEnabled(true);
-                        if (spMeasureModel.getSelectedItemPosition() == 0) {
-                            spMeasureTime.setEnabled(true);
-                        } else {
-                            spMeasureTime.setEnabled(false);
-                        }
-                        break;
                     case RUNNING:
                         measureName.setEnabled(false);
                         history.setEnabled(false);
@@ -327,28 +337,7 @@ public class MeasureActivity extends BluetoothBaseActivity<DashboardPresenter> i
                         spMeasureModel.setEnabled(false);
                         spMeasureTime.setEnabled(false);
                         break;
-                    case STOP:
-                    case ERROR:
-                    case DONE:
-                        if (measureStatus == MeasureStatus.DONE) {
-                            AlertDialog.Builder builder = new AlertDialog.Builder(MeasureActivity.this);
-                            builder.setTitle("提示");//设置title
-                            builder.setMessage("测量完成");//设置内容
-                            //点击确认按钮事件
-                            builder.setPositiveButton("确认", new DialogInterface.OnClickListener() {
-                                @Override
-                                public void onClick(DialogInterface dialog, int which) {
-                                    dialog.dismiss();
-                                }
-                            });
-                            //创建出AlertDialog对象
-                            AlertDialog alertDialog = builder.create();
-                            //点击对话框之外的地方不消失
-                            alertDialog.setCanceledOnTouchOutside(false);
-                            //设置显示
-                            alertDialog.show();
-                            playSound();
-                        }
+                    default:
                         measureName.setEnabled(true);
                         history.setEnabled(true);
                         history.setAlpha(1.0f);
@@ -361,8 +350,6 @@ public class MeasureActivity extends BluetoothBaseActivity<DashboardPresenter> i
                             spMeasureTime.setEnabled(false);
                         }
                         break;
-                    default:
-                        break;
                 }
             }
         });
@@ -370,17 +357,16 @@ public class MeasureActivity extends BluetoothBaseActivity<DashboardPresenter> i
     }
 
     @Override
-    public void alreadyRunning(final Map<Integer, DashboardModel.MeasureRunningStatus> measureRunningStatusMap, final String time) {
-        Log.d(TAG, "alreadyRunning" + time);
+    public void updateRunningStatus(final Map<Integer, DashboardModel.MeasureRunningStatus> measureRunningStatusMap) {
         if (DashboardActivity.getDashboardActivity() != null) {
-            DashboardActivity.getDashboardActivity().alreadyRunning(measureRunningStatusMap, time);
+            DashboardActivity.getDashboardActivity().updateRunningStatus(measureRunningStatusMap);
         }
         runOnUiThread(new Runnable() {
             @Override
             public void run() {
                 DashboardModel.MeasureRunningStatus measureRunningStatus = measureRunningStatusMap.get(index);
-                if (measureRunningStatus != null && measureRunningStatus.isRunning() && alreadyRunning != null && time != null) {
-                    alreadyRunning.setText(time);
+                if (measureRunningStatus != null && measureRunningStatus.isRunning() && alreadyRunning != null && measureRunningStatus.getRunningTime() != null) {
+                    alreadyRunning.setText(measureRunningStatus.getRunningTime());
                 }
             }
         });
@@ -399,7 +385,7 @@ public class MeasureActivity extends BluetoothBaseActivity<DashboardPresenter> i
     @Override
     protected void onResume() {
         super.onResume();
-        updateUI(mPresenter.getMeasureStatus(index), index);
+        updateUI(mPresenter.getMeasureStatus(index));
     }
 
     @Override

@@ -21,6 +21,11 @@ public class MeasureValue {
     @SmartColumn(id =5,name = "环境值")
     private double humidity;
 
+    /**
+     * 该字段只在自动测量模式下使用
+     * <br> 0x01：自动测量进行中
+     * <br> 0x02：自动测量结束
+     */
     private int measureStatus;
 
     private boolean running;

@@ -24,8 +24,10 @@ import android.widget.ImageButton;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.drt.moisture.data.AppConfig;
 import com.drt.moisture.data.BleEvent;
 import com.drt.moisture.data.source.bluetooth.SppDataCallback;
+import com.drt.moisture.data.source.bluetooth.response.CdslSetResponse;
 import com.drt.moisture.data.source.bluetooth.response.SocResponse;
 import com.drt.moisture.util.StatusBarUtil;
 import com.inuker.bluetooth.library.Constants;
@@ -420,6 +422,23 @@ public abstract class BluetoothBaseActivity<T extends BasePresenter> extends Bas
         @Override
         public void delivery(SocResponse socResponse) {
             EventBus.getDefault().post(socResponse); //普通事件发布
+            App.getInstance().getBluetoothService().queryClsl(new SppDataCallback<CdslSetResponse>() {
+
+                @Override
+                public void delivery(CdslSetResponse cdslSetResponse) {
+                    AppConfig appConfig = App.getInstance().getLocalDataService().queryAppConfig();
+                    appConfig.setPointCount(cdslSetResponse.getCount());
+                    if (appConfig.getPointCount() > 0 && appConfig.getPointCount() < 6) {
+                        App.getInstance().getLocalDataService().setAppConfig(appConfig);
+                        Log.d(TAG, "缓存测量节点：" + cdslSetResponse.getCount());
+                    }
+                }
+
+                @Override
+                public Class<CdslSetResponse> getEntityType() {
+                    return CdslSetResponse.class;
+                }
+            });
         }
 
         @Override

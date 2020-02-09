@@ -9,9 +9,7 @@ import java.util.Map;
  */
 public interface MeasureDataCallback<T> {
 
-    void runningTime(String time);
-
-    void runningTime(Map<Integer, DashboardModel.MeasureRunningStatus> measureRunningStatusMap, String time);
+    void runningStatus(Map<Integer, DashboardModel.MeasureRunningStatus> measureRunningStatusMap);
 
     void success(T value);
 

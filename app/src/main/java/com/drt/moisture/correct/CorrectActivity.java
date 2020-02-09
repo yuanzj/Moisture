@@ -320,7 +320,7 @@ public class CorrectActivity extends BluetoothBaseActivity<CorrectPresenter> imp
 
     @Override
     public void alreadyRunning(final String time) {
-        Log.d(TAG, "alreadyRunning" + time);
+        Log.d(TAG, "updateRunningStatus" + time);
         runOnUiThread(new Runnable() {
             @Override
             public void run() {

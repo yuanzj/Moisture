@@ -90,6 +90,7 @@ public class DashboardModel implements DashboardContract.Model {
 
             @Override
             public void delivery(StartMeasureResponse startMeasureResponse) {
+                startMeasureResponse.setIndex(index);
                 MeasureRunningStatus mMeasureRunningStatus = new MeasureRunningStatus();
                 mMeasureRunningStatus.setIndex(index);
                 mMeasureRunningStatus.setModel(model);
@@ -108,7 +109,7 @@ public class DashboardModel implements DashboardContract.Model {
     }
 
     @Override
-    public synchronized void startQuery(int model, int _pointCount, MeasureDataCallback<List<MeasureValue>> callback) {
+    public synchronized void startQuery(int _pointCount, MeasureDataCallback<List<MeasureValue>> callback) {
         AppConfig appConfig = App.getInstance().getLocalDataService().queryAppConfig();
         int period = appConfig.getPeriod();
 
@@ -137,7 +138,9 @@ public class DashboardModel implements DashboardContract.Model {
     }
 
     @Override
-    public void stopQuery(boolean sendCommand, int index) {
+    public void stopMeasure(boolean sendCommand, int index) {
+
+        Log.d("yzj", "stopMeasure" + index);
 
         MeasureRunningStatus measureRunningStatus = measureRunningStatusMap.get(index);
         if (measureRunningStatus != null) {
@@ -175,7 +178,7 @@ public class DashboardModel implements DashboardContract.Model {
             int index = i + 1;
             MeasureRunningStatus measureRunningStatus = measureRunningStatusMap.get(index);
             if (measureRunningStatus != null && measureRunningStatus.isRunning) {
-                stopQuery(true, index);
+                stopMeasure(true, index);
             }
         }
     }
@@ -213,8 +216,8 @@ public class DashboardModel implements DashboardContract.Model {
                             measureValue.setMeasureStatus(0x02);
                         }
                     } else {
-                        if (recordDataResponse.getStatus1() == 0x02) {
-                            stopQuery(true, 1);
+                        if (measureValue.getMeasureStatus() == 0x02) {
+                            stopMeasure(true, 1);
                         }
                     }
                 } else {
@@ -254,8 +257,8 @@ public class DashboardModel implements DashboardContract.Model {
                             measureValue.setMeasureStatus(0x02);
                         }
                     } else {
-                        if (recordDataResponse.getStatus1() == 0x02) {
-                            stopQuery(true, 1);
+                        if (measureValue.getMeasureStatus() == 0x02) {
+                            stopMeasure(true, 1);
                         }
                     }
                 } else {
@@ -279,8 +282,8 @@ public class DashboardModel implements DashboardContract.Model {
                             measureValue.setMeasureStatus(0x02);
                         }
                     } else {
-                        if (recordDataResponse.getStatus1() == 0x02) {
-                            stopQuery(true, 2);
+                        if (measureValue.getMeasureStatus() == 0x02) {
+                            stopMeasure(true, 2);
                         }
                     }
                 } else {
@@ -322,8 +325,8 @@ public class DashboardModel implements DashboardContract.Model {
                             measureValue.setMeasureStatus(0x02);
                         }
                     } else {
-                        if (recordDataResponse.getStatus1() == 0x02) {
-                            stopQuery(true, 1);
+                        if (measureValue.getMeasureStatus() == 0x02) {
+                            stopMeasure(true, 1);
                         }
                     }
                 } else {
@@ -347,8 +350,8 @@ public class DashboardModel implements DashboardContract.Model {
                             measureValue.setMeasureStatus(0x02);
                         }
                     } else {
-                        if (recordDataResponse.getStatus1() == 0x02) {
-                            stopQuery(true, 2);
+                        if (measureValue.getMeasureStatus() == 0x02) {
+                            stopMeasure(true, 2);
                         }
                     }
                 } else {
@@ -372,8 +375,8 @@ public class DashboardModel implements DashboardContract.Model {
                             measureValue.setMeasureStatus(0x02);
                         }
                     } else {
-                        if (recordDataResponse.getStatus1() == 0x02) {
-                            stopQuery(true, 3);
+                        if (measureValue.getMeasureStatus() == 0x02) {
+                            stopMeasure(true, 3);
                         }
                     }
                 } else {
@@ -415,8 +418,8 @@ public class DashboardModel implements DashboardContract.Model {
                             measureValue.setMeasureStatus(0x02);
                         }
                     } else {
-                        if (recordDataResponse.getStatus1() == 0x02) {
-                            stopQuery(true, 1);
+                        if (measureValue.getMeasureStatus() == 0x02) {
+                            stopMeasure(true, 1);
                         }
                     }
                 } else {
@@ -440,8 +443,8 @@ public class DashboardModel implements DashboardContract.Model {
                             measureValue.setMeasureStatus(0x02);
                         }
                     } else {
-                        if (recordDataResponse.getStatus1() == 0x02) {
-                            stopQuery(true, 2);
+                        if (measureValue.getMeasureStatus() == 0x02) {
+                            stopMeasure(true, 2);
                         }
                     }
                 } else {
@@ -465,8 +468,8 @@ public class DashboardModel implements DashboardContract.Model {
                             measureValue.setMeasureStatus(0x02);
                         }
                     } else {
-                        if (recordDataResponse.getStatus1() == 0x02) {
-                            stopQuery(true, 3);
+                        if (measureValue.getMeasureStatus() == 0x02) {
+                            stopMeasure(true, 3);
                         }
                     }
                 } else {
@@ -490,8 +493,8 @@ public class DashboardModel implements DashboardContract.Model {
                             measureValue.setMeasureStatus(0x02);
                         }
                     } else {
-                        if (recordDataResponse.getStatus1() == 0x02) {
-                            stopQuery(true, 4);
+                        if (measureValue.getMeasureStatus() == 0x02) {
+                            stopMeasure(true, 4);
                         }
                     }
                 } else {
@@ -514,9 +517,6 @@ public class DashboardModel implements DashboardContract.Model {
         @Override
         public void delivery(DashboardRecordDataResponse5 recordDataResponse) {
             if (measureDataCallback != null) {
-
-                Log.d("yzj","point5CallBack" + recordDataResponse.getTime());
-
                 List<MeasureValue> measureValues = new ArrayList<>();
 
                 MeasureValue measureValue = new MeasureValue();
@@ -535,8 +535,8 @@ public class DashboardModel implements DashboardContract.Model {
                             measureValue.setMeasureStatus(0x02);
                         }
                     } else {
-                        if (recordDataResponse.getStatus1() == 0x02) {
-                            stopQuery(true, 1);
+                        if (measureValue.getMeasureStatus() == 0x02) {
+                            stopMeasure(true, 2);
                         }
                     }
                 } else {
@@ -560,8 +560,8 @@ public class DashboardModel implements DashboardContract.Model {
                             measureValue.setMeasureStatus(0x02);
                         }
                     } else {
-                        if (recordDataResponse.getStatus1() == 0x02) {
-                            stopQuery(true, 2);
+                        if (measureValue.getMeasureStatus() == 0x02) {
+                            stopMeasure(true, 2);
                         }
                     }
                 } else {
@@ -585,8 +585,8 @@ public class DashboardModel implements DashboardContract.Model {
                             measureValue.setMeasureStatus(0x02);
                         }
                     } else {
-                        if (recordDataResponse.getStatus1() == 0x02) {
-                            stopQuery(true, 3);
+                        if (measureValue.getMeasureStatus() == 0x02) {
+                            stopMeasure(true, 3);
                         }
                     }
                 } else {
@@ -610,8 +610,8 @@ public class DashboardModel implements DashboardContract.Model {
                             measureValue.setMeasureStatus(0x02);
                         }
                     } else {
-                        if (recordDataResponse.getStatus1() == 0x02) {
-                            stopQuery(true, 4);
+                        if (measureValue.getMeasureStatus() == 0x02) {
+                            stopMeasure(true, 4);
                         }
                     }
                 } else {
@@ -635,8 +635,8 @@ public class DashboardModel implements DashboardContract.Model {
                             measureValue.setMeasureStatus(0x02);
                         }
                     } else {
-                        if (recordDataResponse.getStatus1() == 0x02) {
-                            stopQuery(true, 5);
+                        if (measureValue.getMeasureStatus() == 0x02) {
+                            stopMeasure(true, 5);
                         }
                     }
                 } else {
@@ -679,34 +679,40 @@ public class DashboardModel implements DashboardContract.Model {
                     }
 
                     CommandEntity commandEntity = commandQueue.take();
-                    if (commandEntity.getType() == 0) {
-                        // 发送蓝牙请求
-                        switch (pointCount) {
-                            case 1:
-                                App.getInstance().getBluetoothService().queryDashboardRecord(System.currentTimeMillis() / 1000, pointCount, point1CallBack);
-                                break;
-                            case 2:
-                                App.getInstance().getBluetoothService().queryDashboardRecord(System.currentTimeMillis() / 1000, pointCount, point2CallBack);
-                                break;
-                            case 3:
-                                App.getInstance().getBluetoothService().queryDashboardRecord(System.currentTimeMillis() / 1000, pointCount, point3CallBack);
-                                break;
-                            case 4:
-                                App.getInstance().getBluetoothService().queryDashboardRecord(System.currentTimeMillis() / 1000, pointCount, point4CallBack);
-                                break;
-                            case 5:
-                                App.getInstance().getBluetoothService().queryDashboardRecord(System.currentTimeMillis() / 1000, pointCount, point5CallBack);
-                                break;
-                            default:
-                                App.getInstance().getBluetoothService().queryDashboardRecord(System.currentTimeMillis() / 1000, pointCount, point1CallBack);
-                                break;
+                    switch (commandEntity.getType()) {
+                        case 0: {
+                            long time = System.currentTimeMillis() / 1000;
+                            switch (pointCount) {
+                                case 1:
+                                    App.getInstance().getBluetoothService().queryDashboardRecord(time, pointCount, point1CallBack);
+                                    break;
+                                case 2:
+                                    App.getInstance().getBluetoothService().queryDashboardRecord(time, pointCount, point2CallBack);
+                                    break;
+                                case 3:
+                                    App.getInstance().getBluetoothService().queryDashboardRecord(time, pointCount, point3CallBack);
+                                    break;
+                                case 4:
+                                    App.getInstance().getBluetoothService().queryDashboardRecord(time, pointCount, point4CallBack);
+                                    break;
+                                case 5:
+                                    App.getInstance().getBluetoothService().queryDashboardRecord(time, pointCount, point5CallBack);
+                                    break;
+                                default:
+                                    App.getInstance().getBluetoothService().queryDashboardRecord(time, pointCount, point1CallBack);
+                                    break;
+                            }
                         }
-
-                    } else {
-                        App.getInstance().getBluetoothService().stopMeasure(commandEntity.getIndex(), stopMeasureResponse);
-                        if (measureDataCallback != null) {
-                            measureDataCallback.measureDone(commandEntity.getIndex());
+                        break;
+                        case 1: {
+                            App.getInstance().getBluetoothService().stopMeasure(commandEntity.getIndex(), stopMeasureResponse);
+                            if (measureDataCallback != null) {
+                                measureDataCallback.measureDone(commandEntity.getIndex());
+                            }
                         }
+                        break;
+                        default:
+                            break;
                     }
                 } catch (InterruptedException e) {
                     e.printStackTrace();
@@ -727,15 +733,21 @@ public class DashboardModel implements DashboardContract.Model {
                     e.printStackTrace();
                 }
                 if (measureDataCallback != null && startTime != null) {
-                    measureDataCallback.runningTime(measureRunningStatusMap, DateUtil.dateDistance1(startTime, new Date()));
+                    for (MeasureRunningStatus measureRunningStatus : measureRunningStatusMap.values()) {
+                        if (measureRunningStatus.isRunning) {
+                            measureRunningStatus.setRunningTime(DateUtil.dateDistance1(startTime, new Date()));
+                        }
+                    }
+                    measureDataCallback.runningStatus(measureRunningStatusMap);
                 }
 
                 for (MeasureRunningStatus measureRunningStatus : measureRunningStatusMap.values()) {
                     if (measureRunningStatus.isRunning) {
                         AppConfig appConfig = App.getInstance().getLocalDataService().queryAppConfig(measureRunningStatus.getIndex());
                         long measuringTime = measureRunningStatus.getStartTime() + appConfig.getMeasuringTime() * 60 * 1000;
+                        // 定时测量自动关闭
                         if (new Date().after(new Date(measuringTime))) {
-                            stopQuery(true, measureRunningStatus.getIndex());
+                            stopMeasure(true, measureRunningStatus.getIndex());
                         }
                     }
                 }
@@ -748,6 +760,7 @@ public class DashboardModel implements DashboardContract.Model {
         int model;
         boolean isRunning;
         long startTime;
+        String runningTime;
 
         public int getIndex() {
             return index;
@@ -779,6 +792,14 @@ public class DashboardModel implements DashboardContract.Model {
 
         public void setStartTime(long startTime) {
             this.startTime = startTime;
+        }
+
+        public String getRunningTime() {
+            return runningTime;
+        }
+
+        public void setRunningTime(String runningTime) {
+            this.runningTime = runningTime;
         }
     }
 

@@ -19,7 +19,7 @@ public class DashboardPresenter extends BasePresenter<DashboardContract.View> im
 
     private MeasureStatus measureStatus;
 
-    public DashboardPresenter() {
+    DashboardPresenter() {
         model = new DashboardModel();
         measureStatus = MeasureStatus.NORMAL;
     }
@@ -40,7 +40,7 @@ public class DashboardPresenter extends BasePresenter<DashboardContract.View> im
     }
 
     @Override
-    public void startMeasure(final int measureModel, String measureName, final int index) {
+    public void startMeasure(int measureModel, String measureName, int index) {
         if (!isViewAttached()) {
             return;
         }
@@ -53,20 +53,16 @@ public class DashboardPresenter extends BasePresenter<DashboardContract.View> im
         App.getInstance().getLocalDataService().setHistory(index, measureName);
 
         model.startMeasure(measureName, measureModel, index, new MeasureDataCallback<StartMeasureResponse>() {
-            @Override
-            public void runningTime(String time) {
-
-            }
 
             @Override
-            public void runningTime(Map<Integer, DashboardModel.MeasureRunningStatus> measureRunningStatusMap, String time) {
+            public void runningStatus(Map<Integer, DashboardModel.MeasureRunningStatus> measureRunningStatusMap) {
 
             }
 
             @Override
             public void success(StartMeasureResponse value) {
                 if (isViewAttached()) {
-                    mView.onStartMeasureSuccess(index);
+                    mView.onStartMeasureSuccess(value.getIndex());
                 }
             }
 
@@ -91,7 +87,7 @@ public class DashboardPresenter extends BasePresenter<DashboardContract.View> im
         DashboardModel.MeasureRunningStatus measureRunningStatus = model.getMeasureRunningStatus(index);
 
         if (measureRunningStatus != null && measureRunningStatus.isRunning) {
-            model.stopQuery(sendCommand, index);
+            model.stopMeasure(sendCommand, index);
             setMeasureStatus(MeasureStatus.STOP);
         } else {
             if (isViewAttached()) {
@@ -103,22 +99,17 @@ public class DashboardPresenter extends BasePresenter<DashboardContract.View> im
     @Override
     public void stopAll() {
         model.stopAll();
-        mView.updateUI(MeasureStatus.DONE, 0);
+        mView.updateUI(MeasureStatus.DONE);
     }
 
     @Override
     public void queryMeasureResult(int pointCount) {
-        model.startQuery(0, pointCount, new MeasureDataCallback<List<MeasureValue>>() {
+        model.startQuery(pointCount, new MeasureDataCallback<List<MeasureValue>>() {
 
             @Override
-            public void runningTime(String time) {
-
-            }
-
-            @Override
-            public void runningTime(Map<Integer, DashboardModel.MeasureRunningStatus> measureRunningStatusMap, String time) {
+            public void runningStatus(Map<Integer, DashboardModel.MeasureRunningStatus> measureRunningStatusMap) {
                 if (isViewAttached()) {
-                    mView.alreadyRunning(measureRunningStatusMap, time);
+                    mView.updateRunningStatus(measureRunningStatusMap);
                 }
             }
 
@@ -133,7 +124,8 @@ public class DashboardPresenter extends BasePresenter<DashboardContract.View> im
             @Override
             public void measureDone(int index) {
                 if (isViewAttached()) {
-                    setMeasureStatus(MeasureStatus.DONE, index);
+                    setMeasureStatus(MeasureStatus.DONE);
+                    mView.onDone(index);
                 }
             }
 
@@ -156,19 +148,14 @@ public class DashboardPresenter extends BasePresenter<DashboardContract.View> im
     public void setMeasureStatus(MeasureStatus measureStatus) {
         this.measureStatus = measureStatus;
         if (isViewAttached()) {
-            mView.updateUI(measureStatus, 1);
+            mView.updateUI(measureStatus);
         }
     }
-
-    public void setMeasureStatus(MeasureStatus measureStatus, int index) {
-        this.measureStatus = measureStatus;
-        if (isViewAttached()) {
-            mView.updateUI(measureStatus, index);
-        }
-    }
-
 
     public MeasureStatus getMeasureStatus() {
+        if (measureStatus != MeasureStatus.RUNNING && isRunning()) {
+            measureStatus = MeasureStatus.RUNNING;
+        }
         return measureStatus;
     }
 
@@ -177,7 +164,6 @@ public class DashboardPresenter extends BasePresenter<DashboardContract.View> im
         if (measureRunningStatus == null) {
             return MeasureStatus.NORMAL;
         }
-
         if (measureRunningStatus.isRunning) {
             return MeasureStatus.RUNNING;
         } else {
@@ -187,8 +173,8 @@ public class DashboardPresenter extends BasePresenter<DashboardContract.View> im
 
     public boolean isRunning() {
         for (int index = 1; index < 6; index++) {
-            DashboardModel.MeasureRunningStatus measureRunningStatus = model.getMeasureRunningStatus(index);
-            if (measureRunningStatus != null && measureRunningStatus.isRunning) {
+            MeasureStatus measureRunningStatus = getMeasureStatus(index);
+            if (measureRunningStatus == MeasureStatus.RUNNING) {
                 return true;
             }
         }

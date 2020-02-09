@@ -185,7 +185,7 @@ public class DashboardActivity extends BluetoothBaseActivity<DashboardPresenter>
     public void initView() {
         mPresenter = new DashboardPresenter();
         mPresenter.attachView(this);
-        DashboardActivity.mDashboardPresenter = mPresenter;
+        mDashboardPresenter = mPresenter;
 
         initChartView();
     }
@@ -225,10 +225,10 @@ public class DashboardActivity extends BluetoothBaseActivity<DashboardPresenter>
                 }
 
                 if (noRunning) {
-                    updateUI(MeasureStatus.NORMAL, 1);
+                    updateUI(MeasureStatus.NORMAL);
                     return;
                 }
-                updateUI(MeasureStatus.RUNNING, 1);
+                updateUI(MeasureStatus.RUNNING);
 
                 addEntry(measureValueList);
                 DecimalFormat df = new DecimalFormat("0.0000");
@@ -313,6 +313,34 @@ public class DashboardActivity extends BluetoothBaseActivity<DashboardPresenter>
     }
 
     @Override
+    public void onDone(final int index) {
+        runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                if (isFront) {
+                    AlertDialog.Builder builder = new AlertDialog.Builder(DashboardActivity.this);
+                    builder.setTitle("提示");//设置title
+                    builder.setMessage("测点" + index + "测量完成");//设置内容
+                    //点击确认按钮事件
+                    builder.setPositiveButton("确认", new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialog, int which) {
+                            dialog.dismiss();
+                        }
+                    });
+                    //创建出AlertDialog对象
+                    AlertDialog alertDialog = builder.create();
+                    //点击对话框之外的地方不消失
+                    alertDialog.setCanceledOnTouchOutside(false);
+                    //设置显示
+                    alertDialog.show();
+                    playSound();
+                }
+            }
+        });
+    }
+
+    @Override
     public void onError(final Throwable throwable) {
         runOnUiThread(new Runnable() {
             @Override
@@ -326,11 +354,6 @@ public class DashboardActivity extends BluetoothBaseActivity<DashboardPresenter>
     public void startMeasure() {
 
         switch (mPresenter.getMeasureStatus()) {
-            case STOP:
-            case ERROR:
-            case NORMAL:
-            case DONE:
-                break;
             case RUNNING:
                 onError(new Exception("测量中..."));
                 return;
@@ -338,7 +361,7 @@ public class DashboardActivity extends BluetoothBaseActivity<DashboardPresenter>
                 onError(new Exception("设备尚未连接，请点击右上角蓝牙按钮连接设备"));
                 return;
             default:
-                return;
+                break;
         }
         progressdialog = new ProgressDialog(DashboardActivity.this);
         progressdialog.setTitle("提示");
@@ -427,7 +450,7 @@ public class DashboardActivity extends BluetoothBaseActivity<DashboardPresenter>
     }
 
     @Override
-    public void updateUI(final MeasureStatus measureStatus, final int index) {
+    public void updateUI(final MeasureStatus measureStatus) {
         runOnUiThread(new Runnable() {
             @Override
             public void run() {
@@ -436,132 +459,96 @@ public class DashboardActivity extends BluetoothBaseActivity<DashboardPresenter>
                         btnStartMeasure.setAlpha(0.32f);
                         btnStopMeasure.setAlpha(0.32f);
                         break;
-                    case NORMAL:
-                        btnStartMeasure.setAlpha(1.0f);
-                        btnStopMeasure.setAlpha(0.32f);
-                        break;
                     case RUNNING:
                         btnStartMeasure.setAlpha(0.32f);
                         btnStopMeasure.setAlpha(1.0f);
                         break;
-                    case STOP:
-                    case ERROR:
-                    case DONE:
+                    default:
                         btnStartMeasure.setAlpha(1.0f);
                         btnStopMeasure.setAlpha(0.32f);
-                        if (measureStatus == MeasureStatus.DONE && index > 0) {
-                            if (isFront) {
-                                AlertDialog.Builder builder = new AlertDialog.Builder(DashboardActivity.this);
-                                builder.setTitle("提示");//设置title
-                                builder.setMessage("测点" + index + "测量完成");//设置内容
-                                //点击确认按钮事件
-                                builder.setPositiveButton("确认", new DialogInterface.OnClickListener() {
-                                    @Override
-                                    public void onClick(DialogInterface dialog, int which) {
-                                        dialog.dismiss();
-                                    }
-                                });
-                                //创建出AlertDialog对象
-                                AlertDialog alertDialog = builder.create();
-                                //点击对话框之外的地方不消失
-                                alertDialog.setCanceledOnTouchOutside(false);
-                                //设置显示
-                                alertDialog.show();
-                                playSound();
-                            }
-                        }
-                        break;
-                    default:
                         break;
                 }
             }
         });
-
     }
 
     @Override
-    public void alreadyRunning(final Map<Integer, DashboardModel.MeasureRunningStatus> measureRunningStatusMap, final String time) {
-        Log.d(TAG, "alreadyRunning" + time);
+    public void updateRunningStatus(final Map<Integer, DashboardModel.MeasureRunningStatus> measureRunningStatusMap) {
         runOnUiThread(new Runnable() {
             @Override
             public void run() {
 
                 final int pointCount = App.getInstance().getLocalDataService().queryAppConfig().getPointCount();
-                DashboardModel.MeasureRunningStatus measureRunningStatus = null;
+                DashboardModel.MeasureRunningStatus measureRunningStatus;
                 switch (pointCount) {
                     case 1:
                         measureRunningStatus = measureRunningStatusMap.get(1);
-                        if (measureRunningStatus != null && measureRunningStatus.isRunning && alreadyRunning != null && time != null) {
-                            alreadyRunning.setText(time);
+                        if (measureRunningStatus != null && measureRunningStatus.isRunning && alreadyRunning != null && measureRunningStatus.getRunningTime() != null) {
+                            alreadyRunning.setText(measureRunningStatus.getRunningTime());
                         }
                         break;
                     case 2:
                         measureRunningStatus = measureRunningStatusMap.get(1);
-                        if (measureRunningStatus != null && measureRunningStatus.isRunning && alreadyRunning != null && time != null) {
-                            alreadyRunning.setText(time);
+                        if (measureRunningStatus != null && measureRunningStatus.isRunning && alreadyRunning != null && measureRunningStatus.getRunningTime() != null) {
+                            alreadyRunning.setText(measureRunningStatus.getRunningTime());
                         }
                         measureRunningStatus = measureRunningStatusMap.get(2);
-                        if (measureRunningStatus != null && measureRunningStatus.isRunning && alreadyRunning1 != null && time != null) {
-                            alreadyRunning1.setText(time);
+                        if (measureRunningStatus != null && measureRunningStatus.isRunning && alreadyRunning1 != null && measureRunningStatus.getRunningTime() != null) {
+                            alreadyRunning1.setText(measureRunningStatus.getRunningTime());
                         }
                         break;
                     case 3:
                         measureRunningStatus = measureRunningStatusMap.get(1);
-                        if (measureRunningStatus != null && measureRunningStatus.isRunning && alreadyRunning != null && time != null) {
-                            alreadyRunning.setText(time);
+                        if (measureRunningStatus != null && measureRunningStatus.isRunning && alreadyRunning != null && measureRunningStatus.getRunningTime() != null) {
+                            alreadyRunning.setText(measureRunningStatus.getRunningTime());
                         }
                         measureRunningStatus = measureRunningStatusMap.get(2);
-                        if (measureRunningStatus != null && measureRunningStatus.isRunning && alreadyRunning1 != null && time != null) {
-                            alreadyRunning1.setText(time);
+                        if (measureRunningStatus != null && measureRunningStatus.isRunning && alreadyRunning1 != null && measureRunningStatus.getRunningTime() != null) {
+                            alreadyRunning1.setText(measureRunningStatus.getRunningTime());
                         }
                         measureRunningStatus = measureRunningStatusMap.get(3);
-                        if (measureRunningStatus != null && measureRunningStatus.isRunning && alreadyRunning2 != null && time != null) {
-                            alreadyRunning2.setText(time);
+                        if (measureRunningStatus != null && measureRunningStatus.isRunning && alreadyRunning2 != null && measureRunningStatus.getRunningTime() != null) {
+                            alreadyRunning2.setText(measureRunningStatus.getRunningTime());
                         }
                         break;
                     case 4:
                         measureRunningStatus = measureRunningStatusMap.get(1);
-                        if (measureRunningStatus != null && measureRunningStatus.isRunning && alreadyRunning != null && time != null) {
-                            alreadyRunning.setText(time);
+                        if (measureRunningStatus != null && measureRunningStatus.isRunning && alreadyRunning != null && measureRunningStatus.getRunningTime() != null) {
+                            alreadyRunning.setText(measureRunningStatus.getRunningTime());
                         }
                         measureRunningStatus = measureRunningStatusMap.get(2);
-                        if (measureRunningStatus != null && measureRunningStatus.isRunning && alreadyRunning1 != null && time != null) {
-                            alreadyRunning1.setText(time);
+                        if (measureRunningStatus != null && measureRunningStatus.isRunning && alreadyRunning1 != null && measureRunningStatus.getRunningTime() != null) {
+                            alreadyRunning1.setText(measureRunningStatus.getRunningTime());
                         }
                         measureRunningStatus = measureRunningStatusMap.get(3);
-                        if (measureRunningStatus != null && measureRunningStatus.isRunning && alreadyRunning2 != null && time != null) {
-                            alreadyRunning2.setText(time);
+                        if (measureRunningStatus != null && measureRunningStatus.isRunning && alreadyRunning2 != null && measureRunningStatus.getRunningTime() != null) {
+                            alreadyRunning2.setText(measureRunningStatus.getRunningTime());
                         }
                         measureRunningStatus = measureRunningStatusMap.get(4);
-                        if (measureRunningStatus != null && measureRunningStatus.isRunning && alreadyRunning3 != null && time != null) {
-                            alreadyRunning3.setText(time);
+                        if (measureRunningStatus != null && measureRunningStatus.isRunning && alreadyRunning3 != null && measureRunningStatus.getRunningTime() != null) {
+                            alreadyRunning3.setText(measureRunningStatus.getRunningTime());
                         }
                         break;
                     case 5:
                         measureRunningStatus = measureRunningStatusMap.get(1);
-                        if (measureRunningStatus != null && measureRunningStatus.isRunning && alreadyRunning != null && time != null) {
-                            alreadyRunning.setText(time);
+                        if (measureRunningStatus != null && measureRunningStatus.isRunning && alreadyRunning != null && measureRunningStatus.getRunningTime() != null) {
+                            alreadyRunning.setText(measureRunningStatus.getRunningTime());
                         }
                         measureRunningStatus = measureRunningStatusMap.get(2);
-                        if (measureRunningStatus != null && measureRunningStatus.isRunning && alreadyRunning1 != null && time != null) {
-                            alreadyRunning1.setText(time);
+                        if (measureRunningStatus != null && measureRunningStatus.isRunning && alreadyRunning1 != null && measureRunningStatus.getRunningTime() != null) {
+                            alreadyRunning1.setText(measureRunningStatus.getRunningTime());
                         }
                         measureRunningStatus = measureRunningStatusMap.get(3);
-                        if (measureRunningStatus != null && measureRunningStatus.isRunning && alreadyRunning2 != null && time != null) {
-                            alreadyRunning2.setText(time);
+                        if (measureRunningStatus != null && measureRunningStatus.isRunning && alreadyRunning2 != null && measureRunningStatus.getRunningTime() != null) {
+                            alreadyRunning2.setText(measureRunningStatus.getRunningTime());
                         }
                         measureRunningStatus = measureRunningStatusMap.get(4);
-                        if (measureRunningStatus != null && measureRunningStatus.isRunning && alreadyRunning3 != null && time != null) {
-                            alreadyRunning3.setText(time);
+                        if (measureRunningStatus != null && measureRunningStatus.isRunning && alreadyRunning3 != null && measureRunningStatus.getRunningTime() != null) {
+                            alreadyRunning3.setText(measureRunningStatus.getRunningTime());
                         }
                         measureRunningStatus = measureRunningStatusMap.get(5);
-                        if (measureRunningStatus != null && measureRunningStatus.isRunning && alreadyRunning4 != null && time != null) {
-                            alreadyRunning4.setText(time);
-                        }
-                        break;
-                    default:
-                        if (alreadyRunning != null && time != null) {
-                            alreadyRunning.setText(time);
+                        if (measureRunningStatus != null && measureRunningStatus.isRunning && alreadyRunning4 != null && measureRunningStatus.getRunningTime() != null) {
+                            alreadyRunning4.setText(measureRunningStatus.getRunningTime());
                         }
                         break;
                 }
@@ -614,9 +601,9 @@ public class DashboardActivity extends BluetoothBaseActivity<DashboardPresenter>
             public void run() {
                 mPresenter.attachView(DashboardActivity.this);
                 if (mPresenter.isRunning()) {
-                    updateUI(MeasureStatus.RUNNING, 0);
+                    updateUI(MeasureStatus.RUNNING);
                 } else {
-                    updateUI(MeasureStatus.NORMAL, 0);
+                    updateUI(MeasureStatus.NORMAL);
 
                 }
 
@@ -632,7 +619,6 @@ public class DashboardActivity extends BluetoothBaseActivity<DashboardPresenter>
 
     @Override
     protected void onDestroy() {
-        mPresenter.stopAll();
         mPresenter.onDestroy();
         super.onDestroy();
     }
@@ -674,7 +660,7 @@ public class DashboardActivity extends BluetoothBaseActivity<DashboardPresenter>
             if (measureValue.getMeasureStatus() == 0x01) {
                 data.addEntry(new Entry(set.getEntryCount(), (float) measureValue.getActivity(), measureValue.getReportTime()), i);
             } else {
-                data.addEntry(new Entry(set.getEntryCount(), -1, measureValue.getReportTime()), i);
+//                data.addEntry(new Entry(set.getEntryCount(), -1, measureValue.getReportTime()), i);
             }
         }
         data.notifyDataChanged();

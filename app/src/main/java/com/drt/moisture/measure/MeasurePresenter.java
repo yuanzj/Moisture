@@ -64,13 +64,9 @@ public class MeasurePresenter extends BasePresenter<MeasureContract.View> implem
         App.getInstance().getLocalDataService().setHistory(measureName);
 
         model.startMeasure(measureName, measureModel, new MeasureDataCallback<StartMeasureResponse>() {
-            @Override
-            public void runningTime(String time) {
-
-            }
 
             @Override
-            public void runningTime(Map<Integer, DashboardModel.MeasureRunningStatus> measureRunningStatusMap, String time) {
+            public void runningStatus(Map<Integer, DashboardModel.MeasureRunningStatus> measureRunningStatusMap) {
 
             }
 
@@ -79,14 +75,7 @@ public class MeasurePresenter extends BasePresenter<MeasureContract.View> implem
                 model.startQuery(measureModel, new MeasureDataCallback<MeasureValue>() {
 
                     @Override
-                    public void runningTime(String time) {
-                        if (isViewAttached()) {
-                            mView.alreadyRunning(time);
-                        }
-                    }
-
-                    @Override
-                    public void runningTime(Map<Integer, DashboardModel.MeasureRunningStatus> measureRunningStatusMap, String time) {
+                    public void runningStatus(Map<Integer, DashboardModel.MeasureRunningStatus> measureRunningStatusMap) {
 
                     }
 

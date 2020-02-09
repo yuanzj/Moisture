@@ -14,35 +14,79 @@ import java.util.Map;
 public interface DashboardContract {
     interface Model {
 
+        /**
+         * 根据测点编号或者测量时间
+         * @param index
+         * @return
+         */
         int getMeasureTime(int index);
 
+        /**
+         * 设置测量时间
+         * @param period
+         * @param index
+         */
         void setMeasureTime(int period, int index);
 
+        /**
+         * 设置测量模式
+         * @param index
+         * @param model
+         */
         void setMeasureModel(int index, int model);
 
+        /**
+         * 启动测量
+         * @param name
+         * @param model
+         * @param index
+         * @param callback
+         */
         void startMeasure(String name, int model, int index, MeasureDataCallback<StartMeasureResponse> callback);
 
-        void startQuery(int model, int pointCount, MeasureDataCallback<List<MeasureValue>> callback);
+        /**
+         * 启动查询
+         * @param pointCount
+         * @param callback
+         */
+        void startQuery(int pointCount, MeasureDataCallback<List<MeasureValue>> callback);
 
-        void stopQuery(boolean sendCommand, int index);
+        /**
+         * 指定节点编号，停止测量
+         * @param sendCommand
+         * @param index
+         */
+        void stopMeasure(boolean sendCommand, int index);
 
+        /**
+         * 停止所有测量
+         */
         void stopAll();
 
-        void onDestroy();
-
+        /**
+         * 获取节点测量状态
+         * @param index
+         * @return
+         */
         DashboardModel.MeasureRunningStatus getMeasureRunningStatus(int index);
 
+        /**
+         * 释放资源
+         */
+        void onDestroy();
     }
 
     interface View extends BaseView {
 
-        void updateUI(MeasureStatus measureStatus, int index);
+        void updateUI(MeasureStatus measureStatus);
 
-        void alreadyRunning(Map<Integer, DashboardModel.MeasureRunningStatus> measureRunningStatusMap, String time);
+        void updateRunningStatus(Map<Integer, DashboardModel.MeasureRunningStatus> measureRunningStatusMap);
 
         void onStartMeasureSuccess(int index);
 
         void onSuccess(List<MeasureValue> measureValue);
+
+        void onDone(int index);
 
         @Override
         void onError(Throwable throwable);

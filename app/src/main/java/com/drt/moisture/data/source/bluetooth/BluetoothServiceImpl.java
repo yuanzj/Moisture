@@ -806,6 +806,22 @@ public class BluetoothServiceImpl implements BluetoothService, BleWriteResponse 
     }
 
     @Override
+    public void queryClsl(SppDataCallback<CdslSetResponse> sppDataCallback) {
+        this.sppDataCallback = sppDataCallback;
+        QueryParameRequest queryParameRequest = new QueryParameRequest();
+        queryParameRequest.setCmdGroup((byte) 0xA2);
+        queryParameRequest.setCmd((byte) 0x8A);
+        queryParameRequest.setResponse((byte) 0x01);
+        queryParameRequest.setReserved(0);
+
+        try {
+            App.getInstance().getBluetoothClient().write(App.getInstance().getConnectMacAddress(), UUIDUtils.makeUUID(0xFFE0), UUIDUtils.makeUUID(0xFFE1), BluetoothDataUtil.encode(queryParameRequest), this);
+        } catch (IllegalAccessException | RkFieldException | FieldConvertException e) {
+            e.printStackTrace();
+        }
+    }
+
+    @Override
     public void onResponse(int code) {
         if (code == REQUEST_SUCCESS) {
             Log.d(TAG, "onResponse success");

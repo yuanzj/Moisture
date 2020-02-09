@@ -201,4 +201,10 @@ public interface BluetoothService {
      */
     void querySoc(SppDataCallback<SocResponse> sppDataCallback);
 
+    /**
+     * 查询节点数量
+     * @param sppDataCallback
+     */
+    void queryClsl(SppDataCallback<CdslSetResponse> sppDataCallback);
+
 }

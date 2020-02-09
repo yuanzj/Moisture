@@ -1,10 +1,8 @@
 package com.drt.moisture.measure;
 
 import android.annotation.SuppressLint;
-import android.text.TextUtils;
 
 import com.drt.moisture.App;
-import com.drt.moisture.R;
 import com.drt.moisture.data.AppConfig;
 import com.drt.moisture.data.BleEvent;
 import com.drt.moisture.data.MeasureValue;
@@ -109,7 +107,7 @@ public class MeasureModel implements MeasureContract.Model {
         clockerTime.schedule(new TimerTask() {
             @Override
             public void run() {
-                measureDataCallback.runningTime(DateUtil.dateDistance(startTime, new Date()));
+//                measureDataCallback.runningStatus(DateUtil.dateDistance(startTime, new Date()));
             }
         }, 0, 1000);
 

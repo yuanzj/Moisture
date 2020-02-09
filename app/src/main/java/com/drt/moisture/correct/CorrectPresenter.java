@@ -56,13 +56,9 @@ public class CorrectPresenter extends BasePresenter<CorrectContract.View> implem
         }
 
         model.startCorrect(measureModel, type, getCorrectTime(), new MeasureDataCallback<StartMeasureResponse>() {
-            @Override
-            public void runningTime(String time) {
-
-            }
 
             @Override
-            public void runningTime(Map<Integer, DashboardModel.MeasureRunningStatus> measureRunningStatusMap, String time) {
+            public void runningStatus(Map<Integer, DashboardModel.MeasureRunningStatus> measureRunningStatusMap) {
                 
             }
 
