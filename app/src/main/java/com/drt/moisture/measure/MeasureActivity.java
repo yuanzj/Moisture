@@ -390,7 +390,7 @@ public class MeasureActivity extends BluetoothBaseActivity<DashboardPresenter> i
 
     @Override
     protected void onDestroy() {
-//        mPresenter.stopMeasure(false, index);
+//        mPresenter.stopCorrect(false, index);
         super.onDestroy();
     }
 

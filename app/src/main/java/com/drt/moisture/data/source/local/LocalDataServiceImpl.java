@@ -52,6 +52,10 @@ public class LocalDataServiceImpl implements LocalDataService {
         appConfig.setPeriod(sp.getInt("period" + index, 1500));
         appConfig.setRatio(sp.getInt("ratio" + index, 0));
         appConfig.setMeasureMode(sp.getInt("measureMode" + index, 0));
+
+        appConfig.setCorrectMode(sp.getInt("correctMode" + index, 1));
+        appConfig.setCorrectType(sp.getInt("correctType" + index, 1));
+
         appConfig.setPointCount(sp.getInt("pointCount", 1));
 
         return appConfig;
@@ -68,6 +72,10 @@ public class LocalDataServiceImpl implements LocalDataService {
         editor.putInt("correctTime" + index, appConfig.getCorrectTime());
         editor.putInt("ratio" + index, appConfig.getRatio());
         editor.putInt("measureMode" + index, appConfig.getMeasureMode());
+
+        editor.putInt("correctMode" + index, appConfig.getCorrectMode());
+        editor.putInt("correctType" + index, appConfig.getCorrectType());
+
         editor.putInt("pointCount", appConfig.getPointCount());
 
         editor.apply();

@@ -8,6 +8,7 @@ import android.view.View;
 import android.widget.Toast;
 
 import com.drt.moisture.correct.CorrectActivity;
+import com.drt.moisture.correctdashboard.CorrectDashboardActivity;
 import com.drt.moisture.dashboard.DashboardActivity;
 import com.drt.moisture.data.BleEvent;
 import com.drt.moisture.measure.MeasureActivity;
@@ -80,7 +81,7 @@ public class MainActivity extends BluetoothBaseActivity<MainPresenter> {
                 startActivity(new Intent(this, DashboardActivity.class));
                 break;
             case R.id.menu_02:
-                startActivity(new Intent(this, CorrectActivity.class));
+                startActivity(new Intent(this, CorrectDashboardActivity.class));
                 break;
             case R.id.menu_03:
                 startActivity(new Intent(this, ReportActivity.class));

@@ -16,8 +16,16 @@ import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.drt.moisture.App;
 import com.drt.moisture.BluetoothBaseActivity;
 import com.drt.moisture.R;
+import com.drt.moisture.correctdashboard.CorrectDashboardActivity;
+import com.drt.moisture.correctdashboard.CorrectDashboardContract;
+import com.drt.moisture.correctdashboard.CorrectDashboardModel;
+import com.drt.moisture.correctdashboard.CorrectDashboardPresenter;
+import com.drt.moisture.dashboard.DashboardActivity;
+import com.drt.moisture.dashboard.DashboardModel;
+import com.drt.moisture.data.AppConfig;
 import com.drt.moisture.data.MeasureStatus;
 import com.drt.moisture.data.MeasureValue;
 import com.drt.moisture.measure.MeasureActivity;
@@ -33,6 +41,8 @@ import com.inuker.bluetooth.library.Constants;
 
 import java.math.RoundingMode;
 import java.text.DecimalFormat;
+import java.util.List;
+import java.util.Map;
 
 import butterknife.BindView;
 import butterknife.OnClick;
@@ -40,7 +50,7 @@ import butterknife.OnClick;
 /**
  * @author yuanzhijian
  */
-public class CorrectActivity extends BluetoothBaseActivity<CorrectPresenter> implements CorrectContract.View {
+public class CorrectActivity extends BluetoothBaseActivity<CorrectDashboardPresenter> implements CorrectDashboardContract.View {
 
     private static final String TAG = CorrectActivity.class.getSimpleName();
 
@@ -74,11 +84,27 @@ public class CorrectActivity extends BluetoothBaseActivity<CorrectPresenter> imp
     @BindView(R.id.activeness)
     TextView activeness;
 
+    int index;
+
+    int pointCount;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        spMeasureTime.setSelection(mPresenter.getCorrectTime() - 15);
+        index = getIntent().getIntExtra("index", 1);
+        pointCount = App.getInstance().getLocalDataService().queryAppConfig().getPointCount();
+        AppConfig appConfig = App.getInstance().getLocalDataService().queryAppConfig(index);
+        if (appConfig.getCorrectMode() == 2) {
+            spMeasureModel.setSelection(2);
+        } else {
+            if (appConfig.getCorrectType() == 1) {
+                spMeasureModel.setSelection(0);
+            } else {
+                spMeasureModel.setSelection(1);
+            }
+        }
+
+        spMeasureTime.setSelection(mPresenter.geCorrectTime(index) - 15);
     }
 
     @Override
@@ -88,7 +114,7 @@ public class CorrectActivity extends BluetoothBaseActivity<CorrectPresenter> imp
 
     @Override
     public void initView() {
-        mPresenter = new CorrectPresenter();
+        mPresenter = CorrectDashboardActivity.getDashboardPresenter();
         mPresenter.attachView(this);
 
         initChartView();
@@ -116,7 +142,7 @@ public class CorrectActivity extends BluetoothBaseActivity<CorrectPresenter> imp
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
                 Log.d(TAG, "spMeasureTime:spMeasureModelonItemSelected:position:" + position);
-                mPresenter.setCorrectTime(position + 15);
+                mPresenter.setCorrectTime(position + 15, index);
             }
 
             @Override
@@ -137,7 +163,15 @@ public class CorrectActivity extends BluetoothBaseActivity<CorrectPresenter> imp
     }
 
     @Override
-    public void onSuccess(final MeasureValue measureValue) {
+    public void onSuccess(final List<MeasureValue> measureValueList) {
+        if (CorrectDashboardActivity.getCorrectDashboardActivity() != null) {
+            CorrectDashboardActivity.getCorrectDashboardActivity().onSuccess(measureValueList);
+        }
+        if (index == 0) {
+            return;
+        }
+        final MeasureValue measureValue = measureValueList.get(index - 1);
+
         runOnUiThread(new Runnable() {
             @Override
             public void run() {
@@ -149,6 +183,11 @@ public class CorrectActivity extends BluetoothBaseActivity<CorrectPresenter> imp
                 activeness.setText(df.format(measureValue.getActivity()));
             }
         });
+    }
+
+    @Override
+    public void onDone() {
+
     }
 
     @Override
@@ -194,7 +233,13 @@ public class CorrectActivity extends BluetoothBaseActivity<CorrectPresenter> imp
                         }
 
                         chart.clear();
-                        mPresenter.startCorrect(model, type);
+
+                        AppConfig appConfig = App.getInstance().getLocalDataService().queryAppConfig(index);
+                        appConfig.setCorrectMode(model);
+                        appConfig.setCorrectType(type);
+                        App.getInstance().getLocalDataService().setAppConfig(index, appConfig);
+
+                        mPresenter.startCorrect(model, type, pointCount);
                     }
                 }).setNegativeButton("取消", new DialogInterface.OnClickListener() {
                     @Override
@@ -304,7 +349,8 @@ public class CorrectActivity extends BluetoothBaseActivity<CorrectPresenter> imp
                             @Override
                             public void onClick(DialogInterface dialogInterface, int i) {
 
-                                mPresenter.startCorrect(0x02, 0x02);
+
+                                mPresenter.startCorrect(0x02, 0x02, pointCount);
 
                             }
                         }).setNegativeButton("取消", new DialogInterface.OnClickListener() {
@@ -319,14 +365,25 @@ public class CorrectActivity extends BluetoothBaseActivity<CorrectPresenter> imp
     }
 
     @Override
-    public void alreadyRunning(final String time) {
-        Log.d(TAG, "updateRunningStatus" + time);
+    public void updateRunningStatus(final Map<Integer, CorrectDashboardModel.MeasureRunningStatus> measureRunningStatusMap) {
+        if (CorrectDashboardActivity.getCorrectDashboardActivity() != null) {
+            CorrectDashboardActivity.getCorrectDashboardActivity().updateRunningStatus(measureRunningStatusMap);
+        }
         runOnUiThread(new Runnable() {
             @Override
             public void run() {
-                alreadyRunning.setText(time);
+                CorrectDashboardModel.MeasureRunningStatus measureRunningStatus = measureRunningStatusMap.get(index);
+                if (measureRunningStatus != null && measureRunningStatus.isRunning() && alreadyRunning != null && measureRunningStatus.getRunningTime() != null) {
+                    alreadyRunning.setText(measureRunningStatus.getRunningTime());
+                }
             }
         });
+    }
+
+    @Override
+    public void onStartMeasureSuccess() {
+        int pointCount = App.getInstance().getLocalDataService().queryAppConfig().getPointCount();
+        mPresenter.queryCorrectResult(pointCount);
     }
 
     @Override
@@ -377,7 +434,7 @@ public class CorrectActivity extends BluetoothBaseActivity<CorrectPresenter> imp
         //chart.setVisibleYRangeMaximum(15, AxisDependency.LEFT);
 //
 //            // this automatically refreshes the chart (calls invalidate())
-        chart.moveViewTo(data.getEntryCount() - 1, (float) measureValue.getActivity(), YAxis.AxisDependency.LEFT);
+        chart.moveViewToX((float) (data.getEntryCount() - 1));
     }
 
 //    private LineDataSet createTemperatureSet() {
@@ -402,7 +459,7 @@ public class CorrectActivity extends BluetoothBaseActivity<CorrectPresenter> imp
         d2.setCircleColor(getResources().getColor(R.color.colorGreen, getTheme()));
         d2.setDrawValues(true);
         d2.setMode(LineDataSet.Mode.CUBIC_BEZIER);
-        d2.setValueFormatter(new ValueFormatter(){
+        d2.setValueFormatter(new ValueFormatter() {
             public String getFormattedValue(float value) {
                 DecimalFormat df = new DecimalFormat("0.00");
                 df.setRoundingMode(RoundingMode.DOWN);

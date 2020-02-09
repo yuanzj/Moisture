@@ -85,7 +85,7 @@ public class CorrectModel implements CorrectContract.Model, SppDataCallback<Corr
         clockerTime.schedule(new TimerTask() {
             @Override
             public void run() {
-                callback.runningTime(DateUtil.dateDistance(startTime, new Date()));
+//                callback.runningTime(DateUtil.dateDistance(startTime, new Date()));
             }
         }, 0, 1000);
 

@@ -17,7 +17,7 @@ public class StopMeasureRequest {
     private int Reserved;
 
     @RkField(position = 5, length = 1)
-    private byte index;
+    private int index;
 
     public byte getCmdGroup() {
         return CmdGroup;
@@ -51,11 +51,11 @@ public class StopMeasureRequest {
         Reserved = reserved;
     }
 
-    public byte getIndex() {
+    public int getIndex() {
         return index;
     }
 
-    public void setIndex(byte index) {
+    public void setIndex(int index) {
         this.index = index;
     }
 }

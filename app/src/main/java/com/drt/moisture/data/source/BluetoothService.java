@@ -23,44 +23,77 @@ public interface BluetoothService {
 
     /**
      * 开始测量
+     *
      * @param name
      * @param measureModel
      * @param interval
      * @param time
      * @param sppDataCallback
      */
-    void startMeasure(String name, int measureModel, int interval, int time, SppDataCallback<StartMeasureResponse> sppDataCallback,final boolean retry);
+    void startMeasure(String name, int measureModel, int interval, int time, SppDataCallback<StartMeasureResponse> sppDataCallback, final boolean retry);
 
-    void startMeasure(String name, int measureModel, int interval, int time, int index, SppDataCallback<StartMeasureResponse> sppDataCallback,final boolean retry);
+    /**
+     * 开始测量
+     *
+     * @param name
+     * @param measureModel
+     * @param interval
+     * @param time
+     * @param index
+     * @param sppDataCallback
+     * @param retry
+     */
+    void startMeasure(String name, int measureModel, int interval, int time, int index, SppDataCallback<StartMeasureResponse> sppDataCallback, final boolean retry);
 
 
     /**
      * 开始校准
+     *
      * @param mode
      * @param type
      * @param time
      * @param sppDataCallback
      */
-    void startCorrect(int mode, int type, int time, SppDataCallback<StartMeasureResponse> sppDataCallback,final boolean retry);
+    void startCorrect(int mode, int type, int time, SppDataCallback<StartMeasureResponse> sppDataCallback, final boolean retry);
+
+    /**
+     * 开始校准
+     *
+     * @param mode
+     * @param type
+     * @param count
+     * @param sppDataCallback
+     */
+    void startCorrect(int mode, int type, int time, int count, SppDataCallback<StartMeasureResponse> sppDataCallback, final boolean retry);
 
 
     /**
      * 停止测量
+     *
      * @param sppDataCallback
      */
     void stopMeasure(SppDataCallback<StopMeasureResponse> sppDataCallback);
 
     /**
      * 停止测量
+     *
      * @param sppDataCallback
      */
     void stopMeasure(int index, SppDataCallback<StopMeasureResponse> sppDataCallback);
 
     /**
      * 停止校准
+     *
      * @param sppDataCallback
      */
     void stopCorrect(SppDataCallback<StopMeasureResponse> sppDataCallback);
+
+    /**
+     * 停止校准
+     *
+     * @param sppDataCallback
+     */
+    void stopCorrect(int pintCount, SppDataCallback<StopMeasureResponse> sppDataCallback);
 
     /**
      * 查询测量记录
@@ -81,17 +114,27 @@ public interface BluetoothService {
 
     /**
      * 查询自动测量
+     *
      * @param time
      * @param sppDataCallback
      */
     void queryAutoRecord(long time, SppDataCallback<AutoRecordDataResponse> sppDataCallback);
+
     /**
      * 查询测量记录
      *
      * @param type
      * @param sppDataCallback
      */
-    void queryCorrect(int measureModel,  int type, int interval, long time, SppDataCallback<CorrectDataResponse> sppDataCallback);
+    void queryCorrect(int measureModel, int type, int interval, long time, SppDataCallback<CorrectDataResponse> sppDataCallback);
+
+    /**
+     * 查询测量记录
+     *
+     * @param type
+     * @param sppDataCallback
+     */
+    void queryCorrect(int measureModel, int type, int interval, long time, int pointCount,SppDataCallback<CorrectDataResponse> sppDataCallback);
 
     /**
      * 查询设备信息
@@ -103,12 +146,15 @@ public interface BluetoothService {
 
     /**
      * 设置设备信息
+     *
      * @param setDeviceInfoRequest
      * @param sppDataCallback
      */
     void setDeviceInfo(SetDeviceInfoParame setDeviceInfoRequest, SppDataCallback<ParameterSetResponse> sppDataCallback);
+
     /**
      * 设置时间
+     *
      * @param time
      * @param sppDataCallback
      */
@@ -116,6 +162,7 @@ public interface BluetoothService {
 
     /**
      * 设置测点数量
+     *
      * @param count
      * @param sppDataCallback
      */
@@ -123,6 +170,7 @@ public interface BluetoothService {
 
     /**
      * 设置时间
+     *
      * @param time
      */
     void setTime(long time);
@@ -130,6 +178,7 @@ public interface BluetoothService {
 
     /**
      * 设置测量参数
+     *
      * @param measureParame
      * @param sppDataCallback
      */
@@ -138,6 +187,7 @@ public interface BluetoothService {
 
     /**
      * 设置校准参数
+     *
      * @param correctParame
      * @param sppDataCallback
      */
@@ -145,12 +195,12 @@ public interface BluetoothService {
 
     /**
      * 设置频率
+     *
      * @param sppDataCallback
      */
     void setRateParam(int rate, int ratio, SppDataCallback<ParameterSetResponse> sppDataCallback, boolean retry);
 
     /**
-     *
      * @param humidityParame
      * @param sppDataCallback
      */
@@ -158,24 +208,28 @@ public interface BluetoothService {
 
     /**
      * 重置
+     *
      * @param sppDataCallback
      */
     void reset(SppDataCallback<ParameterSetResponse> sppDataCallback);
 
     /**
      * 查询测量参数
+     *
      * @param sppDataCallback
      */
     void queryMeasureParame(int type, SppDataCallback<SetMeasureParameRequest> sppDataCallback);
 
     /**
      * 查询校准参数
+     *
      * @param sppDataCallback
      */
     void queryCorrectParam(int type, SppDataCallback<SetCorrectParameRequest> sppDataCallback);
 
     /**
      * 查询湿度
+     *
      * @param sppDataCallback
      */
     void queryHumidityParam(SppDataCallback<SetHumidityParameRequest> sppDataCallback);
@@ -183,6 +237,7 @@ public interface BluetoothService {
 
     /**
      * 查询测量参数
+     *
      * @param sppDataCallback
      */
     void queryRateParame(SppDataCallback<SetRateRequest> sppDataCallback);
@@ -192,17 +247,19 @@ public interface BluetoothService {
      *
      * @param sppDataCallback
      */
-    void queryHisRecord(String name,int index, SppDataCallback<HisRecordDataResponse> sppDataCallback);
+    void queryHisRecord(String name, int index, SppDataCallback<HisRecordDataResponse> sppDataCallback);
 
 
     /**
      * 查询电量
+     *
      * @param sppDataCallback
      */
     void querySoc(SppDataCallback<SocResponse> sppDataCallback);
 
     /**
      * 查询节点数量
+     *
      * @param sppDataCallback
      */
     void queryClsl(SppDataCallback<CdslSetResponse> sppDataCallback);

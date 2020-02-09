@@ -198,6 +198,83 @@ public class BluetoothServiceImpl implements BluetoothService, BleWriteResponse 
     }
 
     @Override
+    public void startCorrect(final int mode, final int type, final int time, final int pointCount, final SppDataCallback<StartMeasureResponse> sppDataCallback, boolean retry) {
+        this.sppDataCallback = sppDataCallback;
+
+        StartCorrectRequest startCorrectRequest = new StartCorrectRequest();
+        startCorrectRequest.setCmdGroup((byte) 0xA5);
+        startCorrectRequest.setCmd((byte) 0x09);
+        startCorrectRequest.setResponse((byte) 0x01);
+        startCorrectRequest.setReserved(0);
+
+//       校准方式<br/>0x01：单点校准<br/>0x02：两点校准
+        startCorrectRequest.setModel((byte) mode);
+
+//        校准类型<br/>0x01：氯化钠校准<br/>0x02：氯化镁校准
+        startCorrectRequest.setType((byte) type);
+
+        startCorrectRequest.setTime((byte) time);
+        if (0x02 == mode) {
+            startCorrectRequest.setStep((byte) type);
+        } else {
+            startCorrectRequest.setStep((byte) mode);
+        }
+
+        switch (pointCount) {
+            case 1:
+                startCorrectRequest.setIndex(0x01);
+                break;
+            case 2:
+                startCorrectRequest.setIndex(0x03);
+                break;
+            case 3:
+                startCorrectRequest.setIndex(0x07);
+                break;
+            case 4:
+                startCorrectRequest.setIndex(0x0F);
+                break;
+            case 5:
+                startCorrectRequest.setIndex(0x1F);
+                break;
+            default:
+                startCorrectRequest.setIndex(0x01);
+                break;
+        }
+
+        try {
+            App.getInstance().getBluetoothClient().write(App.getInstance().getConnectMacAddress(), UUIDUtils.makeUUID(0xFFE0), UUIDUtils.makeUUID(0xFFE1), BluetoothDataUtil.encode(startCorrectRequest), this);
+
+            if (!retry) {
+                expectResponseCode = 0xA5;
+                currentRetryCount = 0;
+                if (timeoutTimer != null) {
+                    timeoutTimer.cancel();
+                }
+                timeoutTimer = new Timer();
+                timeoutTimer.schedule(new TimerTask() {
+                    @Override
+                    public void run() {
+                        if (currentRetryCount >= 2) {
+                            currentRetryCount = 0;
+                            timeoutTimer.cancel();
+                            timeoutTimer = null;
+                        } else {
+                            if (timeoutTimer != null) {
+                                currentRetryCount++;
+                                startCorrect(mode, type, time, pointCount, sppDataCallback, true);
+                            }
+                        }
+
+                    }
+                }, 300, 300);
+            }
+
+        } catch (IllegalAccessException | RkFieldException | FieldConvertException e) {
+            e.printStackTrace();
+        }
+    }
+
+    @Override
     public void stopMeasure(SppDataCallback<StopMeasureResponse> sppDataCallback) {
         stopMeasure(1, sppDataCallback);
     }
@@ -237,6 +314,50 @@ public class BluetoothServiceImpl implements BluetoothService, BleWriteResponse 
         request.setCmd((byte) 0x0A);
         request.setResponse((byte) 0x01);
         request.setReserved(0);
+
+        try {
+            App.getInstance().getBluetoothClient().write(App.getInstance().getConnectMacAddress(), UUIDUtils.makeUUID(0xFFE0), UUIDUtils.makeUUID(0xFFE1), BluetoothDataUtil.encode(request), this);
+        } catch (IllegalAccessException | RkFieldException | FieldConvertException e) {
+            e.printStackTrace();
+        }
+    }
+
+    @Override
+    public void stopCorrect(int pointCount, SppDataCallback<StopMeasureResponse> sppDataCallback) {
+        if (timeoutTimer != null) {
+            timeoutTimer.cancel();
+            timeoutTimer = null;
+        }
+        this.sppDataCallback = sppDataCallback;
+
+        StopMeasureRequest request = new StopMeasureRequest();
+        request.setCmdGroup((byte) 0xA5);
+        request.setCmd((byte) 0x0A);
+        request.setResponse((byte) 0x01);
+        request.setReserved(0);
+
+
+//        节点索引：<br>用每一位表示一个节点，且可以组合使用<br>0x0001：1号节点<br>0x0002：2号节点<br>0x0010：5号节点<br>0x001f：1~5，共5个节点
+        switch (pointCount) {
+            case 1:
+                request.setIndex(0x01);
+                break;
+            case 2:
+                request.setIndex(0x03);
+                break;
+            case 3:
+                request.setIndex(0x07);
+                break;
+            case 4:
+                request.setIndex(0x0F);
+                break;
+            case 5:
+                request.setIndex(0x1F);
+                break;
+            default:
+                request.setIndex(0x01);
+                break;
+        }
 
         try {
             App.getInstance().getBluetoothClient().write(App.getInstance().getConnectMacAddress(), UUIDUtils.makeUUID(0xFFE0), UUIDUtils.makeUUID(0xFFE1), BluetoothDataUtil.encode(request), this);
@@ -357,6 +478,73 @@ public class BluetoothServiceImpl implements BluetoothService, BleWriteResponse 
 
 
         recordDataRequest.setReserved(0x00);
+        try {
+            App.getInstance().getBluetoothClient().write(App.getInstance().getConnectMacAddress(), UUIDUtils.makeUUID(0xFFE0), UUIDUtils.makeUUID(0xFFE1), BluetoothDataUtil.encode(recordDataRequest), this);
+
+        } catch (IllegalAccessException | RkFieldException | FieldConvertException e) {
+            e.printStackTrace();
+        }
+    }
+
+    @Override
+    public void queryCorrect(int measureModel, int type, int interval, long time, int pointCount, SppDataCallback<CorrectDataResponse> sppDataCallback) {
+        this.sppDataCallback = sppDataCallback;
+
+        CorrectDataRequest recordDataRequest = new CorrectDataRequest();
+        recordDataRequest.setCmdGroup((byte) 0xA4);
+//        命令编号
+//        0x05 单点氯化钠
+//        0x06 单点氯化镁
+//        0x15 多点氯化钠
+//        0x16 多点氯化镁
+
+//        校准方式<br/>0x01：单点校准<br/>0x02：两点校准
+//                        校准类型<br/>0x01：氯化钠校准<br/>0x02：氯化镁校准
+
+        if (measureModel == 0x01 && type == 0x01) {
+            recordDataRequest.setCmd((byte) 0x05);
+        } else if (measureModel == 0x01 && type == 0x02) {
+            recordDataRequest.setCmd((byte) 0x06);
+        } else if (measureModel == 0x02 && type == 0x01) {
+            recordDataRequest.setCmd((byte) 0x15);
+        } else if (measureModel == 0x02 && type == 0x02) {
+            recordDataRequest.setCmd((byte) 0x16);
+        }
+
+
+        recordDataRequest.setResponse((byte) 0x01);
+        if (interval * 3 >= time) {
+            recordDataRequest.setType(0x01);
+        } else {
+            recordDataRequest.setType(0x00);
+        }
+
+//        水分活度数据类型<br/>0x00：实际测试值<br/>0x01：真实值
+
+
+        recordDataRequest.setReserved(0x00);
+
+//        节点索引：<br>用每一位表示一个节点，且可以组合使用<br>0x0001：1号节点<br>0x0002：2号节点<br>0x0010：5号节点<br>0x001f：1~5，共5个节点
+        switch (pointCount) {
+            case 1:
+                recordDataRequest.setIndex(0x01);
+                break;
+            case 2:
+                recordDataRequest.setIndex(0x03);
+                break;
+            case 3:
+                recordDataRequest.setIndex(0x07);
+                break;
+            case 4:
+                recordDataRequest.setIndex(0x0F);
+                break;
+            case 5:
+                recordDataRequest.setIndex(0x1F);
+                break;
+            default:
+                recordDataRequest.setIndex(0x01);
+                break;
+        }
         try {
             App.getInstance().getBluetoothClient().write(App.getInstance().getConnectMacAddress(), UUIDUtils.makeUUID(0xFFE0), UUIDUtils.makeUUID(0xFFE1), BluetoothDataUtil.encode(recordDataRequest), this);
 

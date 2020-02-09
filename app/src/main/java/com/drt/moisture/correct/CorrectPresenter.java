@@ -1,6 +1,7 @@
 package com.drt.moisture.correct;
 
 
+import com.drt.moisture.correctdashboard.CorrectDashboardModel;
 import com.drt.moisture.dashboard.DashboardModel;
 import com.drt.moisture.data.MeasureStatus;
 import com.drt.moisture.data.MeasureValue;
@@ -67,10 +68,8 @@ public class CorrectPresenter extends BasePresenter<CorrectContract.View> implem
                 model.startCorrect(measureModel, type, new CorrectDataCallback<MeasureValue>() {
 
                     @Override
-                    public void runningTime(String time) {
-                        if (isViewAttached()) {
-                            mView.alreadyRunning(time);
-                        }
+                    public void runningStatus(Map<Integer, CorrectDashboardModel.MeasureRunningStatus> measureRunningStatusMap) {
+
                     }
 
                     @Override

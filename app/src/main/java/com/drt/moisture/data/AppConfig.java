@@ -42,6 +42,17 @@ public class AppConfig {
      */
     private int measureMode;
 
+
+    /**
+     * <br>0x01：单点校准<br>0x02：两点校准
+     */
+    private int correctMode;
+
+    /**
+     * <br>0x01：氯化钠校准<br>0x02：氯化镁校准
+     */
+    private int correctType;
+
     public int getPeriod() {
         return period;
     }
@@ -104,6 +115,22 @@ public class AppConfig {
 
     public void setMeasureMode(int measureMode) {
         this.measureMode = measureMode;
+    }
+
+    public int getCorrectMode() {
+        return correctMode;
+    }
+
+    public void setCorrectMode(int correctMode) {
+        this.correctMode = correctMode;
+    }
+
+    public int getCorrectType() {
+        return correctType;
+    }
+
+    public void setCorrectType(int correctType) {
+        this.correctType = correctType;
     }
 
     @Override

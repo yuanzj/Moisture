@@ -28,6 +28,9 @@ public class StartCorrectRequest {
     @RkField(position = 8, length = 1)
     private byte step;
 
+    @RkField(position = 9, length = 2)
+    private int index;
+
     public byte getCmdGroup() {
         return CmdGroup;
     }
@@ -90,5 +93,13 @@ public class StartCorrectRequest {
 
     public void setStep(byte step) {
         this.step = step;
+    }
+
+    public int getIndex() {
+        return index;
+    }
+
+    public void setIndex(int index) {
+        this.index = index;
     }
 }

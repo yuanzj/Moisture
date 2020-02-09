@@ -30,13 +30,17 @@
             android:screenOrientation="landscape" />
 
         <activity
+            android:name=".correctdashboard.CorrectDashboardActivity"
+            android:label="@string/activity_correct"
+            android:screenOrientation="landscape" />
+
+        <activity
             android:name=".correct.CorrectActivity"
             android:label="@string/activity_correct"
             android:screenOrientation="landscape" />
 
         <activity
             android:name=".report.ReportActivity"
-
             android:label="@string/activity_query"
             android:screenOrientation="landscape" />
 

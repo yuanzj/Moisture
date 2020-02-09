@@ -1,20 +1,19 @@
-package com.drt.moisture.dashboard;
+package com.drt.moisture.correctdashboard;
 
 
 import android.annotation.SuppressLint;
-import android.util.Log;
 
 import com.drt.moisture.App;
 import com.drt.moisture.data.AppConfig;
 import com.drt.moisture.data.BleEvent;
 import com.drt.moisture.data.MeasureValue;
-import com.drt.moisture.data.source.MeasureDataCallback;
+import com.drt.moisture.data.source.CorrectDataCallback;
 import com.drt.moisture.data.source.bluetooth.SppDataCallback;
-import com.drt.moisture.data.source.bluetooth.response.DashboardRecordDataResponse1;
-import com.drt.moisture.data.source.bluetooth.response.DashboardRecordDataResponse2;
-import com.drt.moisture.data.source.bluetooth.response.DashboardRecordDataResponse3;
-import com.drt.moisture.data.source.bluetooth.response.DashboardRecordDataResponse4;
-import com.drt.moisture.data.source.bluetooth.response.DashboardRecordDataResponse5;
+import com.drt.moisture.data.source.bluetooth.response.DashboardCorrectDataResponse1;
+import com.drt.moisture.data.source.bluetooth.response.DashboardCorrectDataResponse2;
+import com.drt.moisture.data.source.bluetooth.response.DashboardCorrectDataResponse3;
+import com.drt.moisture.data.source.bluetooth.response.DashboardCorrectDataResponse4;
+import com.drt.moisture.data.source.bluetooth.response.DashboardCorrectDataResponse5;
 import com.drt.moisture.data.source.bluetooth.response.StartMeasureResponse;
 import com.drt.moisture.data.source.bluetooth.response.StopMeasureResponse;
 import com.drt.moisture.util.DateUtil;
@@ -34,9 +33,9 @@ import java.util.concurrent.BlockingDeque;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.LinkedBlockingDeque;
 
-public class DashboardModel implements DashboardContract.Model {
+public class CorrectDashboardModel implements CorrectDashboardContract.Model {
 
-    private static final String TAG = DashboardModel.class.getSimpleName();
+    private static final String TAG = CorrectDashboardModel.class.getSimpleName();
 
     @SuppressLint("SimpleDateFormat")
     private static final SimpleDateFormat SIMPLE_DATE_FORMAT = new SimpleDateFormat("HH:mm:ss");
@@ -48,55 +47,57 @@ public class DashboardModel implements DashboardContract.Model {
     private Map<Integer, MeasureRunningStatus> measureRunningStatusMap = new ConcurrentHashMap<>();
     private BlockingDeque<CommandEntity> commandQueue = new LinkedBlockingDeque<>();
 
-    private volatile MeasureDataCallback<List<MeasureValue>> measureDataCallback;
+    private volatile CorrectDataCallback<List<MeasureValue>> CorrectDataCallback;
 
     private volatile boolean isRunning;
 
     private volatile int pointCount;
 
-    DashboardModel() {
+    /**
+     * 0: 氯化钠
+     * 1: 氯化镁
+     */
+    private int step;
+
+    CorrectDashboardModel() {
         isRunning = true;
         statusCheckThread.start();
         queryThread.start();
     }
 
     @Override
-    public int getMeasureTime(int index) {
+    public int getCorrectTime(int index) {
         AppConfig appConfig = App.getInstance().getLocalDataService().queryAppConfig(index);
-        return appConfig.getMeasuringTime();
+        return appConfig.getCorrectTime();
     }
 
     @Override
-    public void setMeasureTime(int period, int index) {
+    public void setCorrectTime(int time, int index) {
         AppConfig appConfig = App.getInstance().getLocalDataService().queryAppConfig(index);
-        appConfig.setMeasuringTime(period);
+        appConfig.setCorrectTime(time);
         App.getInstance().getLocalDataService().setAppConfig(index, appConfig);
     }
 
     @Override
-    public void setMeasureModel(int index, int model) {
-        AppConfig appConfig = App.getInstance().getLocalDataService().queryAppConfig(index);
-        appConfig.setMeasureMode(model);
-        App.getInstance().getLocalDataService().setAppConfig(index, appConfig);
-    }
+    public void startCorrect(final int model, final int type, final int count, final CorrectDataCallback<StartMeasureResponse> callback) {
+        if (step > 1) {
+            step = 0;
+        }
 
-    @Override
-    public void startMeasure(String name, final int model, final int index, final MeasureDataCallback<StartMeasureResponse> callback) {
-
-        AppConfig appConfig = App.getInstance().getLocalDataService().queryAppConfig(index);
-        int period = appConfig.getPeriod();
-        int measuringTime = appConfig.getMeasuringTime();
-        App.getInstance().getBluetoothService().startMeasure(name, model, period, measuringTime, index, new SppDataCallback<StartMeasureResponse>() {
+        int correctTime = getCorrectTime(1);
+        App.getInstance().getBluetoothService().startCorrect(model, type, correctTime, count, new SppDataCallback<StartMeasureResponse>() {
 
             @Override
             public void delivery(StartMeasureResponse startMeasureResponse) {
-                startMeasureResponse.setIndex(index);
-                MeasureRunningStatus mMeasureRunningStatus = new MeasureRunningStatus();
-                mMeasureRunningStatus.setIndex(index);
-                mMeasureRunningStatus.setModel(model);
-                mMeasureRunningStatus.setRunning(true);
-                mMeasureRunningStatus.setStartTime(System.currentTimeMillis());
-                measureRunningStatusMap.put(index, mMeasureRunningStatus);
+                for (int index = 1; index <= count; index++) {
+                    startMeasureResponse.setIndex(index);
+                    MeasureRunningStatus mMeasureRunningStatus = new MeasureRunningStatus();
+                    mMeasureRunningStatus.setIndex(index);
+                    mMeasureRunningStatus.setModel(model);
+                    mMeasureRunningStatus.setRunning(true);
+                    mMeasureRunningStatus.setStartTime(System.currentTimeMillis());
+                    measureRunningStatusMap.put(index, mMeasureRunningStatus);
+                }
                 callback.success(startMeasureResponse);
             }
 
@@ -109,12 +110,12 @@ public class DashboardModel implements DashboardContract.Model {
     }
 
     @Override
-    public synchronized void startQuery(int _pointCount, MeasureDataCallback<List<MeasureValue>> callback) {
-        AppConfig appConfig = App.getInstance().getLocalDataService().queryAppConfig();
+    public synchronized void startQuery(int _pointCount, CorrectDataCallback<List<MeasureValue>> callback) {
+        AppConfig appConfig = App.getInstance().getLocalDataService().queryAppConfig(1);
         int period = appConfig.getPeriod();
 
         this.pointCount = _pointCount;
-        this.measureDataCallback = callback;
+        this.CorrectDataCallback = callback;
 
         startTime = new Date();
         // 启动定时查询定时器
@@ -138,32 +139,24 @@ public class DashboardModel implements DashboardContract.Model {
     }
 
     @Override
-    public void stopMeasure(boolean sendCommand, int index) {
+    public void stopCorrect(boolean sendCommand) {
 
-        Log.d("yzj", "stopCorrect" + index);
-
-        MeasureRunningStatus measureRunningStatus = measureRunningStatusMap.get(index);
-        if (measureRunningStatus != null) {
-            measureRunningStatus.setRunning(false);
-            measureRunningStatusMap.put(index, measureRunningStatus);
-        }
-        boolean needCancelTimer = true;
-        for (MeasureRunningStatus value : measureRunningStatusMap.values()) {
-            if (value.isRunning) {
-                needCancelTimer = false;
-                break;
+        for (int i = 0; i < pointCount; i++) {
+            int index = i + 1;
+            MeasureRunningStatus measureRunningStatus = measureRunningStatusMap.get(index);
+            if (measureRunningStatus != null) {
+                measureRunningStatus.setRunning(false);
+                measureRunningStatusMap.put(index, measureRunningStatus);
             }
         }
-        if (needCancelTimer) {
-            if (runningTimer != null) {
-                runningTimer.cancel();
-            }
+
+        if (runningTimer != null) {
+            runningTimer.cancel();
         }
 
         if (sendCommand) {
             CommandEntity commandEntity = new CommandEntity();
             commandEntity.setType(1);
-            commandEntity.setIndex(index);
             try {
                 commandQueue.put(commandEntity);
             } catch (InterruptedException e) {
@@ -174,13 +167,7 @@ public class DashboardModel implements DashboardContract.Model {
 
     @Override
     public void stopAll() {
-        for (int i = 0; i < pointCount; i++) {
-            int index = i + 1;
-            MeasureRunningStatus measureRunningStatus = measureRunningStatusMap.get(index);
-            if (measureRunningStatus != null && measureRunningStatus.isRunning) {
-                stopMeasure(true, index);
-            }
-        }
+        stopCorrect(true);
     }
 
     @Override
@@ -189,77 +176,61 @@ public class DashboardModel implements DashboardContract.Model {
     }
 
     @Override
-    public MeasureRunningStatus getMeasureRunningStatus(int index) {
+    public MeasureRunningStatus getCorrectRunningStatus(int index) {
         return measureRunningStatusMap.get(index);
     }
 
-    SppDataCallback point1CallBack = new SppDataCallback<DashboardRecordDataResponse1>() {
+    SppDataCallback point1CallBack = new SppDataCallback<DashboardCorrectDataResponse1>() {
 
         @Override
-        public void delivery(DashboardRecordDataResponse1 recordDataResponse) {
-            if (measureDataCallback != null) {
+        public void delivery(DashboardCorrectDataResponse1 recordDataResponse) {
+            if (CorrectDataCallback != null) {
 
                 MeasureValue measureValue = new MeasureValue();
 
                 measureValue.setTemperature(recordDataResponse.getTemperature1() / 100.0);
                 measureValue.setActivity(recordDataResponse.getActivity1() / 10000.0);
-                measureValue.setHumidity(recordDataResponse.getHumidity1() / 10000.0);
                 measureValue.setReportTime(SIMPLE_DATE_FORMAT.format(new Date(recordDataResponse.getTime() * 1000)));
                 measureValue.setName("");
-                measureValue.setMeasureStatus(recordDataResponse.getStatus1());
                 MeasureRunningStatus measureRunningStatus = measureRunningStatusMap.get(1);
                 if (measureRunningStatus != null) {
-                    if (measureRunningStatus.getModel() == 0) {
-                        if (measureRunningStatus.isRunning) {
-                            measureValue.setMeasureStatus(0x01);
-                        } else {
-                            measureValue.setMeasureStatus(0x02);
-                        }
+                    if (measureRunningStatus.isRunning) {
+                        measureValue.setMeasureStatus(0x01);
                     } else {
-                        if (measureValue.getMeasureStatus() == 0x02) {
-                            stopMeasure(true, 1);
-                        }
+                        measureValue.setMeasureStatus(0x02);
                     }
                 } else {
                     measureValue.setMeasureStatus(0);
                 }
-                measureDataCallback.success(Collections.singletonList(measureValue));
+                CorrectDataCallback.success(Collections.singletonList(measureValue));
             }
         }
 
         @Override
-        public Class<DashboardRecordDataResponse1> getEntityType() {
-            return DashboardRecordDataResponse1.class;
+        public Class<DashboardCorrectDataResponse1> getEntityType() {
+            return DashboardCorrectDataResponse1.class;
         }
     };
 
-    SppDataCallback point2CallBack = new SppDataCallback<DashboardRecordDataResponse2>() {
+    SppDataCallback point2CallBack = new SppDataCallback<DashboardCorrectDataResponse2>() {
 
         @Override
-        public void delivery(DashboardRecordDataResponse2 recordDataResponse) {
-            if (measureDataCallback != null) {
+        public void delivery(DashboardCorrectDataResponse2 recordDataResponse) {
+            if (CorrectDataCallback != null) {
 
                 List<MeasureValue> measureValues = new ArrayList<>();
 
                 MeasureValue measureValue = new MeasureValue();
                 measureValue.setTemperature(recordDataResponse.getTemperature1() / 100.0);
                 measureValue.setActivity(recordDataResponse.getActivity1() / 10000.0);
-                measureValue.setHumidity(recordDataResponse.getHumidity1() / 10000.0);
                 measureValue.setReportTime(SIMPLE_DATE_FORMAT.format(new Date(recordDataResponse.getTime() * 1000)));
                 measureValue.setName("");
-                measureValue.setMeasureStatus(recordDataResponse.getStatus1());
                 MeasureRunningStatus measureRunningStatus = measureRunningStatusMap.get(1);
                 if (measureRunningStatus != null) {
-                    if (measureRunningStatus.getModel() == 0) {
-                        if (measureRunningStatus.isRunning) {
-                            measureValue.setMeasureStatus(0x01);
-                        } else {
-                            measureValue.setMeasureStatus(0x02);
-                        }
+                    if (measureRunningStatus.isRunning) {
+                        measureValue.setMeasureStatus(0x01);
                     } else {
-                        if (measureValue.getMeasureStatus() == 0x02) {
-                            stopMeasure(true, 1);
-                        }
+                        measureValue.setMeasureStatus(0x02);
                     }
                 } else {
                     measureValue.setMeasureStatus(0);
@@ -269,65 +240,49 @@ public class DashboardModel implements DashboardContract.Model {
                 measureValue = new MeasureValue();
                 measureValue.setTemperature(recordDataResponse.getTemperature2() / 100.0);
                 measureValue.setActivity(recordDataResponse.getActivity2() / 10000.0);
-                measureValue.setHumidity(recordDataResponse.getHumidity2() / 10000.0);
                 measureValue.setReportTime(SIMPLE_DATE_FORMAT.format(new Date(recordDataResponse.getTime() * 1000)));
                 measureValue.setName("");
-                measureValue.setMeasureStatus(recordDataResponse.getStatus2());
                 measureRunningStatus = measureRunningStatusMap.get(2);
                 if (measureRunningStatus != null) {
-                    if (measureRunningStatus.getModel() == 0) {
-                        if (measureRunningStatus.isRunning) {
-                            measureValue.setMeasureStatus(0x01);
-                        } else {
-                            measureValue.setMeasureStatus(0x02);
-                        }
+                    if (measureRunningStatus.isRunning) {
+                        measureValue.setMeasureStatus(0x01);
                     } else {
-                        if (measureValue.getMeasureStatus() == 0x02) {
-                            stopMeasure(true, 2);
-                        }
+                        measureValue.setMeasureStatus(0x02);
                     }
                 } else {
                     measureValue.setMeasureStatus(0);
                 }
                 measureValues.add(measureValue);
 
-                measureDataCallback.success(measureValues);
+                CorrectDataCallback.success(measureValues);
             }
         }
 
         @Override
-        public Class<DashboardRecordDataResponse2> getEntityType() {
-            return DashboardRecordDataResponse2.class;
+        public Class<DashboardCorrectDataResponse2> getEntityType() {
+            return DashboardCorrectDataResponse2.class;
         }
     };
 
-    SppDataCallback point3CallBack = new SppDataCallback<DashboardRecordDataResponse3>() {
+    SppDataCallback point3CallBack = new SppDataCallback<DashboardCorrectDataResponse3>() {
 
         @Override
-        public void delivery(DashboardRecordDataResponse3 recordDataResponse) {
-            if (measureDataCallback != null) {
+        public void delivery(DashboardCorrectDataResponse3 recordDataResponse) {
+            if (CorrectDataCallback != null) {
 
                 List<MeasureValue> measureValues = new ArrayList<>();
 
                 MeasureValue measureValue = new MeasureValue();
                 measureValue.setTemperature(recordDataResponse.getTemperature1() / 100.0);
                 measureValue.setActivity(recordDataResponse.getActivity1() / 10000.0);
-                measureValue.setHumidity(recordDataResponse.getHumidity1() / 10000.0);
                 measureValue.setReportTime(SIMPLE_DATE_FORMAT.format(new Date(recordDataResponse.getTime() * 1000)));
                 measureValue.setName("");
-                measureValue.setMeasureStatus(recordDataResponse.getStatus1());
                 MeasureRunningStatus measureRunningStatus = measureRunningStatusMap.get(1);
                 if (measureRunningStatus != null) {
-                    if (measureRunningStatus.getModel() == 0) {
-                        if (measureRunningStatus.isRunning) {
-                            measureValue.setMeasureStatus(0x01);
-                        } else {
-                            measureValue.setMeasureStatus(0x02);
-                        }
+                    if (measureRunningStatus.isRunning) {
+                        measureValue.setMeasureStatus(0x01);
                     } else {
-                        if (measureValue.getMeasureStatus() == 0x02) {
-                            stopMeasure(true, 1);
-                        }
+                        measureValue.setMeasureStatus(0x02);
                     }
                 } else {
                     measureValue.setMeasureStatus(0);
@@ -337,22 +292,14 @@ public class DashboardModel implements DashboardContract.Model {
                 measureValue = new MeasureValue();
                 measureValue.setTemperature(recordDataResponse.getTemperature2() / 100.0);
                 measureValue.setActivity(recordDataResponse.getActivity2() / 10000.0);
-                measureValue.setHumidity(recordDataResponse.getHumidity2() / 10000.0);
                 measureValue.setReportTime(SIMPLE_DATE_FORMAT.format(new Date(recordDataResponse.getTime() * 1000)));
                 measureValue.setName("");
-                measureValue.setMeasureStatus(recordDataResponse.getStatus2());
                 measureRunningStatus = measureRunningStatusMap.get(2);
                 if (measureRunningStatus != null) {
-                    if (measureRunningStatus.getModel() == 0) {
-                        if (measureRunningStatus.isRunning) {
-                            measureValue.setMeasureStatus(0x01);
-                        } else {
-                            measureValue.setMeasureStatus(0x02);
-                        }
+                    if (measureRunningStatus.isRunning) {
+                        measureValue.setMeasureStatus(0x01);
                     } else {
-                        if (measureValue.getMeasureStatus() == 0x02) {
-                            stopMeasure(true, 2);
-                        }
+                        measureValue.setMeasureStatus(0x02);
                     }
                 } else {
                     measureValue.setMeasureStatus(0);
@@ -362,65 +309,49 @@ public class DashboardModel implements DashboardContract.Model {
                 measureValue = new MeasureValue();
                 measureValue.setTemperature(recordDataResponse.getTemperature3() / 100.0);
                 measureValue.setActivity(recordDataResponse.getActivity3() / 10000.0);
-                measureValue.setHumidity(recordDataResponse.getHumidity3() / 10000.0);
                 measureValue.setReportTime(SIMPLE_DATE_FORMAT.format(new Date(recordDataResponse.getTime() * 1000)));
                 measureValue.setName("");
-                measureValue.setMeasureStatus(recordDataResponse.getStatus3());
                 measureRunningStatus = measureRunningStatusMap.get(3);
                 if (measureRunningStatus != null) {
-                    if (measureRunningStatus.getModel() == 0) {
-                        if (measureRunningStatus.isRunning) {
-                            measureValue.setMeasureStatus(0x01);
-                        } else {
-                            measureValue.setMeasureStatus(0x02);
-                        }
+                    if (measureRunningStatus.isRunning) {
+                        measureValue.setMeasureStatus(0x01);
                     } else {
-                        if (measureValue.getMeasureStatus() == 0x02) {
-                            stopMeasure(true, 3);
-                        }
+                        measureValue.setMeasureStatus(0x02);
                     }
                 } else {
                     measureValue.setMeasureStatus(0);
                 }
                 measureValues.add(measureValue);
 
-                measureDataCallback.success(measureValues);
+                CorrectDataCallback.success(measureValues);
             }
         }
 
         @Override
-        public Class<DashboardRecordDataResponse3> getEntityType() {
-            return DashboardRecordDataResponse3.class;
+        public Class<DashboardCorrectDataResponse3> getEntityType() {
+            return DashboardCorrectDataResponse3.class;
         }
     };
 
-    SppDataCallback point4CallBack = new SppDataCallback<DashboardRecordDataResponse4>() {
+    SppDataCallback point4CallBack = new SppDataCallback<DashboardCorrectDataResponse4>() {
 
         @Override
-        public void delivery(DashboardRecordDataResponse4 recordDataResponse) {
-            if (measureDataCallback != null) {
+        public void delivery(DashboardCorrectDataResponse4 recordDataResponse) {
+            if (CorrectDataCallback != null) {
 
                 List<MeasureValue> measureValues = new ArrayList<>();
 
                 MeasureValue measureValue = new MeasureValue();
                 measureValue.setTemperature(recordDataResponse.getTemperature1() / 100.0);
                 measureValue.setActivity(recordDataResponse.getActivity1() / 10000.0);
-                measureValue.setHumidity(recordDataResponse.getHumidity1() / 10000.0);
                 measureValue.setReportTime(SIMPLE_DATE_FORMAT.format(new Date(recordDataResponse.getTime() * 1000)));
                 measureValue.setName("");
-                measureValue.setMeasureStatus(recordDataResponse.getStatus1());
                 MeasureRunningStatus measureRunningStatus = measureRunningStatusMap.get(1);
                 if (measureRunningStatus != null) {
-                    if (measureRunningStatus.getModel() == 0) {
-                        if (measureRunningStatus.isRunning) {
-                            measureValue.setMeasureStatus(0x01);
-                        } else {
-                            measureValue.setMeasureStatus(0x02);
-                        }
+                    if (measureRunningStatus.isRunning) {
+                        measureValue.setMeasureStatus(0x01);
                     } else {
-                        if (measureValue.getMeasureStatus() == 0x02) {
-                            stopMeasure(true, 1);
-                        }
+                        measureValue.setMeasureStatus(0x02);
                     }
                 } else {
                     measureValue.setMeasureStatus(0);
@@ -430,22 +361,14 @@ public class DashboardModel implements DashboardContract.Model {
                 measureValue = new MeasureValue();
                 measureValue.setTemperature(recordDataResponse.getTemperature2() / 100.0);
                 measureValue.setActivity(recordDataResponse.getActivity2() / 10000.0);
-                measureValue.setHumidity(recordDataResponse.getHumidity2() / 10000.0);
                 measureValue.setReportTime(SIMPLE_DATE_FORMAT.format(new Date(recordDataResponse.getTime() * 1000)));
                 measureValue.setName("");
-                measureValue.setMeasureStatus(recordDataResponse.getStatus2());
                 measureRunningStatus = measureRunningStatusMap.get(2);
                 if (measureRunningStatus != null) {
-                    if (measureRunningStatus.getModel() == 0) {
-                        if (measureRunningStatus.isRunning) {
-                            measureValue.setMeasureStatus(0x01);
-                        } else {
-                            measureValue.setMeasureStatus(0x02);
-                        }
+                    if (measureRunningStatus.isRunning) {
+                        measureValue.setMeasureStatus(0x01);
                     } else {
-                        if (measureValue.getMeasureStatus() == 0x02) {
-                            stopMeasure(true, 2);
-                        }
+                        measureValue.setMeasureStatus(0x02);
                     }
                 } else {
                     measureValue.setMeasureStatus(0);
@@ -455,22 +378,14 @@ public class DashboardModel implements DashboardContract.Model {
                 measureValue = new MeasureValue();
                 measureValue.setTemperature(recordDataResponse.getTemperature3() / 100.0);
                 measureValue.setActivity(recordDataResponse.getActivity3() / 10000.0);
-                measureValue.setHumidity(recordDataResponse.getHumidity3() / 10000.0);
                 measureValue.setReportTime(SIMPLE_DATE_FORMAT.format(new Date(recordDataResponse.getTime() * 1000)));
                 measureValue.setName("");
-                measureValue.setMeasureStatus(recordDataResponse.getStatus3());
                 measureRunningStatus = measureRunningStatusMap.get(3);
                 if (measureRunningStatus != null) {
-                    if (measureRunningStatus.getModel() == 0) {
-                        if (measureRunningStatus.isRunning) {
-                            measureValue.setMeasureStatus(0x01);
-                        } else {
-                            measureValue.setMeasureStatus(0x02);
-                        }
+                    if (measureRunningStatus.isRunning) {
+                        measureValue.setMeasureStatus(0x01);
                     } else {
-                        if (measureValue.getMeasureStatus() == 0x02) {
-                            stopMeasure(true, 3);
-                        }
+                        measureValue.setMeasureStatus(0x02);
                     }
                 } else {
                     measureValue.setMeasureStatus(0);
@@ -480,64 +395,48 @@ public class DashboardModel implements DashboardContract.Model {
                 measureValue = new MeasureValue();
                 measureValue.setTemperature(recordDataResponse.getTemperature4() / 100.0);
                 measureValue.setActivity(recordDataResponse.getActivity4() / 10000.0);
-                measureValue.setHumidity(recordDataResponse.getHumidity4() / 10000.0);
                 measureValue.setReportTime(SIMPLE_DATE_FORMAT.format(new Date(recordDataResponse.getTime() * 1000)));
                 measureValue.setName("");
-                measureValue.setMeasureStatus(recordDataResponse.getStatus4());
                 measureRunningStatus = measureRunningStatusMap.get(4);
                 if (measureRunningStatus != null) {
-                    if (measureRunningStatus.getModel() == 0) {
-                        if (measureRunningStatus.isRunning) {
-                            measureValue.setMeasureStatus(0x01);
-                        } else {
-                            measureValue.setMeasureStatus(0x02);
-                        }
+                    if (measureRunningStatus.isRunning) {
+                        measureValue.setMeasureStatus(0x01);
                     } else {
-                        if (measureValue.getMeasureStatus() == 0x02) {
-                            stopMeasure(true, 4);
-                        }
+                        measureValue.setMeasureStatus(0x02);
                     }
                 } else {
                     measureValue.setMeasureStatus(0);
                 }
                 measureValues.add(measureValue);
 
-                measureDataCallback.success(measureValues);
+                CorrectDataCallback.success(measureValues);
             }
         }
 
         @Override
-        public Class<DashboardRecordDataResponse4> getEntityType() {
-            return DashboardRecordDataResponse4.class;
+        public Class<DashboardCorrectDataResponse4> getEntityType() {
+            return DashboardCorrectDataResponse4.class;
         }
     };
 
-    SppDataCallback point5CallBack = new SppDataCallback<DashboardRecordDataResponse5>() {
+    SppDataCallback point5CallBack = new SppDataCallback<DashboardCorrectDataResponse5>() {
 
         @Override
-        public void delivery(DashboardRecordDataResponse5 recordDataResponse) {
-            if (measureDataCallback != null) {
+        public void delivery(DashboardCorrectDataResponse5 recordDataResponse) {
+            if (CorrectDataCallback != null) {
                 List<MeasureValue> measureValues = new ArrayList<>();
 
                 MeasureValue measureValue = new MeasureValue();
                 measureValue.setTemperature(recordDataResponse.getTemperature1() / 100.0);
                 measureValue.setActivity(recordDataResponse.getActivity1() / 10000.0);
-                measureValue.setHumidity(recordDataResponse.getHumidity1() / 10000.0);
                 measureValue.setReportTime(SIMPLE_DATE_FORMAT.format(new Date(recordDataResponse.getTime() * 1000)));
                 measureValue.setName("");
-                measureValue.setMeasureStatus(recordDataResponse.getStatus1());
                 MeasureRunningStatus measureRunningStatus = measureRunningStatusMap.get(1);
                 if (measureRunningStatus != null) {
-                    if (measureRunningStatus.getModel() == 0) {
-                        if (measureRunningStatus.isRunning) {
-                            measureValue.setMeasureStatus(0x01);
-                        } else {
-                            measureValue.setMeasureStatus(0x02);
-                        }
+                    if (measureRunningStatus.isRunning) {
+                        measureValue.setMeasureStatus(0x01);
                     } else {
-                        if (measureValue.getMeasureStatus() == 0x02) {
-                            stopMeasure(true, 2);
-                        }
+                        measureValue.setMeasureStatus(0x02);
                     }
                 } else {
                     measureValue.setMeasureStatus(0);
@@ -547,22 +446,14 @@ public class DashboardModel implements DashboardContract.Model {
                 measureValue = new MeasureValue();
                 measureValue.setTemperature(recordDataResponse.getTemperature2() / 100.0);
                 measureValue.setActivity(recordDataResponse.getActivity2() / 10000.0);
-                measureValue.setHumidity(recordDataResponse.getHumidity2() / 10000.0);
                 measureValue.setReportTime(SIMPLE_DATE_FORMAT.format(new Date(recordDataResponse.getTime() * 1000)));
                 measureValue.setName("");
-                measureValue.setMeasureStatus(recordDataResponse.getStatus2());
                 measureRunningStatus = measureRunningStatusMap.get(2);
                 if (measureRunningStatus != null) {
-                    if (measureRunningStatus.getModel() == 0) {
-                        if (measureRunningStatus.isRunning) {
-                            measureValue.setMeasureStatus(0x01);
-                        } else {
-                            measureValue.setMeasureStatus(0x02);
-                        }
+                    if (measureRunningStatus.isRunning) {
+                        measureValue.setMeasureStatus(0x01);
                     } else {
-                        if (measureValue.getMeasureStatus() == 0x02) {
-                            stopMeasure(true, 2);
-                        }
+                        measureValue.setMeasureStatus(0x02);
                     }
                 } else {
                     measureValue.setMeasureStatus(0);
@@ -572,22 +463,14 @@ public class DashboardModel implements DashboardContract.Model {
                 measureValue = new MeasureValue();
                 measureValue.setTemperature(recordDataResponse.getTemperature3() / 100.0);
                 measureValue.setActivity(recordDataResponse.getActivity3() / 10000.0);
-                measureValue.setHumidity(recordDataResponse.getHumidity3() / 10000.0);
                 measureValue.setReportTime(SIMPLE_DATE_FORMAT.format(new Date(recordDataResponse.getTime() * 1000)));
                 measureValue.setName("");
-                measureValue.setMeasureStatus(recordDataResponse.getStatus3());
                 measureRunningStatus = measureRunningStatusMap.get(3);
                 if (measureRunningStatus != null) {
-                    if (measureRunningStatus.getModel() == 0) {
-                        if (measureRunningStatus.isRunning) {
-                            measureValue.setMeasureStatus(0x01);
-                        } else {
-                            measureValue.setMeasureStatus(0x02);
-                        }
+                    if (measureRunningStatus.isRunning) {
+                        measureValue.setMeasureStatus(0x01);
                     } else {
-                        if (measureValue.getMeasureStatus() == 0x02) {
-                            stopMeasure(true, 3);
-                        }
+                        measureValue.setMeasureStatus(0x02);
                     }
                 } else {
                     measureValue.setMeasureStatus(0);
@@ -597,22 +480,14 @@ public class DashboardModel implements DashboardContract.Model {
                 measureValue = new MeasureValue();
                 measureValue.setTemperature(recordDataResponse.getTemperature4() / 100.0);
                 measureValue.setActivity(recordDataResponse.getActivity4() / 10000.0);
-                measureValue.setHumidity(recordDataResponse.getHumidity4() / 10000.0);
                 measureValue.setReportTime(SIMPLE_DATE_FORMAT.format(new Date(recordDataResponse.getTime() * 1000)));
                 measureValue.setName("");
-                measureValue.setMeasureStatus(recordDataResponse.getStatus4());
                 measureRunningStatus = measureRunningStatusMap.get(4);
                 if (measureRunningStatus != null) {
-                    if (measureRunningStatus.getModel() == 0) {
-                        if (measureRunningStatus.isRunning) {
-                            measureValue.setMeasureStatus(0x01);
-                        } else {
-                            measureValue.setMeasureStatus(0x02);
-                        }
+                    if (measureRunningStatus.isRunning) {
+                        measureValue.setMeasureStatus(0x01);
                     } else {
-                        if (measureValue.getMeasureStatus() == 0x02) {
-                            stopMeasure(true, 4);
-                        }
+                        measureValue.setMeasureStatus(0x02);
                     }
                 } else {
                     measureValue.setMeasureStatus(0);
@@ -622,35 +497,27 @@ public class DashboardModel implements DashboardContract.Model {
                 measureValue = new MeasureValue();
                 measureValue.setTemperature(recordDataResponse.getTemperature5() / 100.0);
                 measureValue.setActivity(recordDataResponse.getActivity5() / 10000.0);
-                measureValue.setHumidity(recordDataResponse.getHumidity5() / 10000.0);
                 measureValue.setReportTime(SIMPLE_DATE_FORMAT.format(new Date(recordDataResponse.getTime() * 1000)));
                 measureValue.setName("");
-                measureValue.setMeasureStatus(recordDataResponse.getStatus5());
                 measureRunningStatus = measureRunningStatusMap.get(5);
                 if (measureRunningStatus != null) {
-                    if (measureRunningStatus.getModel() == 0) {
-                        if (measureRunningStatus.isRunning) {
-                            measureValue.setMeasureStatus(0x01);
-                        } else {
-                            measureValue.setMeasureStatus(0x02);
-                        }
+                    if (measureRunningStatus.isRunning) {
+                        measureValue.setMeasureStatus(0x01);
                     } else {
-                        if (measureValue.getMeasureStatus() == 0x02) {
-                            stopMeasure(true, 5);
-                        }
+                        measureValue.setMeasureStatus(0x02);
                     }
                 } else {
                     measureValue.setMeasureStatus(0);
                 }
                 measureValues.add(measureValue);
 
-                measureDataCallback.success(measureValues);
+                CorrectDataCallback.success(measureValues);
             }
         }
 
         @Override
-        public Class<DashboardRecordDataResponse5> getEntityType() {
-            return DashboardRecordDataResponse5.class;
+        public Class<DashboardCorrectDataResponse5> getEntityType() {
+            return DashboardCorrectDataResponse5.class;
         }
     };
 
@@ -681,33 +548,39 @@ public class DashboardModel implements DashboardContract.Model {
                     CommandEntity commandEntity = commandQueue.take();
                     switch (commandEntity.getType()) {
                         case 0: {
-                            long time = System.currentTimeMillis() / 1000;
+                            AppConfig appConfig = App.getInstance().getLocalDataService().queryAppConfig(1);
+                            int period = appConfig.getPeriod();
+
+                            int correctMode = appConfig.getCorrectMode();
+                            int correctType = appConfig.getCorrectType();
+                            int correctTime = appConfig.getCorrectTime();
+                            long time = correctTime * 60 * 1000 - (System.currentTimeMillis() - startTime.getTime());
                             switch (pointCount) {
                                 case 1:
-                                    App.getInstance().getBluetoothService().queryDashboardRecord(time, pointCount, point1CallBack);
+                                    App.getInstance().getBluetoothService().queryCorrect(correctMode, correctType, period, time, pointCount, point1CallBack);
                                     break;
                                 case 2:
-                                    App.getInstance().getBluetoothService().queryDashboardRecord(time, pointCount, point2CallBack);
+                                    App.getInstance().getBluetoothService().queryCorrect(correctMode, correctType, period, time, pointCount, point2CallBack);
                                     break;
                                 case 3:
-                                    App.getInstance().getBluetoothService().queryDashboardRecord(time, pointCount, point3CallBack);
+                                    App.getInstance().getBluetoothService().queryCorrect(correctMode, correctType, period, time, pointCount, point3CallBack);
                                     break;
                                 case 4:
-                                    App.getInstance().getBluetoothService().queryDashboardRecord(time, pointCount, point4CallBack);
+                                    App.getInstance().getBluetoothService().queryCorrect(correctMode, correctType, period, time, pointCount, point4CallBack);
                                     break;
                                 case 5:
-                                    App.getInstance().getBluetoothService().queryDashboardRecord(time, pointCount, point5CallBack);
+                                    App.getInstance().getBluetoothService().queryCorrect(correctMode, correctType, period, time, pointCount, point5CallBack);
                                     break;
                                 default:
-                                    App.getInstance().getBluetoothService().queryDashboardRecord(time, pointCount, point1CallBack);
+                                    App.getInstance().getBluetoothService().queryCorrect(correctMode, correctType, period, time, pointCount, point1CallBack);
                                     break;
                             }
                         }
                         break;
                         case 1: {
-                            App.getInstance().getBluetoothService().stopMeasure(commandEntity.getIndex(), stopMeasureResponse);
-                            if (measureDataCallback != null) {
-                                measureDataCallback.measureDone(commandEntity.getIndex());
+                            App.getInstance().getBluetoothService().stopCorrect(pointCount, stopMeasureResponse);
+                            if (CorrectDataCallback != null) {
+                                CorrectDataCallback.correctDone(step++);
                             }
                         }
                         break;
@@ -732,22 +605,23 @@ public class DashboardModel implements DashboardContract.Model {
                 } catch (InterruptedException e) {
                     e.printStackTrace();
                 }
-                if (measureDataCallback != null && startTime != null) {
+                if (CorrectDataCallback != null && startTime != null) {
                     for (MeasureRunningStatus measureRunningStatus : measureRunningStatusMap.values()) {
                         if (measureRunningStatus.isRunning) {
                             measureRunningStatus.setRunningTime(DateUtil.dateDistance1(startTime, new Date()));
                         }
                     }
-                    measureDataCallback.runningStatus(measureRunningStatusMap);
+                    CorrectDataCallback.runningStatus(measureRunningStatusMap);
                 }
 
                 for (MeasureRunningStatus measureRunningStatus : measureRunningStatusMap.values()) {
                     if (measureRunningStatus.isRunning) {
-                        AppConfig appConfig = App.getInstance().getLocalDataService().queryAppConfig(measureRunningStatus.getIndex());
-                        long measuringTime = measureRunningStatus.getStartTime() + appConfig.getMeasuringTime() * 60 * 1000;
+                        AppConfig appConfig = App.getInstance().getLocalDataService().queryAppConfig(1);
+                        long measuringTime = measureRunningStatus.getStartTime() + appConfig.getCorrectTime() * 60 * 1000;
                         // 定时测量自动关闭
                         if (new Date().after(new Date(measuringTime))) {
-                            stopMeasure(true, measureRunningStatus.getIndex());
+                            stopCorrect(true);
+                            break;
                         }
                     }
                 }
@@ -811,10 +685,6 @@ public class DashboardModel implements DashboardContract.Model {
          */
         private int type;
 
-        /**
-         * 节点编号
-         */
-        private int index;
 
         public int getType() {
             return type;
@@ -824,12 +694,5 @@ public class DashboardModel implements DashboardContract.Model {
             this.type = type;
         }
 
-        public int getIndex() {
-            return index;
-        }
-
-        public void setIndex(int index) {
-            this.index = index;
-        }
     }
 }
