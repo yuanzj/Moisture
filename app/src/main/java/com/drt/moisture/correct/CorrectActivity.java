@@ -387,8 +387,14 @@ public class CorrectActivity extends BluetoothBaseActivity<CorrectDashboardPrese
     }
 
     @Override
+    protected void onResume() {
+        super.onResume();
+        updateUI(mPresenter.getMeasureStatus(index));
+    }
+
+    @Override
     protected void onDestroy() {
-        mPresenter.stopCorrect(false);
+//        mPresenter.stopCorrect(false);
         super.onDestroy();
     }
 
