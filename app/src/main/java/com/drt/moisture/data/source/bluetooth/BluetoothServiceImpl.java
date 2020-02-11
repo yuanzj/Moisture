@@ -38,7 +38,7 @@ public class BluetoothServiceImpl implements BluetoothService, BleWriteResponse 
 
     private volatile Timer timeoutTimer;
 
-    private int expectResponseCode;
+    private volatile int expectResponseCode;
 
     public BluetoothServiceImpl(Context context) {
 
@@ -53,6 +53,7 @@ public class BluetoothServiceImpl implements BluetoothService, BleWriteResponse 
                 try {
                     getCmdGroup = sppDataCallback.getEntityType().getMethod("getCmdGroup");
                     Object CmdGroup = getCmdGroup.invoke(object);//调用借钱方法，得到返回值
+                    Log.d("yzj", "getCmdGroup:" + CmdGroup);
                     if (timeoutTimer != null && expectResponseCode == Integer.parseInt(CmdGroup.toString())) {
                         timeoutTimer.cancel();
                         timeoutTimer = null;
@@ -108,6 +109,7 @@ public class BluetoothServiceImpl implements BluetoothService, BleWriteResponse 
 
         startMeasureRequest.setTime((byte) time);
         try {
+            Log.d("yzj", "startMeasure" + index);
             App.getInstance().getBluetoothClient().write(App.getInstance().getConnectMacAddress(), UUIDUtils.makeUUID(0xFFE0), UUIDUtils.makeUUID(0xFFE1), BluetoothDataUtil.encode(startMeasureRequest), this);
 
             if (!retry) {
@@ -242,6 +244,8 @@ public class BluetoothServiceImpl implements BluetoothService, BleWriteResponse 
         }
 
         try {
+            Log.d("yzj", "startCorrect" + pointCount);
+
             App.getInstance().getBluetoothClient().write(App.getInstance().getConnectMacAddress(), UUIDUtils.makeUUID(0xFFE0), UUIDUtils.makeUUID(0xFFE1), BluetoothDataUtil.encode(startCorrectRequest), this);
 
             if (!retry) {
@@ -303,23 +307,7 @@ public class BluetoothServiceImpl implements BluetoothService, BleWriteResponse 
 
     @Override
     public void stopCorrect(SppDataCallback<StopMeasureResponse> sppDataCallback) {
-        if (timeoutTimer != null) {
-            timeoutTimer.cancel();
-            timeoutTimer = null;
-        }
-        this.sppDataCallback = sppDataCallback;
-
-        StopMeasureRequest request = new StopMeasureRequest();
-        request.setCmdGroup((byte) 0xA5);
-        request.setCmd((byte) 0x0A);
-        request.setResponse((byte) 0x01);
-        request.setReserved(0);
-
-        try {
-            App.getInstance().getBluetoothClient().write(App.getInstance().getConnectMacAddress(), UUIDUtils.makeUUID(0xFFE0), UUIDUtils.makeUUID(0xFFE1), BluetoothDataUtil.encode(request), this);
-        } catch (IllegalAccessException | RkFieldException | FieldConvertException e) {
-            e.printStackTrace();
-        }
+        stopCorrect(1, sppDataCallback);
     }
 
     @Override
@@ -330,7 +318,7 @@ public class BluetoothServiceImpl implements BluetoothService, BleWriteResponse 
         }
         this.sppDataCallback = sppDataCallback;
 
-        StopMeasureRequest request = new StopMeasureRequest();
+        StopCorrectRequest request = new StopCorrectRequest();
         request.setCmdGroup((byte) 0xA5);
         request.setCmd((byte) 0x0A);
         request.setResponse((byte) 0x01);

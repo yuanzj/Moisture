@@ -2,7 +2,7 @@ package com.drt.moisture.data.source.bluetooth.resquest;
 
 import com.rokyinfo.convert.RkField;
 
-public class SetCdslRequest {
+public class StopCorrectRequest {
 
     @RkField(position = 0, length = 1)
     private int CmdGroup;
@@ -16,8 +16,8 @@ public class SetCdslRequest {
     @RkField(position = 3, length = 2)
     private int Reserved;
 
-    @RkField(position = 5, length = 1)
-    private int count;
+    @RkField(position = 5, length = 2)
+    private int index;
 
     public int getCmdGroup() {
         return CmdGroup;
@@ -51,11 +51,11 @@ public class SetCdslRequest {
         Reserved = reserved;
     }
 
-    public int getCount() {
-        return count;
+    public int getIndex() {
+        return index;
     }
 
-    public void setCount(int count) {
-        this.count = count;
+    public void setIndex(int index) {
+        this.index = index;
     }
 }

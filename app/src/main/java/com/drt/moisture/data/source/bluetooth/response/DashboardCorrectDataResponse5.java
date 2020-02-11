@@ -5,7 +5,7 @@ import com.rokyinfo.convert.RkField;
 public class DashboardCorrectDataResponse5 extends CorrectDataResponse {
 
     @RkField(position = 0, length = 1)
-    private byte CmdGroup;
+    private int CmdGroup;
 
     @RkField(position = 1, length = 1)
     private byte Cmd;
@@ -20,7 +20,7 @@ public class DashboardCorrectDataResponse5 extends CorrectDataResponse {
     private long time;
 
     @RkField(position = 9, length = 2)
-    private int temperature1;
+    private short temperature1;
 
     @RkField(position = 11, length = 2)
     private int activity1;
@@ -29,7 +29,7 @@ public class DashboardCorrectDataResponse5 extends CorrectDataResponse {
     private int index1;
 
     @RkField(position = 14, length = 2)
-    private int temperature2;
+    private short temperature2;
 
     @RkField(position = 16, length = 2)
     private int activity2;
@@ -38,7 +38,7 @@ public class DashboardCorrectDataResponse5 extends CorrectDataResponse {
     private int index2;
 
     @RkField(position = 19, length = 2)
-    private int temperature3;
+    private short temperature3;
 
     @RkField(position = 21, length = 2)
     private int activity3;
@@ -47,7 +47,7 @@ public class DashboardCorrectDataResponse5 extends CorrectDataResponse {
     private int index3;
 
     @RkField(position = 24, length = 2)
-    private int temperature4;
+    private short temperature4;
 
     @RkField(position = 26, length = 2)
     private int activity4;
@@ -56,7 +56,7 @@ public class DashboardCorrectDataResponse5 extends CorrectDataResponse {
     private int index4;
 
     @RkField(position = 29, length = 2)
-    private int temperature5;
+    private short temperature5;
 
     @RkField(position = 31, length = 2)
     private int activity5;
@@ -64,11 +64,11 @@ public class DashboardCorrectDataResponse5 extends CorrectDataResponse {
     @RkField(position = 33, length = 1)
     private int index5;
 
-    public byte getCmdGroup() {
+    public int getCmdGroup() {
         return CmdGroup;
     }
 
-    public void setCmdGroup(byte cmdGroup) {
+    public void setCmdGroup(int cmdGroup) {
         CmdGroup = cmdGroup;
     }
 
@@ -104,11 +104,11 @@ public class DashboardCorrectDataResponse5 extends CorrectDataResponse {
         this.time = time;
     }
 
-    public int getTemperature1() {
+    public short getTemperature1() {
         return temperature1;
     }
 
-    public void setTemperature1(int temperature1) {
+    public void setTemperature1(short temperature1) {
         this.temperature1 = temperature1;
     }
 
@@ -128,11 +128,11 @@ public class DashboardCorrectDataResponse5 extends CorrectDataResponse {
         this.index1 = index1;
     }
 
-    public int getTemperature2() {
+    public short getTemperature2() {
         return temperature2;
     }
 
-    public void setTemperature2(int temperature2) {
+    public void setTemperature2(short temperature2) {
         this.temperature2 = temperature2;
     }
 
@@ -152,11 +152,11 @@ public class DashboardCorrectDataResponse5 extends CorrectDataResponse {
         this.index2 = index2;
     }
 
-    public int getTemperature3() {
+    public short getTemperature3() {
         return temperature3;
     }
 
-    public void setTemperature3(int temperature3) {
+    public void setTemperature3(short temperature3) {
         this.temperature3 = temperature3;
     }
 
@@ -176,11 +176,11 @@ public class DashboardCorrectDataResponse5 extends CorrectDataResponse {
         this.index3 = index3;
     }
 
-    public int getTemperature4() {
+    public short getTemperature4() {
         return temperature4;
     }
 
-    public void setTemperature4(int temperature4) {
+    public void setTemperature4(short temperature4) {
         this.temperature4 = temperature4;
     }
 
@@ -200,11 +200,11 @@ public class DashboardCorrectDataResponse5 extends CorrectDataResponse {
         this.index4 = index4;
     }
 
-    public int getTemperature5() {
+    public short getTemperature5() {
         return temperature5;
     }
 
-    public void setTemperature5(int temperature5) {
+    public void setTemperature5(short temperature5) {
         this.temperature5 = temperature5;
     }
 

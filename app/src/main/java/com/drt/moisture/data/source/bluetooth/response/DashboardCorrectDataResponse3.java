@@ -5,7 +5,7 @@ import com.rokyinfo.convert.RkField;
 public class DashboardCorrectDataResponse3 extends CorrectDataResponse{
 
     @RkField(position = 0, length = 1)
-    private byte CmdGroup;
+    private int CmdGroup;
 
     @RkField(position = 1, length = 1)
     private byte Cmd;
@@ -20,7 +20,7 @@ public class DashboardCorrectDataResponse3 extends CorrectDataResponse{
     private long time;
 
     @RkField(position = 9, length = 2)
-    private int temperature1;
+    private short temperature1;
 
     @RkField(position = 11, length = 2)
     private int activity1;
@@ -29,7 +29,7 @@ public class DashboardCorrectDataResponse3 extends CorrectDataResponse{
     private int index1;
 
     @RkField(position = 14, length = 2)
-    private int temperature2;
+    private short temperature2;
 
     @RkField(position = 16, length = 2)
     private int activity2;
@@ -38,7 +38,7 @@ public class DashboardCorrectDataResponse3 extends CorrectDataResponse{
     private int index2;
 
     @RkField(position = 19, length = 2)
-    private int temperature3;
+    private short temperature3;
 
     @RkField(position = 21, length = 2)
     private int activity3;
@@ -46,11 +46,11 @@ public class DashboardCorrectDataResponse3 extends CorrectDataResponse{
     @RkField(position = 23, length = 1)
     private int index3;
 
-    public byte getCmdGroup() {
+    public int getCmdGroup() {
         return CmdGroup;
     }
 
-    public void setCmdGroup(byte cmdGroup) {
+    public void setCmdGroup(int cmdGroup) {
         CmdGroup = cmdGroup;
     }
 
@@ -86,11 +86,11 @@ public class DashboardCorrectDataResponse3 extends CorrectDataResponse{
         this.time = time;
     }
 
-    public int getTemperature1() {
+    public short getTemperature1() {
         return temperature1;
     }
 
-    public void setTemperature1(int temperature1) {
+    public void setTemperature1(short temperature1) {
         this.temperature1 = temperature1;
     }
 
@@ -110,11 +110,11 @@ public class DashboardCorrectDataResponse3 extends CorrectDataResponse{
         this.index1 = index1;
     }
 
-    public int getTemperature2() {
+    public short getTemperature2() {
         return temperature2;
     }
 
-    public void setTemperature2(int temperature2) {
+    public void setTemperature2(short temperature2) {
         this.temperature2 = temperature2;
     }
 
@@ -134,11 +134,11 @@ public class DashboardCorrectDataResponse3 extends CorrectDataResponse{
         this.index2 = index2;
     }
 
-    public int getTemperature3() {
+    public short getTemperature3() {
         return temperature3;
     }
 
-    public void setTemperature3(int temperature3) {
+    public void setTemperature3(short temperature3) {
         this.temperature3 = temperature3;
     }
 

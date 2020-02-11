@@ -5,7 +5,7 @@ import com.rokyinfo.convert.RkField;
 public class StopMeasureResponse {
 
     @RkField(position = 0, length = 1)
-    private byte CmdGroup;
+    private int CmdGroup;
 
     @RkField(position = 1, length = 1)
     private byte Cmd;
@@ -16,11 +16,11 @@ public class StopMeasureResponse {
     @RkField(position = 3, length = 2)
     private int Reserved;
 
-    public byte getCmdGroup() {
+    public int getCmdGroup() {
         return CmdGroup;
     }
 
-    public void setCmdGroup(byte cmdGroup) {
+    public void setCmdGroup(int cmdGroup) {
         CmdGroup = cmdGroup;
     }
 
