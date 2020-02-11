@@ -23,7 +23,7 @@ public class ReportPresenter extends BasePresenter<ReportContract.View> implemen
     }
 
     @Override
-    public void queryReport(EditText measureName, Date startTime, Date endTime) {
+    public void queryReport(int index, EditText measureName, Date startTime, Date endTime) {
 
 //        if (TextUtils.isEmpty(measureName.getText())) {
 //            mView.onError(new Exception("请输入样品名称"));
@@ -34,7 +34,7 @@ public class ReportPresenter extends BasePresenter<ReportContract.View> implemen
             return;
         }
         mView.showLoading();
-        model.queryReport(measureName.getText().toString(),startTime, endTime, new MeasureDataCallback<List<MeasureValue>>() {
+        model.queryReport(index, measureName.getText().toString(),startTime, endTime, new MeasureDataCallback<List<MeasureValue>>() {
 
             @Override
             public void runningStatus(Map<Integer, DashboardModel.MeasureRunningStatus> measureRunningStatusMap) {

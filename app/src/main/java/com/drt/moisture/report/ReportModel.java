@@ -27,7 +27,7 @@ public class ReportModel implements ReportContract.Model, SppDataCallback<HisRec
     volatile boolean running;
 
     @Override
-    public void queryReport(final String measureName, final Date startTime, final Date endTime, final MeasureDataCallback<List<MeasureValue>> report) {
+    public void queryReport(final int index, final String measureName, final Date startTime, final Date endTime, final MeasureDataCallback<List<MeasureValue>> report) {
 
         this.measureName = measureName;
         this.report = report;
@@ -44,7 +44,7 @@ public class ReportModel implements ReportContract.Model, SppDataCallback<HisRec
                         break;
                     }
 
-                    App.getInstance().getBluetoothService().queryHisRecord(measureName, i, ReportModel.this);
+                    App.getInstance().getBluetoothService().queryHisRecord(index, measureName, i, ReportModel.this);
 //                    HisRecordDataResponse recordDataResponse = new HisRecordDataResponse();
 //                    recordDataResponse.setName("text");
 //                    recordDataResponse.setTime(System.currentTimeMillis()/1000);

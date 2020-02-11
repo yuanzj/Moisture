@@ -11,6 +11,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
 import android.widget.EditText;
 import android.widget.ListView;
 import android.widget.SimpleAdapter;
@@ -60,6 +61,8 @@ public class SettingActivity extends BluetoothBaseActivity<SettingPresenter> imp
 
     boolean isBleConnected;
 
+    volatile int currentSelectIndex = 1;
+
     @Override
     public void onDeviceInfoSuccess(final DeviceInfo deviceInfo) {
         runOnUiThread(new Runnable() {
@@ -96,7 +99,7 @@ public class SettingActivity extends BluetoothBaseActivity<SettingPresenter> imp
                     final EditText csL = dialogParameSet.findViewById(R.id.csL);
                     final EditText csM = dialogParameSet.findViewById(R.id.csM);
                     final EditText csN = dialogParameSet.findViewById(R.id.csN);
-                    final EditText csCDSL = dialogParameSet.findViewById(R.id.csCDSL);
+//                    final EditText csCDSL = dialogParameSet.findViewById(R.id.csCDSL);
 
 
                     csA.setText("" + setMeasureParameRequest.getA() / 1000000.0);
@@ -113,7 +116,7 @@ public class SettingActivity extends BluetoothBaseActivity<SettingPresenter> imp
                     csL.setText("" + setMeasureParameRequest.getL() / 1000000.0);
                     csM.setText("" + setMeasureParameRequest.getM() / 1000000.0);
                     csN.setText("" + setMeasureParameRequest.getN());
-                    csCDSL.setText("" + setMeasureParameRequest.getO());
+//                    csCDSL.setText("" + setMeasureParameRequest.getO());
                 }
             }
         });
@@ -134,7 +137,7 @@ public class SettingActivity extends BluetoothBaseActivity<SettingPresenter> imp
                     final EditText csG_1 = dialogParameSet.findViewById(R.id.csG_1);
                     final EditText csH_1 = dialogParameSet.findViewById(R.id.csH_1);
                     final EditText csI_1 = dialogParameSet.findViewById(R.id.csI_1);
-                    final EditText csCDSL_1 = dialogParameSet.findViewById(R.id.csCDSL_1);
+//                    final EditText csCDSL_1 = dialogParameSet.findViewById(R.id.csCDSL_1);
 
                     csA_1.setText("" + setCorrectParameRequest.getA() / 1000000.0);
                     csB_1.setText("" + setCorrectParameRequest.getB() / 1000000.0);
@@ -145,7 +148,7 @@ public class SettingActivity extends BluetoothBaseActivity<SettingPresenter> imp
                     csG_1.setText("" + setCorrectParameRequest.getG() / 1000000.0);
                     csH_1.setText("" + setCorrectParameRequest.getH() / 1000000.0);
                     csI_1.setText("" + setCorrectParameRequest.getI() / 1000000.0);
-                    csCDSL_1.setText("" + setCorrectParameRequest.getJ());
+//                    csCDSL_1.setText("" + setCorrectParameRequest.getJ());
                 }
             }
         });
@@ -494,6 +497,39 @@ public class SettingActivity extends BluetoothBaseActivity<SettingPresenter> imp
 
                 tabhost.setCurrentTab(0);
 
+                // 建立数据源
+                int pointCount = App.getInstance().getLocalDataService().queryAppConfig().getPointCount();
+                final String[] mItems = new String[pointCount];
+                for (int i = 0; i < pointCount; i++) {
+                    mItems[i] = "节点" + (i + 1);
+                }
+                // 建立Adapter并且绑定数据源
+                ArrayAdapter<String> adapter = new ArrayAdapter<>(this, android.R.layout.simple_spinner_item, mItems);
+                adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+                //绑定 Adapter到控件
+                Spinner spinner1 = dialogParameSet.findViewById(R.id.spinner1);
+                spinner1.setAdapter(adapter);
+                spinner1.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+                    @Override
+                    public void onItemSelected(AdapterView<?> parent, View view,
+                                               int pos, long id) {
+                        currentSelectIndex = (pos + 1);
+                        String tabId = tabhost.getCurrentTabTag();
+                        if (tabId.equals("测量参数")) {
+                            mPresenter.queryMeasureConfig(currentSelectIndex);
+                        } else if (tabId.equals("校准参数")) {
+                            mPresenter.queryCorrectConfig(currentSelectIndex);
+                        } else if (tabId.equals("湿度参数")) {
+                            mPresenter.queryHumidityConfig(currentSelectIndex);
+                        }
+                    }
+
+                    @Override
+                    public void onNothingSelected(AdapterView<?> parent) {
+                        // Another interface callback
+                    }
+                });
+
                 final EditText csA = dialogParameSet.findViewById(R.id.csA);
                 final EditText csB = dialogParameSet.findViewById(R.id.csB);
                 final EditText csC = dialogParameSet.findViewById(R.id.csC);
@@ -508,7 +544,7 @@ public class SettingActivity extends BluetoothBaseActivity<SettingPresenter> imp
                 final EditText csL = dialogParameSet.findViewById(R.id.csL);
                 final EditText csM = dialogParameSet.findViewById(R.id.csM);
                 final EditText csN = dialogParameSet.findViewById(R.id.csN);
-                final EditText csCDSL = dialogParameSet.findViewById(R.id.csCDSL);
+//                final EditText csCDSL = dialogParameSet.findViewById(R.id.csCDSL);
 
 
                 final EditText csA_1 = dialogParameSet.findViewById(R.id.csA_1);
@@ -520,7 +556,7 @@ public class SettingActivity extends BluetoothBaseActivity<SettingPresenter> imp
                 final EditText csG_1 = dialogParameSet.findViewById(R.id.csG_1);
                 final EditText csH_1 = dialogParameSet.findViewById(R.id.csH_1);
                 final EditText csI_1 = dialogParameSet.findViewById(R.id.csI_1);
-                final EditText csCDSL_1 = dialogParameSet.findViewById(R.id.csCDSL_1);
+//                final EditText csCDSL_1 = dialogParameSet.findViewById(R.id.csCDSL_1);
 
 
                 final EditText csA_2 = dialogParameSet.findViewById(R.id.csA_2);
@@ -590,13 +626,7 @@ public class SettingActivity extends BluetoothBaseActivity<SettingPresenter> imp
                                     if (csN.getText().length() > 0) {
                                         measureParame.setN((int) (Double.parseDouble(csN.getText().toString())));
                                     }
-                                    if (csCDSL.getText().length() > 0) {
-                                        if (Integer.parseInt(csCDSL.getText().toString()) > 0 && Integer.parseInt(csCDSL.getText().toString()) < 6) {
-                                            measureParame.setCdsl(Integer.parseInt(csCDSL.getText().toString()));
-                                        } else {
-                                            Toast.makeText(SettingActivity.this, "最多只能支持5个测点，请输入1~5的数字！", Toast.LENGTH_SHORT).show();
-                                        }
-                                    }
+                                    measureParame.setCdsl(currentSelectIndex);
 
                                     mPresenter.setMeasureParame(measureParame);
                                 } else if (tabhost.getCurrentTab() == 1) {
@@ -629,13 +659,7 @@ public class SettingActivity extends BluetoothBaseActivity<SettingPresenter> imp
                                     if (csI_1.getText().length() > 0) {
                                         correctParame.setI((int) (Double.parseDouble(csI_1.getText().toString()) * 1000000));
                                     }
-                                    if (csCDSL_1.getText().length() > 0) {
-                                        if (Integer.parseInt(csCDSL_1.getText().toString()) > 0 && Integer.parseInt(csCDSL_1.getText().toString()) < 6) {
-                                            correctParame.setJ(Integer.parseInt(csCDSL_1.getText().toString()));
-                                        } else {
-                                            Toast.makeText(SettingActivity.this, "最多只能支持5个测点，请输入1~5的数字！", Toast.LENGTH_SHORT).show();
-                                        }
-                                    }
+                                    correctParame.setJ(currentSelectIndex);
 
                                     mPresenter.setCorrectParame(correctParame);
                                 } else {
@@ -705,16 +729,16 @@ public class SettingActivity extends BluetoothBaseActivity<SettingPresenter> imp
                     @Override
                     public void onTabChanged(String tabId) {
                         if (tabId.equals("测量参数")) {
-                            mPresenter.queryMeasureConfig();
+                            mPresenter.queryMeasureConfig(currentSelectIndex);
                         } else if (tabId.equals("校准参数")) {
-                            mPresenter.queryCorrectConfig();
+                            mPresenter.queryCorrectConfig(currentSelectIndex);
                         } else if (tabId.equals("湿度参数")) {
-                            mPresenter.queryHumidityConfig();
+                            mPresenter.queryHumidityConfig(currentSelectIndex);
                         }
                     }
                 });
 
-                mPresenter.queryMeasureConfig();
+                mPresenter.queryMeasureConfig(currentSelectIndex);
             }
             break;
             default:

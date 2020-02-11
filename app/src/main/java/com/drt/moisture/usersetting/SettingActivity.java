@@ -12,6 +12,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
 import android.widget.EditText;
 import android.widget.ListView;
 import android.widget.SimpleAdapter;
@@ -62,6 +63,8 @@ public class SettingActivity extends BluetoothBaseActivity<SettingPresenter> imp
     ProgressDialog progressdialog;
 
     boolean isBleConnected;
+
+    volatile int currentSelectIndex = 1;
 
     @Override
     public void onDeviceInfoSuccess(final DeviceInfo deviceInfo) {
@@ -528,6 +531,39 @@ public class SettingActivity extends BluetoothBaseActivity<SettingPresenter> imp
 
                 tabhost.setCurrentTab(0);
 
+                // 建立数据源
+                int pointCount = App.getInstance().getLocalDataService().queryAppConfig().getPointCount();
+                final String[] mItems = new String[pointCount];
+                for (int i = 0; i < pointCount; i++) {
+                    mItems[i] = "节点" + (i + 1);
+                }
+                // 建立Adapter并且绑定数据源
+                ArrayAdapter<String> adapter = new ArrayAdapter<>(this, android.R.layout.simple_spinner_item, mItems);
+                adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+                //绑定 Adapter到控件
+                Spinner spinner1 = dialogParameSet.findViewById(R.id.spinner1);
+                spinner1.setAdapter(adapter);
+                spinner1.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+                    @Override
+                    public void onItemSelected(AdapterView<?> parent, View view,
+                                               int pos, long id) {
+                        currentSelectIndex = (pos + 1);
+                        String tabId = tabhost.getCurrentTabTag();
+                        if (tabId.equals("测量参数")) {
+                            mPresenter.queryMeasureConfig(currentSelectIndex);
+                        } else if (tabId.equals("校准参数")) {
+                            mPresenter.queryCorrectConfig(currentSelectIndex);
+                        } else if (tabId.equals("湿度参数")) {
+                            mPresenter.queryHumidityConfig(currentSelectIndex);
+                        }
+                    }
+
+                    @Override
+                    public void onNothingSelected(AdapterView<?> parent) {
+                        // Another interface callback
+                    }
+                });
+
                 final EditText csA = dialogParameSet.findViewById(R.id.csA);
                 final EditText csB = dialogParameSet.findViewById(R.id.csB);
                 final EditText csC = dialogParameSet.findViewById(R.id.csC);
@@ -740,16 +776,16 @@ public class SettingActivity extends BluetoothBaseActivity<SettingPresenter> imp
                     @Override
                     public void onTabChanged(String tabId) {
                         if (tabId.equals("测量参数")) {
-                            mPresenter.queryMeasureConfig();
+                            mPresenter.queryMeasureConfig(currentSelectIndex);
                         } else if (tabId.equals("校准参数")) {
-                            mPresenter.queryCorrectConfig();
+                            mPresenter.queryCorrectConfig(currentSelectIndex);
                         } else if (tabId.equals("湿度参数")) {
-                            mPresenter.queryHumidityConfig();
+                            mPresenter.queryHumidityConfig(currentSelectIndex);
                         }
                     }
                 });
 
-                mPresenter.queryMeasureConfig();
+                mPresenter.queryMeasureConfig(currentSelectIndex);
             }
             break;
             case 1: {

@@ -81,7 +81,7 @@ public class SettingModel implements SettingContract.Model {
     @Override
     public void queryMeasureConfig(DataCallback<SetMeasureParameRequest> _dataCallback) {
         this.setMeasureParameRequestDataCallback = _dataCallback;
-        App.getInstance().getBluetoothService().queryMeasureParame(0x01, new SppDataCallback<SetMeasureParameRequest>() {
+        App.getInstance().getBluetoothService().queryMeasureParame(1, 0x01, new SppDataCallback<SetMeasureParameRequest>() {
             @Override
             public void delivery(SetMeasureParameRequest setMeasureParameRequest) {
                 if (setMeasureParameRequestDataCallback != null) {
@@ -99,7 +99,7 @@ public class SettingModel implements SettingContract.Model {
     @Override
     public void queryCorrectConfig(DataCallback<SetCorrectParameRequest> _dataCallback) {
         this.setCorrectParameRequestDataCallback = _dataCallback;
-        App.getInstance().getBluetoothService().queryCorrectParam(0x01, new SppDataCallback<SetCorrectParameRequest>() {
+        App.getInstance().getBluetoothService().queryCorrectParam(1,0x01, new SppDataCallback<SetCorrectParameRequest>() {
             @Override
             public void delivery(SetCorrectParameRequest setMeasureParameRequest) {
                 if (setCorrectParameRequestDataCallback != null) {
@@ -117,7 +117,7 @@ public class SettingModel implements SettingContract.Model {
     @Override
     public void queryHumidityConfig(DataCallback<SetHumidityParameRequest> _dataCallback) {
         this.setHumidityParameRequestDataCallback = _dataCallback;
-        App.getInstance().getBluetoothService().queryHumidityParam(new SppDataCallback<SetHumidityParameRequest>() {
+        App.getInstance().getBluetoothService().queryHumidityParam(1, new SppDataCallback<SetHumidityParameRequest>() {
             @Override
             public void delivery(SetHumidityParameRequest setMeasureParameRequest) {
                 if (setHumidityParameRequestDataCallback != null) {

@@ -12,7 +12,7 @@ import java.util.List;
 public interface ReportContract {
 
     interface Model {
-        void queryReport(String measureName, Date startTime, Date endTime, final MeasureDataCallback<List<MeasureValue>> report);
+        void queryReport(int index, String measureName, Date startTime, Date endTime, final MeasureDataCallback<List<MeasureValue>> report);
 
         void stop();
     }
@@ -26,7 +26,7 @@ public interface ReportContract {
     }
 
     interface Presenter {
-        void queryReport(EditText measureName, Date startTime, Date endTime);
+        void queryReport(int index, EditText measureName, Date startTime, Date endTime);
 
         void stop();
     }

@@ -40,12 +40,12 @@ public class SettingPresenter extends BasePresenter<SettingContract.View> implem
     }
 
     @Override
-    public void queryMeasureConfig() {
+    public void queryMeasureConfig(int index) {
         if (!isViewAttached()) {
             return;
         }
         mView.showLoading();
-        model.queryMeasureConfig(new DataCallback<SetMeasureParameRequest>() {
+        model.queryMeasureConfig(index, new DataCallback<SetMeasureParameRequest>() {
             @Override
             public void delivery(SetMeasureParameRequest deviceInfo) {
                 if (isViewAttached()) {
@@ -57,12 +57,12 @@ public class SettingPresenter extends BasePresenter<SettingContract.View> implem
     }
 
     @Override
-    public void queryCorrectConfig() {
+    public void queryCorrectConfig(int index) {
         if (!isViewAttached()) {
             return;
         }
         mView.showLoading();
-        model.queryCorrectConfig(new DataCallback<SetCorrectParameRequest>() {
+        model.queryCorrectConfig(index, new DataCallback<SetCorrectParameRequest>() {
             @Override
             public void delivery(SetCorrectParameRequest deviceInfo) {
                 if (isViewAttached()) {
@@ -74,12 +74,12 @@ public class SettingPresenter extends BasePresenter<SettingContract.View> implem
     }
 
     @Override
-    public void queryHumidityConfig() {
+    public void queryHumidityConfig(int index) {
         if (!isViewAttached()) {
             return;
         }
         mView.showLoading();
-        model.queryHumidityConfig(new DataCallback<SetHumidityParameRequest>() {
+        model.queryHumidityConfig(index, new DataCallback<SetHumidityParameRequest>() {
             @Override
             public void delivery(SetHumidityParameRequest deviceInfo) {
                 if (isViewAttached()) {

@@ -835,7 +835,7 @@ public class BluetoothServiceImpl implements BluetoothService, BleWriteResponse 
     }
 
     @Override
-    public void queryMeasureParame(int type, SppDataCallback<SetMeasureParameRequest> sppDataCallback) {
+    public void queryMeasureParame(int index, int type, SppDataCallback<SetMeasureParameRequest> sppDataCallback) {
         this.sppDataCallback = sppDataCallback;
         QueryParameRequest queryParameRequest = new QueryParameRequest();
         queryParameRequest.setCmdGroup((byte) 0xA2);
@@ -843,6 +843,7 @@ public class BluetoothServiceImpl implements BluetoothService, BleWriteResponse 
         queryParameRequest.setResponse((byte) 0x01);
         queryParameRequest.setReserved(0);
         queryParameRequest.setType(type);
+        queryParameRequest.setIndex(index);
         try {
             App.getInstance().getBluetoothClient().write(App.getInstance().getConnectMacAddress(), UUIDUtils.makeUUID(0xFFE0), UUIDUtils.makeUUID(0xFFE1), BluetoothDataUtil.encode(queryParameRequest), this);
         } catch (IllegalAccessException | RkFieldException | FieldConvertException e) {
@@ -851,7 +852,7 @@ public class BluetoothServiceImpl implements BluetoothService, BleWriteResponse 
     }
 
     @Override
-    public void queryCorrectParam(int type, SppDataCallback<SetCorrectParameRequest> sppDataCallback) {
+    public void queryCorrectParam(int index, int type, SppDataCallback<SetCorrectParameRequest> sppDataCallback) {
         this.sppDataCallback = sppDataCallback;
         QueryParameRequest queryParameRequest = new QueryParameRequest();
         queryParameRequest.setCmdGroup((byte) 0xA2);
@@ -859,6 +860,7 @@ public class BluetoothServiceImpl implements BluetoothService, BleWriteResponse 
         queryParameRequest.setResponse((byte) 0x01);
         queryParameRequest.setReserved(0);
         queryParameRequest.setType(type);
+        queryParameRequest.setIndex(index);
         try {
             App.getInstance().getBluetoothClient().write(App.getInstance().getConnectMacAddress(), UUIDUtils.makeUUID(0xFFE0), UUIDUtils.makeUUID(0xFFE1), BluetoothDataUtil.encode(queryParameRequest), this);
         } catch (IllegalAccessException | RkFieldException | FieldConvertException e) {
@@ -867,13 +869,15 @@ public class BluetoothServiceImpl implements BluetoothService, BleWriteResponse 
     }
 
     @Override
-    public void queryHumidityParam(SppDataCallback<SetHumidityParameRequest> sppDataCallback) {
+    public void queryHumidityParam(int index, SppDataCallback<SetHumidityParameRequest> sppDataCallback) {
         this.sppDataCallback = sppDataCallback;
         QueryParameRequest queryParameRequest = new QueryParameRequest();
         queryParameRequest.setCmdGroup((byte) 0xA2);
         queryParameRequest.setCmd((byte) 0x89);
         queryParameRequest.setResponse((byte) 0x01);
         queryParameRequest.setReserved(0);
+        queryParameRequest.setIndex(index);
+
 
         try {
             App.getInstance().getBluetoothClient().write(App.getInstance().getConnectMacAddress(), UUIDUtils.makeUUID(0xFFE0), UUIDUtils.makeUUID(0xFFE1), BluetoothDataUtil.encode(queryParameRequest), this);
@@ -941,7 +945,7 @@ public class BluetoothServiceImpl implements BluetoothService, BleWriteResponse 
     }
 
     @Override
-    public void queryHisRecord(String name, int index, SppDataCallback<HisRecordDataResponse> sppDataCallback) {
+    public void queryHisRecord(int pointIndex, String name, int index, SppDataCallback<HisRecordDataResponse> sppDataCallback) {
         this.sppDataCallback = sppDataCallback;
 
         HisRecordDataRequest recordDataRequest = new HisRecordDataRequest();
@@ -957,6 +961,7 @@ public class BluetoothServiceImpl implements BluetoothService, BleWriteResponse 
         } else {
             recordDataRequest.setQueryModel(0x03);
         }
+        recordDataRequest.setPointIndex(pointIndex);
         try {
             App.getInstance().getBluetoothClient().write(App.getInstance().getConnectMacAddress(), UUIDUtils.makeUUID(0xFFE0), UUIDUtils.makeUUID(0xFFE1), BluetoothDataUtil.encode(recordDataRequest), this);
 

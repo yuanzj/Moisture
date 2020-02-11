@@ -31,6 +31,9 @@ public class HisRecordDataResponse {
     @RkField(position = 43, length = 2)
     private short humidity;
 
+    @RkField(position = 45, length = 1)
+    private int index;
+
     public int getCmdGroup() {
         return CmdGroup;
     }
@@ -101,6 +104,14 @@ public class HisRecordDataResponse {
 
     public void setHumidity(short humidity) {
         this.humidity = humidity;
+    }
+
+    public int getIndex() {
+        return index;
+    }
+
+    public void setIndex(int index) {
+        this.index = index;
     }
 
     @Override

@@ -23,11 +23,11 @@ public interface SettingContract {
          */
         void queryDeviceInfo(DataCallback<DeviceInfo> dataCallback);
 
-        void queryMeasureConfig(DataCallback<SetMeasureParameRequest> dataCallback);
+        void queryMeasureConfig(int index, DataCallback<SetMeasureParameRequest> dataCallback);
 
-        void queryCorrectConfig(DataCallback<SetCorrectParameRequest> dataCallback);
+        void queryCorrectConfig(int index, DataCallback<SetCorrectParameRequest> dataCallback);
 
-        void queryHumidityConfig(DataCallback<SetHumidityParameRequest> dataCallback);
+        void queryHumidityConfig(int index, DataCallback<SetHumidityParameRequest> dataCallback);
 
         void queryRate(DataCallback<SetRateRequest> dataCallback);
 
@@ -63,11 +63,11 @@ public interface SettingContract {
     interface Presenter {
         void queryDeviceInfo();
 
-        void queryMeasureConfig();
+        void queryMeasureConfig(int index);
 
-        void queryCorrectConfig();
+        void queryCorrectConfig(int index);
 
-        void queryHumidityConfig();
+        void queryHumidityConfig(int index);
 
         void queryRate();
 

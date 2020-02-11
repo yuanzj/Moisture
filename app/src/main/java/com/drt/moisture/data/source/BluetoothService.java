@@ -218,21 +218,21 @@ public interface BluetoothService {
      *
      * @param sppDataCallback
      */
-    void queryMeasureParame(int type, SppDataCallback<SetMeasureParameRequest> sppDataCallback);
+    void queryMeasureParame(int index, int type, SppDataCallback<SetMeasureParameRequest> sppDataCallback);
 
     /**
      * 查询校准参数
      *
      * @param sppDataCallback
      */
-    void queryCorrectParam(int type, SppDataCallback<SetCorrectParameRequest> sppDataCallback);
+    void queryCorrectParam(int index, int type, SppDataCallback<SetCorrectParameRequest> sppDataCallback);
 
     /**
      * 查询湿度
      *
      * @param sppDataCallback
      */
-    void queryHumidityParam(SppDataCallback<SetHumidityParameRequest> sppDataCallback);
+    void queryHumidityParam(int index, SppDataCallback<SetHumidityParameRequest> sppDataCallback);
 
 
     /**
@@ -247,7 +247,7 @@ public interface BluetoothService {
      *
      * @param sppDataCallback
      */
-    void queryHisRecord(String name, int index, SppDataCallback<HisRecordDataResponse> sppDataCallback);
+    void queryHisRecord(int pointIndex, String name, int index, SppDataCallback<HisRecordDataResponse> sppDataCallback);
 
 
     /**

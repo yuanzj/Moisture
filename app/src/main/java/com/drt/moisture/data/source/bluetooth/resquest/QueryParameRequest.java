@@ -19,6 +19,9 @@ public class QueryParameRequest {
     @RkField(position = 5, length = 1)
     private int type;
 
+    @RkField(position = 6, length = 1)
+    private int index;
+
     public int getCmdGroup() {
         return CmdGroup;
     }
@@ -57,5 +60,13 @@ public class QueryParameRequest {
 
     public void setType(int type) {
         this.type = type;
+    }
+
+    public int getIndex() {
+        return index;
+    }
+
+    public void setIndex(int index) {
+        this.index = index;
     }
 }

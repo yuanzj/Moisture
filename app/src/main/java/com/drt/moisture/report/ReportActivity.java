@@ -22,6 +22,7 @@ import com.bin.david.form.data.format.bg.IBackgroundFormat;
 import com.bin.david.form.data.table.PageTableData;
 import com.drt.moisture.App;
 import com.drt.moisture.BluetoothBaseActivity;
+import com.drt.moisture.MainActivity;
 import com.drt.moisture.R;
 import com.drt.moisture.data.MeasureValue;
 import com.drt.moisture.util.AppPermission;
@@ -82,6 +83,9 @@ public class ReportActivity extends BluetoothBaseActivity<ReportPresenter> imple
     @BindView(R.id.endTime)
     Button endTime;
 
+    @BindView(R.id.spinner1)
+    Spinner spinner1;
+
     boolean isBleConnected;
 
     List<MeasureValue> currentData;
@@ -89,6 +93,8 @@ public class ReportActivity extends BluetoothBaseActivity<ReportPresenter> imple
     int pageSize;
 
     volatile int currentPage;
+
+    volatile int currentSelectIndex = 1;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -108,7 +114,7 @@ public class ReportActivity extends BluetoothBaseActivity<ReportPresenter> imple
 
         Point outSize = new Point();
         this.getWindowManager().getDefaultDisplay().getSize(outSize);
-        table.getConfig().setMinTableWidth((int)(outSize.x * 1.5 / 2.5) - getResources().getDimensionPixelSize(R.dimen.dividing_line));
+        table.getConfig().setMinTableWidth((int) (outSize.x * 1.5 / 2.5) - getResources().getDimensionPixelSize(R.dimen.dividing_line));
 
         table.getConfig().setContentBackground(new IBackgroundFormat() {
 
@@ -139,6 +145,30 @@ public class ReportActivity extends BluetoothBaseActivity<ReportPresenter> imple
 
         startTime.setText(sdf.format(new Date(System.currentTimeMillis() - 7 * 24 * 60 * 60 * 1000)));
         endTime.setText(sdf.format(new Date()));
+
+        // 建立数据源
+        int pointCount = App.getInstance().getLocalDataService().queryAppConfig().getPointCount();
+        final String[] mItems = new String[pointCount];
+        for (int i = 0; i < pointCount; i++) {
+            mItems[i] = "节点" + (i + 1);
+        }
+        // 建立Adapter并且绑定数据源
+        ArrayAdapter<String> adapter = new ArrayAdapter<>(this, android.R.layout.simple_spinner_item, mItems);
+        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        //绑定 Adapter到控件
+        spinner1.setAdapter(adapter);
+        spinner1.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> parent, View view,
+                                       int pos, long id) {
+                currentSelectIndex = (pos + 1);
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> parent) {
+                // Another interface callback
+            }
+        });
     }
 
     @Override
@@ -301,13 +331,13 @@ public class ReportActivity extends BluetoothBaseActivity<ReportPresenter> imple
         table.setVisibility(View.INVISIBLE);
         currentData = new ArrayList<>();
         currentPage = 0;
-        page.setText( "0/0");
+        page.setText("0/0");
         total.setText("共0条");
         previous.setAlpha(0.54f);
         next.setAlpha(0.54f);
 
         try {
-            mPresenter.queryReport(mesasureName, sdf.parse(startTime.getText().toString()), sdf.parse(endTime.getText().toString()));
+            mPresenter.queryReport(currentSelectIndex, mesasureName, sdf.parse(startTime.getText().toString()), sdf.parse(endTime.getText().toString()));
         } catch (ParseException e) {
             e.printStackTrace();
         }
@@ -407,7 +437,7 @@ public class ReportActivity extends BluetoothBaseActivity<ReportPresenter> imple
                             @Override
                             public void onTimeSet(TimePicker view, int hourOfDay, int minute) {
 
-                                startDateTime += (" " + String.format("%2d", hourOfDay).replace(" ", "0") + ":" + String.format("%2d", minute).replace(" ", "0")  + ":" + String.format("%2d", second).replace(" ", "0"));
+                                startDateTime += (" " + String.format("%2d", hourOfDay).replace(" ", "0") + ":" + String.format("%2d", minute).replace(" ", "0") + ":" + String.format("%2d", second).replace(" ", "0"));
 
                                 startTime.setText(startDateTime);
                             }
@@ -419,7 +449,7 @@ public class ReportActivity extends BluetoothBaseActivity<ReportPresenter> imple
     }
 
     @OnClick(R.id.endTime)
-    public void onEndTime()  {
+    public void onEndTime() {
         Calendar ca = Calendar.getInstance();
         try {
             ca.setTime(sdf.parse(endTime.getText().toString()));
@@ -444,7 +474,7 @@ public class ReportActivity extends BluetoothBaseActivity<ReportPresenter> imple
                             @Override
                             public void onTimeSet(TimePicker view, int hourOfDay, int minute) {
 
-                                endDateTime += (" " + String.format("%2d", hourOfDay).replace(" ", "0") + ":" + String.format("%2d", minute).replace(" ", "0")  + ":" + String.format("%2d", second).replace(" ", "0"));
+                                endDateTime += (" " + String.format("%2d", hourOfDay).replace(" ", "0") + ":" + String.format("%2d", minute).replace(" ", "0") + ":" + String.format("%2d", second).replace(" ", "0"));
 
                                 endTime.setText(endDateTime);
                             }
