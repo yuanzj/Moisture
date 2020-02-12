@@ -232,7 +232,7 @@ public interface BluetoothService {
      *
      * @param sppDataCallback
      */
-    void queryHumidityParam(int index, SppDataCallback<SetHumidityParameRequest> sppDataCallback);
+    void queryHumidityParam(int index, int type, SppDataCallback<SetHumidityParameRequest> sppDataCallback);
 
 
     /**

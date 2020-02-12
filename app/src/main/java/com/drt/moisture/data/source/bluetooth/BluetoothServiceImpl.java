@@ -869,15 +869,15 @@ public class BluetoothServiceImpl implements BluetoothService, BleWriteResponse 
     }
 
     @Override
-    public void queryHumidityParam(int index, SppDataCallback<SetHumidityParameRequest> sppDataCallback) {
+    public void queryHumidityParam(int index, int type, SppDataCallback<SetHumidityParameRequest> sppDataCallback) {
         this.sppDataCallback = sppDataCallback;
-        QueryParameRequest queryParameRequest = new QueryParameRequest();
+        QueryHumidityParameRequest queryParameRequest = new QueryHumidityParameRequest();
         queryParameRequest.setCmdGroup((byte) 0xA2);
         queryParameRequest.setCmd((byte) 0x89);
         queryParameRequest.setResponse((byte) 0x01);
         queryParameRequest.setReserved(0);
+//        queryParameRequest.setType(type);
         queryParameRequest.setIndex(index);
-
 
         try {
             App.getInstance().getBluetoothClient().write(App.getInstance().getConnectMacAddress(), UUIDUtils.makeUUID(0xFFE0), UUIDUtils.makeUUID(0xFFE1), BluetoothDataUtil.encode(queryParameRequest), this);

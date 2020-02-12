@@ -117,7 +117,7 @@ public class SettingModel implements SettingContract.Model {
     @Override
     public void queryHumidityConfig(DataCallback<SetHumidityParameRequest> _dataCallback) {
         this.setHumidityParameRequestDataCallback = _dataCallback;
-        App.getInstance().getBluetoothService().queryHumidityParam(1, new SppDataCallback<SetHumidityParameRequest>() {
+        App.getInstance().getBluetoothService().queryHumidityParam(1, 1,new SppDataCallback<SetHumidityParameRequest>() {
             @Override
             public void delivery(SetHumidityParameRequest setMeasureParameRequest) {
                 if (setHumidityParameRequestDataCallback != null) {

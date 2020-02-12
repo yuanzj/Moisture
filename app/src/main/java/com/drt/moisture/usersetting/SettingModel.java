@@ -76,7 +76,7 @@ public class SettingModel implements SettingContract.Model {
     @Override
     public void queryCorrectConfig(int index, DataCallback<SetCorrectParameRequest> _dataCallback) {
         this.setCorrectParameRequestDataCallback = _dataCallback;
-        App.getInstance().getBluetoothService().queryCorrectParam(index, 0x02,new SppDataCallback<SetCorrectParameRequest>() {
+        App.getInstance().getBluetoothService().queryCorrectParam(index, 0x02, new SppDataCallback<SetCorrectParameRequest>() {
             @Override
             public void delivery(SetCorrectParameRequest setMeasureParameRequest) {
                 if (setCorrectParameRequestDataCallback != null) {
@@ -94,7 +94,7 @@ public class SettingModel implements SettingContract.Model {
     @Override
     public void queryHumidityConfig(int index, DataCallback<SetHumidityParameRequest> _dataCallback) {
         this.setHumidityParameRequestDataCallback = _dataCallback;
-        App.getInstance().getBluetoothService().queryHumidityParam(index, new SppDataCallback<SetHumidityParameRequest>() {
+        App.getInstance().getBluetoothService().queryHumidityParam(index, 0x02, new SppDataCallback<SetHumidityParameRequest>() {
             @Override
             public void delivery(SetHumidityParameRequest setMeasureParameRequest) {
                 if (setHumidityParameRequestDataCallback != null) {
@@ -162,7 +162,7 @@ public class SettingModel implements SettingContract.Model {
             public Class<ParameterSetResponse> getEntityType() {
                 return ParameterSetResponse.class;
             }
-        },false,0x02);
+        }, false, 0x02);
     }
 
     @Override
@@ -181,7 +181,7 @@ public class SettingModel implements SettingContract.Model {
             public Class<ParameterSetResponse> getEntityType() {
                 return ParameterSetResponse.class;
             }
-        },false,0x02);
+        }, false, 0x02);
     }
 
     @Override
@@ -219,13 +219,13 @@ public class SettingModel implements SettingContract.Model {
             public Class<ParameterSetResponse> getEntityType() {
                 return ParameterSetResponse.class;
             }
-        },false);
+        }, false);
     }
 
     @Override
     public void reset(DataCallback<ParameterSetResponse> dataCallback) {
         this.parameterSetResponseDataCallback = dataCallback;
-        App.getInstance().getBluetoothService().reset( new SppDataCallback<ParameterSetResponse>() {
+        App.getInstance().getBluetoothService().reset(new SppDataCallback<ParameterSetResponse>() {
 
             @Override
             public void delivery(ParameterSetResponse parameterSetResponse) {
