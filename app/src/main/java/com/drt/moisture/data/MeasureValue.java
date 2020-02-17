@@ -6,7 +6,7 @@ import com.bin.david.form.annotation.SmartTable;
 @SmartTable(name="水分活度表")
 public class MeasureValue {
 
-    @SmartColumn(id =1,name = "节点号")
+    @SmartColumn(id =1,name = "测点")
     private int index;
 
     @SmartColumn(id =2,name = "时间")

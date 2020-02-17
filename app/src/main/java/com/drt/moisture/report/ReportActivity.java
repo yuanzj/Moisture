@@ -150,7 +150,7 @@ public class ReportActivity extends BluetoothBaseActivity<ReportPresenter> imple
         int pointCount = App.getInstance().getLocalDataService().queryAppConfig().getPointCount();
         final String[] mItems = new String[pointCount];
         for (int i = 0; i < pointCount; i++) {
-            mItems[i] = "节点" + (i + 1);
+            mItems[i] = "测点" + (i + 1);
         }
         // 建立Adapter并且绑定数据源
         ArrayAdapter<String> adapter = new ArrayAdapter<>(this, android.R.layout.simple_spinner_item, mItems);
@@ -285,7 +285,7 @@ public class ReportActivity extends BluetoothBaseActivity<ReportPresenter> imple
 
         if (AppPermission.isGrantExternalRW(this)) {
             if (currentData != null && currentData.size() > 0) {
-                String[] title = {"时间", "样品名称", "温度", "水分活度", "环境值"};
+                String[] title = { "测点", "时间", "样品名称", "温度", "水分活度", "环境值"};
 
                 File file = new File(ExcelUtil.getSDPath() + "/水分活度测量");
                 ExcelUtil.makeDir(file);
@@ -496,6 +496,7 @@ public class ReportActivity extends BluetoothBaseActivity<ReportPresenter> imple
             MeasureValue measureValue = values.get(i);
             ArrayList<String> beanList = new ArrayList<>();
             beanList.add(measureValue.getReportTime());
+            beanList.add(String.valueOf(measureValue.getIndex()));
             beanList.add(String.valueOf(measureValue.getName()));
             beanList.add(String.valueOf(measureValue.getTemperature()));
             beanList.add(String.valueOf(measureValue.getActivity()));

@@ -52,7 +52,7 @@ public interface DashboardContract {
         void startQuery(int pointCount, MeasureDataCallback<List<MeasureValue>> callback);
 
         /**
-         * 指定节点编号，停止测量
+         * 指定测点编号，停止测量
          * @param sendCommand
          * @param index
          */
@@ -64,7 +64,7 @@ public interface DashboardContract {
         void stopAll();
 
         /**
-         * 获取节点测量状态
+         * 获取测点测量状态
          * @param index
          * @return
          */

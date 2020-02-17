@@ -430,7 +430,8 @@ public abstract class BluetoothBaseActivity<T extends BasePresenter> extends Bas
                     appConfig.setPointCount(cdslSetResponse.getCount());
                     if (appConfig.getPointCount() > 0 && appConfig.getPointCount() < 6) {
                         App.getInstance().getLocalDataService().setAppConfig(appConfig);
-                        Log.d(TAG, "缓存测量节点：" + cdslSetResponse.getCount());
+                        Log.d(TAG, "缓存测量测点：" + cdslSetResponse.getCount());
+                        EventBus.getDefault().post(appConfig); //普通事件发布s
                     }
                 }
 

@@ -87,6 +87,7 @@ public class ReportModel implements ReportContract.Model, SppDataCallback<HisRec
         if (reportDate.after(startTime) && reportDate.before(endTime)) {
             List<MeasureValue> values = new ArrayList<>();
             MeasureValue measureValue = new MeasureValue();
+            measureValue.setIndex(recordDataResponse.getIndex());
             measureValue.setTemperature(recordDataResponse.getTemperature() / 100.0);
             measureValue.setActivity(recordDataResponse.getActivity() / 10000.0);
             measureValue.setReportTime(sdf.format(reportDate));

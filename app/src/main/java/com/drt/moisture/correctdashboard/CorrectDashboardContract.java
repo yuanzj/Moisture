@@ -45,7 +45,7 @@ public interface CorrectDashboardContract {
         void startQuery(int pointCount, CorrectDataCallback<List<MeasureValue>> callback);
 
         /**
-         * 指定节点编号，停止校正
+         * 指定测点编号，停止校正
          * @param sendCommand
          */
         void stopCorrect(boolean sendCommand);
@@ -56,7 +56,7 @@ public interface CorrectDashboardContract {
         void stopAll();
 
         /**
-         * 获取节点校正状态
+         * 获取测点校正状态
          * @param index
          * @return
          */
@@ -108,7 +108,7 @@ public interface CorrectDashboardContract {
          *
          * @param model       校准模式
          * @param type        校准类型
-         * @param count       节点数量
+         * @param count       测点数量
          */
         void startCorrect(int model, int type, int count);
 

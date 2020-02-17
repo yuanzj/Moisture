@@ -117,9 +117,19 @@ public class LocalDataServiceImpl implements LocalDataService {
 
     @Override
     public void clearAll() {
-        SharedPreferences sp = context.getSharedPreferences("SP", MODE_PRIVATE);
-        SharedPreferences.Editor editor = sp.edit();
-        editor.clear();
-        editor.apply();
+        AppConfig appConfig = queryAppConfig(1);
+        int pointCount = appConfig.getPointCount();
+        for (int i = 0; i < pointCount; i++) {
+            appConfig = queryAppConfig(i + 1);
+            appConfig.setMeasuringTime(5);
+            appConfig.setCorrectTime(15);
+            appConfig.setPeriod(1500);
+            appConfig.setRatio(0);
+            appConfig.setMeasureMode(0);
+            appConfig.setCorrectMode(1);
+            appConfig.setCorrectType(1);
+            setAppConfig(i + 1, appConfig);
+        }
+
     }
 }

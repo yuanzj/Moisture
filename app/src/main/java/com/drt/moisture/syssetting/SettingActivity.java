@@ -501,7 +501,7 @@ public class SettingActivity extends BluetoothBaseActivity<SettingPresenter> imp
                 int pointCount = App.getInstance().getLocalDataService().queryAppConfig().getPointCount();
                 final String[] mItems = new String[pointCount];
                 for (int i = 0; i < pointCount; i++) {
-                    mItems[i] = "节点" + (i + 1);
+                    mItems[i] = "测点" + (i + 1);
                 }
                 // 建立Adapter并且绑定数据源
                 ArrayAdapter<String> adapter = new ArrayAdapter<>(this, android.R.layout.simple_spinner_item, mItems);

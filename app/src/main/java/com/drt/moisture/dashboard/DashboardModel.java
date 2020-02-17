@@ -812,7 +812,7 @@ public class DashboardModel implements DashboardContract.Model {
         private int type;
 
         /**
-         * 节点编号
+         * 测点编号
          */
         private int index;
 

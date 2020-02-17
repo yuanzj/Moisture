@@ -325,7 +325,7 @@ public class BluetoothServiceImpl implements BluetoothService, BleWriteResponse 
         request.setReserved(0);
 
 
-//        节点索引：<br>用每一位表示一个节点，且可以组合使用<br>0x0001：1号节点<br>0x0002：2号节点<br>0x0010：5号节点<br>0x001f：1~5，共5个节点
+//        测点索引：<br>用每一位表示一个测点，且可以组合使用<br>0x0001：1号测点<br>0x0002：2号测点<br>0x0010：5号测点<br>0x001f：1~5，共5个测点
         switch (pointCount) {
             case 1:
                 request.setIndex(0x01);
@@ -382,7 +382,7 @@ public class BluetoothServiceImpl implements BluetoothService, BleWriteResponse 
         recordDataRequest.setResponse((byte) 0x01);
         recordDataRequest.setReserved(0);
         recordDataRequest.setTime(ByteConvert.uintToBytes(time));
-//        节点索引：<br>用每一位表示一个节点，且可以组合使用<br>0x0001：1号节点<br>0x0002：2号节点<br>0x0010：5号节点<br>0x001f：1~5，共5个节点
+//        测点索引：<br>用每一位表示一个测点，且可以组合使用<br>0x0001：1号测点<br>0x0002：2号测点<br>0x0010：5号测点<br>0x001f：1~5，共5个测点
         switch (pointCount) {
             case 1:
                 recordDataRequest.setIndex(0x01);
@@ -512,7 +512,7 @@ public class BluetoothServiceImpl implements BluetoothService, BleWriteResponse 
 
         recordDataRequest.setReserved(0x00);
 
-//        节点索引：<br>用每一位表示一个节点，且可以组合使用<br>0x0001：1号节点<br>0x0002：2号节点<br>0x0010：5号节点<br>0x001f：1~5，共5个节点
+//        测点索引：<br>用每一位表示一个测点，且可以组合使用<br>0x0001：1号测点<br>0x0002：2号测点<br>0x0010：5号测点<br>0x001f：1~5，共5个测点
         switch (pointCount) {
             case 1:
                 recordDataRequest.setIndex(0x01);

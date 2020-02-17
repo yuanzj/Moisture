@@ -20,9 +20,11 @@ import com.drt.moisture.App;
 import com.drt.moisture.BluetoothBaseActivity;
 import com.drt.moisture.R;
 import com.drt.moisture.correct.CorrectActivity;
+import com.drt.moisture.dashboard.DashboardActivity;
 import com.drt.moisture.data.AppConfig;
 import com.drt.moisture.data.MeasureStatus;
 import com.drt.moisture.data.MeasureValue;
+import com.drt.moisture.measure.MeasureActivity;
 import com.github.mikephil.charting.charts.LineChart;
 import com.github.mikephil.charting.components.XAxis;
 import com.github.mikephil.charting.components.YAxis;
@@ -32,6 +34,9 @@ import com.github.mikephil.charting.data.LineDataSet;
 import com.github.mikephil.charting.formatter.ValueFormatter;
 import com.github.mikephil.charting.interfaces.datasets.ILineDataSet;
 import com.inuker.bluetooth.library.Constants;
+
+import org.greenrobot.eventbus.Subscribe;
+import org.greenrobot.eventbus.ThreadMode;
 
 import java.math.RoundingMode;
 import java.text.DecimalFormat;
@@ -138,6 +143,38 @@ public class CorrectDashboardActivity extends BluetoothBaseActivity<CorrectDashb
 
     public static CorrectDashboardActivity getCorrectDashboardActivity() {
         return correctDashboardActivity;
+    }
+
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    public void onGetMessage(AppConfig appConfig) {
+        if (isFront) {
+            point1.setTag(1);
+            point2.setTag(2);
+            point3.setTag(3);
+            point4.setTag(4);
+            point5.setTag(5);
+
+            View[] pointViews = new View[]{point1, point2, point3, point4, point5};
+            int pointCount = appConfig.getPointCount();
+            for (int i = 0; i < pointViews.length; i++) {
+                View point = pointViews[i];
+                if (i < pointCount) {
+                    point.setAlpha(1f);
+                    point.setEnabled(true);
+                } else {
+                    point.setAlpha(0.32f);
+                    point.setEnabled(false);
+                }
+                point.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                        Intent intent = new Intent(CorrectDashboardActivity.this, MeasureActivity.class);
+                        intent.putExtra("index", (Integer) view.getTag());
+                        startActivity(intent);
+                    }
+                });
+            }
+        }
     }
 
     @Override

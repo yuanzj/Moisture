@@ -23,6 +23,7 @@ import com.drt.moisture.R;
 import com.drt.moisture.data.AppConfig;
 import com.drt.moisture.data.MeasureStatus;
 import com.drt.moisture.data.MeasureValue;
+import com.drt.moisture.data.source.bluetooth.response.SocResponse;
 import com.drt.moisture.measure.MeasureActivity;
 import com.github.mikephil.charting.charts.LineChart;
 import com.github.mikephil.charting.components.XAxis;
@@ -33,6 +34,9 @@ import com.github.mikephil.charting.data.LineDataSet;
 import com.github.mikephil.charting.formatter.ValueFormatter;
 import com.github.mikephil.charting.interfaces.datasets.ILineDataSet;
 import com.inuker.bluetooth.library.Constants;
+
+import org.greenrobot.eventbus.Subscribe;
+import org.greenrobot.eventbus.ThreadMode;
 
 import java.math.RoundingMode;
 import java.text.DecimalFormat;
@@ -55,7 +59,7 @@ public class DashboardActivity extends BluetoothBaseActivity<DashboardPresenter>
 
     int[] colors = new int[]{R.color.btnOrange, R.color.btnGreen, R.color.btnBlue, R.color.btnRed1, R.color.btnRed};
 
-    boolean isFront = false;
+    volatile boolean isFront = false;
 
     @BindView(R.id.chart)
     LineChart chart;
@@ -141,6 +145,38 @@ public class DashboardActivity extends BluetoothBaseActivity<DashboardPresenter>
 
     public static DashboardActivity getDashboardActivity() {
         return dashboardActivity;
+    }
+
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    public void onGetMessage(AppConfig appConfig) {
+        if (isFront) {
+            point1.setTag(1);
+            point2.setTag(2);
+            point3.setTag(3);
+            point4.setTag(4);
+            point5.setTag(5);
+
+            View[] pointViews = new View[]{point1, point2, point3, point4, point5};
+            int pointCount = appConfig.getPointCount();
+            for (int i = 0; i < pointViews.length; i++) {
+                View point = pointViews[i];
+                if (i < pointCount) {
+                    point.setAlpha(1f);
+                    point.setEnabled(true);
+                } else {
+                    point.setAlpha(0.32f);
+                    point.setEnabled(false);
+                }
+                point.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                        Intent intent = new Intent(DashboardActivity.this, MeasureActivity.class);
+                        intent.putExtra("index", (Integer) view.getTag());
+                        startActivity(intent);
+                    }
+                });
+            }
+        }
     }
 
     @Override
@@ -573,7 +609,7 @@ public class DashboardActivity extends BluetoothBaseActivity<DashboardPresenter>
                         e.printStackTrace();
                     }
 
-                    // 启动下一个节点
+                    // 启动下一个测点
                     int nextIndex = (index + 1);
                     if (startStatus.get(nextIndex) != null && !startStatus.get(nextIndex)) {
                         String name = App.getInstance().getLocalDataService().queryHistory(nextIndex).get(0);
@@ -581,7 +617,7 @@ public class DashboardActivity extends BluetoothBaseActivity<DashboardPresenter>
                         mPresenter.startMeasure(appConfig.getMeasureMode(), name, nextIndex);
                     }
 
-                    // 释放节点
+                    // 释放测点
                     if (countDownLatch != null) {
                         countDownLatch.countDown();
                     }
