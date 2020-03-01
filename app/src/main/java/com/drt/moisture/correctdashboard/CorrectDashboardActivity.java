@@ -168,7 +168,7 @@ public class CorrectDashboardActivity extends BluetoothBaseActivity<CorrectDashb
                 point.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View view) {
-                        Intent intent = new Intent(CorrectDashboardActivity.this, MeasureActivity.class);
+                        Intent intent = new Intent(CorrectDashboardActivity.this, CorrectActivity.class);
                         intent.putExtra("index", (Integer) view.getTag());
                         startActivity(intent);
                     }

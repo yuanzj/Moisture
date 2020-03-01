@@ -18,7 +18,7 @@ public class CorrectDashboardPresenter extends BasePresenter<CorrectDashboardCon
 
     private MeasureStatus measureStatus;
 
-    CorrectDashboardPresenter() {
+    public CorrectDashboardPresenter() {
         model = new CorrectDashboardModel();
         measureStatus = MeasureStatus.NORMAL;
     }

@@ -9,6 +9,7 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AlertDialog;
+import android.text.TextUtils;
 import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
@@ -99,6 +100,8 @@ public class MeasureActivity extends BluetoothBaseActivity<DashboardPresenter> i
         spMeasureTime.setSelection(mPresenter.getMeasureTime(index) - 5);
         List<String> names = App.getInstance().getLocalDataService().queryHistory(index);
         measureName.setText(names.get(names.size() - 1));
+
+        setTitleName("测点" + index + "测量");
     }
 
     @Override
@@ -109,6 +112,10 @@ public class MeasureActivity extends BluetoothBaseActivity<DashboardPresenter> i
     @Override
     public void initView() {
         mPresenter = DashboardActivity.getDashboardPresenter();
+        if (mPresenter == null) {
+            mPresenter = new DashboardPresenter();
+            mPresenter.attachView(this);
+        }
         mPresenter.attachView(this);
 
         initChartView();
@@ -386,6 +393,14 @@ public class MeasureActivity extends BluetoothBaseActivity<DashboardPresenter> i
     protected void onResume() {
         super.onResume();
         updateUI(mPresenter.getMeasureStatus(index));
+    }
+
+    @Override
+    protected void onStop() {
+        super.onStop();
+        if (!TextUtils.isEmpty(measureName.getText())) {
+            App.getInstance().getLocalDataService().setHistory(index, measureName.getText().toString());
+        }
     }
 
     @Override

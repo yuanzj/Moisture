@@ -105,6 +105,8 @@ public class CorrectActivity extends BluetoothBaseActivity<CorrectDashboardPrese
         }
 
         spMeasureTime.setSelection(mPresenter.geCorrectTime(index) - 15);
+
+        setTitleName("测点" + index + "校正");
     }
 
     @Override
@@ -115,6 +117,10 @@ public class CorrectActivity extends BluetoothBaseActivity<CorrectDashboardPrese
     @Override
     public void initView() {
         mPresenter = CorrectDashboardActivity.getDashboardPresenter();
+        if (mPresenter == null) {
+            mPresenter = new CorrectDashboardPresenter();
+            mPresenter.attachView(this);
+        }
         mPresenter.attachView(this);
 
         initChartView();

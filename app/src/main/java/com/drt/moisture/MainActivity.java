@@ -75,13 +75,26 @@ public class MainActivity extends BluetoothBaseActivity<MainPresenter> {
 
     public void onClick(View view) {
 
+        int pointCount = App.getInstance().getLocalDataService().queryAppConfig().getPointCount();
+
         switch (view.getId()) {
             case R.id.menu_01:
-//                startActivity(new Intent(this, MeasureActivity.class));
-                startActivity(new Intent(this, DashboardActivity.class));
+                if (pointCount == 1) {
+                    Intent intent = new Intent(this, MeasureActivity.class);
+                    intent.putExtra("index", 1);
+                    startActivity(intent);
+                } else {
+                    startActivity(new Intent(this, DashboardActivity.class));
+                }
                 break;
             case R.id.menu_02:
-                startActivity(new Intent(this, CorrectDashboardActivity.class));
+                if (pointCount == 1) {
+                    Intent intent = new Intent(this, CorrectActivity.class);
+                    intent.putExtra("index", 1);
+                    startActivity(intent);
+                } else {
+                    startActivity(new Intent(this, CorrectDashboardActivity.class));
+                }
                 break;
             case R.id.menu_03:
                 startActivity(new Intent(this, ReportActivity.class));

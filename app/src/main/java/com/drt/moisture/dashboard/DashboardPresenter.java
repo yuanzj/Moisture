@@ -19,7 +19,7 @@ public class DashboardPresenter extends BasePresenter<DashboardContract.View> im
 
     private MeasureStatus measureStatus;
 
-    DashboardPresenter() {
+    public DashboardPresenter() {
         model = new DashboardModel();
         measureStatus = MeasureStatus.NORMAL;
     }
