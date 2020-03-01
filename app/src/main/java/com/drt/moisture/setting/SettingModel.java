@@ -8,13 +8,14 @@ import com.drt.moisture.data.HumidityParame;
 import com.drt.moisture.data.MeasureParame;
 import com.drt.moisture.data.SetDeviceInfoParame;
 import com.drt.moisture.data.source.bluetooth.SppDataCallback;
-import com.drt.moisture.data.source.bluetooth.response.CdslSetResponse;
 import com.drt.moisture.data.source.bluetooth.response.DeviceInfoResponse;
 import com.drt.moisture.data.source.bluetooth.response.ParameterSetResponse;
+import com.drt.moisture.data.source.bluetooth.response.TimingSetResponse;
 import com.drt.moisture.data.source.bluetooth.resquest.SetCorrectParameRequest;
 import com.drt.moisture.data.source.bluetooth.resquest.SetHumidityParameRequest;
 import com.drt.moisture.data.source.bluetooth.resquest.SetMeasureParameRequest;
 import com.drt.moisture.data.source.bluetooth.resquest.SetRateRequest;
+import com.drt.moisture.data.source.bluetooth.resquest.TimingSetRequest;
 
 public class SettingModel implements SettingContract.Model {
 
@@ -30,7 +31,12 @@ public class SettingModel implements SettingContract.Model {
 
     private DataCallback<SetRateRequest> setRateRequestDataCallback;
 
+    private DataCallback<TimingSetResponse> queryTimingResponseDataCallback;
+
     private DataCallback<ParameterSetResponse> cdslSetResponseDataCallback;
+
+    private DataCallback<ParameterSetResponse> setTimingSetResponseDataCallback;
+
 
     private DeviceInfo deviceInfo = new DeviceInfo();
 
@@ -151,6 +157,24 @@ public class SettingModel implements SettingContract.Model {
     }
 
     @Override
+    public void queryTiming(DataCallback<TimingSetResponse> _dataCallback) {
+        this.queryTimingResponseDataCallback = _dataCallback;
+        App.getInstance().getBluetoothService().queryTiming(new SppDataCallback<TimingSetResponse>() {
+            @Override
+            public void delivery(TimingSetResponse setMeasureParameRequest) {
+                if (queryTimingResponseDataCallback != null) {
+                    queryTimingResponseDataCallback.delivery(setMeasureParameRequest);
+                }
+            }
+
+            @Override
+            public Class<TimingSetResponse> getEntityType() {
+                return TimingSetResponse.class;
+            }
+        });
+    }
+
+    @Override
     public void setTime(long time, DataCallback<ParameterSetResponse> dataCallback) {
         this.parameterSetResponseDataCallback = dataCallback;
         App.getInstance().getBluetoothService().setTime(time, new SppDataCallback<ParameterSetResponse>() {
@@ -254,6 +278,25 @@ public class SettingModel implements SettingContract.Model {
             public void delivery(ParameterSetResponse parameterSetResponse) {
                 if (cdslSetResponseDataCallback != null) {
                     cdslSetResponseDataCallback.delivery(parameterSetResponse);
+                }
+            }
+
+            @Override
+            public Class<ParameterSetResponse> getEntityType() {
+                return ParameterSetResponse.class;
+            }
+        });
+    }
+
+    @Override
+    public void setTiming(TimingSetRequest timingSetRequest, DataCallback<ParameterSetResponse> sppDataCallback) {
+        this.setTimingSetResponseDataCallback = sppDataCallback;
+        App.getInstance().getBluetoothService().setTiming(timingSetRequest, new SppDataCallback<ParameterSetResponse>() {
+
+            @Override
+            public void delivery(ParameterSetResponse parameterSetResponse) {
+                if (setTimingSetResponseDataCallback != null) {
+                    setTimingSetResponseDataCallback.delivery(parameterSetResponse);
                 }
             }
 

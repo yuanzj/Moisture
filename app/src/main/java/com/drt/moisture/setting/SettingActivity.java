@@ -1,5 +1,6 @@
 package com.drt.moisture.setting;
 
+import android.app.TimePickerDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -21,6 +22,7 @@ import android.widget.SimpleAdapter;
 import android.widget.Spinner;
 import android.widget.TabHost;
 import android.widget.TextView;
+import android.widget.TimePicker;
 import android.widget.Toast;
 
 import com.drt.moisture.App;
@@ -32,10 +34,13 @@ import com.drt.moisture.data.DeviceInfo;
 import com.drt.moisture.data.HumidityParame;
 import com.drt.moisture.data.MeasureParame;
 import com.drt.moisture.data.SetDeviceInfoParame;
+import com.drt.moisture.data.source.bluetooth.response.TimingSetResponse;
 import com.drt.moisture.data.source.bluetooth.resquest.SetCorrectParameRequest;
 import com.drt.moisture.data.source.bluetooth.resquest.SetHumidityParameRequest;
 import com.drt.moisture.data.source.bluetooth.resquest.SetMeasureParameRequest;
 import com.drt.moisture.data.source.bluetooth.resquest.SetRateRequest;
+import com.drt.moisture.data.source.bluetooth.resquest.TimingSetRequest;
+import com.drt.moisture.report.ReportActivity;
 import com.drt.moisture.util.AndroidUtil;
 import com.drt.moisture.util.ExcelUtil;
 import com.inuker.bluetooth.library.Constants;
@@ -47,6 +52,7 @@ import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Calendar;
@@ -66,7 +72,7 @@ public class SettingActivity extends BluetoothBaseActivity<SettingPresenter> imp
     @BindView(R.id.version)
     TextView version;
 
-    View deviceInfoView, dialogDateTime, dialogRate, dialogParameSet, dialogSetDeviceInfo;
+    View deviceInfoView, dialogDateTime, dialogRate, dialogParameSet, dialogSetDeviceInfo, dialogSetTiming;
 
     boolean isBleConnected;
 
@@ -279,6 +285,23 @@ public class SettingActivity extends BluetoothBaseActivity<SettingPresenter> imp
                     AppConfig appConfig = App.getInstance().getLocalDataService().queryAppConfig();
                     appConfig.setPeriod(Integer.parseInt(spinner2.getSelectedItem().toString()));
                     App.getInstance().getLocalDataService().setAppConfig(appConfig);
+                }
+            }
+        });
+    }
+
+    @Override
+    public void onTimingSuccess(final TimingSetResponse timingSetResponse) {
+        runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                if (dialogSetTiming != null) {
+                    final TextView time1 = dialogSetTiming.findViewById(R.id.time1);
+                    final TextView time2 = dialogSetTiming.findViewById(R.id.time2);
+                    final TextView time3 = dialogSetTiming.findViewById(R.id.time3);
+                    time1.setText(String.format("%02d:%02d", timingSetResponse.getTime1h(), timingSetResponse.getTime1m()));
+                    time2.setText(String.format("%02d:%02d", timingSetResponse.getTime2h(), timingSetResponse.getTime2m()));
+                    time3.setText(String.format("%02d:%02d", timingSetResponse.getTime3h(), timingSetResponse.getTime3m()));
                 }
             }
         });
@@ -614,6 +637,129 @@ public class SettingActivity extends BluetoothBaseActivity<SettingPresenter> imp
                         }).setNegativeButton("取消", null).show();
             }
             break;
+            case 5: {
+
+                dialogSetTiming = LayoutInflater.from(this).inflate(R.layout.dialog_set_timing, null);
+                final TextView time1 = dialogSetTiming.findViewById(R.id.time1);
+                final TextView time2 = dialogSetTiming.findViewById(R.id.time2);
+                final TextView time3 = dialogSetTiming.findViewById(R.id.time3);
+
+
+                dialogSetTiming.findViewById(R.id.set1).setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+
+                        String[] temp = time1.getText().toString().split(":");
+                        int hour, minute;
+                        if (temp.length > 1) {
+                            hour = Integer.parseInt(temp[0]);
+                            minute = Integer.parseInt(temp[1]);
+                        } else {
+                            Calendar ca = Calendar.getInstance();
+                            hour = ca.get(Calendar.HOUR_OF_DAY);
+                            minute = ca.get(Calendar.MINUTE);
+                        }
+
+
+                        new TimePickerDialog(SettingActivity.this, new TimePickerDialog.OnTimeSetListener() {
+                            @Override
+                            public void onTimeSet(TimePicker view, int hourOfDay, int minute) {
+                                time1.setText(String.format("%02d:%02d", hourOfDay, minute));
+                            }
+                        }, hour, minute, true).show();
+                    }
+                });
+
+                dialogSetTiming.findViewById(R.id.set2).setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        String[] temp = time2.getText().toString().split(":");
+                        int hour, minute;
+                        if (temp.length > 1) {
+                            hour = Integer.parseInt(temp[0]);
+                            minute = Integer.parseInt(temp[1]);
+                        } else {
+                            Calendar ca = Calendar.getInstance();
+                            hour = ca.get(Calendar.HOUR_OF_DAY);
+                            minute = ca.get(Calendar.MINUTE);
+                        }
+
+
+                        new TimePickerDialog(SettingActivity.this, new TimePickerDialog.OnTimeSetListener() {
+                            @Override
+                            public void onTimeSet(TimePicker view, int hourOfDay, int minute) {
+                                time2.setText(String.format("%02d:%02d", hourOfDay, minute));
+                            }
+                        }, hour, minute, true).show();
+                    }
+                });
+
+                dialogSetTiming.findViewById(R.id.set3).setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        String[] temp = time3.getText().toString().split(":");
+                        int hour, minute;
+                        if (temp.length > 1) {
+                            hour = Integer.parseInt(temp[0]);
+                            minute = Integer.parseInt(temp[1]);
+                        } else {
+                            Calendar ca = Calendar.getInstance();
+                            hour = ca.get(Calendar.HOUR_OF_DAY);
+                            minute = ca.get(Calendar.MINUTE);
+                        }
+
+
+                        new TimePickerDialog(SettingActivity.this, new TimePickerDialog.OnTimeSetListener() {
+                            @Override
+                            public void onTimeSet(TimePicker view, int hourOfDay, int minute) {
+                                time3.setText(String.format("%02d:%02d", hourOfDay, minute));
+                            }
+                        }, hour, minute, true).show();
+                    }
+                });
+
+
+                AlertDialog.Builder builder = new AlertDialog.Builder(this).setTitle("定时测量设置")
+                        .setView(dialogSetTiming)
+                        .setPositiveButton("确认", new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialogInterface, int i) {
+
+                                TimingSetRequest timingSetRequest = new TimingSetRequest();
+                                String[] temp = time1.getText().toString().split(":");
+                                if (temp.length > 1) {
+                                    timingSetRequest.setTime1h(Integer.parseInt(temp[0]));
+                                    timingSetRequest.setTime1m(Integer.parseInt(temp[1]));
+                                }
+
+                                temp = time2.getText().toString().split(":");
+                                if (temp.length > 1) {
+                                    timingSetRequest.setTime2h(Integer.parseInt(temp[0]));
+                                    timingSetRequest.setTime2m(Integer.parseInt(temp[1]));
+                                }
+
+                                temp = time3.getText().toString().split(":");
+                                if (temp.length > 1) {
+                                    timingSetRequest.setTime3h(Integer.parseInt(temp[0]));
+                                    timingSetRequest.setTime3m(Integer.parseInt(temp[1]));
+                                }
+
+                                mPresenter.setTiming(timingSetRequest);
+                            }
+                        })
+                        .setNegativeButton("取消", new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialog, int which) {
+                                // TODO Auto-generated method stub
+                                dialog.dismiss();
+                            }
+                        })
+                        .setCancelable(false);
+                builder.show();
+
+                mPresenter.queryTiming();
+            }
+            break;
             default:
                 break;
         }
@@ -695,6 +841,11 @@ public class SettingActivity extends BluetoothBaseActivity<SettingPresenter> imp
             item1 = new HashMap<>();
             item1.put("icon", R.mipmap.icons_data_configuration);
             item1.put("title", "测点设置");
+            data.add(item1);
+
+            item1 = new HashMap<>();
+            item1.put("icon", R.mipmap.icons_data_configuration);
+            item1.put("title", "定时测量设置");
             data.add(item1);
 
             listView.setAdapter(new SimpleAdapter(this, data,

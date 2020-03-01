@@ -10,10 +10,14 @@ import com.drt.moisture.data.source.bluetooth.SppDataCallback;
 import com.drt.moisture.data.source.bluetooth.response.CdslSetResponse;
 import com.drt.moisture.data.source.bluetooth.response.ParameterSetResponse;
 
+import com.drt.moisture.data.source.bluetooth.response.TimingSetResponse;
 import com.drt.moisture.data.source.bluetooth.resquest.SetCorrectParameRequest;
 import com.drt.moisture.data.source.bluetooth.resquest.SetHumidityParameRequest;
 import com.drt.moisture.data.source.bluetooth.resquest.SetMeasureParameRequest;
 import com.drt.moisture.data.source.bluetooth.resquest.SetRateRequest;
+import com.drt.moisture.data.source.bluetooth.resquest.SetTimeRequest;
+import com.drt.moisture.data.source.bluetooth.resquest.TimingSetRequest;
+
 import net.yzj.android.common.base.BaseView;
 
 public interface SettingContract {
@@ -36,6 +40,8 @@ public interface SettingContract {
 
         void queryRate(DataCallback<SetRateRequest> dataCallback);
 
+        void queryTiming(DataCallback<TimingSetResponse> dataCallback);
+
         void setTime(long time, DataCallback<ParameterSetResponse> dataCallback);
 
         void setMeasureParame(MeasureParame measureParame, DataCallback<ParameterSetResponse> dataCallback);
@@ -47,6 +53,8 @@ public interface SettingContract {
         void setRateParame(int rate, int ratio, DataCallback<ParameterSetResponse> dataCallback);
 
         void setCdsl(int count, DataCallback<ParameterSetResponse> sppDataCallback);
+
+        void setTiming(TimingSetRequest timingSetRequest, DataCallback<ParameterSetResponse> sppDataCallback);
 
     }
 
@@ -61,6 +69,8 @@ public interface SettingContract {
         void onHumidityConfigSuccess(SetHumidityParameRequest deviceInfo);
 
         void onRateSuccess(SetRateRequest deviceInfo);
+
+        void onTimingSuccess(TimingSetResponse timingSetResponse);
 
         void onSetTimeSuccess();
 
@@ -81,6 +91,8 @@ public interface SettingContract {
 
         void queryRate();
 
+        void queryTiming();
+
         void setTime(long time);
 
         void setMeasureParame(MeasureParame measureParame);
@@ -92,5 +104,7 @@ public interface SettingContract {
         void setRateParame(int rate,int ratio);
 
         void setCdsl(int count);
+
+        void setTiming(TimingSetRequest timingSetRequest);
     }
 }

@@ -22,6 +22,12 @@ public class SocResponse {
     @RkField(position = 7, length = 1)
     private int soc;
 
+    /**
+     *  0x00：空闲<br/>0x01：自动测量<br/>0x02：定时测量<br/>0x03：校准
+     */
+    @RkField(position = 8, length = 1)
+    private int status;
+
     public int getCmdGroup() {
         return CmdGroup;
     }
@@ -70,6 +76,14 @@ public class SocResponse {
         this.soc = soc;
     }
 
+    public int getStatus() {
+        return status;
+    }
+
+    public void setStatus(int status) {
+        this.status = status;
+    }
+
     @Override
     public String toString() {
         return "SocResponse{" +
@@ -79,6 +93,7 @@ public class SocResponse {
                 ", Reserved=" + Reserved +
                 ", voltage=" + voltage +
                 ", soc=" + soc +
+                ", status=" + status +
                 '}';
     }
 }

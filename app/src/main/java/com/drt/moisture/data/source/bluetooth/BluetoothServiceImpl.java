@@ -887,6 +887,21 @@ public class BluetoothServiceImpl implements BluetoothService, BleWriteResponse 
     }
 
     @Override
+    public void setTiming(TimingSetRequest timingSetRequest, SppDataCallback<ParameterSetResponse> sppDataCallback) {
+        this.sppDataCallback = sppDataCallback;
+        timingSetRequest.setCmdGroup((byte) 0xA2);
+        timingSetRequest.setCmd((byte) 0x0B);
+        timingSetRequest.setResponse((byte) 0x01);
+        timingSetRequest.setReserved(0);
+
+        try {
+            App.getInstance().getBluetoothClient().write(App.getInstance().getConnectMacAddress(), UUIDUtils.makeUUID(0xFFE0), UUIDUtils.makeUUID(0xFFE1), BluetoothDataUtil.encode(timingSetRequest), this);
+        } catch (IllegalAccessException | RkFieldException | FieldConvertException e) {
+            e.printStackTrace();
+        }
+    }
+
+    @Override
     public void queryRateParame(SppDataCallback<SetRateRequest> sppDataCallback) {
         this.sppDataCallback = sppDataCallback;
         QueryParameRequest queryParameRequest = new QueryParameRequest();
@@ -992,6 +1007,22 @@ public class BluetoothServiceImpl implements BluetoothService, BleWriteResponse 
         QueryParameRequest queryParameRequest = new QueryParameRequest();
         queryParameRequest.setCmdGroup((byte) 0xA2);
         queryParameRequest.setCmd((byte) 0x8A);
+        queryParameRequest.setResponse((byte) 0x01);
+        queryParameRequest.setReserved(0);
+
+        try {
+            App.getInstance().getBluetoothClient().write(App.getInstance().getConnectMacAddress(), UUIDUtils.makeUUID(0xFFE0), UUIDUtils.makeUUID(0xFFE1), BluetoothDataUtil.encode(queryParameRequest), this);
+        } catch (IllegalAccessException | RkFieldException | FieldConvertException e) {
+            e.printStackTrace();
+        }
+    }
+
+    @Override
+    public void queryTiming(SppDataCallback<TimingSetResponse> sppDataCallback) {
+        this.sppDataCallback = sppDataCallback;
+        QueryParameRequest queryParameRequest = new QueryParameRequest();
+        queryParameRequest.setCmdGroup((byte) 0xA2);
+        queryParameRequest.setCmd((byte) 0x8C);
         queryParameRequest.setResponse((byte) 0x01);
         queryParameRequest.setReserved(0);
 

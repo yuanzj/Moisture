@@ -1,0 +1,114 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="@color/colorWhite"
+    android:orientation="vertical"
+    android:padding="@dimen/padding_default">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="48dp"
+        android:gravity="center_vertical"
+        android:orientation="horizontal">
+
+        <TextView
+            android:layout_width="60dp"
+            android:layout_height="wrap_content"
+            android:text="定时1："
+            android:textColor="@color/colorSecondBody"
+            android:textSize="@dimen/sizeBody" />
+
+        <TextView
+            android:id="@+id/time1"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:textColor="@color/colorBody"
+            android:textSize="@dimen/sizeSubTitle" />
+
+        <Button
+            android:id="@+id/set1"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:background="@drawable/selector_btn_transparent"
+            android:paddingLeft="16dp"
+            android:paddingRight="16dp"
+            android:text="设置"
+            android:textColor="@color/colorPrimary"
+            android:textSize="@dimen/sizeBody"
+             />
+    </LinearLayout>
+
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="48dp"
+        android:gravity="center_vertical"
+        android:orientation="horizontal">
+
+        <TextView
+            android:layout_width="60dp"
+            android:layout_height="wrap_content"
+            android:text="定时2："
+            android:textColor="@color/colorSecondBody"
+            android:textSize="@dimen/sizeBody" />
+
+
+        <TextView
+            android:id="@+id/time2"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:textColor="@color/colorBody"
+            android:textSize="@dimen/sizeSubTitle" />
+
+        <Button
+            android:id="@+id/set2"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:background="@drawable/selector_btn_transparent"
+            android:paddingLeft="16dp"
+            android:paddingRight="16dp"
+            android:text="设置"
+            android:textColor="@color/colorPrimary"
+            android:textSize="@dimen/sizeBody"
+             />
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="48dp"
+        android:gravity="center_vertical"
+        android:orientation="horizontal">
+
+        <TextView
+            android:layout_width="60dp"
+            android:layout_height="wrap_content"
+            android:text="定时3："
+            android:textColor="@color/colorSecondBody"
+            android:textSize="@dimen/sizeBody" />
+
+
+        <TextView
+            android:id="@+id/time3"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:textColor="@color/colorBody"
+            android:textSize="@dimen/sizeSubTitle" />
+
+        <Button
+            android:id="@+id/set3"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:background="@drawable/selector_btn_transparent"
+            android:paddingLeft="16dp"
+            android:paddingRight="16dp"
+            android:text="设置"
+            android:textColor="@color/colorPrimary"
+            android:textSize="@dimen/sizeBody"
+             />
+    </LinearLayout>
+
+</LinearLayout>

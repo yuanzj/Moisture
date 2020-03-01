@@ -9,10 +9,13 @@ import com.drt.moisture.data.SetDeviceInfoParame;
 import com.drt.moisture.data.source.bluetooth.response.CdslSetResponse;
 import com.drt.moisture.data.source.bluetooth.response.ParameterSetResponse;
 
+import com.drt.moisture.data.source.bluetooth.response.TimingSetResponse;
 import com.drt.moisture.data.source.bluetooth.resquest.SetCorrectParameRequest;
 import com.drt.moisture.data.source.bluetooth.resquest.SetHumidityParameRequest;
 import com.drt.moisture.data.source.bluetooth.resquest.SetMeasureParameRequest;
 import com.drt.moisture.data.source.bluetooth.resquest.SetRateRequest;
+import com.drt.moisture.data.source.bluetooth.resquest.TimingSetRequest;
+
 import net.yzj.android.common.base.BasePresenter;
 
 public class SettingPresenter extends BasePresenter<SettingContract.View> implements SettingContract.Presenter {
@@ -127,6 +130,23 @@ public class SettingPresenter extends BasePresenter<SettingContract.View> implem
     }
 
     @Override
+    public void queryTiming() {
+        if (!isViewAttached()) {
+            return;
+        }
+        mView.showLoading();
+        model.queryTiming(new DataCallback<TimingSetResponse>() {
+            @Override
+            public void delivery(TimingSetResponse deviceInfo) {
+                if (isViewAttached()) {
+                    mView.hideLoading();
+                    mView.onTimingSuccess(deviceInfo);
+                }
+            }
+        });
+    }
+
+    @Override
     public void setTime(long time) {
         if (!isViewAttached()) {
             return;
@@ -218,6 +238,23 @@ public class SettingPresenter extends BasePresenter<SettingContract.View> implem
         }
         mView.showLoading();
         model.setCdsl(count, new DataCallback<ParameterSetResponse>() {
+            @Override
+            public void delivery(ParameterSetResponse deviceInfo) {
+                if (isViewAttached()) {
+                    mView.hideLoading();
+                    mView.onSetParameSuccess();
+                }
+            }
+        });
+    }
+
+    @Override
+    public void setTiming(TimingSetRequest timingSetRequest) {
+        if (!isViewAttached()) {
+            return;
+        }
+        mView.showLoading();
+        model.setTiming(timingSetRequest, new DataCallback<ParameterSetResponse>() {
             @Override
             public void delivery(ParameterSetResponse deviceInfo) {
                 if (isViewAttached()) {

@@ -11,6 +11,7 @@ import com.drt.moisture.data.source.bluetooth.resquest.SetDeviceInfoRequest;
 import com.drt.moisture.data.source.bluetooth.resquest.SetHumidityParameRequest;
 import com.drt.moisture.data.source.bluetooth.resquest.SetMeasureParameRequest;
 import com.drt.moisture.data.source.bluetooth.resquest.SetRateRequest;
+import com.drt.moisture.data.source.bluetooth.resquest.TimingSetRequest;
 
 public interface BluetoothService {
 
@@ -234,6 +235,13 @@ public interface BluetoothService {
      */
     void queryHumidityParam(int index, int type, SppDataCallback<SetHumidityParameRequest> sppDataCallback);
 
+    /**
+     * 设置定时时间
+     * @param timingSetRequest
+     * @param sppDataCallback
+     */
+    void setTiming(TimingSetRequest timingSetRequest, SppDataCallback<ParameterSetResponse> sppDataCallback);
+
 
     /**
      * 查询测量参数
@@ -263,5 +271,13 @@ public interface BluetoothService {
      * @param sppDataCallback
      */
     void queryClsl(SppDataCallback<CdslSetResponse> sppDataCallback);
+
+
+    /**
+     * 查询定时时间
+     *
+     * @param sppDataCallback
+     */
+    void queryTiming(SppDataCallback<TimingSetResponse> sppDataCallback);
 
 }
