@@ -66,6 +66,20 @@ public class CorrectDashboardModel implements CorrectDashboardContract.Model {
     }
 
     @Override
+    public void setCorrectMode(int mode, int index) {
+        AppConfig appConfig = App.getInstance().getLocalDataService().queryAppConfig(index);
+        appConfig.setCorrectMode(mode);
+        App.getInstance().getLocalDataService().setAppConfig(index, appConfig);
+    }
+
+    @Override
+    public void setCorrectType(int type, int index) {
+        AppConfig appConfig = App.getInstance().getLocalDataService().queryAppConfig(index);
+        appConfig.setCorrectType(type);
+        App.getInstance().getLocalDataService().setAppConfig(index, appConfig);
+    }
+
+    @Override
     public int getCorrectTime(int index) {
         AppConfig appConfig = App.getInstance().getLocalDataService().queryAppConfig(index);
         return appConfig.getCorrectTime();

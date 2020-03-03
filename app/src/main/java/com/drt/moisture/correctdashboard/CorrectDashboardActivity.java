@@ -395,7 +395,39 @@ public class CorrectDashboardActivity extends BluetoothBaseActivity<CorrectDashb
     }
 
     @OnClick(R.id.btnStartMeasure)
-    public void startMeasure() {
+    public void startMeasure()  {
+        AppConfig appConfig = App.getInstance().getLocalDataService().queryAppConfig(1);
+        int model = appConfig.getCorrectMode();
+        int type = appConfig.getCorrectType();
+
+        String title;
+        if (model == 0x01 && type == 0x01) {
+            title = "请放置氯化钠饱和液";
+        } else if (model == 0x01 && type == 0x02) {
+            title = "请放置氯化镁饱和液";
+        } else {
+            title = "请先放置氯化钠饱和液";
+        }
+
+        AlertDialog.Builder builder = new AlertDialog.Builder(this)
+                .setTitle("提示")
+                .setMessage(title).setPositiveButton("确认", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialogInterface, int i) {
+
+                        startCorrect();
+
+                    }
+                }).setNegativeButton("取消", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialogInterface, int i) {
+                        dialogInterface.dismiss();
+                    }
+                });
+        builder.create().show();
+    }
+
+    private void startCorrect() {
 
         switch (mPresenter.getMeasureStatus()) {
             case RUNNING:

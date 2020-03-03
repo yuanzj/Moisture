@@ -24,6 +24,16 @@ public class CorrectDashboardPresenter extends BasePresenter<CorrectDashboardCon
     }
 
     @Override
+    public void setCorrectMode(int mode, int index) {
+        model.setCorrectMode(mode, index);
+    }
+
+    @Override
+    public void setCorrectType(int type, int index) {
+        model.setCorrectType(type, index);
+    }
+
+    @Override
     public int geCorrectTime(int index) {
         return model.getCorrectTime(index);
     }

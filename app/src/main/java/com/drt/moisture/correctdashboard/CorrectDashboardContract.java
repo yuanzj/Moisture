@@ -15,7 +15,22 @@ public interface CorrectDashboardContract {
     interface Model {
 
         /**
+         * 设置校准模式
+         *
+         * @param mode
+         */
+        void setCorrectMode(int mode, int index);
+
+        /**
+         * 设置校准类型
+         *
+         * @param type
+         */
+        void setCorrectType(int type, int index);
+
+        /**
          * 根据测点编号或者校正时间
+         *
          * @param index
          * @return
          */
@@ -23,6 +38,7 @@ public interface CorrectDashboardContract {
 
         /**
          * 设置校正时间
+         *
          * @param period
          * @param index
          */
@@ -30,6 +46,7 @@ public interface CorrectDashboardContract {
 
         /**
          * 启动校正
+         *
          * @param type
          * @param model
          * @param count
@@ -39,6 +56,7 @@ public interface CorrectDashboardContract {
 
         /**
          * 启动查询
+         *
          * @param pointCount
          * @param callback
          */
@@ -46,6 +64,7 @@ public interface CorrectDashboardContract {
 
         /**
          * 指定测点编号，停止校正
+         *
          * @param sendCommand
          */
         void stopCorrect(boolean sendCommand);
@@ -57,6 +76,7 @@ public interface CorrectDashboardContract {
 
         /**
          * 获取测点校正状态
+         *
          * @param index
          * @return
          */
@@ -90,6 +110,20 @@ public interface CorrectDashboardContract {
     interface Presenter {
 
         /**
+         * 设置校准模式
+         *
+         * @param mode
+         */
+        void setCorrectMode(int mode, int index);
+
+        /**
+         * 设置校准类型
+         *
+         * @param type
+         */
+        void setCorrectType(int type, int index);
+
+        /**
          * 获取校正耗时
          *
          * @return
@@ -106,9 +140,9 @@ public interface CorrectDashboardContract {
         /**
          * 启动校正
          *
-         * @param model       校准模式
-         * @param type        校准类型
-         * @param count       测点数量
+         * @param model 校准模式
+         * @param type  校准类型
+         * @param count 测点数量
          */
         void startCorrect(int model, int type, int count);
 

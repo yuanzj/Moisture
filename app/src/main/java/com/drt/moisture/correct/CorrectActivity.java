@@ -136,6 +136,24 @@ public class CorrectActivity extends BluetoothBaseActivity<CorrectDashboardPrese
                 } else {
                     correctTitle.setText("请先放置氯化钠饱和液");
                 }
+
+                int model;
+                int type;
+                if (position == 2) {
+//                            双点校正
+                    model = 0x02;
+                    type = 0x01;
+                } else if (position == 1) {
+//                            氯化镁校正
+                    model = 0x01;
+                    type = 0x02;
+                } else {
+//                            氯化钠校正
+                    model = 0x01;
+                    type = 0x01;
+                }
+                mPresenter.setCorrectMode(model, index);
+                mPresenter.setCorrectType(type, index);
             }
 
             @Override
