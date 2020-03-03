@@ -105,7 +105,7 @@ public class SettingModel implements SettingContract.Model {
     @Override
     public void queryCorrectConfig(DataCallback<SetCorrectParameRequest> _dataCallback) {
         this.setCorrectParameRequestDataCallback = _dataCallback;
-        App.getInstance().getBluetoothService().queryCorrectParam(1,0x01, new SppDataCallback<SetCorrectParameRequest>() {
+        App.getInstance().getBluetoothService().queryCorrectParam(1, 0x01, new SppDataCallback<SetCorrectParameRequest>() {
             @Override
             public void delivery(SetCorrectParameRequest setMeasureParameRequest) {
                 if (setCorrectParameRequestDataCallback != null) {
@@ -123,7 +123,7 @@ public class SettingModel implements SettingContract.Model {
     @Override
     public void queryHumidityConfig(DataCallback<SetHumidityParameRequest> _dataCallback) {
         this.setHumidityParameRequestDataCallback = _dataCallback;
-        App.getInstance().getBluetoothService().queryHumidityParam(1, 1,new SppDataCallback<SetHumidityParameRequest>() {
+        App.getInstance().getBluetoothService().queryHumidityParam(1, 1, new SppDataCallback<SetHumidityParameRequest>() {
             @Override
             public void delivery(SetHumidityParameRequest setMeasureParameRequest) {
                 if (setHumidityParameRequestDataCallback != null) {
@@ -209,7 +209,7 @@ public class SettingModel implements SettingContract.Model {
             public Class<ParameterSetResponse> getEntityType() {
                 return ParameterSetResponse.class;
             }
-        },false, 0x01);
+        }, false, 0x01);
     }
 
     @Override
@@ -228,7 +228,7 @@ public class SettingModel implements SettingContract.Model {
             public Class<ParameterSetResponse> getEntityType() {
                 return ParameterSetResponse.class;
             }
-        },false,0x01);
+        }, false, 0x01);
     }
 
     @Override
@@ -266,7 +266,7 @@ public class SettingModel implements SettingContract.Model {
             public Class<ParameterSetResponse> getEntityType() {
                 return ParameterSetResponse.class;
             }
-        },false);
+        }, false);
     }
 
     @Override
@@ -285,7 +285,7 @@ public class SettingModel implements SettingContract.Model {
             public Class<ParameterSetResponse> getEntityType() {
                 return ParameterSetResponse.class;
             }
-        });
+        }, false);
     }
 
     @Override

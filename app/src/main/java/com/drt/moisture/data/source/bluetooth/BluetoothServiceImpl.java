@@ -643,7 +643,8 @@ public class BluetoothServiceImpl implements BluetoothService, BleWriteResponse 
     }
 
     @Override
-    public void setCdsl(int count, SppDataCallback<ParameterSetResponse> sppDataCallback) {
+    public void setCdsl(final int count, final SppDataCallback<ParameterSetResponse> sppDataCallback, boolean retry) {
+
         this.sppDataCallback = sppDataCallback;
         SetCdslRequest setTimeRequest = new SetCdslRequest();
         setTimeRequest.setCmdGroup((byte) 0xA2);
@@ -653,7 +654,34 @@ public class BluetoothServiceImpl implements BluetoothService, BleWriteResponse 
         setTimeRequest.setCount(count);
 
         try {
+
             App.getInstance().getBluetoothClient().write(App.getInstance().getConnectMacAddress(), UUIDUtils.makeUUID(0xFFE0), UUIDUtils.makeUUID(0xFFE1), BluetoothDataUtil.encode(setTimeRequest), this);
+
+            if (!retry) {
+                expectResponseCode = 0xA5;
+                currentRetryCount = 0;
+                if (timeoutTimer != null) {
+                    timeoutTimer.cancel();
+                }
+                timeoutTimer = new Timer();
+                timeoutTimer.schedule(new TimerTask() {
+                    @Override
+                    public void run() {
+                        if (currentRetryCount >= 2) {
+                            currentRetryCount = 0;
+                            timeoutTimer.cancel();
+                            timeoutTimer = null;
+                        } else {
+                            if (timeoutTimer != null) {
+                                currentRetryCount++;
+                                setCdsl(count, sppDataCallback, true);
+                            }
+                        }
+
+                    }
+                }, 300, 300);
+            }
+
         } catch (IllegalAccessException | RkFieldException | FieldConvertException e) {
             e.printStackTrace();
         }
