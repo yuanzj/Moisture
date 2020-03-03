@@ -80,6 +80,15 @@ public class MainActivity extends BluetoothBaseActivity<MainPresenter> {
         switch (view.getId()) {
             case R.id.menu_01:
                 if (pointCount == 1) {
+                    if (DashboardActivity.getDashboardPresenter() != null) {
+                        DashboardActivity.getDashboardPresenter().onDestroy();
+                        DashboardActivity.setDashboardPresenter(null);
+                    }
+
+                    if (DashboardActivity.getDashboardActivity() != null) {
+                        DashboardActivity.setDashboardActivity(null);
+                    }
+
                     Intent intent = new Intent(this, MeasureActivity.class);
                     intent.putExtra("index", 1);
                     startActivity(intent);
@@ -89,6 +98,15 @@ public class MainActivity extends BluetoothBaseActivity<MainPresenter> {
                 break;
             case R.id.menu_02:
                 if (pointCount == 1) {
+                    if (CorrectDashboardActivity.getDashboardPresenter() != null) {
+                        CorrectDashboardActivity.getDashboardPresenter().onDestroy();
+                        CorrectDashboardActivity.setCorrectDashboardPresenter(null);
+                    }
+
+                    if (CorrectDashboardActivity.getCorrectDashboardActivity() != null) {
+                        CorrectDashboardActivity.setCorrectDashboardActivity(null);
+                    }
+
                     Intent intent = new Intent(this, CorrectActivity.class);
                     intent.putExtra("index", 1);
                     startActivity(intent);
@@ -135,7 +153,7 @@ public class MainActivity extends BluetoothBaseActivity<MainPresenter> {
                     EventBus.getDefault().post(new BleEvent());
                 }
             }
-        },0, 3000);
+        }, 0, 3000);
     }
 
     @Override

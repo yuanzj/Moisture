@@ -133,7 +133,15 @@ public class CorrectDashboardActivity extends BluetoothBaseActivity<CorrectDashb
 
     CountDownLatch countDownLatch;
 
+    public static void setCorrectDashboardPresenter(CorrectDashboardPresenter mCorrectDashboardPresenter) {
+        CorrectDashboardActivity.mCorrectDashboardPresenter = mCorrectDashboardPresenter;
+    }
+
     private static CorrectDashboardPresenter mCorrectDashboardPresenter;
+
+    public static void setCorrectDashboardActivity(CorrectDashboardActivity correctDashboardActivity) {
+        CorrectDashboardActivity.correctDashboardActivity = correctDashboardActivity;
+    }
 
     private static CorrectDashboardActivity correctDashboardActivity;
 
@@ -144,6 +152,8 @@ public class CorrectDashboardActivity extends BluetoothBaseActivity<CorrectDashb
     public static CorrectDashboardActivity getCorrectDashboardActivity() {
         return correctDashboardActivity;
     }
+
+
 
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void onGetMessage(AppConfig appConfig) {

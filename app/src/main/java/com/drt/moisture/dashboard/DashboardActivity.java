@@ -135,7 +135,15 @@ public class DashboardActivity extends BluetoothBaseActivity<DashboardPresenter>
     CountDownLatch countDownLatch;
     Map<Integer, Boolean> startStatus = new ConcurrentHashMap<>();
 
+    public static void setDashboardPresenter(DashboardPresenter mDashboardPresenter) {
+        DashboardActivity.mDashboardPresenter = mDashboardPresenter;
+    }
+
     private static DashboardPresenter mDashboardPresenter;
+
+    public static void setDashboardActivity(DashboardActivity dashboardActivity) {
+        DashboardActivity.dashboardActivity = dashboardActivity;
+    }
 
     private static DashboardActivity dashboardActivity;
 

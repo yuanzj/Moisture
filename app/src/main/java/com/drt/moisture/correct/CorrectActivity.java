@@ -401,6 +401,10 @@ public class CorrectActivity extends BluetoothBaseActivity<CorrectDashboardPrese
     @Override
     protected void onDestroy() {
 //        mPresenter.stopCorrect(false);
+        if (CorrectDashboardActivity.getDashboardPresenter() == null) {
+            mPresenter.onDestroy();
+        }
+
         super.onDestroy();
     }
 

@@ -23,6 +23,7 @@ import android.widget.Toast;
 import com.drt.moisture.App;
 import com.drt.moisture.BluetoothBaseActivity;
 import com.drt.moisture.R;
+import com.drt.moisture.correctdashboard.CorrectDashboardActivity;
 import com.drt.moisture.dashboard.DashboardActivity;
 import com.drt.moisture.dashboard.DashboardContract;
 import com.drt.moisture.dashboard.DashboardModel;
@@ -406,6 +407,9 @@ public class MeasureActivity extends BluetoothBaseActivity<DashboardPresenter> i
     @Override
     protected void onDestroy() {
 //        mPresenter.stopCorrect(false, index);
+        if (DashboardActivity.getDashboardPresenter() == null) {
+            mPresenter.onDestroy();
+        }
         super.onDestroy();
     }
 
