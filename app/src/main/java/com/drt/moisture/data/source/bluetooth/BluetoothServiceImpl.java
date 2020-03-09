@@ -1050,7 +1050,7 @@ public class BluetoothServiceImpl implements BluetoothService, BleWriteResponse 
         this.sppDataCallback = sppDataCallback;
         QueryParameRequest queryParameRequest = new QueryParameRequest();
         queryParameRequest.setCmdGroup((byte) 0xA2);
-        queryParameRequest.setCmd((byte) 0x8C);
+        queryParameRequest.setCmd((byte) 0x8B);
         queryParameRequest.setResponse((byte) 0x01);
         queryParameRequest.setReserved(0);
 

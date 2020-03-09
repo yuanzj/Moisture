@@ -35,8 +35,8 @@ public class DashboardPresenter extends BasePresenter<DashboardContract.View> im
     }
 
     @Override
-    public void setMeasureModel(int index, int _model) {
-        model.setMeasureModel(index, _model);
+    public void setMeasureModel(int _model, int index) {
+        model.setMeasureModel(_model, index);
     }
 
     @Override

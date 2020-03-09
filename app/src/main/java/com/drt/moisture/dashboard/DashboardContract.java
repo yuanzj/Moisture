@@ -33,7 +33,7 @@ public interface DashboardContract {
          * @param index
          * @param model
          */
-        void setMeasureModel(int index, int model);
+        void setMeasureModel(int model,  int index);
 
         /**
          * 启动测量

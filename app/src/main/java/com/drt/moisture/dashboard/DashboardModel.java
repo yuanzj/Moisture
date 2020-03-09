@@ -74,7 +74,7 @@ public class DashboardModel implements DashboardContract.Model {
     }
 
     @Override
-    public void setMeasureModel(int index, int model) {
+    public void setMeasureModel(int model, int index) {
         AppConfig appConfig = App.getInstance().getLocalDataService().queryAppConfig(index);
         appConfig.setMeasureMode(model);
         App.getInstance().getLocalDataService().setAppConfig(index, appConfig);

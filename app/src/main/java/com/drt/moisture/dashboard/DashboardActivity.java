@@ -25,7 +25,9 @@ import com.drt.moisture.data.MeasureStatus;
 import com.drt.moisture.data.MeasureValue;
 import com.drt.moisture.data.source.bluetooth.response.SocResponse;
 import com.drt.moisture.measure.MeasureActivity;
+import com.drt.moisture.util.LineChartMarkView;
 import com.github.mikephil.charting.charts.LineChart;
+import com.github.mikephil.charting.components.Description;
 import com.github.mikephil.charting.components.XAxis;
 import com.github.mikephil.charting.components.YAxis;
 import com.github.mikephil.charting.data.Entry;
@@ -40,6 +42,7 @@ import org.greenrobot.eventbus.ThreadMode;
 
 import java.math.RoundingMode;
 import java.text.DecimalFormat;
+import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
@@ -436,7 +439,9 @@ public class DashboardActivity extends BluetoothBaseActivity<DashboardPresenter>
                 }
 
                 int index = 1;
-                String name = App.getInstance().getLocalDataService().queryHistory(index).get(0);
+                List<String> historyList = App.getInstance().getLocalDataService().queryHistory(index);
+                Collections.reverse(historyList);
+                String name = historyList.get(0);
                 AppConfig appConfig = App.getInstance().getLocalDataService().queryAppConfig(index);
                 mPresenter.startMeasure(appConfig.getMeasureMode(), name, index);
 
@@ -620,8 +625,10 @@ public class DashboardActivity extends BluetoothBaseActivity<DashboardPresenter>
                     // 启动下一个测点
                     int nextIndex = (index + 1);
                     if (startStatus.get(nextIndex) != null && !startStatus.get(nextIndex)) {
-                        String name = App.getInstance().getLocalDataService().queryHistory(nextIndex).get(0);
                         AppConfig appConfig = App.getInstance().getLocalDataService().queryAppConfig(nextIndex);
+                        List<String> historyList = App.getInstance().getLocalDataService().queryHistory(nextIndex);
+                        Collections.reverse(historyList);
+                        String name = historyList.get(0);
                         mPresenter.startMeasure(appConfig.getMeasureMode(), name, nextIndex);
                     }
 
@@ -712,7 +719,7 @@ public class DashboardActivity extends BluetoothBaseActivity<DashboardPresenter>
         // let the chart know it's data has changed
         chart.notifyDataSetChanged();
 
-        chart.setVisibleXRangeMaximum(30);
+        chart.setVisibleXRangeMaximum(50);
         //chart.setVisibleYRangeMaximum(15, AxisDependency.LEFT);
 //
 //            // this automatically refreshes the chart (calls invalidate())
@@ -723,12 +730,14 @@ public class DashboardActivity extends BluetoothBaseActivity<DashboardPresenter>
 
 
         LineDataSet d2 = new LineDataSet(null, "测点" + (i + 1) + "水分活度");
-        d2.setLineWidth(2.5f);
+        d2.setLineWidth(2.0f);
         d2.setCircleRadius(4.5f);
         d2.setHighLightColor(getResources().getColor(colors[i], getTheme()));
         d2.setColor(getResources().getColor(colors[i], getTheme()));
         d2.setCircleColor(getResources().getColor(colors[i], getTheme()));
-        d2.setDrawValues(true);
+        d2.setDrawValues(false);
+        d2.setDrawCircles(false);
+
         d2.setMode(LineDataSet.Mode.CUBIC_BEZIER);
         d2.setValueFormatter(new ValueFormatter() {
             public String getFormattedValue(float value) {
@@ -747,14 +756,20 @@ public class DashboardActivity extends BluetoothBaseActivity<DashboardPresenter>
 
         // apply styling
         // holder.chart.setValueTypeface(mTf);
+        chart.setDrawBorders(false);
+        chart.setDrawGridBackground(false);
+
         chart.getDescription().setEnabled(false);
         chart.setDrawGridBackground(false);
         chart.setNoDataText("没有测量数据。请点击右上角蓝牙按钮连接设备后开始测量!");
         chart.setNoDataTextColor(getColor(R.color.colorSecondBody));
 
         XAxis xAxis = chart.getXAxis();
+        xAxis.setLabelCount(10, false);
         xAxis.setPosition(XAxis.XAxisPosition.BOTTOM);
-        xAxis.setDrawGridLines(false);
+        xAxis.setAxisMaximum(50);
+        xAxis.enableGridDashedLine(10f, 10f, 0f);
+        xAxis.setDrawGridLines(true);
         xAxis.setDrawAxisLine(true);
         xAxis.setValueFormatter(new ValueFormatter() {
             @Override
@@ -772,16 +787,30 @@ public class DashboardActivity extends BluetoothBaseActivity<DashboardPresenter>
         });
 
         YAxis leftAxis = chart.getAxisLeft();
-        leftAxis.setLabelCount(5, false);
+        leftAxis.setLabelCount(10, false);
         leftAxis.setDrawGridLines(false);
         leftAxis.setAxisMinimum(0f); // this replaces setStartAtZero(true)
         leftAxis.setAxisMaximum(1.0000f);
+        leftAxis.enableGridDashedLine(10f, 10f, 0f);
+        leftAxis.setDrawGridLines(true);
 
         YAxis rightAxis = chart.getAxisRight();
         rightAxis.setLabelCount(5, false);
         rightAxis.setDrawGridLines(false);
         rightAxis.setAxisMinimum(0f); // this replaces setStartAtZero(true)
         rightAxis.setAxisMaximum(1.0000f);
+        rightAxis.setEnabled(false);
+        rightAxis.setDrawGridLines(false);
+
+        LineChartMarkView mv = new LineChartMarkView(this, xAxis.getValueFormatter());
+        mv.setChartView(chart);
+        chart.setMarker(mv);
+        chart.invalidate();
+
+        chart.setDoubleTapToZoomEnabled(false);//双击屏幕缩放
+        chart.setScaleEnabled(true);
+        chart.setScaleXEnabled(false);
+        chart.setScaleYEnabled(true);
     }
 
     public void playSound() {

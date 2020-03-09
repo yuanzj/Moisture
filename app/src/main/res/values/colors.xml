@@ -19,6 +19,7 @@
     <!--不激活状态颜色、分割线颜色-->
     <color name="colorDisableBody">#3F000000</color>
 
+    <color name="transparent_gray">#69000000</color>
 
     <color name="colorBtnDisable">#7f042B85</color>
     <color name="colorBtnPress">#1080FF</color>

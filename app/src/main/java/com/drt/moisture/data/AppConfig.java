@@ -141,6 +141,11 @@ public class AppConfig {
                 ", correctTime=" + correctTime +
                 ", ratio=" + ratio +
                 ", pointCount=" + pointCount +
+                ", startTime=" + startTime +
+                ", runStatus=" + runStatus +
+                ", measureMode=" + measureMode +
+                ", correctMode=" + correctMode +
+                ", correctType=" + correctType +
                 '}';
     }
 }
