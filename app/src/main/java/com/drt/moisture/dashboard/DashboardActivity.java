@@ -767,7 +767,7 @@ public class DashboardActivity extends BluetoothBaseActivity<DashboardPresenter>
         XAxis xAxis = chart.getXAxis();
         xAxis.setLabelCount(10, false);
         xAxis.setPosition(XAxis.XAxisPosition.BOTTOM);
-        xAxis.setAxisMaximum(50);
+//        xAxis.setAxisMaximum(50);
         xAxis.enableGridDashedLine(10f, 10f, 0f);
         xAxis.setDrawGridLines(true);
         xAxis.setDrawAxisLine(true);

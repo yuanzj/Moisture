@@ -308,7 +308,7 @@ public class ReportActivity extends BluetoothBaseActivity<ReportPresenter> imple
 
     @OnClick(R.id.history)
     public void onClickHistory() {
-        List<String> historyList = App.getInstance().getLocalDataService().queryHistory();
+        List<String> historyList = App.getInstance().getLocalDataService().queryHistory(currentSelectIndex);
         Collections.reverse(historyList);
         final String[] items = historyList.toArray(new String[historyList.size()]);
         AlertDialog.Builder builder = new AlertDialog.Builder(this)

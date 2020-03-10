@@ -528,7 +528,7 @@ public class MeasureActivity extends BluetoothBaseActivity<DashboardPresenter> i
         XAxis xAxis = chart.getXAxis();
         xAxis.setLabelCount(10, false);
         xAxis.setPosition(XAxis.XAxisPosition.BOTTOM);
-        xAxis.setAxisMaximum(30);
+//        xAxis.setAxisMaximum(30);
         xAxis.enableGridDashedLine(10f, 10f, 0f);
         xAxis.setDrawGridLines(true);
         xAxis.setDrawAxisLine(true);
