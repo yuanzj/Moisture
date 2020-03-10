@@ -915,7 +915,7 @@ public class BluetoothServiceImpl implements BluetoothService, BleWriteResponse 
     }
 
     @Override
-    public void setTiming(TimingSetRequest timingSetRequest, SppDataCallback<ParameterSetResponse> sppDataCallback) {
+    public void setTiming(final TimingSetRequest timingSetRequest, final SppDataCallback<ParameterSetResponse> sppDataCallback, boolean retry) {
         this.sppDataCallback = sppDataCallback;
         timingSetRequest.setCmdGroup((byte) 0xA2);
         timingSetRequest.setCmd((byte) 0x0B);
@@ -924,6 +924,32 @@ public class BluetoothServiceImpl implements BluetoothService, BleWriteResponse 
 
         try {
             App.getInstance().getBluetoothClient().write(App.getInstance().getConnectMacAddress(), UUIDUtils.makeUUID(0xFFE0), UUIDUtils.makeUUID(0xFFE1), BluetoothDataUtil.encode(timingSetRequest), this);
+
+            if (!retry) {
+                expectResponseCode = 0xA2;
+                currentRetryCount = 0;
+                if (timeoutTimer != null) {
+                    timeoutTimer.cancel();
+                }
+                timeoutTimer = new Timer();
+                timeoutTimer.schedule(new TimerTask() {
+                    @Override
+                    public void run() {
+                        if (currentRetryCount >= 2) {
+                            currentRetryCount = 0;
+                            timeoutTimer.cancel();
+                            timeoutTimer = null;
+                        } else {
+                            if (timeoutTimer != null) {
+                                currentRetryCount++;
+                                setTiming(timingSetRequest, sppDataCallback, true);
+                            }
+                        }
+
+                    }
+                }, 800, 800);
+            }
+
         } catch (IllegalAccessException | RkFieldException | FieldConvertException e) {
             e.printStackTrace();
         }
@@ -1046,7 +1072,7 @@ public class BluetoothServiceImpl implements BluetoothService, BleWriteResponse 
     }
 
     @Override
-    public void queryTiming(SppDataCallback<TimingSetResponse> sppDataCallback) {
+    public void queryTiming(final SppDataCallback<TimingSetResponse> sppDataCallback, boolean retry) {
         this.sppDataCallback = sppDataCallback;
         QueryParameRequest queryParameRequest = new QueryParameRequest();
         queryParameRequest.setCmdGroup((byte) 0xA2);
@@ -1056,6 +1082,31 @@ public class BluetoothServiceImpl implements BluetoothService, BleWriteResponse 
 
         try {
             App.getInstance().getBluetoothClient().write(App.getInstance().getConnectMacAddress(), UUIDUtils.makeUUID(0xFFE0), UUIDUtils.makeUUID(0xFFE1), BluetoothDataUtil.encode(queryParameRequest), this);
+
+            if (!retry) {
+                expectResponseCode = 0xA2;
+                currentRetryCount = 0;
+                if (timeoutTimer != null) {
+                    timeoutTimer.cancel();
+                }
+                timeoutTimer = new Timer();
+                timeoutTimer.schedule(new TimerTask() {
+                    @Override
+                    public void run() {
+                        if (currentRetryCount >= 2) {
+                            currentRetryCount = 0;
+                            timeoutTimer.cancel();
+                            timeoutTimer = null;
+                        } else {
+                            if (timeoutTimer != null) {
+                                currentRetryCount++;
+                                queryTiming(sppDataCallback, true);
+                            }
+                        }
+
+                    }
+                }, 300, 300);
+            }
         } catch (IllegalAccessException | RkFieldException | FieldConvertException e) {
             e.printStackTrace();
         }

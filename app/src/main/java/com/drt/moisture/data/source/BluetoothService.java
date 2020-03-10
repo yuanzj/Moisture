@@ -135,7 +135,7 @@ public interface BluetoothService {
      * @param type
      * @param sppDataCallback
      */
-    void queryCorrect(int measureModel, int type, int interval, long time, int pointCount,SppDataCallback<CorrectDataResponse> sppDataCallback);
+    void queryCorrect(int measureModel, int type, int interval, long time, int pointCount, SppDataCallback<CorrectDataResponse> sppDataCallback);
 
     /**
      * 查询设备信息
@@ -237,10 +237,11 @@ public interface BluetoothService {
 
     /**
      * 设置定时时间
+     *
      * @param timingSetRequest
      * @param sppDataCallback
      */
-    void setTiming(TimingSetRequest timingSetRequest, SppDataCallback<ParameterSetResponse> sppDataCallback);
+    void setTiming(TimingSetRequest timingSetRequest, SppDataCallback<ParameterSetResponse> sppDataCallback, boolean retry);
 
 
     /**
@@ -278,6 +279,6 @@ public interface BluetoothService {
      *
      * @param sppDataCallback
      */
-    void queryTiming(SppDataCallback<TimingSetResponse> sppDataCallback);
+    void queryTiming(SppDataCallback<TimingSetResponse> sppDataCallback, boolean retry);
 
 }
