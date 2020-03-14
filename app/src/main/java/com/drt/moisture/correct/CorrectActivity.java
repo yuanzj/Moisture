@@ -29,6 +29,7 @@ import com.drt.moisture.data.AppConfig;
 import com.drt.moisture.data.MeasureStatus;
 import com.drt.moisture.data.MeasureValue;
 import com.drt.moisture.measure.MeasureActivity;
+import com.drt.moisture.util.LineChartMarkView;
 import com.github.mikephil.charting.charts.LineChart;
 import com.github.mikephil.charting.components.XAxis;
 import com.github.mikephil.charting.components.YAxis;
@@ -458,17 +459,19 @@ public class CorrectActivity extends BluetoothBaseActivity<CorrectDashboardPrese
             set = createActivitySet();
             data.addDataSet(set);
         }
-        data.addEntry(new Entry(set.getEntryCount(), (float) measureValue.getActivity(), measureValue.getReportTime()), 0);
+        data.addEntry(new Entry(set.getEntryCount(), (float) measureValue.getActivity(), measureValue), 0);
         data.notifyDataChanged();
 
         // let the chart know it's data has changed
         chart.notifyDataSetChanged();
 
-        chart.setVisibleXRangeMaximum(30);
-        //chart.setVisibleYRangeMaximum(15, AxisDependency.LEFT);
-//
-//            // this automatically refreshes the chart (calls invalidate())
-        chart.moveViewToX((float) (data.getEntryCount() - 1));
+        if (data.getXMax() >= 30) {
+            chart.getXAxis().resetAxisMaximum();
+            chart.setVisibleXRangeMaximum(30);
+        } else {
+            chart.getXAxis().setAxisMaximum(30);
+        }
+        chart.moveViewToX(data.getXMax());
     }
 
 //    private LineDataSet createTemperatureSet() {
@@ -486,13 +489,14 @@ public class CorrectActivity extends BluetoothBaseActivity<CorrectDashboardPrese
     private LineDataSet createActivitySet() {
 
         LineDataSet d2 = new LineDataSet(null, "水分活度");
-        d2.setLineWidth(2.5f);
+        d2.setLineWidth(2f);
         d2.setCircleRadius(4.5f);
         d2.setHighLightColor(getResources().getColor(R.color.colorGreen, getTheme()));
         d2.setColor(getResources().getColor(R.color.colorGreen, getTheme()));
         d2.setCircleColor(getResources().getColor(R.color.colorGreen, getTheme()));
-        d2.setDrawValues(true);
-        d2.setMode(LineDataSet.Mode.CUBIC_BEZIER);
+        d2.setDrawValues(false);
+        d2.setDrawCircles(false);
+        d2.setMode(LineDataSet.Mode.LINEAR);
         d2.setValueFormatter(new ValueFormatter() {
             public String getFormattedValue(float value) {
                 DecimalFormat df = new DecimalFormat("0.00");
@@ -516,18 +520,21 @@ public class CorrectActivity extends BluetoothBaseActivity<CorrectDashboardPrese
         chart.setNoDataTextColor(getColor(R.color.colorSecondBody));
 
         XAxis xAxis = chart.getXAxis();
+        xAxis.setAxisMaximum(30);
+        xAxis.setLabelCount(6, false);
         xAxis.setPosition(XAxis.XAxisPosition.BOTTOM);
-        xAxis.setDrawGridLines(false);
+        xAxis.enableGridDashedLine(10f, 10f, 0f);
+        xAxis.setDrawGridLines(true);
         xAxis.setDrawAxisLine(true);
         xAxis.setValueFormatter(new ValueFormatter() {
             @Override
             public String getFormattedValue(float value) {
                 if (chart.getLineData() != null
-                        && chart.getLineData().getDataSetByIndex(0) != null
-                        && chart.getLineData().getDataSetByIndex(0).getEntryCount() > (int) value
-                        && chart.getLineData().getDataSetByIndex(0).getEntryForIndex((int) value) != null) {
-                    Entry entry = chart.getLineData().getDataSetByIndex(0).getEntryForIndex((int) value);
-                    return (String) entry.getData();
+                        && chart.getLineData().getMaxEntryCountSet() != null
+                        && chart.getLineData().getMaxEntryCountSet().getEntryCount() > (int) value
+                        && chart.getLineData().getMaxEntryCountSet().getEntryForIndex((int) value) != null) {
+                    Entry entry = chart.getLineData().getMaxEntryCountSet().getEntryForIndex((int) value);
+                    return ((MeasureValue) entry.getData()).getReportTime();
                 } else {
                     return "";
                 }
@@ -535,15 +542,30 @@ public class CorrectActivity extends BluetoothBaseActivity<CorrectDashboardPrese
         });
 
         YAxis leftAxis = chart.getAxisLeft();
-        leftAxis.setLabelCount(5, false);
+        leftAxis.setLabelCount(10, false);
+        leftAxis.setDrawGridLines(false);
         leftAxis.setAxisMinimum(0f); // this replaces setStartAtZero(true)
         leftAxis.setAxisMaximum(1.0000f);
+        leftAxis.enableGridDashedLine(10f, 10f, 0f);
+        leftAxis.setDrawGridLines(true);
 
         YAxis rightAxis = chart.getAxisRight();
         rightAxis.setLabelCount(5, false);
         rightAxis.setDrawGridLines(false);
         rightAxis.setAxisMinimum(0f); // this replaces setStartAtZero(true)
         rightAxis.setAxisMaximum(1.0000f);
+        rightAxis.setEnabled(false);
+        rightAxis.setDrawGridLines(false);
+
+        LineChartMarkView mv = new LineChartMarkView(this, xAxis.getValueFormatter());
+        mv.setChartView(chart);
+        chart.setMarker(mv);
+        chart.invalidate();
+
+        chart.setDoubleTapToZoomEnabled(false);//双击屏幕缩放
+        chart.setScaleEnabled(true);
+        chart.setScaleXEnabled(false);
+        chart.setScaleYEnabled(true);
     }
 
     public void playSound() {

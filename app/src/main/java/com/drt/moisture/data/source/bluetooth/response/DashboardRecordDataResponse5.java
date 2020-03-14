@@ -301,4 +301,36 @@ public class DashboardRecordDataResponse5 extends DashboardRecordDataResponse {
     public void setHumidity5(short humidity5) {
         this.humidity5 = humidity5;
     }
+
+    @Override
+    public String toString() {
+        return "DashboardRecordDataResponse5{" +
+                "CmdGroup=" + CmdGroup +
+                ", Cmd=" + Cmd +
+                ", Response=" + Response +
+                ", Reserved=" + Reserved +
+                ", time=" + time +
+                ", index=" + index +
+                ", temperature1=" + temperature1 +
+                ", activity1=" + activity1 +
+                ", status1=" + status1 +
+                ", humidity1=" + humidity1 +
+                ", temperature2=" + temperature2 +
+                ", activity2=" + activity2 +
+                ", status2=" + status2 +
+                ", humidity2=" + humidity2 +
+                ", temperature3=" + temperature3 +
+                ", activity3=" + activity3 +
+                ", status3=" + status3 +
+                ", humidity3=" + humidity3 +
+                ", temperature4=" + temperature4 +
+                ", activity4=" + activity4 +
+                ", status4=" + status4 +
+                ", humidity4=" + humidity4 +
+                ", temperature5=" + temperature5 +
+                ", activity5=" + activity5 +
+                ", status5=" + status5 +
+                ", humidity5=" + humidity5 +
+                '}';
+    }
 }

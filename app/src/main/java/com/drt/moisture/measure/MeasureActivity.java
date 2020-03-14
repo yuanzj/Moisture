@@ -23,7 +23,6 @@ import android.widget.Toast;
 import com.drt.moisture.App;
 import com.drt.moisture.BluetoothBaseActivity;
 import com.drt.moisture.R;
-import com.drt.moisture.correctdashboard.CorrectDashboardActivity;
 import com.drt.moisture.dashboard.DashboardActivity;
 import com.drt.moisture.dashboard.DashboardContract;
 import com.drt.moisture.dashboard.DashboardModel;
@@ -464,17 +463,19 @@ public class MeasureActivity extends BluetoothBaseActivity<DashboardPresenter> i
             set = createActivitySet();
             data.addDataSet(set);
         }
-        data.addEntry(new Entry(set.getEntryCount(), (float) measureValue.getActivity(), measureValue.getReportTime()), 0);
+        data.addEntry(new Entry(set.getEntryCount(), (float) measureValue.getActivity(), measureValue), 0);
         data.notifyDataChanged();
 
         // let the chart know it's data has changed
         chart.notifyDataSetChanged();
 
-        chart.setVisibleXRangeMaximum(30);
-        //chart.setVisibleYRangeMaximum(15, AxisDependency.LEFT);
-//
-//            // this automatically refreshes the chart (calls invalidate())
-        chart.moveViewToX((float) (data.getEntryCount() - 1));
+        if (data.getXMax() >= 30) {
+            chart.getXAxis().resetAxisMaximum();
+            chart.setVisibleXRangeMaximum(30);
+        } else {
+            chart.getXAxis().setAxisMaximum(30);
+        }
+        chart.moveViewToX(data.getXMax());
     }
 
 //    private LineDataSet createTemperatureSet() {
@@ -499,7 +500,7 @@ public class MeasureActivity extends BluetoothBaseActivity<DashboardPresenter> i
         d2.setCircleColor(getResources().getColor(R.color.colorGreen, getTheme()));
         d2.setDrawValues(false);
         d2.setDrawCircles(false);
-        d2.setMode(LineDataSet.Mode.CUBIC_BEZIER);
+        d2.setMode(LineDataSet.Mode.LINEAR);
         d2.setValueFormatter(new ValueFormatter() {
             public String getFormattedValue(float value) {
                 DecimalFormat df = new DecimalFormat("0.00");
@@ -526,7 +527,8 @@ public class MeasureActivity extends BluetoothBaseActivity<DashboardPresenter> i
         chart.setNoDataTextColor(getColor(R.color.colorSecondBody));
 
         XAxis xAxis = chart.getXAxis();
-        xAxis.setLabelCount(10, false);
+        xAxis.setAxisMaximum(30);
+        xAxis.setLabelCount(6, false);
         xAxis.setPosition(XAxis.XAxisPosition.BOTTOM);
 //        xAxis.setAxisMaximum(30);
         xAxis.enableGridDashedLine(10f, 10f, 0f);
@@ -536,11 +538,11 @@ public class MeasureActivity extends BluetoothBaseActivity<DashboardPresenter> i
             @Override
             public String getFormattedValue(float value) {
                 if (chart.getLineData() != null
-                        && chart.getLineData().getDataSetByIndex(0) != null
-                        && chart.getLineData().getDataSetByIndex(0).getEntryCount() > (int) value
-                        && chart.getLineData().getDataSetByIndex(0).getEntryForIndex((int) value) != null) {
-                    Entry entry = chart.getLineData().getDataSetByIndex(0).getEntryForIndex((int) value);
-                    return (String) entry.getData();
+                        && chart.getLineData().getMaxEntryCountSet() != null
+                        && chart.getLineData().getMaxEntryCountSet().getEntryCount() > (int) value
+                        && chart.getLineData().getMaxEntryCountSet().getEntryForIndex((int) value) != null) {
+                    Entry entry = chart.getLineData().getMaxEntryCountSet().getEntryForIndex((int) value);
+                    return ((MeasureValue) entry.getData()).getReportTime();
                 } else {
                     return "";
                 }

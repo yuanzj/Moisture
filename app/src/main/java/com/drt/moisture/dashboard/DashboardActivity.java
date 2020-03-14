@@ -11,7 +11,6 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AlertDialog;
-import android.util.Log;
 import android.view.View;
 import android.widget.LinearLayout;
 import android.widget.TextView;
@@ -23,11 +22,9 @@ import com.drt.moisture.R;
 import com.drt.moisture.data.AppConfig;
 import com.drt.moisture.data.MeasureStatus;
 import com.drt.moisture.data.MeasureValue;
-import com.drt.moisture.data.source.bluetooth.response.SocResponse;
 import com.drt.moisture.measure.MeasureActivity;
 import com.drt.moisture.util.LineChartMarkView;
 import com.github.mikephil.charting.charts.LineChart;
-import com.github.mikephil.charting.components.Description;
 import com.github.mikephil.charting.components.XAxis;
 import com.github.mikephil.charting.components.YAxis;
 import com.github.mikephil.charting.data.Entry;
@@ -703,13 +700,14 @@ public class DashboardActivity extends BluetoothBaseActivity<DashboardPresenter>
         for (int i = 0; i < measureValueList.size(); i++) {
 
             MeasureValue measureValue = measureValueList.get(i);
+            measureValue.setIndex(i + 1);
             ILineDataSet set = data.getDataSetByIndex(i);
             if (set == null) {
                 set = createActivitySet(i);
                 data.addDataSet(set);
             }
             if (measureValue.getMeasureStatus() == 0x01 || measureValue.getMeasureStatus() == 0x03) {
-                data.addEntry(new Entry(set.getEntryCount(), (float) measureValue.getActivity(), measureValue.getReportTime()), i);
+                data.addEntry(new Entry(set.getEntryCount(), (float) measureValue.getActivity(), measureValue), i);
             } else {
 //                data.addEntry(new Entry(set.getEntryCount(), -1, measureValue.getReportTime()), i);
             }
@@ -719,11 +717,17 @@ public class DashboardActivity extends BluetoothBaseActivity<DashboardPresenter>
         // let the chart know it's data has changed
         chart.notifyDataSetChanged();
 
-        chart.setVisibleXRangeMaximum(50);
         //chart.setVisibleYRangeMaximum(15, AxisDependency.LEFT);
 //
 //            // this automatically refreshes the chart (calls invalidate())
-        chart.moveViewToX((float) (data.getEntryCount() - 1));
+        if (data.getXMax() >= 50) {
+            chart.getXAxis().resetAxisMaximum();
+            chart.setVisibleXRangeMaximum(50);
+        } else {
+            chart.getXAxis().setAxisMaximum(50);
+        }
+        chart.moveViewToX(data.getXMax());
+
     }
 
     private LineDataSet createActivitySet(int i) {
@@ -738,7 +742,7 @@ public class DashboardActivity extends BluetoothBaseActivity<DashboardPresenter>
         d2.setDrawValues(false);
         d2.setDrawCircles(false);
 
-        d2.setMode(LineDataSet.Mode.CUBIC_BEZIER);
+        d2.setMode(LineDataSet.Mode.LINEAR);
         d2.setValueFormatter(new ValueFormatter() {
             public String getFormattedValue(float value) {
                 DecimalFormat df = new DecimalFormat("0.00");
@@ -765,9 +769,9 @@ public class DashboardActivity extends BluetoothBaseActivity<DashboardPresenter>
         chart.setNoDataTextColor(getColor(R.color.colorSecondBody));
 
         XAxis xAxis = chart.getXAxis();
+        xAxis.setAxisMaximum(50);
         xAxis.setLabelCount(10, false);
         xAxis.setPosition(XAxis.XAxisPosition.BOTTOM);
-//        xAxis.setAxisMaximum(50);
         xAxis.enableGridDashedLine(10f, 10f, 0f);
         xAxis.setDrawGridLines(true);
         xAxis.setDrawAxisLine(true);
@@ -775,11 +779,11 @@ public class DashboardActivity extends BluetoothBaseActivity<DashboardPresenter>
             @Override
             public String getFormattedValue(float value) {
                 if (chart.getLineData() != null
-                        && chart.getLineData().getDataSetByIndex(0) != null
-                        && chart.getLineData().getDataSetByIndex(0).getEntryCount() > (int) value
-                        && chart.getLineData().getDataSetByIndex(0).getEntryForIndex((int) value) != null) {
-                    Entry entry = chart.getLineData().getDataSetByIndex(0).getEntryForIndex((int) value);
-                    return (String) entry.getData();
+                        && chart.getLineData().getMaxEntryCountSet() != null
+                        && chart.getLineData().getMaxEntryCountSet().getEntryCount() > (int) value
+                        && chart.getLineData().getMaxEntryCountSet().getEntryForIndex((int) value) != null) {
+                    Entry entry = chart.getLineData().getMaxEntryCountSet().getEntryForIndex((int) value);
+                    return ((MeasureValue) entry.getData()).getReportTime();
                 } else {
                     return "";
                 }

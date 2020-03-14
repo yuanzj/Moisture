@@ -5,6 +5,7 @@ import android.content.Context;
 import android.widget.TextView;
 
 import com.drt.moisture.R;
+import com.drt.moisture.data.MeasureValue;
 import com.github.mikephil.charting.components.MarkerView;
 import com.github.mikephil.charting.data.Entry;
 import com.github.mikephil.charting.formatter.ValueFormatter;
@@ -30,7 +31,7 @@ public class LineChartMarkView extends MarkerView {
     public void refreshContent(Entry e, Highlight highlight) {
         //展示自定义X轴值 后的X轴内容
         tvDate.setText(xAxisValueFormatter.getFormattedValue(e.getX()));
-        tvValue.setText("水分活度：" + e.getY());
+        tvValue.setText("测点" + ((MeasureValue) e.getData()).getIndex() + "水分活度：" + e.getY());
         super.refreshContent(e, highlight);
     }
 
