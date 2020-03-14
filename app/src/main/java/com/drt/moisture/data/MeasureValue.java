@@ -26,8 +26,10 @@ public class MeasureValue {
 
     /**
      * 该字段只在自动测量模式下使用
+     * <br> 0x00：定时测量结束
      * <br> 0x01：自动测量进行中
      * <br> 0x02：自动测量结束
+     * <br> 0x03：定时测量进行中
      */
     private int measureStatus;
 

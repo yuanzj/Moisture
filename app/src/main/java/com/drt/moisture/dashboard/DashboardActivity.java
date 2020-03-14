@@ -265,7 +265,7 @@ public class DashboardActivity extends BluetoothBaseActivity<DashboardPresenter>
 
                     MeasureValue measureValue = measureValueList.get(i);
 
-                    if (measureValue.getMeasureStatus() == 0x01) {
+                    if (measureValue.getMeasureStatus() == 0x01 || measureValue.getMeasureStatus() == 0x03) {
                         noRunning = false;
                         break;
                     }
@@ -283,72 +283,72 @@ public class DashboardActivity extends BluetoothBaseActivity<DashboardPresenter>
 
                 switch (measureValueList.size()) {
                     case 1:
-                        if (measureValueList.get(0).getMeasureStatus() != 0) {
+                        if (measureValueList.get(0).getMeasureStatus() != 0 && measureValueList.get(0).getMeasureStatus() != 0x02) {
                             temperature.setText(String.format("%.2f", measureValueList.get(0).getTemperature()) + "°C");
                             activeness.setText(df.format(measureValueList.get(0).getActivity()));
                         }
                         break;
                     case 2:
-                        if (measureValueList.get(0).getMeasureStatus() != 0) {
+                        if (measureValueList.get(0).getMeasureStatus() != 0 && measureValueList.get(0).getMeasureStatus() != 0x02) {
                             temperature.setText(String.format("%.2f", measureValueList.get(0).getTemperature()) + "°C");
                             activeness.setText(df.format(measureValueList.get(0).getActivity()));
                         }
-                        if (measureValueList.get(1).getMeasureStatus() != 0) {
+                        if (measureValueList.get(1).getMeasureStatus() != 0 && measureValueList.get(1).getMeasureStatus() != 0x02) {
                             temperature1.setText(String.format("%.2f", measureValueList.get(1).getTemperature()) + "°C");
                             activeness1.setText(df.format(measureValueList.get(1).getActivity()));
                         }
                         break;
                     case 3:
-                        if (measureValueList.get(0).getMeasureStatus() != 0) {
+                        if (measureValueList.get(0).getMeasureStatus() != 0 && measureValueList.get(0).getMeasureStatus() != 0x02) {
                             temperature.setText(String.format("%.2f", measureValueList.get(0).getTemperature()) + "°C");
                             activeness.setText(df.format(measureValueList.get(0).getActivity()));
                         }
-                        if (measureValueList.get(1).getMeasureStatus() != 0) {
+                        if (measureValueList.get(1).getMeasureStatus() != 0 && measureValueList.get(1).getMeasureStatus() != 0x02) {
                             temperature1.setText(String.format("%.2f", measureValueList.get(1).getTemperature()) + "°C");
                             activeness1.setText(df.format(measureValueList.get(1).getActivity()));
                         }
-                        if (measureValueList.get(2).getMeasureStatus() != 0) {
+                        if (measureValueList.get(2).getMeasureStatus() != 0 && measureValueList.get(2).getMeasureStatus() != 0x02) {
                             temperature2.setText(String.format("%.2f", measureValueList.get(2).getTemperature()) + "°C");
                             activeness2.setText(df.format(measureValueList.get(2).getActivity()));
                         }
                         break;
                     case 4:
-                        if (measureValueList.get(0).getMeasureStatus() != 0) {
+                        if (measureValueList.get(0).getMeasureStatus() != 0 && measureValueList.get(0).getMeasureStatus() != 0x02) {
                             temperature.setText(String.format("%.2f", measureValueList.get(0).getTemperature()) + "°C");
                             activeness.setText(df.format(measureValueList.get(0).getActivity()));
                         }
-                        if (measureValueList.get(1).getMeasureStatus() != 0) {
+                        if (measureValueList.get(1).getMeasureStatus() != 0 && measureValueList.get(1).getMeasureStatus() != 0x02) {
                             temperature1.setText(String.format("%.2f", measureValueList.get(1).getTemperature()) + "°C");
                             activeness1.setText(df.format(measureValueList.get(1).getActivity()));
                         }
-                        if (measureValueList.get(2).getMeasureStatus() != 0) {
+                        if (measureValueList.get(2).getMeasureStatus() != 0 && measureValueList.get(2).getMeasureStatus() != 0x02) {
                             temperature2.setText(String.format("%.2f", measureValueList.get(2).getTemperature()) + "°C");
                             activeness2.setText(df.format(measureValueList.get(2).getActivity()));
                         }
-                        if (measureValueList.get(3).getMeasureStatus() != 0) {
+                        if (measureValueList.get(3).getMeasureStatus() != 0 && measureValueList.get(3).getMeasureStatus() != 0x02) {
                             temperature3.setText(String.format("%.2f", measureValueList.get(3).getTemperature()) + "°C");
                             activeness3.setText(df.format(measureValueList.get(3).getActivity()));
                         }
 
                         break;
                     case 5:
-                        if (measureValueList.get(0).getMeasureStatus() != 0) {
+                        if (measureValueList.get(0).getMeasureStatus() != 0 && measureValueList.get(0).getMeasureStatus() != 0x02) {
                             temperature.setText(String.format("%.2f", measureValueList.get(0).getTemperature()) + "°C");
                             activeness.setText(df.format(measureValueList.get(0).getActivity()));
                         }
-                        if (measureValueList.get(1).getMeasureStatus() != 0) {
+                        if (measureValueList.get(1).getMeasureStatus() != 0 && measureValueList.get(1).getMeasureStatus() != 0x02) {
                             temperature1.setText(String.format("%.2f", measureValueList.get(1).getTemperature()) + "°C");
                             activeness1.setText(df.format(measureValueList.get(1).getActivity()));
                         }
-                        if (measureValueList.get(2).getMeasureStatus() != 0) {
+                        if (measureValueList.get(2).getMeasureStatus() != 0 && measureValueList.get(2).getMeasureStatus() != 0x02) {
                             temperature2.setText(String.format("%.2f", measureValueList.get(2).getTemperature()) + "°C");
                             activeness2.setText(df.format(measureValueList.get(2).getActivity()));
                         }
-                        if (measureValueList.get(3).getMeasureStatus() != 0) {
+                        if (measureValueList.get(3).getMeasureStatus() != 0 && measureValueList.get(3).getMeasureStatus() != 0x02) {
                             temperature3.setText(String.format("%.2f", measureValueList.get(3).getTemperature()) + "°C");
                             activeness3.setText(df.format(measureValueList.get(3).getActivity()));
                         }
-                        if (measureValueList.get(4).getMeasureStatus() != 0) {
+                        if (measureValueList.get(4).getMeasureStatus() != 0 && measureValueList.get(4).getMeasureStatus() != 0x02) {
                             temperature4.setText(String.format("%.2f", measureValueList.get(4).getTemperature()) + "°C");
                             activeness4.setText(df.format(measureValueList.get(4).getActivity()));
                         }
@@ -708,7 +708,7 @@ public class DashboardActivity extends BluetoothBaseActivity<DashboardPresenter>
                 set = createActivitySet(i);
                 data.addDataSet(set);
             }
-            if (measureValue.getMeasureStatus() == 0x01) {
+            if (measureValue.getMeasureStatus() == 0x01 || measureValue.getMeasureStatus() == 0x03) {
                 data.addEntry(new Entry(set.getEntryCount(), (float) measureValue.getActivity(), measureValue.getReportTime()), i);
             } else {
 //                data.addEntry(new Entry(set.getEntryCount(), -1, measureValue.getReportTime()), i);

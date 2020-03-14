@@ -207,21 +207,8 @@ public class DashboardModel implements DashboardContract.Model {
                 measureValue.setReportTime(SIMPLE_DATE_FORMAT.format(new Date(recordDataResponse.getTime() * 1000)));
                 measureValue.setName("");
                 measureValue.setMeasureStatus(recordDataResponse.getStatus1());
-                MeasureRunningStatus measureRunningStatus = measureRunningStatusMap.get(1);
-                if (measureRunningStatus != null) {
-                    if (measureRunningStatus.getModel() == 0) {
-                        if (measureRunningStatus.isRunning) {
-                            measureValue.setMeasureStatus(0x01);
-                        } else {
-                            measureValue.setMeasureStatus(0x02);
-                        }
-                    } else {
-                        if (measureValue.getMeasureStatus() == 0x02) {
-                            stopMeasure(true, 1);
-                        }
-                    }
-                } else {
-                    measureValue.setMeasureStatus(0);
+                if (measureValue.getMeasureStatus() == 0x02) {
+                    stopMeasure(true, 1);
                 }
                 measureDataCallback.success(Collections.singletonList(measureValue));
             }
@@ -248,22 +235,10 @@ public class DashboardModel implements DashboardContract.Model {
                 measureValue.setReportTime(SIMPLE_DATE_FORMAT.format(new Date(recordDataResponse.getTime() * 1000)));
                 measureValue.setName("");
                 measureValue.setMeasureStatus(recordDataResponse.getStatus1());
-                MeasureRunningStatus measureRunningStatus = measureRunningStatusMap.get(1);
-                if (measureRunningStatus != null) {
-                    if (measureRunningStatus.getModel() == 0) {
-                        if (measureRunningStatus.isRunning) {
-                            measureValue.setMeasureStatus(0x01);
-                        } else {
-                            measureValue.setMeasureStatus(0x02);
-                        }
-                    } else {
-                        if (measureValue.getMeasureStatus() == 0x02) {
-                            stopMeasure(true, 1);
-                        }
-                    }
-                } else {
-                    measureValue.setMeasureStatus(0);
+                if (measureValue.getMeasureStatus() == 0x02) {
+                    stopMeasure(true, 1);
                 }
+
                 measureValues.add(measureValue);
 
                 measureValue = new MeasureValue();
@@ -273,21 +248,8 @@ public class DashboardModel implements DashboardContract.Model {
                 measureValue.setReportTime(SIMPLE_DATE_FORMAT.format(new Date(recordDataResponse.getTime() * 1000)));
                 measureValue.setName("");
                 measureValue.setMeasureStatus(recordDataResponse.getStatus2());
-                measureRunningStatus = measureRunningStatusMap.get(2);
-                if (measureRunningStatus != null) {
-                    if (measureRunningStatus.getModel() == 0) {
-                        if (measureRunningStatus.isRunning) {
-                            measureValue.setMeasureStatus(0x01);
-                        } else {
-                            measureValue.setMeasureStatus(0x02);
-                        }
-                    } else {
-                        if (measureValue.getMeasureStatus() == 0x02) {
-                            stopMeasure(true, 2);
-                        }
-                    }
-                } else {
-                    measureValue.setMeasureStatus(0);
+                if (measureValue.getMeasureStatus() == 0x02) {
+                    stopMeasure(true, 2);
                 }
                 measureValues.add(measureValue);
 
@@ -316,21 +278,8 @@ public class DashboardModel implements DashboardContract.Model {
                 measureValue.setReportTime(SIMPLE_DATE_FORMAT.format(new Date(recordDataResponse.getTime() * 1000)));
                 measureValue.setName("");
                 measureValue.setMeasureStatus(recordDataResponse.getStatus1());
-                MeasureRunningStatus measureRunningStatus = measureRunningStatusMap.get(1);
-                if (measureRunningStatus != null) {
-                    if (measureRunningStatus.getModel() == 0) {
-                        if (measureRunningStatus.isRunning) {
-                            measureValue.setMeasureStatus(0x01);
-                        } else {
-                            measureValue.setMeasureStatus(0x02);
-                        }
-                    } else {
-                        if (measureValue.getMeasureStatus() == 0x02) {
-                            stopMeasure(true, 1);
-                        }
-                    }
-                } else {
-                    measureValue.setMeasureStatus(0);
+                if (measureValue.getMeasureStatus() == 0x02) {
+                    stopMeasure(true, 1);
                 }
                 measureValues.add(measureValue);
 
@@ -341,21 +290,8 @@ public class DashboardModel implements DashboardContract.Model {
                 measureValue.setReportTime(SIMPLE_DATE_FORMAT.format(new Date(recordDataResponse.getTime() * 1000)));
                 measureValue.setName("");
                 measureValue.setMeasureStatus(recordDataResponse.getStatus2());
-                measureRunningStatus = measureRunningStatusMap.get(2);
-                if (measureRunningStatus != null) {
-                    if (measureRunningStatus.getModel() == 0) {
-                        if (measureRunningStatus.isRunning) {
-                            measureValue.setMeasureStatus(0x01);
-                        } else {
-                            measureValue.setMeasureStatus(0x02);
-                        }
-                    } else {
-                        if (measureValue.getMeasureStatus() == 0x02) {
-                            stopMeasure(true, 2);
-                        }
-                    }
-                } else {
-                    measureValue.setMeasureStatus(0);
+                if (measureValue.getMeasureStatus() == 0x02) {
+                    stopMeasure(true, 2);
                 }
                 measureValues.add(measureValue);
 
@@ -366,21 +302,8 @@ public class DashboardModel implements DashboardContract.Model {
                 measureValue.setReportTime(SIMPLE_DATE_FORMAT.format(new Date(recordDataResponse.getTime() * 1000)));
                 measureValue.setName("");
                 measureValue.setMeasureStatus(recordDataResponse.getStatus3());
-                measureRunningStatus = measureRunningStatusMap.get(3);
-                if (measureRunningStatus != null) {
-                    if (measureRunningStatus.getModel() == 0) {
-                        if (measureRunningStatus.isRunning) {
-                            measureValue.setMeasureStatus(0x01);
-                        } else {
-                            measureValue.setMeasureStatus(0x02);
-                        }
-                    } else {
-                        if (measureValue.getMeasureStatus() == 0x02) {
-                            stopMeasure(true, 3);
-                        }
-                    }
-                } else {
-                    measureValue.setMeasureStatus(0);
+                if (measureValue.getMeasureStatus() == 0x02) {
+                    stopMeasure(true, 3);
                 }
                 measureValues.add(measureValue);
 
@@ -409,21 +332,8 @@ public class DashboardModel implements DashboardContract.Model {
                 measureValue.setReportTime(SIMPLE_DATE_FORMAT.format(new Date(recordDataResponse.getTime() * 1000)));
                 measureValue.setName("");
                 measureValue.setMeasureStatus(recordDataResponse.getStatus1());
-                MeasureRunningStatus measureRunningStatus = measureRunningStatusMap.get(1);
-                if (measureRunningStatus != null) {
-                    if (measureRunningStatus.getModel() == 0) {
-                        if (measureRunningStatus.isRunning) {
-                            measureValue.setMeasureStatus(0x01);
-                        } else {
-                            measureValue.setMeasureStatus(0x02);
-                        }
-                    } else {
-                        if (measureValue.getMeasureStatus() == 0x02) {
-                            stopMeasure(true, 1);
-                        }
-                    }
-                } else {
-                    measureValue.setMeasureStatus(0);
+                if (measureValue.getMeasureStatus() == 0x02) {
+                    stopMeasure(true, 1);
                 }
                 measureValues.add(measureValue);
 
@@ -434,21 +344,8 @@ public class DashboardModel implements DashboardContract.Model {
                 measureValue.setReportTime(SIMPLE_DATE_FORMAT.format(new Date(recordDataResponse.getTime() * 1000)));
                 measureValue.setName("");
                 measureValue.setMeasureStatus(recordDataResponse.getStatus2());
-                measureRunningStatus = measureRunningStatusMap.get(2);
-                if (measureRunningStatus != null) {
-                    if (measureRunningStatus.getModel() == 0) {
-                        if (measureRunningStatus.isRunning) {
-                            measureValue.setMeasureStatus(0x01);
-                        } else {
-                            measureValue.setMeasureStatus(0x02);
-                        }
-                    } else {
-                        if (measureValue.getMeasureStatus() == 0x02) {
-                            stopMeasure(true, 2);
-                        }
-                    }
-                } else {
-                    measureValue.setMeasureStatus(0);
+                if (measureValue.getMeasureStatus() == 0x02) {
+                    stopMeasure(true, 2);
                 }
                 measureValues.add(measureValue);
 
@@ -459,21 +356,8 @@ public class DashboardModel implements DashboardContract.Model {
                 measureValue.setReportTime(SIMPLE_DATE_FORMAT.format(new Date(recordDataResponse.getTime() * 1000)));
                 measureValue.setName("");
                 measureValue.setMeasureStatus(recordDataResponse.getStatus3());
-                measureRunningStatus = measureRunningStatusMap.get(3);
-                if (measureRunningStatus != null) {
-                    if (measureRunningStatus.getModel() == 0) {
-                        if (measureRunningStatus.isRunning) {
-                            measureValue.setMeasureStatus(0x01);
-                        } else {
-                            measureValue.setMeasureStatus(0x02);
-                        }
-                    } else {
-                        if (measureValue.getMeasureStatus() == 0x02) {
-                            stopMeasure(true, 3);
-                        }
-                    }
-                } else {
-                    measureValue.setMeasureStatus(0);
+                if (measureValue.getMeasureStatus() == 0x02) {
+                    stopMeasure(true, 3);
                 }
                 measureValues.add(measureValue);
 
@@ -484,21 +368,8 @@ public class DashboardModel implements DashboardContract.Model {
                 measureValue.setReportTime(SIMPLE_DATE_FORMAT.format(new Date(recordDataResponse.getTime() * 1000)));
                 measureValue.setName("");
                 measureValue.setMeasureStatus(recordDataResponse.getStatus4());
-                measureRunningStatus = measureRunningStatusMap.get(4);
-                if (measureRunningStatus != null) {
-                    if (measureRunningStatus.getModel() == 0) {
-                        if (measureRunningStatus.isRunning) {
-                            measureValue.setMeasureStatus(0x01);
-                        } else {
-                            measureValue.setMeasureStatus(0x02);
-                        }
-                    } else {
-                        if (measureValue.getMeasureStatus() == 0x02) {
-                            stopMeasure(true, 4);
-                        }
-                    }
-                } else {
-                    measureValue.setMeasureStatus(0);
+                if (measureValue.getMeasureStatus() == 0x02) {
+                    stopMeasure(true, 4);
                 }
                 measureValues.add(measureValue);
 
@@ -526,21 +397,8 @@ public class DashboardModel implements DashboardContract.Model {
                 measureValue.setReportTime(SIMPLE_DATE_FORMAT.format(new Date(recordDataResponse.getTime() * 1000)));
                 measureValue.setName("");
                 measureValue.setMeasureStatus(recordDataResponse.getStatus1());
-                MeasureRunningStatus measureRunningStatus = measureRunningStatusMap.get(1);
-                if (measureRunningStatus != null) {
-                    if (measureRunningStatus.getModel() == 0) {
-                        if (measureRunningStatus.isRunning) {
-                            measureValue.setMeasureStatus(0x01);
-                        } else {
-                            measureValue.setMeasureStatus(0x02);
-                        }
-                    } else {
-                        if (measureValue.getMeasureStatus() == 0x02) {
-                            stopMeasure(true, 2);
-                        }
-                    }
-                } else {
-                    measureValue.setMeasureStatus(0);
+                if (measureValue.getMeasureStatus() == 0x02) {
+                    stopMeasure(true, 1);
                 }
                 measureValues.add(measureValue);
 
@@ -551,21 +409,8 @@ public class DashboardModel implements DashboardContract.Model {
                 measureValue.setReportTime(SIMPLE_DATE_FORMAT.format(new Date(recordDataResponse.getTime() * 1000)));
                 measureValue.setName("");
                 measureValue.setMeasureStatus(recordDataResponse.getStatus2());
-                measureRunningStatus = measureRunningStatusMap.get(2);
-                if (measureRunningStatus != null) {
-                    if (measureRunningStatus.getModel() == 0) {
-                        if (measureRunningStatus.isRunning) {
-                            measureValue.setMeasureStatus(0x01);
-                        } else {
-                            measureValue.setMeasureStatus(0x02);
-                        }
-                    } else {
-                        if (measureValue.getMeasureStatus() == 0x02) {
-                            stopMeasure(true, 2);
-                        }
-                    }
-                } else {
-                    measureValue.setMeasureStatus(0);
+                if (measureValue.getMeasureStatus() == 0x02) {
+                    stopMeasure(true, 2);
                 }
                 measureValues.add(measureValue);
 
@@ -576,21 +421,8 @@ public class DashboardModel implements DashboardContract.Model {
                 measureValue.setReportTime(SIMPLE_DATE_FORMAT.format(new Date(recordDataResponse.getTime() * 1000)));
                 measureValue.setName("");
                 measureValue.setMeasureStatus(recordDataResponse.getStatus3());
-                measureRunningStatus = measureRunningStatusMap.get(3);
-                if (measureRunningStatus != null) {
-                    if (measureRunningStatus.getModel() == 0) {
-                        if (measureRunningStatus.isRunning) {
-                            measureValue.setMeasureStatus(0x01);
-                        } else {
-                            measureValue.setMeasureStatus(0x02);
-                        }
-                    } else {
-                        if (measureValue.getMeasureStatus() == 0x02) {
-                            stopMeasure(true, 3);
-                        }
-                    }
-                } else {
-                    measureValue.setMeasureStatus(0);
+                if (measureValue.getMeasureStatus() == 0x02) {
+                    stopMeasure(true, 3);
                 }
                 measureValues.add(measureValue);
 
@@ -601,21 +433,8 @@ public class DashboardModel implements DashboardContract.Model {
                 measureValue.setReportTime(SIMPLE_DATE_FORMAT.format(new Date(recordDataResponse.getTime() * 1000)));
                 measureValue.setName("");
                 measureValue.setMeasureStatus(recordDataResponse.getStatus4());
-                measureRunningStatus = measureRunningStatusMap.get(4);
-                if (measureRunningStatus != null) {
-                    if (measureRunningStatus.getModel() == 0) {
-                        if (measureRunningStatus.isRunning) {
-                            measureValue.setMeasureStatus(0x01);
-                        } else {
-                            measureValue.setMeasureStatus(0x02);
-                        }
-                    } else {
-                        if (measureValue.getMeasureStatus() == 0x02) {
-                            stopMeasure(true, 4);
-                        }
-                    }
-                } else {
-                    measureValue.setMeasureStatus(0);
+                if (measureValue.getMeasureStatus() == 0x02) {
+                    stopMeasure(true, 4);
                 }
                 measureValues.add(measureValue);
 
@@ -626,21 +445,8 @@ public class DashboardModel implements DashboardContract.Model {
                 measureValue.setReportTime(SIMPLE_DATE_FORMAT.format(new Date(recordDataResponse.getTime() * 1000)));
                 measureValue.setName("");
                 measureValue.setMeasureStatus(recordDataResponse.getStatus5());
-                measureRunningStatus = measureRunningStatusMap.get(5);
-                if (measureRunningStatus != null) {
-                    if (measureRunningStatus.getModel() == 0) {
-                        if (measureRunningStatus.isRunning) {
-                            measureValue.setMeasureStatus(0x01);
-                        } else {
-                            measureValue.setMeasureStatus(0x02);
-                        }
-                    } else {
-                        if (measureValue.getMeasureStatus() == 0x02) {
-                            stopMeasure(true, 5);
-                        }
-                    }
-                } else {
-                    measureValue.setMeasureStatus(0);
+                if (measureValue.getMeasureStatus() == 0x02) {
+                    stopMeasure(true, 5);
                 }
                 measureValues.add(measureValue);
 

@@ -194,11 +194,11 @@ public class MeasureActivity extends BluetoothBaseActivity<DashboardPresenter> i
         runOnUiThread(new Runnable() {
             @Override
             public void run() {
-                if (measureValue.getMeasureStatus() == 0x01) {
+                if (measureValue.getMeasureStatus() == 0x01 || measureValue.getMeasureStatus() == 0x03) {
                     updateUI(MeasureStatus.RUNNING);
                     addEntry(measureValue);
                 }
-                if (measureValue.getMeasureStatus() != 0) {
+                if (measureValue.getMeasureStatus() != 0 && measureValue.getMeasureStatus() != 0x02) {
                     time.setText(measureValue.getReportTime());
                     temperature.setText(String.format("%.2f", measureValue.getTemperature()) + "°C");
                     DecimalFormat df = new DecimalFormat("0.0000");
