@@ -513,7 +513,13 @@ public class DashboardModel implements DashboardContract.Model {
                         case 1: {
                             App.getInstance().getBluetoothService().stopMeasure(commandEntity.getIndex(), stopMeasureResponse);
                             if (measureDataCallback != null) {
-                                measureDataCallback.measureDone(commandEntity.getIndex());
+
+                                MeasureRunningStatus measureRunningStatus = measureRunningStatusMap.get(commandEntity.getIndex());
+                                if (measureRunningStatus != null && (System.currentTimeMillis() - measureRunningStatus.getLastDoneTime()) > 2000) {
+                                    measureDataCallback.measureDone(commandEntity.getIndex());
+                                    measureRunningStatus.setLastDoneTime(System.currentTimeMillis());
+                                }
+
                             }
                         }
                         break;
@@ -567,6 +573,7 @@ public class DashboardModel implements DashboardContract.Model {
         boolean isRunning;
         long startTime;
         String runningTime;
+        long lastDoneTime;
 
         public int getIndex() {
             return index;
@@ -606,6 +613,14 @@ public class DashboardModel implements DashboardContract.Model {
 
         public void setRunningTime(String runningTime) {
             this.runningTime = runningTime;
+        }
+
+        public long getLastDoneTime() {
+            return lastDoneTime;
+        }
+
+        public void setLastDoneTime(long lastDoneTime) {
+            this.lastDoneTime = lastDoneTime;
         }
     }
 
