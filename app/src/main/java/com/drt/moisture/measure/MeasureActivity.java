@@ -16,6 +16,7 @@ import android.widget.AdapterView;
 import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.LinearLayout;
+import android.widget.RelativeLayout;
 import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -57,7 +58,9 @@ public class MeasureActivity extends BluetoothBaseActivity<DashboardPresenter> i
 
     private static final String TAG = MeasureActivity.class.getSimpleName();
 
-    @BindView(R.id.chart)
+    @BindView(R.id.parent_chart)
+    RelativeLayout parentChart;
+
     LineChart chart;
 
     @BindView(R.id.btnStartMeasure)
@@ -128,6 +131,11 @@ public class MeasureActivity extends BluetoothBaseActivity<DashboardPresenter> i
         }
         mPresenter.attachView(this);
 
+        if (chart != null) {
+            parentChart.removeAllViews();
+        }
+        chart = (LineChart) getLayoutInflater().inflate(R.layout.chart_view, parentChart, false);
+        parentChart.addView(chart);
         initChartView();
 
         spMeasureModel.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
@@ -271,7 +279,12 @@ public class MeasureActivity extends BluetoothBaseActivity<DashboardPresenter> i
         progressdialog.setCancelable(false);
         progressdialog.show();
 
-        chart.clear();
+        if (chart != null) {
+            parentChart.removeAllViews();
+        }
+        chart = (LineChart) getLayoutInflater().inflate(R.layout.chart_view, parentChart, false);
+        parentChart.addView(chart);
+        initChartView();
         // 校准时间
         App.getInstance().getBluetoothService().setTime(System.currentTimeMillis() / 1000);
         // 根据测点数量发送开始指令

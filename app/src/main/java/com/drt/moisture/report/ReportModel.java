@@ -86,6 +86,7 @@ public class ReportModel implements ReportContract.Model, SppDataCallback<HisRec
 
         Date reportDate = new Date(recordDataResponse.getTime() * 1000);
         if (reportDate.after(startTime) && reportDate.before(endTime) && !temp.contains(recordDataResponse.getIndex() + sdf.format(reportDate))) {
+            temp.add(recordDataResponse.getIndex() + sdf.format(reportDate));
             List<MeasureValue> values = new ArrayList<>();
             MeasureValue measureValue = new MeasureValue();
             measureValue.setIndex(recordDataResponse.getIndex());
@@ -98,6 +99,7 @@ public class ReportModel implements ReportContract.Model, SppDataCallback<HisRec
             if (report != null) {
                 report.success(values);
             }
+
         }
     }
 

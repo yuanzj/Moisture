@@ -12,6 +12,7 @@ import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.LinearLayout;
+import android.widget.RelativeLayout;
 import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -55,7 +56,9 @@ public class CorrectActivity extends BluetoothBaseActivity<CorrectDashboardPrese
 
     private static final String TAG = CorrectActivity.class.getSimpleName();
 
-    @BindView(R.id.chart)
+    @BindView(R.id.parent_chart)
+    RelativeLayout parentChart;
+
     LineChart chart;
 
     @BindView(R.id.btnStartMeasure)
@@ -124,6 +127,11 @@ public class CorrectActivity extends BluetoothBaseActivity<CorrectDashboardPrese
         }
         mPresenter.attachView(this);
 
+        if (chart != null) {
+            parentChart.removeAllViews();
+        }
+        chart = (LineChart) getLayoutInflater().inflate(R.layout.chart_view, parentChart, false);
+        parentChart.addView(chart);
         initChartView();
 
         spMeasureModel.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
@@ -257,7 +265,12 @@ public class CorrectActivity extends BluetoothBaseActivity<CorrectDashboardPrese
                             type = 0x01;
                         }
 
-                        chart.clear();
+                        if (chart != null) {
+                            parentChart.removeAllViews();
+                        }
+                        chart = (LineChart) getLayoutInflater().inflate(R.layout.chart_view, parentChart, false);
+                        parentChart.addView(chart);
+                        initChartView();
 
                         AppConfig appConfig = App.getInstance().getLocalDataService().queryAppConfig(index);
                         appConfig.setCorrectMode(model);
