@@ -278,6 +278,7 @@ public class DashboardActivity extends BluetoothBaseActivity<DashboardPresenter>
                 }
                 updateUI(MeasureStatus.RUNNING);
 
+
                 addEntry(measureValueList);
                 DecimalFormat df = new DecimalFormat("0.0000");
                 df.setRoundingMode(RoundingMode.DOWN);
@@ -698,7 +699,11 @@ public class DashboardActivity extends BluetoothBaseActivity<DashboardPresenter>
     }
 
     private void addEntry(List<MeasureValue> measureValueList) {
-
+        if (chart == null) {
+            chart = (LineChart) getLayoutInflater().inflate(R.layout.chart_view, parentChart, false);
+            parentChart.addView(chart);
+            initChartView();
+        }
         LineData data = chart.getData();
 
         if (data == null) {

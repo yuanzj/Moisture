@@ -518,6 +518,20 @@ public class DashboardModel implements DashboardContract.Model {
                                 if (measureRunningStatus != null && (System.currentTimeMillis() - measureRunningStatus.getLastDoneTime()) > 2000) {
                                     measureDataCallback.measureDone(commandEntity.getIndex());
                                     measureRunningStatus.setLastDoneTime(System.currentTimeMillis());
+                                    measureRunningStatus.isRunning = false;
+                                    boolean needCancelTimer = true;
+                                    for (MeasureRunningStatus value : measureRunningStatusMap.values()) {
+                                        if (value.isRunning) {
+                                            needCancelTimer = false;
+                                            break;
+                                        }
+                                    }
+                                    if (needCancelTimer) {
+                                        if (runningTimer != null) {
+                                            runningTimer.cancel();
+                                        }
+                                    }
+
                                 }
 
                             }

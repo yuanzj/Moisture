@@ -129,7 +129,7 @@ public class BluetoothServiceImpl implements BluetoothService, BleWriteResponse 
                         } else {
                             if (timeoutTimer != null) {
                                 currentRetryCount++;
-                                startMeasure(name, measureModel, interval, time, sppDataCallback, true);
+                                startMeasure( name, measureModel, interval, time, index,  sppDataCallback, true);
                             }
                         }
 

@@ -709,7 +709,11 @@ public class CorrectDashboardActivity extends BluetoothBaseActivity<CorrectDashb
     }
 
     private void addEntry(List<MeasureValue> measureValueList) {
-
+        if (chart == null) {
+            chart = (LineChart) getLayoutInflater().inflate(R.layout.chart_view, parentChart, false);
+            parentChart.addView(chart);
+            initChartView();
+        }
         LineData data = chart.getData();
 
         if (data == null) {
