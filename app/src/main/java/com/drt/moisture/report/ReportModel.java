@@ -20,6 +20,7 @@ public class ReportModel implements ReportContract.Model, SppDataCallback<HisRec
     private SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 
     MeasureDataCallback<List<MeasureValue>> report;
+    Set<String> temp = new HashSet<>();
 
     String measureName;
     Date startTime, endTime;
@@ -28,7 +29,7 @@ public class ReportModel implements ReportContract.Model, SppDataCallback<HisRec
 
     @Override
     public void queryReport(final int index, final String measureName, final Date startTime, final Date endTime, final MeasureDataCallback<List<MeasureValue>> report) {
-
+        temp.clear();
         this.measureName = measureName;
         this.report = report;
         this.startTime = startTime;
@@ -84,7 +85,7 @@ public class ReportModel implements ReportContract.Model, SppDataCallback<HisRec
         }
 
         Date reportDate = new Date(recordDataResponse.getTime() * 1000);
-        if (reportDate.after(startTime) && reportDate.before(endTime)) {
+        if (reportDate.after(startTime) && reportDate.before(endTime) && !temp.contains(recordDataResponse.getIndex() + sdf.format(reportDate))) {
             List<MeasureValue> values = new ArrayList<>();
             MeasureValue measureValue = new MeasureValue();
             measureValue.setIndex(recordDataResponse.getIndex());

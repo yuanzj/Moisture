@@ -1,6 +1,7 @@
 package com.drt.moisture.report;
 
 import android.app.DatePickerDialog;
+import android.app.ProgressDialog;
 import android.app.TimePickerDialog;
 import android.content.DialogInterface;
 import android.graphics.Canvas;
@@ -25,6 +26,7 @@ import com.drt.moisture.BluetoothBaseActivity;
 import com.drt.moisture.MainActivity;
 import com.drt.moisture.R;
 import com.drt.moisture.data.MeasureValue;
+import com.drt.moisture.measure.MeasureActivity;
 import com.drt.moisture.util.AppPermission;
 import com.drt.moisture.util.ExcelUtil;
 import com.drt.moisture.util.StatusBarUtil;
@@ -85,6 +87,8 @@ public class ReportActivity extends BluetoothBaseActivity<ReportPresenter> imple
 
     @BindView(R.id.spinner1)
     Spinner spinner1;
+
+    ProgressDialog progressDialog;
 
     boolean isBleConnected;
 
@@ -226,6 +230,10 @@ public class ReportActivity extends BluetoothBaseActivity<ReportPresenter> imple
                 } else {
                     next.setAlpha(1.0f);
                 }
+
+                if (progressDialog != null) {
+                    progressDialog.setMessage("已经加载" + currentData.size() + "条数据请稍后...");
+                }
             }
         });
     }
@@ -241,6 +249,9 @@ public class ReportActivity extends BluetoothBaseActivity<ReportPresenter> imple
                 next.setEnabled(true);
                 previous.setEnabled(true);
                 progress.setVisibility(View.GONE);
+                if (progressDialog != null) {
+                    progressDialog.dismiss();
+                }
 
                 AlertDialog.Builder builder = new AlertDialog.Builder(ReportActivity.this).setIcon(R.mipmap.ic_launcher).setTitle("提示")
                         .setMessage("获取结束").setPositiveButton("确认", new DialogInterface.OnClickListener() {
@@ -348,6 +359,11 @@ public class ReportActivity extends BluetoothBaseActivity<ReportPresenter> imple
             previous.setEnabled(false);
             next.setEnabled(false);
         }
+        progressDialog = new ProgressDialog(ReportActivity.this);
+        progressDialog.setTitle("提示");
+        progressDialog.setMessage("查询中，请稍后...");
+        progressDialog.setCancelable(false);
+        progressDialog.show();
     }
 
     @OnClick(R.id.previous)

@@ -142,7 +142,7 @@ public interface BluetoothService {
      *
      * @param sppDataCallback
      */
-    void queryDeviceInfo(SppDataCallback<DeviceInfoResponse> sppDataCallback);
+    void queryDeviceInfo(SppDataCallback<DeviceInfoResponse> sppDataCallback, boolean retry);
 
 
     /**
@@ -151,7 +151,7 @@ public interface BluetoothService {
      * @param setDeviceInfoRequest
      * @param sppDataCallback
      */
-    void setDeviceInfo(SetDeviceInfoParame setDeviceInfoRequest, SppDataCallback<ParameterSetResponse> sppDataCallback);
+    void setDeviceInfo(SetDeviceInfoParame setDeviceInfoRequest, SppDataCallback<ParameterSetResponse> sppDataCallback, boolean retry);
 
     /**
      * 设置时间
@@ -159,7 +159,7 @@ public interface BluetoothService {
      * @param time
      * @param sppDataCallback
      */
-    void setTime(long time, SppDataCallback<ParameterSetResponse> sppDataCallback);
+    void setTime(long time, SppDataCallback<ParameterSetResponse> sppDataCallback, boolean retry);
 
     /**
      * 设置测点数量

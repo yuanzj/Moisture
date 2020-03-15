@@ -542,7 +542,7 @@ public class BluetoothServiceImpl implements BluetoothService, BleWriteResponse 
     }
 
     @Override
-    public void queryDeviceInfo(SppDataCallback<DeviceInfoResponse> sppDataCallback) {
+    public void queryDeviceInfo(final SppDataCallback<DeviceInfoResponse> sppDataCallback, boolean retry) {
         this.sppDataCallback = sppDataCallback;
 
         DeviceInfoRequest deviceInfoRequest = new DeviceInfoRequest();
@@ -553,13 +553,38 @@ public class BluetoothServiceImpl implements BluetoothService, BleWriteResponse 
 
         try {
             App.getInstance().getBluetoothClient().write(App.getInstance().getConnectMacAddress(), UUIDUtils.makeUUID(0xFFE0), UUIDUtils.makeUUID(0xFFE1), BluetoothDataUtil.encode(deviceInfoRequest), this);
+
+            if (!retry) {
+                expectResponseCode = 0xA1;
+                currentRetryCount = 0;
+                if (timeoutTimer != null) {
+                    timeoutTimer.cancel();
+                }
+                timeoutTimer = new Timer();
+                timeoutTimer.schedule(new TimerTask() {
+                    @Override
+                    public void run() {
+                        if (currentRetryCount >= 2) {
+                            currentRetryCount = 0;
+                            timeoutTimer.cancel();
+                            timeoutTimer = null;
+                        } else {
+                            if (timeoutTimer != null) {
+                                currentRetryCount++;
+                                queryDeviceInfo(sppDataCallback, true);
+                            }
+                        }
+
+                    }
+                }, 300, 300);
+            }
         } catch (IllegalAccessException | RkFieldException | FieldConvertException e) {
             e.printStackTrace();
         }
     }
 
     @Override
-    public void setDeviceInfo(SetDeviceInfoParame setDeviceInfoRequest, SppDataCallback<ParameterSetResponse> sppDataCallback) {
+    public void setDeviceInfo(final SetDeviceInfoParame setDeviceInfoRequest, final SppDataCallback<ParameterSetResponse> sppDataCallback, boolean retry) {
         this.sppDataCallback = sppDataCallback;
 
         SetDeviceInfoRequest deviceInfoRequest = new SetDeviceInfoRequest();
@@ -620,13 +645,38 @@ public class BluetoothServiceImpl implements BluetoothService, BleWriteResponse 
 
         try {
             App.getInstance().getBluetoothClient().write(App.getInstance().getConnectMacAddress(), UUIDUtils.makeUUID(0xFFE0), UUIDUtils.makeUUID(0xFFE1), BluetoothDataUtil.encode(deviceInfoRequest), this);
+            if (!retry) {
+                expectResponseCode = 0xA1;
+                currentRetryCount = 0;
+                if (timeoutTimer != null) {
+                    timeoutTimer.cancel();
+                }
+                timeoutTimer = new Timer();
+                timeoutTimer.schedule(new TimerTask() {
+                    @Override
+                    public void run() {
+                        if (currentRetryCount >= 2) {
+                            currentRetryCount = 0;
+                            timeoutTimer.cancel();
+                            timeoutTimer = null;
+                        } else {
+                            if (timeoutTimer != null) {
+                                currentRetryCount++;
+                                setDeviceInfo(setDeviceInfoRequest, sppDataCallback, true);
+                            }
+                        }
+
+                    }
+                }, 300, 300);
+            }
+
         } catch (IllegalAccessException | RkFieldException | FieldConvertException e) {
             e.printStackTrace();
         }
     }
 
     @Override
-    public void setTime(long time, SppDataCallback<ParameterSetResponse> sppDataCallback) {
+    public void setTime(final long time, final SppDataCallback<ParameterSetResponse> sppDataCallback, boolean retry) {
         this.sppDataCallback = sppDataCallback;
         SetTimeRequest setTimeRequest = new SetTimeRequest();
         setTimeRequest.setCmdGroup((byte) 0xA2);
@@ -637,6 +687,31 @@ public class BluetoothServiceImpl implements BluetoothService, BleWriteResponse 
 
         try {
             App.getInstance().getBluetoothClient().write(App.getInstance().getConnectMacAddress(), UUIDUtils.makeUUID(0xFFE0), UUIDUtils.makeUUID(0xFFE1), BluetoothDataUtil.encode(setTimeRequest), this);
+
+            if (!retry) {
+                expectResponseCode = 0xA2;
+                currentRetryCount = 0;
+                if (timeoutTimer != null) {
+                    timeoutTimer.cancel();
+                }
+                timeoutTimer = new Timer();
+                timeoutTimer.schedule(new TimerTask() {
+                    @Override
+                    public void run() {
+                        if (currentRetryCount >= 2) {
+                            currentRetryCount = 0;
+                            timeoutTimer.cancel();
+                            timeoutTimer = null;
+                        } else {
+                            if (timeoutTimer != null) {
+                                currentRetryCount++;
+                                setTime(time, sppDataCallback, true);
+                            }
+                        }
+
+                    }
+                }, 300, 300);
+            }
         } catch (IllegalAccessException | RkFieldException | FieldConvertException e) {
             e.printStackTrace();
         }
@@ -658,7 +733,7 @@ public class BluetoothServiceImpl implements BluetoothService, BleWriteResponse 
             App.getInstance().getBluetoothClient().write(App.getInstance().getConnectMacAddress(), UUIDUtils.makeUUID(0xFFE0), UUIDUtils.makeUUID(0xFFE1), BluetoothDataUtil.encode(setTimeRequest), this);
 
             if (!retry) {
-                expectResponseCode = 0xA5;
+                expectResponseCode = 0xA2;
                 currentRetryCount = 0;
                 if (timeoutTimer != null) {
                     timeoutTimer.cancel();
@@ -688,7 +763,7 @@ public class BluetoothServiceImpl implements BluetoothService, BleWriteResponse 
     }
 
     @Override
-    public void setTime(long time) {
+    public void setTime(final long time) {
         SetTimeRequest setTimeRequest = new SetTimeRequest();
         setTimeRequest.setCmdGroup((byte) 0xA2);
         setTimeRequest.setCmd((byte) 0x05);
