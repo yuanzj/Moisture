@@ -721,6 +721,8 @@ public class CorrectDashboardActivity extends BluetoothBaseActivity<CorrectDashb
             chart.setData(data);
         }
 
+        float middleActivity = 0;
+        int count = 0;
         for (int i = 0; i < measureValueList.size(); i++) {
 
             MeasureValue measureValue = measureValueList.get(i);
@@ -731,11 +733,19 @@ public class CorrectDashboardActivity extends BluetoothBaseActivity<CorrectDashb
                 data.addDataSet(set);
             }
             if (measureValue.getMeasureStatus() == 0x01) {
+                count++;
+                middleActivity += (float) measureValue.getActivity();
                 data.addEntry(new Entry(set.getEntryCount(), (float) measureValue.getActivity(), measureValue), i);
             } else {
 //                data.addEntry(new Entry(set.getEntryCount(), -1, measureValue.getReportTime()), i);
             }
         }
+        if (count > 0) {
+            middleActivity = middleActivity / count;
+        } else {
+            middleActivity = 0.5f;
+        }
+
         data.notifyDataChanged();
 
         // let the chart know it's data has changed
@@ -747,7 +757,7 @@ public class CorrectDashboardActivity extends BluetoothBaseActivity<CorrectDashb
         } else {
             chart.getXAxis().setAxisMaximum(50);
         }
-        chart.moveViewToX(data.getXMax());
+        chart.moveViewTo(data.getXMax(), middleActivity, YAxis.AxisDependency.LEFT);
     }
 
     private LineDataSet createActivitySet(int i) {

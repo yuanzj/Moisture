@@ -484,7 +484,7 @@ public class CorrectActivity extends BluetoothBaseActivity<CorrectDashboardPrese
         } else {
             chart.getXAxis().setAxisMaximum(30);
         }
-        chart.moveViewToX(data.getXMax());
+        chart.moveViewTo(data.getXMax(),  (float) measureValue.getActivity(), YAxis.AxisDependency.LEFT);
     }
 
 //    private LineDataSet createTemperatureSet() {
