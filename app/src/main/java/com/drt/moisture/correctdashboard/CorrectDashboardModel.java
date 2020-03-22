@@ -181,7 +181,27 @@ public class CorrectDashboardModel implements CorrectDashboardContract.Model {
 
     @Override
     public void stopAll() {
-        stopCorrect(true);
+        for (int i = 0; i < pointCount; i++) {
+            int index = i + 1;
+            MeasureRunningStatus measureRunningStatus = measureRunningStatusMap.get(index);
+            if (measureRunningStatus != null) {
+                measureRunningStatus.setRunning(false);
+                measureRunningStatusMap.put(index, measureRunningStatus);
+            }
+        }
+
+        if (runningTimer != null) {
+            runningTimer.cancel();
+        }
+
+        CommandEntity commandEntity = new CommandEntity();
+        commandEntity.setType(1);
+        commandEntity.setStopType(1);
+        try {
+            commandQueue.put(commandEntity);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
     }
 
     @Override
@@ -594,7 +614,11 @@ public class CorrectDashboardModel implements CorrectDashboardContract.Model {
                         case 1: {
                             App.getInstance().getBluetoothService().stopCorrect(pointCount, stopMeasureResponse);
                             if (CorrectDataCallback != null) {
-                                CorrectDataCallback.correctDone(step++);
+                                if (commandEntity.getStopType() == 0) {
+                                    CorrectDataCallback.correctDone(step++);
+                                } else {
+                                    CorrectDataCallback.correctDone(1);
+                                }
                             }
                         }
                         break;
@@ -699,6 +723,11 @@ public class CorrectDashboardModel implements CorrectDashboardContract.Model {
          */
         private int type;
 
+        /**
+         * stop all
+         */
+        private int stopType;
+
 
         public int getType() {
             return type;
@@ -708,5 +737,12 @@ public class CorrectDashboardModel implements CorrectDashboardContract.Model {
             this.type = type;
         }
 
+        public int getStopType() {
+            return stopType;
+        }
+
+        public void setStopType(int stopType) {
+            this.stopType = stopType;
+        }
     }
 }
