@@ -15,6 +15,9 @@ import com.drt.moisture.data.source.bluetooth.response.DashboardRecordDataRespon
 import com.drt.moisture.data.source.bluetooth.response.DashboardRecordDataResponse3;
 import com.drt.moisture.data.source.bluetooth.response.DashboardRecordDataResponse4;
 import com.drt.moisture.data.source.bluetooth.response.DashboardRecordDataResponse5;
+import com.drt.moisture.data.source.bluetooth.response.DeviceInfoResponse;
+import com.drt.moisture.data.source.bluetooth.response.DeviceStatusResponse;
+import com.drt.moisture.data.source.bluetooth.response.SocResponse;
 import com.drt.moisture.data.source.bluetooth.response.StartMeasureResponse;
 import com.drt.moisture.data.source.bluetooth.response.StopMeasureResponse;
 import com.drt.moisture.util.DateUtil;
@@ -537,6 +540,10 @@ public class DashboardModel implements DashboardContract.Model {
                             }
                         }
                         break;
+                        case 2: {
+                            App.getInstance().getBluetoothService().querySoc(deviceInfoResponse);
+                            break;
+                        }
                         default:
                             break;
                     }
@@ -548,6 +555,41 @@ public class DashboardModel implements DashboardContract.Model {
             }
         }
     });
+
+    SppDataCallback<SocResponse> deviceInfoResponse = new SppDataCallback<SocResponse>() {
+
+        @Override
+        public void delivery(SocResponse deviceInfoResponse) {
+//            0x00：空闲<br/>0x01：自动测量<br/>0x02：定时测量<br/>0x03：校准
+            Log.e("yzj", deviceInfoResponse.toString());
+            if (deviceInfoResponse.getStatus() == 0x01) {
+                boolean needShowChart = true;
+                for (MeasureRunningStatus value : measureRunningStatusMap.values()) {
+                    if (value.isRunning) {
+                        needShowChart = false;
+                        break;
+                    }
+                }
+                if (needShowChart) {
+                    int pointCount = App.getInstance().getLocalDataService().queryAppConfig().getPointCount();
+                    for (int index = 1; index <= pointCount; index++) {
+                        MeasureRunningStatus mMeasureRunningStatus = new MeasureRunningStatus();
+                        mMeasureRunningStatus.setIndex(index);
+                        mMeasureRunningStatus.setModel(1);
+                        mMeasureRunningStatus.setRunning(true);
+                        mMeasureRunningStatus.setStartTime(System.currentTimeMillis());
+                        measureRunningStatusMap.put(index, mMeasureRunningStatus);
+                    }
+                    EventBus.getDefault().post(new DeviceStatusResponse());
+                }
+            }
+        }
+
+        @Override
+        public Class<SocResponse> getEntityType() {
+            return SocResponse.class;
+        }
+    };
 
     Thread statusCheckThread = new Thread(new Runnable() {
         @Override
@@ -576,6 +618,19 @@ public class DashboardModel implements DashboardContract.Model {
                             stopMeasure(true, measureRunningStatus.getIndex());
                         }
                     }
+                }
+
+                boolean isRunning = false;
+                for (MeasureRunningStatus measureRunningStatus : measureRunningStatusMap.values()) {
+                    if (measureRunningStatus.isRunning) {
+                        isRunning = true;
+                        break;
+                    }
+                }
+                if (!isRunning) {
+                    CommandEntity commandEntity = new CommandEntity();
+                    commandEntity.setType(2);
+                    commandQueue.push(commandEntity);
                 }
             }
         }

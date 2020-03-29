@@ -25,6 +25,8 @@ import com.drt.moisture.R;
 import com.drt.moisture.data.AppConfig;
 import com.drt.moisture.data.MeasureStatus;
 import com.drt.moisture.data.MeasureValue;
+import com.drt.moisture.data.source.bluetooth.response.DeviceStatusResponse;
+import com.drt.moisture.data.source.bluetooth.response.SocResponse;
 import com.drt.moisture.measure.MeasureActivity;
 import com.drt.moisture.util.LineChartMarkView;
 import com.github.mikephil.charting.charts.LineChart;
@@ -159,6 +161,15 @@ public class DashboardActivity extends BluetoothBaseActivity<DashboardPresenter>
 
     public static DashboardActivity getDashboardActivity() {
         return dashboardActivity;
+    }
+
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    public void onGetMessage(DeviceStatusResponse socResponse) {
+        if (isFront) {
+            // 根据测点数量发送开始指令
+            int pointCount = App.getInstance().getLocalDataService().queryAppConfig().getPointCount();
+            mPresenter.queryMeasureResult(pointCount);
+        }
     }
 
     @Subscribe(threadMode = ThreadMode.MAIN)
