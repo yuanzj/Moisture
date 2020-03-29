@@ -363,6 +363,16 @@ public class ReportActivity extends BluetoothBaseActivity<ReportPresenter> imple
         progressDialog.setTitle("提示");
         progressDialog.setMessage("查询中，请稍后...");
         progressDialog.setCancelable(false);
+        progressDialog.setButton(DialogInterface.BUTTON_NEGATIVE, "取消",
+                new DialogInterface.OnClickListener() {
+
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        // TODO Auto-generated method stub
+                        mPresenter.stop();
+                        progressDialog.dismiss();
+                    }
+                });
         progressDialog.show();
     }
 

@@ -58,6 +58,8 @@ public class MeasureActivity extends BluetoothBaseActivity<DashboardPresenter> i
 
     private static final String TAG = MeasureActivity.class.getSimpleName();
 
+    int[] colors = new int[]{R.color.btnOrange, R.color.btnGreen, R.color.btnBlue, R.color.btnRed1, R.color.btnRed};
+
     @BindView(R.id.parent_chart)
     RelativeLayout parentChart;
 
@@ -452,6 +454,8 @@ public class MeasureActivity extends BluetoothBaseActivity<DashboardPresenter> i
         }
     }
 
+    float minY = Float.MAX_VALUE, maxY = Float.MIN_VALUE;
+
     private void addEntry(MeasureValue measureValue) {
 
         LineData data = chart.getData();
@@ -477,6 +481,14 @@ public class MeasureActivity extends BluetoothBaseActivity<DashboardPresenter> i
             data.addDataSet(set);
         }
         data.addEntry(new Entry(set.getEntryCount(), (float) measureValue.getActivity(), measureValue), 0);
+        if ((float) measureValue.getActivity() != 0.0F) {
+            if (minY > (float) measureValue.getActivity()) {
+                minY = (float) measureValue.getActivity();
+            }
+            if (maxY < (float) measureValue.getActivity()) {
+                maxY = (float) measureValue.getActivity();
+            }
+        }
         data.notifyDataChanged();
 
         // let the chart know it's data has changed
@@ -488,7 +500,12 @@ public class MeasureActivity extends BluetoothBaseActivity<DashboardPresenter> i
         } else {
             chart.getXAxis().setAxisMaximum(30);
         }
-        chart.moveViewTo(data.getXMax(),  (float) measureValue.getActivity(), YAxis.AxisDependency.LEFT);
+        if (minY != maxY && maxY > minY) {
+            Log.e("yzj", "minY:" + minY + ",maxY:" + maxY);
+            chart.getAxisLeft().setAxisMinimum(minY); // this replaces setStartAtZero(true)
+            chart.getAxisLeft().setAxisMaximum(maxY);
+        }
+        chart.moveViewToX(data.getXMax());
     }
 
 //    private LineDataSet createTemperatureSet() {
@@ -508,9 +525,9 @@ public class MeasureActivity extends BluetoothBaseActivity<DashboardPresenter> i
         LineDataSet d2 = new LineDataSet(null, "水分活度");
         d2.setLineWidth(2f);
         d2.setCircleRadius(4.5f);
-        d2.setHighLightColor(getResources().getColor(R.color.colorGreen, getTheme()));
-        d2.setColor(getResources().getColor(R.color.colorGreen, getTheme()));
-        d2.setCircleColor(getResources().getColor(R.color.colorGreen, getTheme()));
+        d2.setHighLightColor(getResources().getColor(colors[index-1], getTheme()));
+        d2.setColor(getResources().getColor(colors[index-1], getTheme()));
+        d2.setCircleColor(getResources().getColor(colors[index-1], getTheme()));
         d2.setDrawValues(false);
         d2.setDrawCircles(false);
         d2.setMode(LineDataSet.Mode.LINEAR);
@@ -525,6 +542,8 @@ public class MeasureActivity extends BluetoothBaseActivity<DashboardPresenter> i
     }
 
     private void initChartView() {
+        minY = Float.MAX_VALUE;
+        maxY = Float.MIN_VALUE;
         Point outSize = new Point();
         this.getWindowManager().getDefaultDisplay().getSize(outSize);
 //        chart.setMinimumHeight((outSize.x - getResources().getDimensionPixelSize(R.dimen.padding_default) * 2) / 2);
@@ -584,9 +603,9 @@ public class MeasureActivity extends BluetoothBaseActivity<DashboardPresenter> i
         chart.invalidate();
 
         chart.setDoubleTapToZoomEnabled(false);//双击屏幕缩放
-        chart.setScaleEnabled(true);
+        chart.setScaleEnabled(false);
         chart.setScaleXEnabled(false);
-        chart.setScaleYEnabled(true);
+        chart.setScaleYEnabled(false);
     }
 
     public void playSound() {

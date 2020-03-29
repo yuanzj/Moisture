@@ -367,7 +367,7 @@ public class CorrectDashboardActivity extends BluetoothBaseActivity<CorrectDashb
                 if (isFront) {
                     AlertDialog.Builder builder = new AlertDialog.Builder(CorrectDashboardActivity.this);
                     builder.setTitle("提示");//设置title
-                    builder.setMessage("矫正完成");//设置内容
+                    builder.setMessage("校正完成");//设置内容
                     //点击确认按钮事件
                     builder.setPositiveButton("确认", new DialogInterface.OnClickListener() {
                         @Override
@@ -434,7 +434,7 @@ public class CorrectDashboardActivity extends BluetoothBaseActivity<CorrectDashb
 
         switch (mPresenter.getMeasureStatus()) {
             case RUNNING:
-                onError(new Exception("矫正中..."));
+                onError(new Exception("校正中..."));
                 return;
             case BT_NOT_CONNECT:
                 onError(new Exception("设备尚未连接，请点击右上角蓝牙按钮连接设备"));
@@ -444,7 +444,7 @@ public class CorrectDashboardActivity extends BluetoothBaseActivity<CorrectDashb
         }
         progressdialog = new ProgressDialog(CorrectDashboardActivity.this);
         progressdialog.setTitle("提示");
-        progressdialog.setMessage("启动所有矫正，请稍后...");
+        progressdialog.setMessage("启动所有校正，请稍后...");
         progressdialog.setCancelable(false);
         progressdialog.show();
 
@@ -479,7 +479,7 @@ public class CorrectDashboardActivity extends BluetoothBaseActivity<CorrectDashb
     public void stopMeasure() {
 
         AlertDialog.Builder builder = new AlertDialog.Builder(this).setTitle("提示")
-                .setMessage("是否确认停止矫正？")
+                .setMessage("是否确认停止校正？")
                 .setPositiveButton("确认", new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialogInterface, int i) {
@@ -488,7 +488,7 @@ public class CorrectDashboardActivity extends BluetoothBaseActivity<CorrectDashb
                             public void run() {
                                 progressdialog = new ProgressDialog(CorrectDashboardActivity.this);
                                 progressdialog.setTitle("提示");
-                                progressdialog.setMessage("停止所有矫正，请稍后...");
+                                progressdialog.setMessage("停止所有校正，请稍后...");
                                 progressdialog.setCancelable(false);
                                 progressdialog.show();
                             }
@@ -792,7 +792,7 @@ public class CorrectDashboardActivity extends BluetoothBaseActivity<CorrectDashb
         // holder.chart.setValueTypeface(mTf);
         chart.getDescription().setEnabled(false);
         chart.setDrawGridBackground(false);
-        chart.setNoDataText("没有矫正数据。请点击右上角蓝牙按钮连接设备后开始矫正!");
+        chart.setNoDataText("没有校正数据。请点击右上角蓝牙按钮连接设备后开始校正!");
         chart.setNoDataTextColor(getColor(R.color.colorSecondBody));
 
         XAxis xAxis = chart.getXAxis();

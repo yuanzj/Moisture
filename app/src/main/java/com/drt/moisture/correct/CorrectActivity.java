@@ -448,6 +448,7 @@ public class CorrectActivity extends BluetoothBaseActivity<CorrectDashboardPrese
             mPresenter.setMeasureStatus(MeasureStatus.NORMAL);
         }
     }
+    float minY = Float.MAX_VALUE, maxY = Float.MIN_VALUE;
 
     private void addEntry(MeasureValue measureValue) {
 
@@ -473,6 +474,14 @@ public class CorrectActivity extends BluetoothBaseActivity<CorrectDashboardPrese
             data.addDataSet(set);
         }
         data.addEntry(new Entry(set.getEntryCount(), (float) measureValue.getActivity(), measureValue), 0);
+        if ((float) measureValue.getActivity() != 0.0F) {
+            if (minY > (float) measureValue.getActivity()) {
+                minY = (float) measureValue.getActivity();
+            }
+            if (maxY < (float) measureValue.getActivity()) {
+                maxY = (float) measureValue.getActivity();
+            }
+        }
         data.notifyDataChanged();
 
         // let the chart know it's data has changed
@@ -484,7 +493,12 @@ public class CorrectActivity extends BluetoothBaseActivity<CorrectDashboardPrese
         } else {
             chart.getXAxis().setAxisMaximum(30);
         }
-        chart.moveViewTo(data.getXMax(),  (float) measureValue.getActivity(), YAxis.AxisDependency.LEFT);
+        if (minY != maxY && maxY > minY) {
+            Log.e("yzj", "minY:" + minY + ",maxY:" + maxY);
+            chart.getAxisLeft().setAxisMinimum(minY); // this replaces setStartAtZero(true)
+            chart.getAxisLeft().setAxisMaximum(maxY);
+        }
+        chart.moveViewToX(data.getXMax());
     }
 
 //    private LineDataSet createTemperatureSet() {
@@ -521,6 +535,8 @@ public class CorrectActivity extends BluetoothBaseActivity<CorrectDashboardPrese
     }
 
     private void initChartView() {
+        minY = Float.MAX_VALUE;
+        maxY = Float.MIN_VALUE;
         Point outSize = new Point();
         this.getWindowManager().getDefaultDisplay().getSize(outSize);
 //        chart.setMinimumHeight((outSize.x - getResources().getDimensionPixelSize(R.dimen.padding_default) * 2) / 2);
@@ -576,9 +592,9 @@ public class CorrectActivity extends BluetoothBaseActivity<CorrectDashboardPrese
         chart.invalidate();
 
         chart.setDoubleTapToZoomEnabled(false);//双击屏幕缩放
-        chart.setScaleEnabled(true);
+        chart.setScaleEnabled(false);
         chart.setScaleXEnabled(false);
-        chart.setScaleYEnabled(true);
+        chart.setScaleYEnabled(false);
     }
 
     public void playSound() {

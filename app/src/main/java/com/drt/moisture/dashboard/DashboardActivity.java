@@ -11,6 +11,7 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AlertDialog;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.LinearLayout;
@@ -698,6 +699,8 @@ public class DashboardActivity extends BluetoothBaseActivity<DashboardPresenter>
         }
     }
 
+    float minY = Float.MAX_VALUE, maxY = Float.MIN_VALUE;
+
     private void addEntry(List<MeasureValue> measureValueList) {
         if (chart == null) {
             chart = (LineChart) getLayoutInflater().inflate(R.layout.chart_view, parentChart, false);
@@ -714,6 +717,7 @@ public class DashboardActivity extends BluetoothBaseActivity<DashboardPresenter>
         float middleActivity = 0;
         int count = 0;
 
+
         for (int i = 0; i < measureValueList.size(); i++) {
 
             MeasureValue measureValue = measureValueList.get(i);
@@ -727,15 +731,17 @@ public class DashboardActivity extends BluetoothBaseActivity<DashboardPresenter>
                 count++;
                 middleActivity += (float) measureValue.getActivity();
                 data.addEntry(new Entry(set.getEntryCount(), (float) measureValue.getActivity(), measureValue), i);
+                if ((float) measureValue.getActivity() != 0.0F) {
+                    if (minY > (float) measureValue.getActivity()) {
+                        minY = (float) measureValue.getActivity();
+                    }
+                    if (maxY < (float) measureValue.getActivity()) {
+                        maxY = (float) measureValue.getActivity();
+                    }
+                }
             } else {
 //                data.addEntry(new Entry(set.getEntryCount(), -1, measureValue.getReportTime()), i);
             }
-        }
-
-        if (count > 0) {
-            middleActivity = middleActivity / count;
-        } else {
-            middleActivity = 0.5f;
         }
 
         data.notifyDataChanged();
@@ -752,7 +758,12 @@ public class DashboardActivity extends BluetoothBaseActivity<DashboardPresenter>
         } else {
             chart.getXAxis().setAxisMaximum(50);
         }
-        chart.moveViewTo(data.getXMax(), middleActivity, YAxis.AxisDependency.LEFT);
+        if (minY != maxY && maxY > minY) {
+            Log.e("yzj", "minY:" + minY + ",maxY:" + maxY);
+            chart.getAxisLeft().setAxisMinimum(minY); // this replaces setStartAtZero(true)
+            chart.getAxisLeft().setAxisMaximum(maxY);
+        }
+        chart.moveViewToX(data.getXMax());
 
 
     }
@@ -781,6 +792,9 @@ public class DashboardActivity extends BluetoothBaseActivity<DashboardPresenter>
     }
 
     private void initChartView() {
+        minY = Float.MAX_VALUE;
+        maxY = Float.MIN_VALUE;
+
         Point outSize = new Point();
         this.getWindowManager().getDefaultDisplay().getSize(outSize);
 //        chart.setMinimumHeight((outSize.x - getResources().getDimensionPixelSize(R.dimen.padding_default) * 2) / 2);
@@ -839,9 +853,9 @@ public class DashboardActivity extends BluetoothBaseActivity<DashboardPresenter>
         chart.invalidate();
 
         chart.setDoubleTapToZoomEnabled(false);//双击屏幕缩放
-        chart.setScaleEnabled(true);
+        chart.setScaleEnabled(false);
         chart.setScaleXEnabled(false);
-        chart.setScaleYEnabled(true);
+        chart.setScaleYEnabled(false);
     }
 
     public void playSound() {

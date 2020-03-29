@@ -194,14 +194,14 @@ public class CorrectDashboardModel implements CorrectDashboardContract.Model {
             runningTimer.cancel();
         }
 
-        CommandEntity commandEntity = new CommandEntity();
-        commandEntity.setType(1);
-        commandEntity.setStopType(1);
-        try {
-            commandQueue.put(commandEntity);
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        }
+//        CommandEntity commandEntity = new CommandEntity();
+//        commandEntity.setType(1);
+//        commandEntity.setStopType(1);
+//        try {
+//            commandQueue.put(commandEntity);
+//        } catch (InterruptedException e) {
+//            e.printStackTrace();
+//        }
     }
 
     @Override
