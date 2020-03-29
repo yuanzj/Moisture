@@ -25,6 +25,8 @@ import com.inuker.bluetooth.library.Constants;
 
 import org.greenrobot.eventbus.EventBus;
 
+import java.text.DateFormat;
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -627,10 +629,38 @@ public class DashboardModel implements DashboardContract.Model {
                         break;
                     }
                 }
-                if (!isRunning) {
-                    CommandEntity commandEntity = new CommandEntity();
-                    commandEntity.setType(2);
-                    commandQueue.push(commandEntity);
+                if (!isRunning && DashboardActivity.getDashboardActivity() != null && DashboardActivity.getDashboardActivity().isFront) {
+
+                    if (DashboardActivity.getDashboardActivity().time1 != null &&
+                            DashboardActivity.getDashboardActivity().time2 != null &&
+                            DashboardActivity.getDashboardActivity().time3 != null
+                    ) {
+                        DateFormat dateFormat = new SimpleDateFormat("HH:mm");
+                        Date date1, date2, date3;
+                        try {
+                            date1 = dateFormat.parse(DashboardActivity.getDashboardActivity().time1);
+                            date2 = dateFormat.parse(DashboardActivity.getDashboardActivity().time2);
+                            date3 = dateFormat.parse(DashboardActivity.getDashboardActivity().time3);
+
+                            if (new Date().after(date1) && new Date().before(new Date(date1.getTime() + 1000 * 60 * 60))) {
+                                CommandEntity commandEntity = new CommandEntity();
+                                commandEntity.setType(2);
+                                commandQueue.push(commandEntity);
+                            } else if (new Date().after(date2) && new Date().before(new Date(date2.getTime() + 1000 * 60 * 60))) {
+                                CommandEntity commandEntity = new CommandEntity();
+                                commandEntity.setType(2);
+                                commandQueue.push(commandEntity);
+                            } else if (new Date().after(date3) && new Date().before(new Date(date3.getTime() + 1000 * 60 * 60))) {
+                                CommandEntity commandEntity = new CommandEntity();
+                                commandEntity.setType(2);
+                                commandQueue.push(commandEntity);
+                            }
+                        } catch (ParseException e) {
+                            e.printStackTrace();
+                        }
+                    }
+
+
                 }
             }
         }

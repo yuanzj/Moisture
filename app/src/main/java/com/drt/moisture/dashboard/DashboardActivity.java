@@ -25,8 +25,10 @@ import com.drt.moisture.R;
 import com.drt.moisture.data.AppConfig;
 import com.drt.moisture.data.MeasureStatus;
 import com.drt.moisture.data.MeasureValue;
+import com.drt.moisture.data.source.bluetooth.SppDataCallback;
 import com.drt.moisture.data.source.bluetooth.response.DeviceStatusResponse;
 import com.drt.moisture.data.source.bluetooth.response.SocResponse;
+import com.drt.moisture.data.source.bluetooth.response.TimingSetResponse;
 import com.drt.moisture.measure.MeasureActivity;
 import com.drt.moisture.util.LineChartMarkView;
 import com.github.mikephil.charting.charts.LineChart;
@@ -43,8 +45,13 @@ import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
 
 import java.math.RoundingMode;
+import java.text.DateFormat;
 import java.text.DecimalFormat;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.time.LocalTime;
 import java.util.Collections;
+import java.util.Date;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
@@ -64,7 +71,7 @@ public class DashboardActivity extends BluetoothBaseActivity<DashboardPresenter>
 
     int[] colors = new int[]{R.color.btnOrange, R.color.btnGreen, R.color.btnBlue, R.color.btnRed1, R.color.btnRed};
 
-    volatile boolean isFront = false;
+    public volatile boolean isFront = false;
 
     @BindView(R.id.parent_chart)
     RelativeLayout parentChart;
@@ -203,6 +210,8 @@ public class DashboardActivity extends BluetoothBaseActivity<DashboardPresenter>
             }
         }
     }
+
+    public volatile String time1, time2, time3;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -679,6 +688,22 @@ public class DashboardActivity extends BluetoothBaseActivity<DashboardPresenter>
 
             }
         }, 500);
+
+        App.getInstance().getBluetoothService().queryTiming(new SppDataCallback<TimingSetResponse>() {
+            @Override
+            public void delivery(TimingSetResponse setMeasureParameRequest) {
+                time1 = String.format("%02d:%02d", setMeasureParameRequest.getTime1h(), setMeasureParameRequest.getTime1m());
+                time2 = String.format("%02d:%02d", setMeasureParameRequest.getTime2h(), setMeasureParameRequest.getTime2m());
+                time3 = String.format("%02d:%02d", setMeasureParameRequest.getTime3h(), setMeasureParameRequest.getTime3m());
+
+                Log.e("yzj", time1 + " " + time2 + " " + time3);
+            }
+
+            @Override
+            public Class<TimingSetResponse> getEntityType() {
+                return TimingSetResponse.class;
+            }
+        }, false);
     }
 
     @Override
