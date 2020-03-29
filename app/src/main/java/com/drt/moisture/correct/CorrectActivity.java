@@ -11,6 +11,7 @@ import android.support.v7.app.AlertDialog;
 import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.Spinner;
@@ -98,6 +99,17 @@ public class CorrectActivity extends BluetoothBaseActivity<CorrectDashboardPrese
         index = getIntent().getIntExtra("index", 1);
         pointCount = App.getInstance().getLocalDataService().queryAppConfig().getPointCount();
         AppConfig appConfig = App.getInstance().getLocalDataService().queryAppConfig(index);
+
+
+        //配置spinner控件展现样式，spinner只是承载多项数据，下面是以何种方式展现这些数据
+        ArrayAdapter<String> localArrayAdapter = new ArrayAdapter<String>(this.getApplicationContext(), R.layout.custom_spiner_text_item, getResources().getStringArray(R.array.correct_model));
+        localArrayAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        spMeasureModel.setAdapter(localArrayAdapter);
+
+        localArrayAdapter = new ArrayAdapter<String>(this.getApplicationContext(), R.layout.custom_spiner_text_item, getResources().getStringArray(R.array.correct_time_array));
+        localArrayAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        spMeasureTime.setAdapter(localArrayAdapter);
+
         if (appConfig.getCorrectMode() == 2) {
             spMeasureModel.setSelection(2);
         } else {
@@ -127,12 +139,12 @@ public class CorrectActivity extends BluetoothBaseActivity<CorrectDashboardPrese
         }
         mPresenter.attachView(this);
 
-        if (chart != null) {
-            parentChart.removeAllViews();
-        }
-        chart = (LineChart) getLayoutInflater().inflate(R.layout.chart_view, parentChart, false);
-        parentChart.addView(chart);
-        initChartView();
+//        if (chart != null) {
+//            parentChart.removeAllViews();
+//        }
+//        chart = (LineChart) getLayoutInflater().inflate(R.layout.chart_view, parentChart, false);
+//        parentChart.addView(chart);
+//        initChartView();
 
         spMeasureModel.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
@@ -208,7 +220,7 @@ public class CorrectActivity extends BluetoothBaseActivity<CorrectDashboardPrese
         runOnUiThread(new Runnable() {
             @Override
             public void run() {
-                addEntry(measureValue);
+//                addEntry(measureValue);
                 time.setText(measureValue.getReportTime());
                 temperature.setText(String.format("%.2f", measureValue.getTemperature()) + "°C");
                 DecimalFormat df = new DecimalFormat("0.0000");
@@ -265,12 +277,12 @@ public class CorrectActivity extends BluetoothBaseActivity<CorrectDashboardPrese
                             type = 0x01;
                         }
 
-                        if (chart != null) {
-                            parentChart.removeAllViews();
-                        }
-                        chart = (LineChart) getLayoutInflater().inflate(R.layout.chart_view, parentChart, false);
-                        parentChart.addView(chart);
-                        initChartView();
+//                        if (chart != null) {
+//                            parentChart.removeAllViews();
+//                        }
+//                        chart = (LineChart) getLayoutInflater().inflate(R.layout.chart_view, parentChart, false);
+//                        parentChart.addView(chart);
+//                        initChartView();
 
                         AppConfig appConfig = App.getInstance().getLocalDataService().queryAppConfig(index);
                         appConfig.setCorrectMode(model);
@@ -448,6 +460,7 @@ public class CorrectActivity extends BluetoothBaseActivity<CorrectDashboardPrese
             mPresenter.setMeasureStatus(MeasureStatus.NORMAL);
         }
     }
+
     float minY = Float.MAX_VALUE, maxY = Float.MIN_VALUE;
 
     private void addEntry(MeasureValue measureValue) {

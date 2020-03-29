@@ -202,6 +202,9 @@ public class CorrectDashboardModel implements CorrectDashboardContract.Model {
 //        } catch (InterruptedException e) {
 //            e.printStackTrace();
 //        }
+        if (CorrectDataCallback != null) {
+            CorrectDataCallback.correctDone(1);
+        }
     }
 
     @Override

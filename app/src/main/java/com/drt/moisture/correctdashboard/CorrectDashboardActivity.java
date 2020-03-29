@@ -277,7 +277,7 @@ public class CorrectDashboardActivity extends BluetoothBaseActivity<CorrectDashb
                 }
                 updateUI(MeasureStatus.RUNNING);
 
-                addEntry(measureValueList);
+//                addEntry(measureValueList);
                 DecimalFormat df = new DecimalFormat("0.0000");
                 df.setRoundingMode(RoundingMode.DOWN);
 
@@ -448,12 +448,12 @@ public class CorrectDashboardActivity extends BluetoothBaseActivity<CorrectDashb
         progressdialog.setCancelable(false);
         progressdialog.show();
 
-        if (chart != null) {
-            parentChart.removeAllViews();
-        }
-        chart = (LineChart) getLayoutInflater().inflate(R.layout.chart_view, parentChart, false);
-        parentChart.addView(chart);
-        initChartView();
+//        if (chart != null) {
+//            parentChart.removeAllViews();
+//        }
+//        chart = (LineChart) getLayoutInflater().inflate(R.layout.chart_view, parentChart, false);
+//        parentChart.addView(chart);
+//        initChartView();
         // 校准时间
         App.getInstance().getBluetoothService().setTime(System.currentTimeMillis() / 1000);
 
