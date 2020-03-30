@@ -20,6 +20,8 @@ import com.drt.moisture.data.source.bluetooth.response.DeviceStatusResponse;
 import com.drt.moisture.data.source.bluetooth.response.SocResponse;
 import com.drt.moisture.data.source.bluetooth.response.StartMeasureResponse;
 import com.drt.moisture.data.source.bluetooth.response.StopMeasureResponse;
+import com.drt.moisture.data.source.bluetooth.resquest.SendAutoStartMsg;
+import com.drt.moisture.data.source.bluetooth.resquest.SendUpdateAlarmMsg;
 import com.drt.moisture.util.DateUtil;
 import com.inuker.bluetooth.library.Constants;
 
@@ -29,6 +31,7 @@ import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Collections;
 import java.util.Date;
 import java.util.List;
@@ -58,6 +61,8 @@ public class DashboardModel implements DashboardContract.Model {
     private volatile boolean isRunning;
 
     private volatile int pointCount;
+
+    private Date lastAutoRunDate1, lastAutoRunDate2, lastAutoRunDate3;
 
     DashboardModel() {
         isRunning = true;
@@ -629,37 +634,40 @@ public class DashboardModel implements DashboardContract.Model {
                         break;
                     }
                 }
-                if (!isRunning && DashboardActivity.getDashboardActivity() != null && DashboardActivity.getDashboardActivity().isFront) {
+                if (!isRunning
+                        && DashboardActivity.getDashboardActivity() != null
+                        && DashboardActivity.getDashboardActivity().isFront
+                        && DashboardActivity.getDashboardActivity().date1 != null
+                        && DashboardActivity.getDashboardActivity().date2 != null
+                        && DashboardActivity.getDashboardActivity().date3 != null) {
 
-                    if (DashboardActivity.getDashboardActivity().time1 != null &&
-                            DashboardActivity.getDashboardActivity().time2 != null &&
-                            DashboardActivity.getDashboardActivity().time3 != null
-                    ) {
-                        DateFormat dateFormat = new SimpleDateFormat("HH:mm");
-                        Date date1, date2, date3;
-                        try {
-                            date1 = dateFormat.parse(DashboardActivity.getDashboardActivity().time1);
-                            date2 = dateFormat.parse(DashboardActivity.getDashboardActivity().time2);
-                            date3 = dateFormat.parse(DashboardActivity.getDashboardActivity().time3);
+                    Date date1 = DashboardActivity.getDashboardActivity().date1;
+                    Date date2 = DashboardActivity.getDashboardActivity().date2;
+                    Date date3 = DashboardActivity.getDashboardActivity().date3;
 
-                            if (new Date().after(date1) && new Date().before(new Date(date1.getTime() + 1000 * 60 * 60))) {
-                                CommandEntity commandEntity = new CommandEntity();
-                                commandEntity.setType(2);
-                                commandQueue.push(commandEntity);
-                            } else if (new Date().after(date2) && new Date().before(new Date(date2.getTime() + 1000 * 60 * 60))) {
-                                CommandEntity commandEntity = new CommandEntity();
-                                commandEntity.setType(2);
-                                commandQueue.push(commandEntity);
-                            } else if (new Date().after(date3) && new Date().before(new Date(date3.getTime() + 1000 * 60 * 60))) {
-                                CommandEntity commandEntity = new CommandEntity();
-                                commandEntity.setType(2);
-                                commandQueue.push(commandEntity);
-                            }
-                        } catch (ParseException e) {
-                            e.printStackTrace();
+                    if (isSameDay(date1, new Date())) {
+                        // 客户端直接启动测量
+                        if (new Date().after(date1) && new Date().before(new Date(date1.getTime() + 1000 * 60 * 2)) && (lastAutoRunDate1 == null || lastAutoRunDate1.before(date1))) {
+                            EventBus.getDefault().post(new SendAutoStartMsg());
+                            lastAutoRunDate1 = new Date();
+                        } else if (new Date().after(date2) && new Date().before(new Date(date2.getTime() + 1000 * 60 * 2)) && (lastAutoRunDate2 == null || lastAutoRunDate2.before(date2))) {
+                            EventBus.getDefault().post(new SendAutoStartMsg());
+                            lastAutoRunDate2 = new Date();
+                        } else if (new Date().after(date3) && new Date().before(new Date(date3.getTime() + 1000 * 60 * 2)) && (lastAutoRunDate3 == null || lastAutoRunDate3.before(date3))) {
+                            EventBus.getDefault().post(new SendAutoStartMsg());
+                            lastAutoRunDate3 = new Date();
                         }
+                        // 客户端发送指令询问终端是否在运行
+                        else if (new Date().after(date1) && new Date().before(new Date(date1.getTime() + 1000 * 60 * 60))
+                                || new Date().after(date2) && new Date().before(new Date(date2.getTime() + 1000 * 60 * 60))
+                                || new Date().after(date3) && new Date().before(new Date(date3.getTime() + 1000 * 60 * 60))) {
+                            CommandEntity commandEntity = new CommandEntity();
+                            commandEntity.setType(2);
+                            commandQueue.push(commandEntity);
+                        }
+                    } else {
+                        EventBus.getDefault().post(new SendUpdateAlarmMsg());
                     }
-
 
                 }
             }
@@ -750,6 +758,26 @@ public class DashboardModel implements DashboardContract.Model {
 
         public void setIndex(int index) {
             this.index = index;
+        }
+    }
+
+    public static boolean isSameDay(Date date1, Date date2) {
+        if (date1 != null && date2 != null) {
+            Calendar cal1 = Calendar.getInstance();
+            cal1.setTime(date1);
+            Calendar cal2 = Calendar.getInstance();
+            cal2.setTime(date2);
+            return isSameDay(cal1, cal2);
+        } else {
+            throw new IllegalArgumentException("The date must not be null");
+        }
+    }
+
+    public static boolean isSameDay(Calendar cal1, Calendar cal2) {
+        if (cal1 != null && cal2 != null) {
+            return cal1.get(0) == cal2.get(0) && cal1.get(1) == cal2.get(1) && cal1.get(6) == cal2.get(6);
+        } else {
+            throw new IllegalArgumentException("The date must not be null");
         }
     }
 }

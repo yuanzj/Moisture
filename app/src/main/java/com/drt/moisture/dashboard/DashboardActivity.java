@@ -29,6 +29,8 @@ import com.drt.moisture.data.source.bluetooth.SppDataCallback;
 import com.drt.moisture.data.source.bluetooth.response.DeviceStatusResponse;
 import com.drt.moisture.data.source.bluetooth.response.SocResponse;
 import com.drt.moisture.data.source.bluetooth.response.TimingSetResponse;
+import com.drt.moisture.data.source.bluetooth.resquest.SendAutoStartMsg;
+import com.drt.moisture.data.source.bluetooth.resquest.SendUpdateAlarmMsg;
 import com.drt.moisture.measure.MeasureActivity;
 import com.drt.moisture.util.LineChartMarkView;
 import com.github.mikephil.charting.charts.LineChart;
@@ -41,6 +43,7 @@ import com.github.mikephil.charting.formatter.ValueFormatter;
 import com.github.mikephil.charting.interfaces.datasets.ILineDataSet;
 import com.inuker.bluetooth.library.Constants;
 
+import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
 
@@ -180,6 +183,46 @@ public class DashboardActivity extends BluetoothBaseActivity<DashboardPresenter>
     }
 
     @Subscribe(threadMode = ThreadMode.MAIN)
+    public void onSendUpdateAlarmMsg(SendUpdateAlarmMsg mSendAutoStartMsg) {
+        App.getInstance().getBluetoothService().queryTiming(new SppDataCallback<TimingSetResponse>() {
+            @Override
+            public void delivery(TimingSetResponse setMeasureParameRequest) {
+
+
+                String time1 = String.format("%02d:%02d", setMeasureParameRequest.getTime1h(), setMeasureParameRequest.getTime1m());
+                String time2 = String.format("%02d:%02d", setMeasureParameRequest.getTime2h(), setMeasureParameRequest.getTime2m());
+                String time3 = String.format("%02d:%02d", setMeasureParameRequest.getTime3h(), setMeasureParameRequest.getTime3m());
+                Log.e("yzj", time1 + " " + time2 + " " + time3);
+
+                DateFormat dateFormat1 = new SimpleDateFormat("yyyy-MM-dd");
+                DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm");
+                String yyyyMM = dateFormat1.format(new Date());
+                try {
+                    date1 = dateFormat.parse(yyyyMM + " " + time1);
+                    date2 = dateFormat.parse(yyyyMM + " " + time2);
+                    date3 = dateFormat.parse(yyyyMM + " " + time3);
+
+                } catch (ParseException e) {
+                    e.printStackTrace();
+                }
+            }
+
+            @Override
+            public Class<TimingSetResponse> getEntityType() {
+                return TimingSetResponse.class;
+            }
+        }, false);
+    }
+
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    public void onSendAutoStartMsg(SendAutoStartMsg mSendAutoStartMsg) {
+        if (isFront) {
+            Toast.makeText(this, "即将启动定时测量", Toast.LENGTH_LONG).show();
+            startMeasure();
+        }
+    }
+
+    @Subscribe(threadMode = ThreadMode.MAIN)
     public void onGetMessage(AppConfig appConfig) {
         if (isFront) {
             point1.setTag(1);
@@ -211,7 +254,7 @@ public class DashboardActivity extends BluetoothBaseActivity<DashboardPresenter>
         }
     }
 
-    public volatile String time1, time2, time3;
+    public volatile Date date1, date2, date3;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -689,21 +732,7 @@ public class DashboardActivity extends BluetoothBaseActivity<DashboardPresenter>
             }
         }, 500);
 
-        App.getInstance().getBluetoothService().queryTiming(new SppDataCallback<TimingSetResponse>() {
-            @Override
-            public void delivery(TimingSetResponse setMeasureParameRequest) {
-                time1 = String.format("%02d:%02d", setMeasureParameRequest.getTime1h(), setMeasureParameRequest.getTime1m());
-                time2 = String.format("%02d:%02d", setMeasureParameRequest.getTime2h(), setMeasureParameRequest.getTime2m());
-                time3 = String.format("%02d:%02d", setMeasureParameRequest.getTime3h(), setMeasureParameRequest.getTime3m());
-
-                Log.e("yzj", time1 + " " + time2 + " " + time3);
-            }
-
-            @Override
-            public Class<TimingSetResponse> getEntityType() {
-                return TimingSetResponse.class;
-            }
-        }, false);
+        EventBus.getDefault().post(new SendUpdateAlarmMsg());
     }
 
     @Override
