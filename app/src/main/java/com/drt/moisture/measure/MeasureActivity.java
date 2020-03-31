@@ -99,10 +99,18 @@ public class MeasureActivity extends BluetoothBaseActivity<DashboardPresenter> i
 
     int index;
 
+    private static MeasureActivity instance;
+
+    public static MeasureActivity getInstance() {
+        return instance;
+    }
+
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        instance = this;
+
         index = getIntent().getIntExtra("index", 1);
         AppConfig appConfig = App.getInstance().getLocalDataService().queryAppConfig(index);
         Log.d("yzj", appConfig.toString());
@@ -434,6 +442,7 @@ public class MeasureActivity extends BluetoothBaseActivity<DashboardPresenter> i
         if (DashboardActivity.getDashboardPresenter() == null) {
             mPresenter.onDestroy();
         }
+        instance = null;
         super.onDestroy();
     }
 
@@ -525,9 +534,9 @@ public class MeasureActivity extends BluetoothBaseActivity<DashboardPresenter> i
         LineDataSet d2 = new LineDataSet(null, "水分活度");
         d2.setLineWidth(2f);
         d2.setCircleRadius(4.5f);
-        d2.setHighLightColor(getResources().getColor(colors[index-1], getTheme()));
-        d2.setColor(getResources().getColor(colors[index-1], getTheme()));
-        d2.setCircleColor(getResources().getColor(colors[index-1], getTheme()));
+        d2.setHighLightColor(getResources().getColor(colors[index - 1], getTheme()));
+        d2.setColor(getResources().getColor(colors[index - 1], getTheme()));
+        d2.setCircleColor(getResources().getColor(colors[index - 1], getTheme()));
         d2.setDrawValues(false);
         d2.setDrawCircles(false);
         d2.setMode(LineDataSet.Mode.LINEAR);

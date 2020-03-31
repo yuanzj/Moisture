@@ -62,8 +62,6 @@ public class DashboardModel implements DashboardContract.Model {
 
     private volatile int pointCount;
 
-    private Date lastAutoRunDate1, lastAutoRunDate2, lastAutoRunDate3;
-
     DashboardModel() {
         isRunning = true;
         statusCheckThread.start();
@@ -569,6 +567,21 @@ public class DashboardModel implements DashboardContract.Model {
         public void delivery(SocResponse deviceInfoResponse) {
 //            0x00：空闲<br/>0x01：自动测量<br/>0x02：定时测量<br/>0x03：校准
             Log.e("yzj", deviceInfoResponse.toString());
+            Date startTime = new Date();
+            switch (timerIndex) {
+                case 0:
+                    App.getInstance().lastAutoRunDate1 = new Date();
+                    startTime = App.getInstance().date1;
+                    break;
+                case 1:
+                    App.getInstance().lastAutoRunDate2 = new Date();
+                    startTime = App.getInstance().date2;
+                    break;
+                case 2:
+                    App.getInstance().lastAutoRunDate3 = new Date();
+                    startTime = App.getInstance().date3;
+                    break;
+            }
             if (deviceInfoResponse.getStatus() == 0x01) {
                 boolean needShowChart = true;
                 for (MeasureRunningStatus value : measureRunningStatusMap.values()) {
@@ -584,7 +597,7 @@ public class DashboardModel implements DashboardContract.Model {
                         mMeasureRunningStatus.setIndex(index);
                         mMeasureRunningStatus.setModel(1);
                         mMeasureRunningStatus.setRunning(true);
-                        mMeasureRunningStatus.setStartTime(System.currentTimeMillis());
+                        mMeasureRunningStatus.setStartTime(startTime.getTime());
                         measureRunningStatusMap.put(index, mMeasureRunningStatus);
                     }
                     EventBus.getDefault().post(new DeviceStatusResponse());
@@ -597,6 +610,7 @@ public class DashboardModel implements DashboardContract.Model {
             return SocResponse.class;
         }
     };
+
 
     Thread statusCheckThread = new Thread(new Runnable() {
         @Override
@@ -637,32 +651,41 @@ public class DashboardModel implements DashboardContract.Model {
                 if (!isRunning
                         && DashboardActivity.getDashboardActivity() != null
                         && DashboardActivity.getDashboardActivity().isFront
-                        && DashboardActivity.getDashboardActivity().date1 != null
-                        && DashboardActivity.getDashboardActivity().date2 != null
-                        && DashboardActivity.getDashboardActivity().date3 != null) {
+                        && App.getInstance().date1 != null
+                        && App.getInstance().date2 != null
+                        && App.getInstance().date3 != null) {
 
-                    Date date1 = DashboardActivity.getDashboardActivity().date1;
-                    Date date2 = DashboardActivity.getDashboardActivity().date2;
-                    Date date3 = DashboardActivity.getDashboardActivity().date3;
+                    Date date1 = App.getInstance().date1;
+                    Date date2 = App.getInstance().date2;
+                    Date date3 = App.getInstance().date3;
 
                     if (isSameDay(date1, new Date())) {
                         // 客户端直接启动测量
-                        if (new Date().after(date1) && new Date().before(new Date(date1.getTime() + 1000 * 60 * 2)) && (lastAutoRunDate1 == null || lastAutoRunDate1.before(date1))) {
+                        if (new Date().after(date1) && new Date().before(new Date(date1.getTime() + 1000 * 60 * 2)) && (App.getInstance().lastAutoRunDate1 == null || App.getInstance().lastAutoRunDate1.before(date1))) {
                             EventBus.getDefault().post(new SendAutoStartMsg());
-                            lastAutoRunDate1 = new Date();
-                        } else if (new Date().after(date2) && new Date().before(new Date(date2.getTime() + 1000 * 60 * 2)) && (lastAutoRunDate2 == null || lastAutoRunDate2.before(date2))) {
+                            App.getInstance().lastAutoRunDate1 = new Date();
+                        } else if (new Date().after(date2) && new Date().before(new Date(date2.getTime() + 1000 * 60 * 2)) && (App.getInstance().lastAutoRunDate2 == null || App.getInstance().lastAutoRunDate2.before(date2))) {
                             EventBus.getDefault().post(new SendAutoStartMsg());
-                            lastAutoRunDate2 = new Date();
-                        } else if (new Date().after(date3) && new Date().before(new Date(date3.getTime() + 1000 * 60 * 2)) && (lastAutoRunDate3 == null || lastAutoRunDate3.before(date3))) {
+                            App.getInstance().lastAutoRunDate2 = new Date();
+                        } else if (new Date().after(date3) && new Date().before(new Date(date3.getTime() + 1000 * 60 * 2)) && (App.getInstance().lastAutoRunDate3 == null || App.getInstance().lastAutoRunDate3.before(date3))) {
                             EventBus.getDefault().post(new SendAutoStartMsg());
-                            lastAutoRunDate3 = new Date();
+                            App.getInstance().lastAutoRunDate3 = new Date();
                         }
                         // 客户端发送指令询问终端是否在运行
-                        else if (new Date().after(date1) && new Date().before(new Date(date1.getTime() + 1000 * 60 * 60))
-                                || new Date().after(date2) && new Date().before(new Date(date2.getTime() + 1000 * 60 * 60))
-                                || new Date().after(date3) && new Date().before(new Date(date3.getTime() + 1000 * 60 * 60))) {
+                        else if (new Date().after(date1) && new Date().before(new Date(date1.getTime() + 1000 * 60 * 60)) && (App.getInstance().lastAutoRunDate1 == null || App.getInstance().lastAutoRunDate1.before(date1))) {
                             CommandEntity commandEntity = new CommandEntity();
                             commandEntity.setType(2);
+                            timerIndex = 0;
+                            commandQueue.push(commandEntity);
+                        } else if (new Date().after(date2) && new Date().before(new Date(date2.getTime() + 1000 * 60 * 60)) && (App.getInstance().lastAutoRunDate2 == null || App.getInstance().lastAutoRunDate2.before(date2))) {
+                            CommandEntity commandEntity = new CommandEntity();
+                            commandEntity.setType(2);
+                            timerIndex = 1;
+                            commandQueue.push(commandEntity);
+                        } else if (new Date().after(date3) && new Date().before(new Date(date3.getTime() + 1000 * 60 * 60)) && (App.getInstance().lastAutoRunDate3 == null || App.getInstance().lastAutoRunDate3.before(date3))) {
+                            CommandEntity commandEntity = new CommandEntity();
+                            commandEntity.setType(2);
+                            timerIndex = 2;
                             commandQueue.push(commandEntity);
                         }
                     } else {
@@ -673,6 +696,8 @@ public class DashboardModel implements DashboardContract.Model {
             }
         }
     });
+
+    volatile int timerIndex;
 
     public static class MeasureRunningStatus {
         int index;
