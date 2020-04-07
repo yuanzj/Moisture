@@ -35,13 +35,12 @@
             android:paddingBottom="16dp">
 
             <LinearLayout
-                android:gravity="right|center_horizontal"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:orientation="vertical"
                 android:layout_marginRight="16dp"
-                >
+                android:layout_weight="1"
+                android:gravity="right|center_horizontal"
+                android:orientation="vertical">
 
                 <LinearLayout
                     android:id="@+id/point1"
@@ -238,9 +237,9 @@
             </LinearLayout>
 
             <LinearLayout
-                android:layout_marginLeft="16dp"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
+                android:layout_marginLeft="16dp"
                 android:layout_weight="1"
                 android:gravity="left|center_horizontal"
                 android:orientation="vertical">
@@ -386,8 +385,49 @@
                 android:layout_height="wrap_content"
                 android:layout_marginTop="16dp"
                 android:layout_weight="1"
-                android:gravity="center_horizontal"
-                android:orientation="vertical">
+                android:gravity="center_horizontal|right"
+                android:orientation="vertical"
+                android:paddingRight="16dp">
+
+                <LinearLayout
+                    android:layout_width="300dp"
+                    android:layout_height="48dp"
+                    android:background="@drawable/bg_white"
+                    android:gravity="center_vertical"
+                    android:orientation="horizontal"
+                    android:paddingLeft="@dimen/padding_default"
+                    android:paddingRight="@dimen/padding_default">
+
+                    <Spinner
+                        android:id="@+id/spinner1"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:background="@drawable/spinner_bg"
+                        android:entries="@array/correct_model" />
+
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="300dp"
+                    android:layout_height="48dp"
+                    android:layout_marginTop="16dp"
+                    android:background="@drawable/bg_white"
+                    android:gravity="center_vertical"
+                    android:orientation="horizontal"
+                    android:paddingLeft="@dimen/padding_default"
+                    android:paddingRight="@dimen/padding_default">
+
+                    <Spinner
+                        android:id="@+id/spinner2"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:background="@drawable/spinner_bg"
+                        android:entries="@array/correct_time_array" />
+
+
+                </LinearLayout>
             </LinearLayout>
 
             <LinearLayout
@@ -396,8 +436,8 @@
                 android:layout_marginTop="16dp"
                 android:layout_weight="1"
                 android:gravity="left|center_horizontal"
-                android:paddingLeft="16dp"
-                android:orientation="vertical">
+                android:orientation="vertical"
+                android:paddingLeft="16dp">
 
 
                 <LinearLayout

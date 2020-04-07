@@ -11,9 +11,13 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AlertDialog;
+import android.util.Log;
 import android.view.View;
+import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
+import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -133,6 +137,12 @@ public class CorrectDashboardActivity extends BluetoothBaseActivity<CorrectDashb
     @BindView(R.id.point5)
     View point5;
 
+    @BindView(R.id.spinner1)
+    Spinner spMeasureModel;
+
+    @BindView(R.id.spinner2)
+    Spinner spMeasureTime;
+
     ProgressDialog progressdialog;
 
     CountDownLatch countDownLatch;
@@ -179,14 +189,14 @@ public class CorrectDashboardActivity extends BluetoothBaseActivity<CorrectDashb
                     point.setAlpha(0.32f);
                     point.setEnabled(false);
                 }
-                point.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View view) {
-                        Intent intent = new Intent(CorrectDashboardActivity.this, CorrectActivity.class);
-                        intent.putExtra("index", (Integer) view.getTag());
-                        startActivity(intent);
-                    }
-                });
+//                point.setOnClickListener(new View.OnClickListener() {
+//                    @Override
+//                    public void onClick(View view) {
+//                        Intent intent = new Intent(CorrectDashboardActivity.this, CorrectActivity.class);
+//                        intent.putExtra("index", (Integer) view.getTag());
+//                        startActivity(intent);
+//                    }
+//                });
             }
         }
     }
@@ -213,15 +223,79 @@ public class CorrectDashboardActivity extends BluetoothBaseActivity<CorrectDashb
                 point.setAlpha(0.32f);
                 point.setEnabled(false);
             }
-            point.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
-                    Intent intent = new Intent(CorrectDashboardActivity.this, CorrectActivity.class);
-                    intent.putExtra("index", (Integer) view.getTag());
-                    startActivity(intent);
-                }
-            });
+//            point.setOnClickListener(new View.OnClickListener() {
+//                @Override
+//                public void onClick(View view) {
+//                    Intent intent = new Intent(CorrectDashboardActivity.this, CorrectActivity.class);
+//                    intent.putExtra("index", (Integer) view.getTag());
+//                    startActivity(intent);
+//                }
+//            });
         }
+
+        // 设置监听
+        spMeasureModel.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                Log.d(TAG, "spMeasureModel:onItemSelected:position:" + position);
+
+                int model;
+                int type;
+                if (position == 2) {
+//                            双点校正
+                    model = 0x02;
+                    type = 0x01;
+                } else if (position == 1) {
+//                            氯化镁校正
+                    model = 0x01;
+                    type = 0x02;
+                } else {
+//                            氯化钠校正
+                    model = 0x01;
+                    type = 0x01;
+                }
+                mPresenter.setCorrectMode(model, 1);
+                mPresenter.setCorrectType(type, 1);
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> parent) {
+                Log.d(TAG, "spMeasureModel:onNothingSelected:view:" + parent);
+            }
+        });
+
+        spMeasureTime.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                Log.d(TAG, "spMeasureTime:spMeasureModelonItemSelected:position:" + position);
+                mPresenter.setCorrectTime(position + 15, 1);
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> parent) {
+                Log.d(TAG, "spMeasureTime:onNothingSelected:view:" + parent);
+            }
+        });
+        //配置spinner控件展现样式，spinner只是承载多项数据，下面是以何种方式展现这些数据
+        ArrayAdapter<String> localArrayAdapter = new ArrayAdapter<String>(this.getApplicationContext(), R.layout.custom_spiner_text_item, getResources().getStringArray(R.array.correct_model));
+        localArrayAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        spMeasureModel.setAdapter(localArrayAdapter);
+
+        localArrayAdapter = new ArrayAdapter<String>(this.getApplicationContext(), R.layout.custom_spiner_text_item, getResources().getStringArray(R.array.correct_time_array));
+        localArrayAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        spMeasureTime.setAdapter(localArrayAdapter);
+
+        if (appConfig.getCorrectMode() == 2) {
+            spMeasureModel.setSelection(2);
+        } else {
+            if (appConfig.getCorrectType() == 1) {
+                spMeasureModel.setSelection(0);
+            } else {
+                spMeasureModel.setSelection(1);
+            }
+        }
+
+        spMeasureTime.setSelection(mPresenter.geCorrectTime(1) - 15);
     }
 
     @Override
@@ -523,14 +597,20 @@ public class CorrectDashboardActivity extends BluetoothBaseActivity<CorrectDashb
                     case BT_NOT_CONNECT:
                         btnStartMeasure.setAlpha(0.32f);
                         btnStopMeasure.setAlpha(0.32f);
+                        spMeasureModel.setEnabled(false);
+                        spMeasureTime.setEnabled(false);
                         break;
                     case RUNNING:
                         btnStartMeasure.setAlpha(0.32f);
                         btnStopMeasure.setAlpha(1.0f);
+                        spMeasureModel.setEnabled(false);
+                        spMeasureTime.setEnabled(false);
                         break;
                     default:
                         btnStartMeasure.setAlpha(1.0f);
                         btnStopMeasure.setAlpha(0.32f);
+                        spMeasureModel.setEnabled(true);
+                        spMeasureTime.setEnabled(true);
                         break;
                 }
             }

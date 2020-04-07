@@ -45,8 +45,10 @@ import com.inuker.bluetooth.library.Constants;
 import java.math.RoundingMode;
 import java.text.DecimalFormat;
 import java.util.Collections;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
+import java.util.Queue;
 
 import butterknife.BindView;
 import butterknife.OnClick;
@@ -463,7 +465,7 @@ public class MeasureActivity extends BluetoothBaseActivity<DashboardPresenter> i
         }
     }
 
-    float minY = Float.MAX_VALUE, maxY = Float.MIN_VALUE;
+    Queue<DashboardActivity.IndexEntry> queue = new LinkedList<>();
 
     private void addEntry(MeasureValue measureValue) {
 
@@ -489,6 +491,9 @@ public class MeasureActivity extends BluetoothBaseActivity<DashboardPresenter> i
             set = createActivitySet();
             data.addDataSet(set);
         }
+        float minY = Float.MAX_VALUE, maxY = Float.MIN_VALUE;
+        DashboardActivity.IndexEntry indexEntry = new DashboardActivity.IndexEntry();
+
         data.addEntry(new Entry(set.getEntryCount(), (float) measureValue.getActivity(), measureValue), 0);
         if ((float) measureValue.getActivity() != 0.0F) {
             if (minY > (float) measureValue.getActivity()) {
@@ -498,6 +503,10 @@ public class MeasureActivity extends BluetoothBaseActivity<DashboardPresenter> i
                 maxY = (float) measureValue.getActivity();
             }
         }
+        indexEntry.setIndex(set.getEntryCount());
+        indexEntry.setMaxValue(maxY);
+        indexEntry.setMinValue(minY);
+
         data.notifyDataChanged();
 
         // let the chart know it's data has changed
@@ -509,11 +518,32 @@ public class MeasureActivity extends BluetoothBaseActivity<DashboardPresenter> i
         } else {
             chart.getXAxis().setAxisMaximum(30);
         }
+
         if (minY != maxY && maxY > minY) {
-            Log.e("yzj", "minY:" + minY + ",maxY:" + maxY);
-            chart.getAxisLeft().setAxisMinimum(minY); // this replaces setStartAtZero(true)
-            chart.getAxisLeft().setAxisMaximum(maxY);
+            queue.add(indexEntry);
         }
+        while (queue.size() > 30) {
+            queue.remove();
+        }
+
+
+        float currentMinY = Float.MAX_VALUE, currentMaxY = Float.MIN_VALUE;
+        for (DashboardActivity.IndexEntry item : queue) {
+            if (currentMinY > item.getMinValue()) {
+                currentMinY = item.getMinValue();
+            }
+            if (currentMaxY < item.getMaxValue()) {
+                currentMaxY = item.getMaxValue();
+            }
+        }
+        if (currentMinY != Float.MAX_VALUE && currentMaxY != Float.MIN_VALUE) {
+            float space = ((currentMaxY - currentMinY) * 100 / 90) / 2;
+
+            Log.e("yzj", "minY:" + (currentMinY - space) + ",maxY:" + (currentMaxY + space));
+            chart.getAxisLeft().setAxisMinimum(currentMinY - space);
+            chart.getAxisLeft().setAxisMaximum(currentMaxY + space);
+        }
+
         chart.moveViewToX(data.getXMax());
     }
 
@@ -551,8 +581,8 @@ public class MeasureActivity extends BluetoothBaseActivity<DashboardPresenter> i
     }
 
     private void initChartView() {
-        minY = Float.MAX_VALUE;
-        maxY = Float.MIN_VALUE;
+        queue.clear();
+
         Point outSize = new Point();
         this.getWindowManager().getDefaultDisplay().getSize(outSize);
 //        chart.setMinimumHeight((outSize.x - getResources().getDimensionPixelSize(R.dimen.padding_default) * 2) / 2);

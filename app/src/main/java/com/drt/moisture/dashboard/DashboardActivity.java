@@ -55,8 +55,10 @@ import java.text.SimpleDateFormat;
 import java.time.LocalTime;
 import java.util.Collections;
 import java.util.Date;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
+import java.util.Queue;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.TimeUnit;
@@ -736,7 +738,37 @@ public class DashboardActivity extends BluetoothBaseActivity<DashboardPresenter>
         }
     }
 
-    float minY = Float.MAX_VALUE, maxY = Float.MIN_VALUE;
+    Queue<IndexEntry> queue = new LinkedList<>();
+
+    public static class IndexEntry {
+        private float index;
+        private float maxValue;
+        private float minValue;
+
+        public float getIndex() {
+            return index;
+        }
+
+        public void setIndex(float index) {
+            this.index = index;
+        }
+
+        public float getMaxValue() {
+            return maxValue;
+        }
+
+        public void setMaxValue(float maxValue) {
+            this.maxValue = maxValue;
+        }
+
+        public float getMinValue() {
+            return minValue;
+        }
+
+        public void setMinValue(float minValue) {
+            this.minValue = minValue;
+        }
+    }
 
     private void addEntry(List<MeasureValue> measureValueList) {
         if (chart == null) {
@@ -751,10 +783,8 @@ public class DashboardActivity extends BluetoothBaseActivity<DashboardPresenter>
             chart.setData(data);
         }
 
-        float middleActivity = 0;
-        int count = 0;
-
-
+        float minY = Float.MAX_VALUE, maxY = Float.MIN_VALUE;
+        IndexEntry indexEntry = new IndexEntry();
         for (int i = 0; i < measureValueList.size(); i++) {
 
             MeasureValue measureValue = measureValueList.get(i);
@@ -765,8 +795,7 @@ public class DashboardActivity extends BluetoothBaseActivity<DashboardPresenter>
                 data.addDataSet(set);
             }
             if (measureValue.getMeasureStatus() == 0x01 || measureValue.getMeasureStatus() == 0x03) {
-                count++;
-                middleActivity += (float) measureValue.getActivity();
+
                 data.addEntry(new Entry(set.getEntryCount(), (float) measureValue.getActivity(), measureValue), i);
                 if ((float) measureValue.getActivity() != 0.0F) {
                     if (minY > (float) measureValue.getActivity()) {
@@ -776,6 +805,9 @@ public class DashboardActivity extends BluetoothBaseActivity<DashboardPresenter>
                         maxY = (float) measureValue.getActivity();
                     }
                 }
+                indexEntry.setIndex(set.getEntryCount());
+                indexEntry.setMaxValue(maxY);
+                indexEntry.setMinValue(minY);
             } else {
 //                data.addEntry(new Entry(set.getEntryCount(), -1, measureValue.getReportTime()), i);
             }
@@ -786,6 +818,7 @@ public class DashboardActivity extends BluetoothBaseActivity<DashboardPresenter>
         // let the chart know it's data has changed
         chart.notifyDataSetChanged();
 
+
         //chart.setVisibleYRangeMaximum(15, AxisDependency.LEFT);
 //
 //            // this automatically refreshes the chart (calls invalidate())
@@ -795,18 +828,38 @@ public class DashboardActivity extends BluetoothBaseActivity<DashboardPresenter>
         } else {
             chart.getXAxis().setAxisMaximum(50);
         }
+
+
         if (minY != maxY && maxY > minY) {
-            Log.e("yzj", "minY:" + minY + ",maxY:" + maxY);
-            chart.getAxisLeft().setAxisMinimum(minY); // this replaces setStartAtZero(true)
-            chart.getAxisLeft().setAxisMaximum(maxY);
+            queue.add(indexEntry);
         }
+        while (queue.size() > 50) {
+            queue.remove();
+        }
+
+
+        float currentMinY = Float.MAX_VALUE, currentMaxY = Float.MIN_VALUE;
+        for (IndexEntry item : queue) {
+            if (currentMinY > item.getMinValue()) {
+                currentMinY = item.getMinValue();
+            }
+            if (currentMaxY < item.getMaxValue()) {
+                currentMaxY = item.getMaxValue();
+            }
+        }
+        if (currentMinY != Float.MAX_VALUE && currentMaxY != Float.MIN_VALUE) {
+            float space = ((currentMaxY - currentMinY) * 100 / 90) / 2;
+
+            Log.e("yzj", "minY:" + (currentMinY - space) + ",maxY:" + (currentMaxY + space));
+            chart.getAxisLeft().setAxisMinimum(currentMinY - space);
+            chart.getAxisLeft().setAxisMaximum(currentMaxY + space);
+        }
+
+
         chart.moveViewToX(data.getXMax());
-
-
     }
 
     private LineDataSet createActivitySet(int i) {
-
 
         LineDataSet d2 = new LineDataSet(null, "测点" + (i + 1) + "水分活度");
         d2.setLineWidth(2.0f);
@@ -829,8 +882,7 @@ public class DashboardActivity extends BluetoothBaseActivity<DashboardPresenter>
     }
 
     private void initChartView() {
-        minY = Float.MAX_VALUE;
-        maxY = Float.MIN_VALUE;
+        queue.clear();
 
         Point outSize = new Point();
         this.getWindowManager().getDefaultDisplay().getSize(outSize);
