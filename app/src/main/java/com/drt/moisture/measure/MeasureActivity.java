@@ -526,22 +526,23 @@ public class MeasureActivity extends BluetoothBaseActivity<DashboardPresenter> i
             queue.remove();
         }
 
-
-        float currentMinY = Float.MAX_VALUE, currentMaxY = Float.MIN_VALUE;
-        for (DashboardActivity.IndexEntry item : queue) {
-            if (currentMinY > item.getMinValue()) {
-                currentMinY = item.getMinValue();
+        if (queue.size() > 0) {
+            float currentMinY = Float.MAX_VALUE, currentMaxY = Float.MIN_VALUE;
+            for (DashboardActivity.IndexEntry item : queue) {
+                if (currentMinY > item.getMinValue()) {
+                    currentMinY = item.getMinValue();
+                }
+                if (currentMaxY < item.getMaxValue()) {
+                    currentMaxY = item.getMaxValue();
+                }
             }
-            if (currentMaxY < item.getMaxValue()) {
-                currentMaxY = item.getMaxValue();
-            }
-        }
-        if (currentMinY != Float.MAX_VALUE && currentMaxY != Float.MIN_VALUE) {
-            float space = ((currentMaxY - currentMinY) * 100 / 90) / 2;
+            if (currentMinY != Float.MAX_VALUE && currentMaxY != Float.MIN_VALUE) {
+                float space = ((currentMaxY - currentMinY) * 100 / 90.0f) * 0.05F;
 
-            Log.e("yzj", "minY:" + (currentMinY - space) + ",maxY:" + (currentMaxY + space));
-            chart.getAxisLeft().setAxisMinimum(currentMinY - space);
-            chart.getAxisLeft().setAxisMaximum(currentMaxY + space);
+                Log.e("yzj", "minY:" + (currentMinY - space) + ",maxY:" + (currentMaxY + space));
+                chart.getAxisLeft().setAxisMinimum(currentMinY - space);
+                chart.getAxisLeft().setAxisMaximum(currentMaxY + space);
+            }
         }
 
         chart.moveViewToX(data.getXMax());
@@ -569,10 +570,10 @@ public class MeasureActivity extends BluetoothBaseActivity<DashboardPresenter> i
         d2.setCircleColor(getResources().getColor(colors[index - 1], getTheme()));
         d2.setDrawValues(false);
         d2.setDrawCircles(false);
-        d2.setMode(LineDataSet.Mode.LINEAR);
+        d2.setMode(LineDataSet.Mode.CUBIC_BEZIER);
         d2.setValueFormatter(new ValueFormatter() {
             public String getFormattedValue(float value) {
-                DecimalFormat df = new DecimalFormat("0.00");
+                DecimalFormat df = new DecimalFormat("0.0000");
                 df.setRoundingMode(RoundingMode.DOWN);
                 return df.format(value);
             }
