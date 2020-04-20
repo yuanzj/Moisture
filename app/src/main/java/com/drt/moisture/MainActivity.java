@@ -14,6 +14,7 @@ import com.drt.moisture.data.BleEvent;
 import com.drt.moisture.measure.MeasureActivity;
 import com.drt.moisture.report.ReportActivity;
 import com.drt.moisture.setting.SettingActivity;
+import com.drt.moisture.util.AppPermission;
 import com.inuker.bluetooth.library.Constants;
 
 import org.greenrobot.eventbus.EventBus;
@@ -30,6 +31,13 @@ public class MainActivity extends BluetoothBaseActivity<MainPresenter> {
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         titleBack.setVisibility(View.GONE);
+
+        if (AppPermission.isGrantExternalRW(this)) {
+            // 申请权限
+        } else {
+            //
+            Toast.makeText(this, "拒绝存储权限将无法保存日志！", Toast.LENGTH_LONG).show();
+        }
     }
 
     @Override

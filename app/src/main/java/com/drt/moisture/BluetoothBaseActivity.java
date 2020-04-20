@@ -29,6 +29,7 @@ import com.drt.moisture.data.BleEvent;
 import com.drt.moisture.data.source.bluetooth.SppDataCallback;
 import com.drt.moisture.data.source.bluetooth.response.CdslSetResponse;
 import com.drt.moisture.data.source.bluetooth.response.SocResponse;
+import com.drt.moisture.util.MyLog;
 import com.drt.moisture.util.StatusBarUtil;
 import com.inuker.bluetooth.library.Constants;
 import com.inuker.bluetooth.library.connect.listener.BleConnectStatusListener;
@@ -41,6 +42,7 @@ import com.inuker.bluetooth.library.search.SearchResult;
 import com.inuker.bluetooth.library.search.response.SearchResponse;
 import com.inuker.bluetooth.library.utils.BluetoothLog;
 import com.inuker.bluetooth.library.utils.UUIDUtils;
+import com.zhjian.bluetooth.spp.HexString;
 
 import net.yzj.android.common.base.BaseMvpActivity;
 import net.yzj.android.common.base.BasePresenter;
@@ -390,6 +392,10 @@ public abstract class BluetoothBaseActivity<T extends BasePresenter> extends Bas
     private static final BleNotifyResponse bleNotifyResponse = new BleNotifyResponse() {
         @Override
         public void onNotify(UUID service, UUID character, byte[] value) {
+            if (value != null && value.length > 0) {
+                MyLog.i("RX", HexString.bytesToHex(value));
+            }
+
             try {
                 if (value.length > 7) {
                     value = Arrays.copyOfRange(value, 6, value.length - 1);
