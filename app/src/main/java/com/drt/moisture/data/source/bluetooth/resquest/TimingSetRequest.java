@@ -17,21 +17,48 @@ public class TimingSetRequest {
     private int Reserved;
 
     @RkField(position = 5, length = 1)
-    private int time1h;
+    private int time1y;
 
     @RkField(position = 6, length = 1)
-    private int time1m;
+    private int time1month;
 
     @RkField(position = 7, length = 1)
-    private int time2h;
+    private int time1day;
 
     @RkField(position = 8, length = 1)
-    private int time2m;
+    private int time1h;
 
     @RkField(position = 9, length = 1)
-    private int time3h;
+    private int time1m;
 
     @RkField(position = 10, length = 1)
+    private int time2y;
+
+    @RkField(position = 11, length = 1)
+    private int time2month;
+
+    @RkField(position = 12, length = 1)
+    private int time2day;
+
+    @RkField(position = 13, length = 1)
+    private int time2h;
+
+    @RkField(position = 14, length = 1)
+    private int time2m;
+
+    @RkField(position = 15, length = 1)
+    private int time3y;
+
+    @RkField(position = 16, length = 1)
+    private int time3month;
+
+    @RkField(position = 17, length = 1)
+    private int time3day;
+
+    @RkField(position = 18, length = 1)
+    private int time3h;
+
+    @RkField(position = 19, length = 1)
     private int time3m;
 
     public int getCmdGroup() {
@@ -112,6 +139,78 @@ public class TimingSetRequest {
 
     public void setTime3m(int time3m) {
         this.time3m = time3m;
+    }
+
+    public int getTime1y() {
+        return time1y;
+    }
+
+    public void setTime1y(int time1y) {
+        this.time1y = time1y;
+    }
+
+    public int getTime1month() {
+        return time1month;
+    }
+
+    public void setTime1month(int time1month) {
+        this.time1month = time1month;
+    }
+
+    public int getTime2y() {
+        return time2y;
+    }
+
+    public void setTime2y(int time2y) {
+        this.time2y = time2y;
+    }
+
+    public int getTime2month() {
+        return time2month;
+    }
+
+    public void setTime2month(int time2month) {
+        this.time2month = time2month;
+    }
+
+    public int getTime3y() {
+        return time3y;
+    }
+
+    public void setTime3y(int time3y) {
+        this.time3y = time3y;
+    }
+
+    public int getTime3month() {
+        return time3month;
+    }
+
+    public void setTime3month(int time3month) {
+        this.time3month = time3month;
+    }
+
+    public int getTime1day() {
+        return time1day;
+    }
+
+    public void setTime1day(int time1day) {
+        this.time1day = time1day;
+    }
+
+    public int getTime2day() {
+        return time2day;
+    }
+
+    public void setTime2day(int time2day) {
+        this.time2day = time2day;
+    }
+
+    public int getTime3day() {
+        return time3day;
+    }
+
+    public void setTime3day(int time3day) {
+        this.time3day = time3day;
     }
 
     @Override

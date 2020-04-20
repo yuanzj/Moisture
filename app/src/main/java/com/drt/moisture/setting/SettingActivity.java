@@ -1,5 +1,6 @@
 package com.drt.moisture.setting;
 
+import android.app.DatePickerDialog;
 import android.app.TimePickerDialog;
 import android.content.Context;
 import android.content.DialogInterface;
@@ -16,6 +17,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.AdapterView;
+import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.ListView;
 import android.widget.SimpleAdapter;
@@ -43,6 +45,7 @@ import com.drt.moisture.data.source.bluetooth.resquest.TimingSetRequest;
 import com.drt.moisture.report.ReportActivity;
 import com.drt.moisture.util.AndroidUtil;
 import com.drt.moisture.util.ExcelUtil;
+import com.github.mikephil.charting.formatter.IFillFormatter;
 import com.inuker.bluetooth.library.Constants;
 
 import java.io.BufferedReader;
@@ -53,9 +56,11 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Calendar;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -291,7 +296,7 @@ public class SettingActivity extends BluetoothBaseActivity<SettingPresenter> imp
     }
 
     @Override
-    public void onTimingSuccess(final TimingSetResponse timingSetResponse) {
+    public void onTimingSuccess(final TimingSetResponse setMeasureParameRequest) {
         runOnUiThread(new Runnable() {
             @Override
             public void run() {
@@ -299,9 +304,14 @@ public class SettingActivity extends BluetoothBaseActivity<SettingPresenter> imp
                     final TextView time1 = dialogSetTiming.findViewById(R.id.time1);
                     final TextView time2 = dialogSetTiming.findViewById(R.id.time2);
                     final TextView time3 = dialogSetTiming.findViewById(R.id.time3);
-                    time1.setText(String.format("%02d:%02d", timingSetResponse.getTime1h(), timingSetResponse.getTime1m()));
-                    time2.setText(String.format("%02d:%02d", timingSetResponse.getTime2h(), timingSetResponse.getTime2m()));
-                    time3.setText(String.format("%02d:%02d", timingSetResponse.getTime3h(), timingSetResponse.getTime3m()));
+
+                    String strtime1 = String.format("%04d-%02d-%02d %02d:%02d", setMeasureParameRequest.getTime1y(), setMeasureParameRequest.getTime1month(), setMeasureParameRequest.getTime1day(), setMeasureParameRequest.getTime1h(), setMeasureParameRequest.getTime1m());
+                    String strtime2 = String.format("%04d-%02d-%02d %02d:%02d", setMeasureParameRequest.getTime2y(), setMeasureParameRequest.getTime2month(), setMeasureParameRequest.getTime2day(), setMeasureParameRequest.getTime2h(), setMeasureParameRequest.getTime2m());
+                    String strtime3 = String.format("%04d-%02d-%02d %02d:%02d", setMeasureParameRequest.getTime3y(), setMeasureParameRequest.getTime3month(), setMeasureParameRequest.getTime3day(), setMeasureParameRequest.getTime3h(), setMeasureParameRequest.getTime3m());
+
+                    time1.setText(strtime1);
+                    time2.setText(strtime2);
+                    time3.setText(strtime3);
                 }
             }
         });
@@ -392,6 +402,10 @@ public class SettingActivity extends BluetoothBaseActivity<SettingPresenter> imp
         });
     }
 
+    String dateTime1 = "";
+    String dateTime2 = "";
+    String dateTime3 = "";
+
     @Override
     public void onItemClick(final AdapterView<?> parent, final View view, final int position, long id) {
         if (!isBleConnected) {
@@ -477,72 +491,179 @@ public class SettingActivity extends BluetoothBaseActivity<SettingPresenter> imp
                     @Override
                     public void onClick(View v) {
 
-                        String[] temp = time1.getText().toString().split(":");
-                        int hour, minute;
-                        if (temp.length > 1) {
-                            hour = Integer.parseInt(temp[0]);
-                            minute = Integer.parseInt(temp[1]);
+                        final int mYear;
+                        final int mMonth;
+                        final int mDay;
+
+                        final int hour;
+                        final int minute;
+
+                        if (time1.getText().toString().length() > 0) {
+                            Calendar ca = Calendar.getInstance();
+                            SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm");
+                            try {
+                                Date temp = simpleDateFormat.parse(time1.getText().toString());
+                                ca.setTime(temp);
+                            } catch (ParseException e) {
+                                e.printStackTrace();
+                            }
+
+                            mYear = ca.get(Calendar.YEAR);
+                            mMonth = ca.get(Calendar.MONTH);
+                            mDay = ca.get(Calendar.DAY_OF_MONTH);
+
+                            hour = ca.get(Calendar.HOUR_OF_DAY);
+                            minute = ca.get(Calendar.MINUTE);
                         } else {
                             Calendar ca = Calendar.getInstance();
+
+                            mYear = ca.get(Calendar.YEAR);
+                            mMonth = ca.get(Calendar.MONTH);
+                            mDay = ca.get(Calendar.DAY_OF_MONTH);
+
                             hour = ca.get(Calendar.HOUR_OF_DAY);
                             minute = ca.get(Calendar.MINUTE);
                         }
 
+                        DatePickerDialog datePickerDialog = new DatePickerDialog(SettingActivity.this,
+                                new DatePickerDialog.OnDateSetListener() {
+                                    @Override
+                                    public void onDateSet(DatePicker view, int year, int month, int dayOfMonth) {
 
-                        new TimePickerDialog(SettingActivity.this, new TimePickerDialog.OnTimeSetListener() {
-                            @Override
-                            public void onTimeSet(TimePicker view, int hourOfDay, int minute) {
-                                time1.setText(String.format("%02d:%02d", hourOfDay, minute));
-                            }
-                        }, hour, minute, true).show();
+                                        dateTime1 = String.format("%04d-%02d-%02d", year, (month + 1), dayOfMonth);
+
+                                        new TimePickerDialog(SettingActivity.this, new TimePickerDialog.OnTimeSetListener() {
+                                            @Override
+                                            public void onTimeSet(TimePicker view, int hourOfDay, int minute) {
+
+                                                dateTime1 += String.format(" %02d:%02d", hourOfDay, minute);
+                                                time1.setText(dateTime1);
+                                            }
+                                        }, hour, minute, true).show();
+                                    }
+                                },
+                                mYear, mMonth, mDay);
+                        datePickerDialog.show();
                     }
                 });
 
                 dialogSetTiming.findViewById(R.id.set2).setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        String[] temp = time2.getText().toString().split(":");
-                        int hour, minute;
-                        if (temp.length > 1) {
-                            hour = Integer.parseInt(temp[0]);
-                            minute = Integer.parseInt(temp[1]);
+                        final int mYear;
+                        final int mMonth;
+                        final int mDay;
+
+                        final int hour;
+                        final int minute;
+
+                        if (time2.getText().toString().length() > 0) {
+                            Calendar ca = Calendar.getInstance();
+                            SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm");
+                            try {
+                                Date temp = simpleDateFormat.parse(time2.getText().toString());
+                                ca.setTime(temp);
+                            } catch (ParseException e) {
+                                e.printStackTrace();
+                            }
+
+                            mYear = ca.get(Calendar.YEAR);
+                            mMonth = ca.get(Calendar.MONTH);
+                            mDay = ca.get(Calendar.DAY_OF_MONTH);
+
+                            hour = ca.get(Calendar.HOUR_OF_DAY);
+                            minute = ca.get(Calendar.MINUTE);
                         } else {
                             Calendar ca = Calendar.getInstance();
+
+                            mYear = ca.get(Calendar.YEAR);
+                            mMonth = ca.get(Calendar.MONTH);
+                            mDay = ca.get(Calendar.DAY_OF_MONTH);
+
                             hour = ca.get(Calendar.HOUR_OF_DAY);
                             minute = ca.get(Calendar.MINUTE);
                         }
 
+                        DatePickerDialog datePickerDialog = new DatePickerDialog(SettingActivity.this,
+                                new DatePickerDialog.OnDateSetListener() {
+                                    @Override
+                                    public void onDateSet(DatePicker view, int year, int month, int dayOfMonth) {
 
-                        new TimePickerDialog(SettingActivity.this, new TimePickerDialog.OnTimeSetListener() {
-                            @Override
-                            public void onTimeSet(TimePicker view, int hourOfDay, int minute) {
-                                time2.setText(String.format("%02d:%02d", hourOfDay, minute));
-                            }
-                        }, hour, minute, true).show();
+                                        dateTime2 = String.format("%04d-%02d-%02d", year, (month + 1), dayOfMonth);
+
+                                        new TimePickerDialog(SettingActivity.this, new TimePickerDialog.OnTimeSetListener() {
+                                            @Override
+                                            public void onTimeSet(TimePicker view, int hourOfDay, int minute) {
+
+                                                dateTime2 += String.format(" %02d:%02d", hourOfDay, minute);
+                                                time2.setText(dateTime2);
+                                            }
+                                        }, hour, minute, true).show();
+                                    }
+                                },
+                                mYear, mMonth, mDay);
+                        datePickerDialog.show();
                     }
                 });
 
                 dialogSetTiming.findViewById(R.id.set3).setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        String[] temp = time3.getText().toString().split(":");
-                        int hour, minute;
-                        if (temp.length > 1) {
-                            hour = Integer.parseInt(temp[0]);
-                            minute = Integer.parseInt(temp[1]);
+
+                        final int mYear;
+                        final int mMonth;
+                        final int mDay;
+
+                        final int hour;
+                        final int minute;
+
+                        if (time3.getText().toString().length() > 0) {
+                            Calendar ca = Calendar.getInstance();
+                            SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm");
+                            try {
+                                Date temp = simpleDateFormat.parse(time3.getText().toString());
+                                ca.setTime(temp);
+                            } catch (ParseException e) {
+                                e.printStackTrace();
+                            }
+
+                            mYear = ca.get(Calendar.YEAR);
+                            mMonth = ca.get(Calendar.MONTH);
+                            mDay = ca.get(Calendar.DAY_OF_MONTH);
+
+                            hour = ca.get(Calendar.HOUR_OF_DAY);
+                            minute = ca.get(Calendar.MINUTE);
                         } else {
                             Calendar ca = Calendar.getInstance();
+
+                            mYear = ca.get(Calendar.YEAR);
+                            mMonth = ca.get(Calendar.MONTH);
+                            mDay = ca.get(Calendar.DAY_OF_MONTH);
+
                             hour = ca.get(Calendar.HOUR_OF_DAY);
                             minute = ca.get(Calendar.MINUTE);
                         }
 
+                        DatePickerDialog datePickerDialog = new DatePickerDialog(SettingActivity.this,
+                                new DatePickerDialog.OnDateSetListener() {
+                                    @Override
+                                    public void onDateSet(DatePicker view, int year, int month, int dayOfMonth) {
 
-                        new TimePickerDialog(SettingActivity.this, new TimePickerDialog.OnTimeSetListener() {
-                            @Override
-                            public void onTimeSet(TimePicker view, int hourOfDay, int minute) {
-                                time3.setText(String.format("%02d:%02d", hourOfDay, minute));
-                            }
-                        }, hour, minute, true).show();
+                                        dateTime3 = String.format("%04d-%02d-%02d", year, (month + 1), dayOfMonth);
+
+                                        new TimePickerDialog(SettingActivity.this, new TimePickerDialog.OnTimeSetListener() {
+                                            @Override
+                                            public void onTimeSet(TimePicker view, int hourOfDay, int minute) {
+
+                                                dateTime3 += String.format(" %02d:%02d", hourOfDay, minute);
+                                                time3.setText(dateTime3);
+                                            }
+                                        }, hour, minute, true).show();
+                                    }
+                                },
+                                mYear, mMonth, mDay);
+                        datePickerDialog.show();
+
                     }
                 });
 
@@ -552,24 +673,67 @@ public class SettingActivity extends BluetoothBaseActivity<SettingPresenter> imp
                         .setPositiveButton("确认", new DialogInterface.OnClickListener() {
                             @Override
                             public void onClick(DialogInterface dialogInterface, int i) {
-
                                 TimingSetRequest timingSetRequest = new TimingSetRequest();
-                                String[] temp = time1.getText().toString().split(":");
-                                if (temp.length > 1) {
-                                    timingSetRequest.setTime1h(Integer.parseInt(temp[0]));
-                                    timingSetRequest.setTime1m(Integer.parseInt(temp[1]));
-                                }
+                                SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm");
+                                try {
+                                    if (time1.getText().toString().length() > 0) {
+                                        Date date = simpleDateFormat.parse(time1.getText().toString());
+                                        Calendar ca = Calendar.getInstance();
+                                        ca.setTime(date);
+                                        int mYear = ca.get(Calendar.YEAR);
+                                        int mMonth = ca.get(Calendar.MONTH) + 1;
+                                        int mDay = ca.get(Calendar.DAY_OF_MONTH);
 
-                                temp = time2.getText().toString().split(":");
-                                if (temp.length > 1) {
-                                    timingSetRequest.setTime2h(Integer.parseInt(temp[0]));
-                                    timingSetRequest.setTime2m(Integer.parseInt(temp[1]));
-                                }
+                                        int hour = ca.get(Calendar.HOUR_OF_DAY);
+                                        int minute = ca.get(Calendar.MINUTE);
 
-                                temp = time3.getText().toString().split(":");
-                                if (temp.length > 1) {
-                                    timingSetRequest.setTime3h(Integer.parseInt(temp[0]));
-                                    timingSetRequest.setTime3m(Integer.parseInt(temp[1]));
+                                        timingSetRequest.setTime1y(mYear);
+                                        timingSetRequest.setTime1m(mMonth);
+                                        timingSetRequest.setTime1day(mDay);
+                                        timingSetRequest.setTime1h(hour);
+                                        timingSetRequest.setTime1m(minute);
+                                    }
+
+                                    if (time2.getText().toString().length() > 0) {
+                                        Date date = simpleDateFormat.parse(time2.getText().toString());
+
+                                        Calendar ca = Calendar.getInstance();
+                                        ca.setTime(date);
+                                        int mYear = ca.get(Calendar.YEAR);
+                                        int mMonth = ca.get(Calendar.MONTH) + 1;
+                                        int mDay = ca.get(Calendar.DAY_OF_MONTH);
+
+                                        int hour = ca.get(Calendar.HOUR_OF_DAY);
+                                        int minute = ca.get(Calendar.MINUTE);
+
+                                        timingSetRequest.setTime2y(mYear);
+                                        timingSetRequest.setTime2m(mMonth);
+                                        timingSetRequest.setTime2day(mDay);
+                                        timingSetRequest.setTime2h(hour);
+                                        timingSetRequest.setTime2m(minute);
+                                    }
+
+                                    if (time3.getText().toString().length() > 0) {
+                                        Date date = simpleDateFormat.parse(time3.getText().toString());
+
+                                        Calendar ca = Calendar.getInstance();
+                                        ca.setTime(date);
+                                        int mYear = ca.get(Calendar.YEAR);
+                                        int mMonth = ca.get(Calendar.MONTH) + 1;
+                                        int mDay = ca.get(Calendar.DAY_OF_MONTH);
+
+                                        int hour = ca.get(Calendar.HOUR_OF_DAY);
+                                        int minute = ca.get(Calendar.MINUTE);
+
+                                        timingSetRequest.setTime3y(mYear);
+                                        timingSetRequest.setTime3m(mMonth);
+                                        timingSetRequest.setTime3day(mDay);
+                                        timingSetRequest.setTime3h(hour);
+                                        timingSetRequest.setTime3m(minute);
+                                    }
+
+                                } catch (ParseException e) {
+                                    e.printStackTrace();
                                 }
 
                                 mPresenter.setTiming(timingSetRequest);
@@ -853,7 +1017,6 @@ public class SettingActivity extends BluetoothBaseActivity<SettingPresenter> imp
             item1.put("icon", R.mipmap.icons_data_configuration);
             item1.put("title", "测点设置");
             data.add(item1);
-
 
 
             listView.setAdapter(new SimpleAdapter(this, data,

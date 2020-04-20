@@ -127,18 +127,16 @@ public class App extends Application {
             public void delivery(TimingSetResponse setMeasureParameRequest) {
 
 
-                String time1 = String.format("%02d:%02d", setMeasureParameRequest.getTime1h(), setMeasureParameRequest.getTime1m());
-                String time2 = String.format("%02d:%02d", setMeasureParameRequest.getTime2h(), setMeasureParameRequest.getTime2m());
-                String time3 = String.format("%02d:%02d", setMeasureParameRequest.getTime3h(), setMeasureParameRequest.getTime3m());
+                String time1 = String.format("%04d-%02d-%02d %02d:%02d", setMeasureParameRequest.getTime1y(), setMeasureParameRequest.getTime1month(), setMeasureParameRequest.getTime1day(), setMeasureParameRequest.getTime1h(), setMeasureParameRequest.getTime1m());
+                String time2 = String.format("%04d-%02d-%02d %02d:%02d", setMeasureParameRequest.getTime2y(), setMeasureParameRequest.getTime2month(), setMeasureParameRequest.getTime2day(), setMeasureParameRequest.getTime2h(), setMeasureParameRequest.getTime2m());
+                String time3 = String.format("%04d-%02d-%02d %02d:%02d", setMeasureParameRequest.getTime3y(), setMeasureParameRequest.getTime3month(), setMeasureParameRequest.getTime3day(), setMeasureParameRequest.getTime3h(), setMeasureParameRequest.getTime3m());
                 Log.e("yzj", time1 + " " + time2 + " " + time3);
 
-                DateFormat dateFormat1 = new SimpleDateFormat("yyyy-MM-dd");
                 DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm");
-                String yyyyMM = dateFormat1.format(new Date());
                 try {
-                    date1 = dateFormat.parse(yyyyMM + " " + time1);
-                    date2 = dateFormat.parse(yyyyMM + " " + time2);
-                    date3 = dateFormat.parse(yyyyMM + " " + time3);
+                    date1 = dateFormat.parse(time1);
+                    date2 = dateFormat.parse(time2);
+                    date3 = dateFormat.parse(time3);
 
                 } catch (ParseException e) {
                     e.printStackTrace();
