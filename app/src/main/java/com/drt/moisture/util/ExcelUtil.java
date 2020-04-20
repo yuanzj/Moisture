@@ -78,7 +78,7 @@ public class ExcelUtil {
                 file.createNewFile();
             }
             workbook = Workbook.createWorkbook(file);
-            WritableSheet sheet = workbook.createSheet("成绩表", 0);
+            WritableSheet sheet = workbook.createSheet("水分活度测量", 0);
             //创建标题栏
             sheet.addCell((WritableCell) new Label(0, 0, fileName, arial14format));
             for (int col = 0; col < colName.length; col++) {

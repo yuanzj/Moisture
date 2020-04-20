@@ -768,6 +768,15 @@ public class DashboardActivity extends BluetoothBaseActivity<DashboardPresenter>
         public void setMinValue(float minValue) {
             this.minValue = minValue;
         }
+
+        @Override
+        public String toString() {
+            return "IndexEntry{" +
+                    "index=" + index +
+                    ", maxValue=" + maxValue +
+                    ", minValue=" + minValue +
+                    '}';
+        }
     }
 
     private void addEntry(List<MeasureValue> measureValueList) {
@@ -797,21 +806,19 @@ public class DashboardActivity extends BluetoothBaseActivity<DashboardPresenter>
             if (measureValue.getMeasureStatus() == 0x01 || measureValue.getMeasureStatus() == 0x03) {
 
                 data.addEntry(new Entry(set.getEntryCount(), (float) measureValue.getActivity(), measureValue), i);
-                if ((float) measureValue.getActivity() != 0.0F) {
-                    if (minY > (float) measureValue.getActivity()) {
-                        minY = (float) measureValue.getActivity();
-                    }
-                    if (maxY < (float) measureValue.getActivity()) {
-                        maxY = (float) measureValue.getActivity();
-                    }
+                if (minY > (float) measureValue.getActivity()) {
+                    minY = (float) measureValue.getActivity();
                 }
-                indexEntry.setIndex(set.getEntryCount());
-                indexEntry.setMaxValue(maxY);
-                indexEntry.setMinValue(minY);
+                if (maxY < (float) measureValue.getActivity()) {
+                    maxY = (float) measureValue.getActivity();
+                }
             } else {
-//                data.addEntry(new Entry(set.getEntryCount(), -1, measureValue.getReportTime()), i);
+                data.addEntry(new Entry(set.getEntryCount(), -1, measureValue.getReportTime()), i);
             }
         }
+
+        indexEntry.setMaxValue(maxY);
+        indexEntry.setMinValue(minY);
 
         data.notifyDataChanged();
 
@@ -830,7 +837,7 @@ public class DashboardActivity extends BluetoothBaseActivity<DashboardPresenter>
         }
 
 
-        if (minY != maxY && maxY > minY) {
+        if (maxY >= 0 && minY >= 0) {
             queue.add(indexEntry);
         }
         while (queue.size() > 50) {
@@ -847,10 +854,11 @@ public class DashboardActivity extends BluetoothBaseActivity<DashboardPresenter>
                     currentMaxY = item.getMaxValue();
                 }
             }
-            if (currentMinY != Float.MAX_VALUE && currentMaxY != Float.MIN_VALUE) {
-                float space = ((currentMaxY - currentMinY) * 100 / 90.0f) * 0.05F;
 
-                Log.e("yzj", "minY:" + (currentMinY - space) + ",maxY:" + (currentMaxY + space));
+            float space = (currentMaxY - currentMinY) / 8.0F;
+            Log.e("yzj1", "setAxisMinimum：" + (currentMinY - space) + "，setAxisMaximum:" + (currentMaxY + space));
+
+            if (space > 0) {
                 chart.getAxisLeft().setAxisMinimum(currentMinY - space);
                 chart.getAxisLeft().setAxisMaximum(currentMaxY + space);
             }
@@ -913,7 +921,11 @@ public class DashboardActivity extends BluetoothBaseActivity<DashboardPresenter>
                         && chart.getLineData().getMaxEntryCountSet().getEntryCount() > (int) value
                         && chart.getLineData().getMaxEntryCountSet().getEntryForIndex((int) value) != null) {
                     Entry entry = chart.getLineData().getMaxEntryCountSet().getEntryForIndex((int) value);
-                    return ((MeasureValue) entry.getData()).getReportTime();
+                    if (entry.getData() instanceof MeasureValue) {
+                        return ((MeasureValue) entry.getData()).getReportTime();
+                    } else {
+                        return "";
+                    }
                 } else {
                     return "";
                 }

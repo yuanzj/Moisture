@@ -201,12 +201,11 @@ public class MeasureActivity extends BluetoothBaseActivity<DashboardPresenter> i
 
     @Override
     public void onSuccess(final List<MeasureValue> measureValueList) {
-
-        if (DashboardActivity.getDashboardActivity() != null) {
-            DashboardActivity.getDashboardActivity().onSuccess(measureValueList);
-        }
         if (index == 0) {
             return;
+        }
+        if (DashboardActivity.getDashboardActivity() != null) {
+            DashboardActivity.getDashboardActivity().onSuccess(measureValueList);
         }
 
         final MeasureValue measureValue = measureValueList.get(index - 1);
@@ -216,6 +215,8 @@ public class MeasureActivity extends BluetoothBaseActivity<DashboardPresenter> i
                 if (measureValue.getMeasureStatus() == 0x01 || measureValue.getMeasureStatus() == 0x03) {
                     updateUI(MeasureStatus.RUNNING);
                     addEntry(measureValue);
+
+
                 }
                 if (measureValue.getMeasureStatus() != 0 && measureValue.getMeasureStatus() != 0x02) {
                     time.setText(measureValue.getReportTime());
@@ -495,13 +496,11 @@ public class MeasureActivity extends BluetoothBaseActivity<DashboardPresenter> i
         DashboardActivity.IndexEntry indexEntry = new DashboardActivity.IndexEntry();
 
         data.addEntry(new Entry(set.getEntryCount(), (float) measureValue.getActivity(), measureValue), 0);
-        if ((float) measureValue.getActivity() != 0.0F) {
-            if (minY > (float) measureValue.getActivity()) {
-                minY = (float) measureValue.getActivity();
-            }
-            if (maxY < (float) measureValue.getActivity()) {
-                maxY = (float) measureValue.getActivity();
-            }
+        if (minY > (float) measureValue.getActivity()) {
+            minY = (float) measureValue.getActivity();
+        }
+        if (maxY < (float) measureValue.getActivity()) {
+            maxY = (float) measureValue.getActivity();
         }
         indexEntry.setIndex(set.getEntryCount());
         indexEntry.setMaxValue(maxY);
@@ -518,8 +517,8 @@ public class MeasureActivity extends BluetoothBaseActivity<DashboardPresenter> i
         } else {
             chart.getXAxis().setAxisMaximum(30);
         }
-
-        if (minY != maxY && maxY > minY) {
+        if (maxY >= 0 && minY >= 0) {
+            Log.e("yzj", indexEntry.toString());
             queue.add(indexEntry);
         }
         while (queue.size() > 30) {
@@ -536,10 +535,9 @@ public class MeasureActivity extends BluetoothBaseActivity<DashboardPresenter> i
                     currentMaxY = item.getMaxValue();
                 }
             }
-            if (currentMinY != Float.MAX_VALUE && currentMaxY != Float.MIN_VALUE) {
-                float space = ((currentMaxY - currentMinY) * 100 / 90.0f) * 0.05F;
 
-                Log.e("yzj", "minY:" + (currentMinY - space) + ",maxY:" + (currentMaxY + space));
+            float space = (currentMaxY - currentMinY) / 8.0F;
+            if (space > 0) {
                 chart.getAxisLeft().setAxisMinimum(currentMinY - space);
                 chart.getAxisLeft().setAxisMaximum(currentMaxY + space);
             }

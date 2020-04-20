@@ -521,8 +521,8 @@ public class ReportActivity extends BluetoothBaseActivity<ReportPresenter> imple
         for (int i = 0; i < values.size(); i++) {
             MeasureValue measureValue = values.get(i);
             ArrayList<String> beanList = new ArrayList<>();
-            beanList.add(measureValue.getReportTime());
             beanList.add(String.valueOf(measureValue.getIndex()));
+            beanList.add(measureValue.getReportTime());
             beanList.add(String.valueOf(measureValue.getName()));
             beanList.add(String.valueOf(measureValue.getTemperature()));
             beanList.add(String.valueOf(measureValue.getActivity()));
