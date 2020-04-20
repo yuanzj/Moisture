@@ -688,7 +688,7 @@ public class SettingActivity extends BluetoothBaseActivity<SettingPresenter> imp
                                         int minute = ca.get(Calendar.MINUTE);
 
                                         timingSetRequest.setTime1y(mYear - 2000);
-                                        timingSetRequest.setTime1m(mMonth);
+                                        timingSetRequest.setTime1month(mMonth);
                                         timingSetRequest.setTime1day(mDay);
                                         timingSetRequest.setTime1h(hour);
                                         timingSetRequest.setTime1m(minute);
@@ -707,7 +707,7 @@ public class SettingActivity extends BluetoothBaseActivity<SettingPresenter> imp
                                         int minute = ca.get(Calendar.MINUTE);
 
                                         timingSetRequest.setTime2y(mYear - 2000);
-                                        timingSetRequest.setTime2m(mMonth);
+                                        timingSetRequest.setTime2month(mMonth);
                                         timingSetRequest.setTime2day(mDay);
                                         timingSetRequest.setTime2h(hour);
                                         timingSetRequest.setTime2m(minute);
@@ -726,7 +726,7 @@ public class SettingActivity extends BluetoothBaseActivity<SettingPresenter> imp
                                         int minute = ca.get(Calendar.MINUTE);
 
                                         timingSetRequest.setTime3y(mYear - 2000);
-                                        timingSetRequest.setTime3m(mMonth);
+                                        timingSetRequest.setTime3month(mMonth);
                                         timingSetRequest.setTime3day(mDay);
                                         timingSetRequest.setTime3h(hour);
                                         timingSetRequest.setTime3m(minute);
