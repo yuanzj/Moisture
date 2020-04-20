@@ -12,6 +12,7 @@ import com.drt.moisture.data.source.BluetoothService;
 import com.drt.moisture.data.source.bluetooth.response.*;
 import com.drt.moisture.data.source.bluetooth.resquest.*;
 import com.drt.moisture.measure.MeasureModel;
+import com.drt.moisture.util.MyLog;
 import com.inuker.bluetooth.library.connect.response.BleWriteResponse;
 import com.inuker.bluetooth.library.utils.UUIDUtils;
 import com.rokyinfo.convert.exception.FieldConvertException;
@@ -48,7 +49,7 @@ public class BluetoothServiceImpl implements BluetoothService, BleWriteResponse 
     private void write(String mac, UUID service, UUID character, byte[] value, BleWriteResponse response) {
         App.getInstance().getBluetoothClient().write(mac, service, character, value, response);
         if (value != null) {
-            Log.i("TX", HexString.bytesToHex(value));
+            MyLog.i("TX", HexString.bytesToHex(value));
         }
     }
 

@@ -127,9 +127,9 @@ public class App extends Application {
             public void delivery(TimingSetResponse setMeasureParameRequest) {
 
 
-                String time1 = String.format("%04d-%02d-%02d %02d:%02d", setMeasureParameRequest.getTime1y(), setMeasureParameRequest.getTime1month(), setMeasureParameRequest.getTime1day(), setMeasureParameRequest.getTime1h(), setMeasureParameRequest.getTime1m());
-                String time2 = String.format("%04d-%02d-%02d %02d:%02d", setMeasureParameRequest.getTime2y(), setMeasureParameRequest.getTime2month(), setMeasureParameRequest.getTime2day(), setMeasureParameRequest.getTime2h(), setMeasureParameRequest.getTime2m());
-                String time3 = String.format("%04d-%02d-%02d %02d:%02d", setMeasureParameRequest.getTime3y(), setMeasureParameRequest.getTime3month(), setMeasureParameRequest.getTime3day(), setMeasureParameRequest.getTime3h(), setMeasureParameRequest.getTime3m());
+                String time1 = String.format("%04d-%02d-%02d %02d:%02d", setMeasureParameRequest.getTime1y() + 2000, setMeasureParameRequest.getTime1month(), setMeasureParameRequest.getTime1day(), setMeasureParameRequest.getTime1h(), setMeasureParameRequest.getTime1m());
+                String time2 = String.format("%04d-%02d-%02d %02d:%02d", setMeasureParameRequest.getTime2y() + 2000, setMeasureParameRequest.getTime2month(), setMeasureParameRequest.getTime2day(), setMeasureParameRequest.getTime2h(), setMeasureParameRequest.getTime2m());
+                String time3 = String.format("%04d-%02d-%02d %02d:%02d", setMeasureParameRequest.getTime3y() + 2000, setMeasureParameRequest.getTime3month(), setMeasureParameRequest.getTime3day(), setMeasureParameRequest.getTime3h(), setMeasureParameRequest.getTime3m());
                 Log.e("yzj", time1 + " " + time2 + " " + time3);
 
                 DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm");

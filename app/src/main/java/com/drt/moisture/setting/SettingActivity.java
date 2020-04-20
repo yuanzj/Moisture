@@ -305,9 +305,9 @@ public class SettingActivity extends BluetoothBaseActivity<SettingPresenter> imp
                     final TextView time2 = dialogSetTiming.findViewById(R.id.time2);
                     final TextView time3 = dialogSetTiming.findViewById(R.id.time3);
 
-                    String strtime1 = String.format("%04d-%02d-%02d %02d:%02d", setMeasureParameRequest.getTime1y(), setMeasureParameRequest.getTime1month(), setMeasureParameRequest.getTime1day(), setMeasureParameRequest.getTime1h(), setMeasureParameRequest.getTime1m());
-                    String strtime2 = String.format("%04d-%02d-%02d %02d:%02d", setMeasureParameRequest.getTime2y(), setMeasureParameRequest.getTime2month(), setMeasureParameRequest.getTime2day(), setMeasureParameRequest.getTime2h(), setMeasureParameRequest.getTime2m());
-                    String strtime3 = String.format("%04d-%02d-%02d %02d:%02d", setMeasureParameRequest.getTime3y(), setMeasureParameRequest.getTime3month(), setMeasureParameRequest.getTime3day(), setMeasureParameRequest.getTime3h(), setMeasureParameRequest.getTime3m());
+                    String strtime1 = String.format("%04d-%02d-%02d %02d:%02d", setMeasureParameRequest.getTime1y() + 2000, setMeasureParameRequest.getTime1month(), setMeasureParameRequest.getTime1day(), setMeasureParameRequest.getTime1h(), setMeasureParameRequest.getTime1m());
+                    String strtime2 = String.format("%04d-%02d-%02d %02d:%02d", setMeasureParameRequest.getTime2y() + 2000, setMeasureParameRequest.getTime2month(), setMeasureParameRequest.getTime2day(), setMeasureParameRequest.getTime2h(), setMeasureParameRequest.getTime2m());
+                    String strtime3 = String.format("%04d-%02d-%02d %02d:%02d", setMeasureParameRequest.getTime3y() + 2000, setMeasureParameRequest.getTime3month(), setMeasureParameRequest.getTime3day(), setMeasureParameRequest.getTime3h(), setMeasureParameRequest.getTime3m());
 
                     time1.setText(strtime1);
                     time2.setText(strtime2);
@@ -687,7 +687,7 @@ public class SettingActivity extends BluetoothBaseActivity<SettingPresenter> imp
                                         int hour = ca.get(Calendar.HOUR_OF_DAY);
                                         int minute = ca.get(Calendar.MINUTE);
 
-                                        timingSetRequest.setTime1y(mYear);
+                                        timingSetRequest.setTime1y(mYear - 2000);
                                         timingSetRequest.setTime1m(mMonth);
                                         timingSetRequest.setTime1day(mDay);
                                         timingSetRequest.setTime1h(hour);
@@ -706,7 +706,7 @@ public class SettingActivity extends BluetoothBaseActivity<SettingPresenter> imp
                                         int hour = ca.get(Calendar.HOUR_OF_DAY);
                                         int minute = ca.get(Calendar.MINUTE);
 
-                                        timingSetRequest.setTime2y(mYear);
+                                        timingSetRequest.setTime2y(mYear - 2000);
                                         timingSetRequest.setTime2m(mMonth);
                                         timingSetRequest.setTime2day(mDay);
                                         timingSetRequest.setTime2h(hour);
@@ -725,7 +725,7 @@ public class SettingActivity extends BluetoothBaseActivity<SettingPresenter> imp
                                         int hour = ca.get(Calendar.HOUR_OF_DAY);
                                         int minute = ca.get(Calendar.MINUTE);
 
-                                        timingSetRequest.setTime3y(mYear);
+                                        timingSetRequest.setTime3y(mYear - 2000);
                                         timingSetRequest.setTime3m(mMonth);
                                         timingSetRequest.setTime3day(mDay);
                                         timingSetRequest.setTime3h(hour);
