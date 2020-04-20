@@ -813,7 +813,7 @@ public class DashboardActivity extends BluetoothBaseActivity<DashboardPresenter>
                     maxY = (float) measureValue.getActivity();
                 }
             } else {
-                data.addEntry(new Entry(set.getEntryCount(), -1, measureValue.getReportTime()), i);
+                data.addEntry(new Entry(set.getEntryCount(), (float) -1, measureValue), i);
             }
         }
 

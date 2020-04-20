@@ -58,7 +58,7 @@
                         android:gravity="center"
                         android:text="1"
                         android:textColor="@color/colorWhite"
-                        android:textSize="@dimen/sizeSubTitle"
+                        android:textSize="@dimen/sizeTitle"
                         android:textStyle="bold" />
 
                     <Space
@@ -73,7 +73,7 @@
                         android:gravity="center"
                         android:text="--"
                         android:textColor="@color/colorWhite"
-                        android:textSize="@dimen/sizeSubTitle" />
+                        android:textSize="@dimen/sizeTitle" />
 
                     <Space
                         android:layout_width="match_parent"
@@ -87,7 +87,7 @@
                         android:gravity="center"
                         android:text="--"
                         android:textColor="@color/colorWhite"
-                        android:textSize="@dimen/sizeSubTitle" />
+                        android:textSize="@dimen/sizeTitle" />
 
                     <Space
                         android:layout_width="match_parent"
@@ -102,7 +102,7 @@
                         android:paddingBottom="4dp"
                         android:text="--"
                         android:textColor="@color/colorWhite"
-                        android:textSize="@dimen/sizeSubTitle" />
+                        android:textSize="@dimen/sizeTitle" />
 
                 </LinearLayout>
 
@@ -124,7 +124,7 @@
                         android:gravity="center"
                         android:text="2"
                         android:textColor="@color/colorWhite"
-                        android:textSize="@dimen/sizeSubTitle"
+                        android:textSize="@dimen/sizeTitle"
                         android:textStyle="bold" />
 
                     <Space
@@ -139,7 +139,7 @@
                         android:gravity="center"
                         android:text="--"
                         android:textColor="@color/colorWhite"
-                        android:textSize="@dimen/sizeSubTitle" />
+                        android:textSize="@dimen/sizeTitle" />
 
                     <Space
                         android:layout_width="match_parent"
@@ -153,7 +153,7 @@
                         android:gravity="center"
                         android:text="--"
                         android:textColor="@color/colorWhite"
-                        android:textSize="@dimen/sizeSubTitle" />
+                        android:textSize="@dimen/sizeTitle" />
 
                     <Space
                         android:layout_width="match_parent"
@@ -167,7 +167,7 @@
                         android:gravity="center"
                         android:text="--"
                         android:textColor="@color/colorWhite"
-                        android:textSize="@dimen/sizeSubTitle" />
+                        android:textSize="@dimen/sizeTitle" />
 
                 </LinearLayout>
 
@@ -188,7 +188,7 @@
                         android:gravity="center"
                         android:text="3"
                         android:textColor="@color/colorWhite"
-                        android:textSize="@dimen/sizeSubTitle"
+                        android:textSize="@dimen/sizeTitle"
                         android:textStyle="bold" />
 
                     <Space
@@ -203,7 +203,7 @@
                         android:gravity="center"
                         android:text="--"
                         android:textColor="@color/colorWhite"
-                        android:textSize="@dimen/sizeSubTitle" />
+                        android:textSize="@dimen/sizeTitle" />
 
                     <Space
                         android:layout_width="0dp"
@@ -217,7 +217,7 @@
                         android:gravity="center"
                         android:text="--"
                         android:textColor="@color/colorWhite"
-                        android:textSize="@dimen/sizeSubTitle" />
+                        android:textSize="@dimen/sizeTitle" />
 
                     <Space
                         android:layout_width="0dp"
@@ -231,7 +231,7 @@
                         android:gravity="center"
                         android:text="--"
                         android:textColor="@color/colorWhite"
-                        android:textSize="@dimen/sizeSubTitle" />
+                        android:textSize="@dimen/sizeTitle" />
 
                 </LinearLayout>
             </LinearLayout>
@@ -260,7 +260,7 @@
                         android:gravity="center"
                         android:text="4"
                         android:textColor="@color/colorWhite"
-                        android:textSize="@dimen/sizeSubTitle"
+                        android:textSize="@dimen/sizeTitle"
                         android:textStyle="bold" />
 
                     <Space
@@ -275,7 +275,7 @@
                         android:gravity="center"
                         android:text="--"
                         android:textColor="@color/colorWhite"
-                        android:textSize="@dimen/sizeSubTitle" />
+                        android:textSize="@dimen/sizeTitle" />
 
                     <Space
                         android:layout_width="0dp"
@@ -289,7 +289,7 @@
                         android:gravity="center"
                         android:text="--"
                         android:textColor="@color/colorWhite"
-                        android:textSize="@dimen/sizeSubTitle" />
+                        android:textSize="@dimen/sizeTitle" />
 
                     <Space
                         android:layout_width="0dp"
@@ -304,7 +304,7 @@
                         android:paddingBottom="4dp"
                         android:text="--"
                         android:textColor="@color/colorWhite"
-                        android:textSize="@dimen/sizeSubTitle" />
+                        android:textSize="@dimen/sizeTitle" />
 
                 </LinearLayout>
 
@@ -325,7 +325,7 @@
                         android:gravity="center"
                         android:text="5"
                         android:textColor="@color/colorWhite"
-                        android:textSize="@dimen/sizeSubTitle"
+                        android:textSize="@dimen/sizeTitle"
                         android:textStyle="bold" />
 
                     <Space
@@ -340,7 +340,7 @@
                         android:gravity="center"
                         android:text="--"
                         android:textColor="@color/colorWhite"
-                        android:textSize="@dimen/sizeSubTitle" />
+                        android:textSize="@dimen/sizeTitle" />
 
                     <Space
                         android:layout_width="0dp"
@@ -354,7 +354,7 @@
                         android:gravity="center"
                         android:text="--"
                         android:textColor="@color/colorWhite"
-                        android:textSize="@dimen/sizeSubTitle" />
+                        android:textSize="@dimen/sizeTitle" />
 
                     <Space
                         android:layout_width="0dp"
@@ -369,7 +369,7 @@
                         android:paddingBottom="4dp"
                         android:text="--"
                         android:textColor="@color/colorWhite"
-                        android:textSize="@dimen/sizeSubTitle" />
+                        android:textSize="@dimen/sizeTitle" />
 
                 </LinearLayout>
             </LinearLayout>
