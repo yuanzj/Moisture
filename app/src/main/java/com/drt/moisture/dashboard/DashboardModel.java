@@ -624,7 +624,7 @@ public class DashboardModel implements DashboardContract.Model {
                 if (measureDataCallback != null && startTime != null) {
                     for (MeasureRunningStatus measureRunningStatus : measureRunningStatusMap.values()) {
                         if (measureRunningStatus.isRunning) {
-                            measureRunningStatus.setRunningTime(DateUtil.dateDistance1(startTime, new Date()));
+                            measureRunningStatus.setRunningTime(DateUtil.dateDistance1(new Date(measureRunningStatus.getStartTime()), new Date()));
                         }
                     }
                     measureDataCallback.runningStatus(measureRunningStatusMap);
