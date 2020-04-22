@@ -476,18 +476,7 @@ public class MeasureActivity extends BluetoothBaseActivity<DashboardPresenter> i
             data = new LineData();
             chart.setData(data);
         }
-
-        ILineDataSet
-
-//        set = data.getDataSetByIndex(0);
-//        if (set == null) {
-//            set = createTemperatureSet();
-//            data.addDataSet(set);
-//        }
-//        data.addEntry(new Entry(set.getEntryCount(), (float) measureValue.getTemperature(), measureValue.getReportTime()), 0);
-//        data.notifyDataChanged();
-
-                set = data.getDataSetByIndex(0);
+        ILineDataSet set = data.getDataSetByIndex(0);
         if (set == null) {
             set = createActivitySet();
             data.addDataSet(set);
@@ -538,8 +527,16 @@ public class MeasureActivity extends BluetoothBaseActivity<DashboardPresenter> i
 
             float space = (currentMaxY - currentMinY) / 8.0F;
             if (space > 0) {
-                chart.getAxisLeft().setAxisMinimum(currentMinY - space);
-                chart.getAxisLeft().setAxisMaximum(currentMaxY + space);
+                float minValue = currentMinY - space;
+                float maxValue = currentMaxY + space;
+                if ((maxValue - minValue) < 0.02F) {
+                    float temp = (0.02F - (maxValue - minValue)) / 2.0f;
+                    minValue -= temp;
+                    maxValue += temp;
+                }
+
+                chart.getAxisLeft().setAxisMinimum(minValue);
+                chart.getAxisLeft().setAxisMaximum(maxValue);
             }
         }
 
@@ -644,6 +641,7 @@ public class MeasureActivity extends BluetoothBaseActivity<DashboardPresenter> i
         chart.setScaleEnabled(false);
         chart.setScaleXEnabled(false);
         chart.setScaleYEnabled(false);
+        chart.setDragEnabled(false);
     }
 
     public void playSound() {
