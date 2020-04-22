@@ -1,40 +1,30 @@
 package com.drt.moisture.setting;
 
-import android.app.DatePickerDialog;
-import android.app.TimePickerDialog;
-import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.SystemClock;
-import android.support.annotation.Nullable;
-import android.support.v7.app.AlertDialog;
+import androidx.annotation.Nullable;
+import androidx.appcompat.app.AlertDialog;
 import android.text.InputType;
-import android.text.TextUtils;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.AdapterView;
-import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.ListView;
 import android.widget.SimpleAdapter;
 import android.widget.Spinner;
-import android.widget.TabHost;
 import android.widget.TextView;
-import android.widget.TimePicker;
 import android.widget.Toast;
 
 import com.drt.moisture.App;
 import com.drt.moisture.BluetoothBaseActivity;
 import com.drt.moisture.R;
 import com.drt.moisture.data.AppConfig;
-import com.drt.moisture.data.CorrectParame;
 import com.drt.moisture.data.DeviceInfo;
-import com.drt.moisture.data.HumidityParame;
-import com.drt.moisture.data.MeasureParame;
 import com.drt.moisture.data.SetDeviceInfoParame;
 import com.drt.moisture.data.source.bluetooth.response.TimingSetResponse;
 import com.drt.moisture.data.source.bluetooth.resquest.SetCorrectParameRequest;
@@ -42,10 +32,9 @@ import com.drt.moisture.data.source.bluetooth.resquest.SetHumidityParameRequest;
 import com.drt.moisture.data.source.bluetooth.resquest.SetMeasureParameRequest;
 import com.drt.moisture.data.source.bluetooth.resquest.SetRateRequest;
 import com.drt.moisture.data.source.bluetooth.resquest.TimingSetRequest;
-import com.drt.moisture.report.ReportActivity;
 import com.drt.moisture.util.AndroidUtil;
+import com.drt.moisture.util.DialogUtil;
 import com.drt.moisture.util.ExcelUtil;
-import com.github.mikephil.charting.formatter.IFillFormatter;
 import com.inuker.bluetooth.library.Constants;
 
 import java.io.BufferedReader;
@@ -58,7 +47,6 @@ import java.io.InputStreamReader;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.HashMap;
@@ -67,6 +55,7 @@ import java.util.Map;
 
 import butterknife.BindView;
 import butterknife.OnClick;
+import io.itimetraveler.widget.pickerselector.TimeWheelPicker;
 
 public class SettingActivity extends BluetoothBaseActivity<SettingPresenter> implements SettingContract.View, AdapterView.OnItemClickListener {
 
@@ -491,118 +480,33 @@ public class SettingActivity extends BluetoothBaseActivity<SettingPresenter> imp
                     @Override
                     public void onClick(View v) {
 
-                        final int mYear;
-                        final int mMonth;
-                        final int mDay;
-
-                        final int hour;
-                        final int minute;
-
-                        if (time1.getText().toString().length() > 0) {
-                            Calendar ca = Calendar.getInstance();
-                            SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm");
-                            try {
-                                Date temp = simpleDateFormat.parse(time1.getText().toString());
-                                ca.setTime(temp);
-                            } catch (ParseException e) {
-                                e.printStackTrace();
+                        TimeWheelPicker picker = new TimeWheelPicker(SettingActivity.this);
+                        picker.setOnTimeChangedListener(new TimeWheelPicker.OnTimeChangedListener() {
+                            @Override
+                            public void onTimeChanged(TimeWheelPicker view, Calendar date) {
+                                SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm");
+                                dateTime1 = simpleDateFormat.format(date.getTime());
+                                time1.setText(dateTime1);
                             }
-
-                            mYear = ca.get(Calendar.YEAR);
-                            mMonth = ca.get(Calendar.MONTH);
-                            mDay = ca.get(Calendar.DAY_OF_MONTH);
-
-                            hour = ca.get(Calendar.HOUR_OF_DAY);
-                            minute = ca.get(Calendar.MINUTE);
-                        } else {
-                            Calendar ca = Calendar.getInstance();
-
-                            mYear = ca.get(Calendar.YEAR);
-                            mMonth = ca.get(Calendar.MONTH);
-                            mDay = ca.get(Calendar.DAY_OF_MONTH);
-
-                            hour = ca.get(Calendar.HOUR_OF_DAY);
-                            minute = ca.get(Calendar.MINUTE);
-                        }
-
-                        DatePickerDialog datePickerDialog = new DatePickerDialog(SettingActivity.this,
-                                new DatePickerDialog.OnDateSetListener() {
-                                    @Override
-                                    public void onDateSet(DatePicker view, int year, int month, int dayOfMonth) {
-
-                                        dateTime1 = String.format("%04d-%02d-%02d", year, (month + 1), dayOfMonth);
-
-                                        new TimePickerDialog(SettingActivity.this, new TimePickerDialog.OnTimeSetListener() {
-                                            @Override
-                                            public void onTimeSet(TimePicker view, int hourOfDay, int minute) {
-
-                                                dateTime1 += String.format(" %02d:%02d", hourOfDay, minute);
-                                                time1.setText(dateTime1);
-                                            }
-                                        }, hour, minute, true).show();
-                                    }
-                                },
-                                mYear, mMonth, mDay);
-                        datePickerDialog.show();
+                        });
+                        DialogUtil.showDialog(SettingActivity.this, "定时1运行时间设置", picker);
                     }
                 });
 
                 dialogSetTiming.findViewById(R.id.set2).setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        final int mYear;
-                        final int mMonth;
-                        final int mDay;
-
-                        final int hour;
-                        final int minute;
-
-                        if (time2.getText().toString().length() > 0) {
-                            Calendar ca = Calendar.getInstance();
-                            SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm");
-                            try {
-                                Date temp = simpleDateFormat.parse(time2.getText().toString());
-                                ca.setTime(temp);
-                            } catch (ParseException e) {
-                                e.printStackTrace();
+                        TimeWheelPicker picker = new TimeWheelPicker(SettingActivity.this);
+                        picker.setOnTimeChangedListener(new TimeWheelPicker.OnTimeChangedListener() {
+                            @Override
+                            public void onTimeChanged(TimeWheelPicker view, Calendar date) {
+                                SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm");
+                                dateTime2 = simpleDateFormat.format(date.getTime());
+                                time2.setText(dateTime2);
                             }
+                        });
+                        DialogUtil.showDialog(SettingActivity.this, "定时2运行时间设置", picker);
 
-                            mYear = ca.get(Calendar.YEAR);
-                            mMonth = ca.get(Calendar.MONTH);
-                            mDay = ca.get(Calendar.DAY_OF_MONTH);
-
-                            hour = ca.get(Calendar.HOUR_OF_DAY);
-                            minute = ca.get(Calendar.MINUTE);
-                        } else {
-                            Calendar ca = Calendar.getInstance();
-
-                            mYear = ca.get(Calendar.YEAR);
-                            mMonth = ca.get(Calendar.MONTH);
-                            mDay = ca.get(Calendar.DAY_OF_MONTH);
-
-                            hour = ca.get(Calendar.HOUR_OF_DAY);
-                            minute = ca.get(Calendar.MINUTE);
-                        }
-
-                        DatePickerDialog datePickerDialog = new DatePickerDialog(SettingActivity.this,
-                                new DatePickerDialog.OnDateSetListener() {
-                                    @Override
-                                    public void onDateSet(DatePicker view, int year, int month, int dayOfMonth) {
-
-                                        dateTime2 = String.format("%04d-%02d-%02d", year, (month + 1), dayOfMonth);
-
-                                        new TimePickerDialog(SettingActivity.this, new TimePickerDialog.OnTimeSetListener() {
-                                            @Override
-                                            public void onTimeSet(TimePicker view, int hourOfDay, int minute) {
-
-                                                dateTime2 += String.format(" %02d:%02d", hourOfDay, minute);
-                                                time2.setText(dateTime2);
-                                            }
-                                        }, hour, minute, true).show();
-                                    }
-                                },
-                                mYear, mMonth, mDay);
-                        datePickerDialog.show();
                     }
                 });
 
@@ -610,59 +514,16 @@ public class SettingActivity extends BluetoothBaseActivity<SettingPresenter> imp
                     @Override
                     public void onClick(View v) {
 
-                        final int mYear;
-                        final int mMonth;
-                        final int mDay;
-
-                        final int hour;
-                        final int minute;
-
-                        if (time3.getText().toString().length() > 0) {
-                            Calendar ca = Calendar.getInstance();
-                            SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm");
-                            try {
-                                Date temp = simpleDateFormat.parse(time3.getText().toString());
-                                ca.setTime(temp);
-                            } catch (ParseException e) {
-                                e.printStackTrace();
+                        TimeWheelPicker picker = new TimeWheelPicker(SettingActivity.this);
+                        picker.setOnTimeChangedListener(new TimeWheelPicker.OnTimeChangedListener() {
+                            @Override
+                            public void onTimeChanged(TimeWheelPicker view, Calendar date) {
+                                SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm");
+                                dateTime3 = simpleDateFormat.format(date.getTime());
+                                time3.setText(dateTime3);
                             }
-
-                            mYear = ca.get(Calendar.YEAR);
-                            mMonth = ca.get(Calendar.MONTH);
-                            mDay = ca.get(Calendar.DAY_OF_MONTH);
-
-                            hour = ca.get(Calendar.HOUR_OF_DAY);
-                            minute = ca.get(Calendar.MINUTE);
-                        } else {
-                            Calendar ca = Calendar.getInstance();
-
-                            mYear = ca.get(Calendar.YEAR);
-                            mMonth = ca.get(Calendar.MONTH);
-                            mDay = ca.get(Calendar.DAY_OF_MONTH);
-
-                            hour = ca.get(Calendar.HOUR_OF_DAY);
-                            minute = ca.get(Calendar.MINUTE);
-                        }
-
-                        DatePickerDialog datePickerDialog = new DatePickerDialog(SettingActivity.this,
-                                new DatePickerDialog.OnDateSetListener() {
-                                    @Override
-                                    public void onDateSet(DatePicker view, int year, int month, int dayOfMonth) {
-
-                                        dateTime3 = String.format("%04d-%02d-%02d", year, (month + 1), dayOfMonth);
-
-                                        new TimePickerDialog(SettingActivity.this, new TimePickerDialog.OnTimeSetListener() {
-                                            @Override
-                                            public void onTimeSet(TimePicker view, int hourOfDay, int minute) {
-
-                                                dateTime3 += String.format(" %02d:%02d", hourOfDay, minute);
-                                                time3.setText(dateTime3);
-                                            }
-                                        }, hour, minute, true).show();
-                                    }
-                                },
-                                mYear, mMonth, mDay);
-                        datePickerDialog.show();
+                        });
+                        DialogUtil.showDialog(SettingActivity.this, "定时3运行时间设置", picker);
 
                     }
                 });

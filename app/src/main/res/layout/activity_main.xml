@@ -15,7 +15,7 @@
         android:layout_weight="1"
         >
 
-        <android.support.v7.widget.Toolbar
+        <androidx.appcompat.widget.Toolbar
             android:id="@+id/toolbar"
             android:layout_width="match_parent"
             android:layout_height="?attr/actionBarSize"
@@ -96,7 +96,7 @@
             </LinearLayout>
 
 
-        </android.support.v7.widget.Toolbar>
+        </androidx.appcompat.widget.Toolbar>
 
         <LinearLayout
             android:layout_marginTop="?attr/actionBarSize"
@@ -117,7 +117,7 @@
                     android:layout_height="0dp"
                     android:layout_weight="1" />
 
-                <android.support.v7.widget.CardView
+                <androidx.cardview.widget.CardView
                     android:id="@+id/menu_01"
                     android:layout_width="@dimen/home_card_width"
                     android:layout_height="@dimen/home_card_height"
@@ -171,9 +171,9 @@
                         </LinearLayout>
                     </LinearLayout>
 
-                </android.support.v7.widget.CardView>
+                </androidx.cardview.widget.CardView>
 
-                <android.support.v7.widget.CardView
+                <androidx.cardview.widget.CardView
                     android:id="@+id/menu_02"
                     android:layout_width="@dimen/home_card_width"
                     android:layout_height="@dimen/home_card_height"
@@ -227,7 +227,7 @@
                                 android:textStyle="bold" />
                         </LinearLayout>
                     </LinearLayout>
-                </android.support.v7.widget.CardView>
+                </androidx.cardview.widget.CardView>
 
                 <Space
                     android:layout_width="match_parent"
@@ -247,7 +247,7 @@
                     android:layout_height="0dp"
                     android:layout_weight="1" />
 
-                <android.support.v7.widget.CardView
+                <androidx.cardview.widget.CardView
                     android:id="@+id/menu_03"
                     android:layout_width="@dimen/home_card_width"
                     android:layout_height="@dimen/home_card_height"
@@ -300,9 +300,9 @@
                         </LinearLayout>
                     </LinearLayout>
 
-                </android.support.v7.widget.CardView>
+                </androidx.cardview.widget.CardView>
 
-                <android.support.v7.widget.CardView
+                <androidx.cardview.widget.CardView
                     android:id="@+id/menu_04"
                     android:layout_width="@dimen/home_card_width"
                     android:layout_height="@dimen/home_card_height"
@@ -356,7 +356,7 @@
                         </LinearLayout>
                     </LinearLayout>
 
-                </android.support.v7.widget.CardView>
+                </androidx.cardview.widget.CardView>
 
                 <Space
                     android:layout_width="match_parent"
