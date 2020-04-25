@@ -484,12 +484,16 @@ public class MeasureActivity extends BluetoothBaseActivity<DashboardPresenter> i
         float minY = Float.MAX_VALUE, maxY = Float.MIN_VALUE;
         DashboardActivity.IndexEntry indexEntry = new DashboardActivity.IndexEntry();
 
-        data.addEntry(new Entry(set.getEntryCount(), (float) measureValue.getActivity(), measureValue), 0);
-        if (minY > (float) measureValue.getActivity()) {
-            minY = (float) measureValue.getActivity();
-        }
-        if (maxY < (float) measureValue.getActivity()) {
-            maxY = (float) measureValue.getActivity();
+        if (measureValue.getActivity() > 0) {
+            data.addEntry(new Entry(set.getEntryCount(), (float) measureValue.getActivity(), measureValue), 0);
+            if (minY > (float) measureValue.getActivity()) {
+                minY = (float) measureValue.getActivity();
+            }
+            if (maxY < (float) measureValue.getActivity()) {
+                maxY = (float) measureValue.getActivity();
+            }
+        } else {
+            data.addEntry(new Entry(set.getEntryCount(), -1, measureValue), 0);
         }
         indexEntry.setIndex(set.getEntryCount());
         indexEntry.setMaxValue(maxY);
@@ -506,11 +510,11 @@ public class MeasureActivity extends BluetoothBaseActivity<DashboardPresenter> i
         } else {
             chart.getXAxis().setAxisMaximum(30);
         }
-        if (maxY >= 0 && minY >= 0) {
+        if (maxY > 0 && minY > 0) {
             Log.e("yzj", indexEntry.toString());
             queue.add(indexEntry);
         }
-        while (queue.size() > 30) {
+        while (queue.size() > 31) {
             queue.remove();
         }
 
@@ -526,7 +530,7 @@ public class MeasureActivity extends BluetoothBaseActivity<DashboardPresenter> i
             }
 
             float space = (currentMaxY - currentMinY) / 8.0F;
-            if (space > 0) {
+            if (space > 0 && space < 1.0) {
                 float minValue = currentMinY - space;
                 float maxValue = currentMaxY + space;
                 if ((maxValue - minValue) < 0.02F) {

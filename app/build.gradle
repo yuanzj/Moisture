@@ -65,7 +65,7 @@ dependencies {
     implementation 'org.jetbrains:annotations-java5:15.0'
 
     // 图表
-    implementation 'com.github.PhilJay:MPAndroidChart:v3.1.0'
+    implementation project(':MPChartLib')
 
     // 表格
     implementation 'com.github.huangyanbin:SmartTable:2.2.0'

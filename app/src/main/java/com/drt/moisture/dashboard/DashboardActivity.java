@@ -786,7 +786,6 @@ public class DashboardActivity extends BluetoothBaseActivity<DashboardPresenter>
         float minY = Float.MAX_VALUE, maxY = Float.MIN_VALUE;
         IndexEntry indexEntry = new IndexEntry();
 
-        ILineDataSet maxSet = data.getMaxEntryCountSet();
         for (int i = 0; i < measureValueList.size(); i++) {
 
             MeasureValue measureValue = measureValueList.get(i);
@@ -797,13 +796,10 @@ public class DashboardActivity extends BluetoothBaseActivity<DashboardPresenter>
                 set = createActivitySet(i);
                 data.addDataSet(set);
             }
-            if (maxSet == null) {
-                maxSet = set;
-            }
 
-            if (measureValue.getMeasureStatus() == 0x01 || measureValue.getMeasureStatus() == 0x03) {
+            if (measureValue.getMeasureStatus() == 0x01 || measureValue.getMeasureStatus() == 0x03 && measureValue.getActivity() > 0) {
 
-                data.addEntry(new Entry(maxSet.getEntryCount(), (float) measureValue.getActivity(), measureValue), i);
+                data.addEntry(new Entry(set.getEntryCount(), (float) measureValue.getActivity(), measureValue), i);
                 if (minY > (float) measureValue.getActivity()) {
                     minY = (float) measureValue.getActivity();
                 }
@@ -811,7 +807,7 @@ public class DashboardActivity extends BluetoothBaseActivity<DashboardPresenter>
                     maxY = (float) measureValue.getActivity();
                 }
             } else {
-//                data.addEntry(new Entry(set.getEntryCount(), (float) -1, measureValue), i);
+                data.addEntry(new Entry(set.getEntryCount(), -1, measureValue), i);
             }
         }
 
@@ -835,10 +831,10 @@ public class DashboardActivity extends BluetoothBaseActivity<DashboardPresenter>
         }
 
 
-        if (maxY >= 0 && minY >= 0) {
+        if (maxY > 0 && minY > 0) {
             queue.add(indexEntry);
         }
-        while (queue.size() > 50) {
+        while (queue.size() > 51) {
             queue.remove();
         }
 
@@ -856,7 +852,7 @@ public class DashboardActivity extends BluetoothBaseActivity<DashboardPresenter>
             float space = (currentMaxY - currentMinY) / 8.0F;
             Log.e("yzj1", "setAxisMinimum：" + (currentMinY - space) + "，setAxisMaximum:" + (currentMaxY + space));
 
-            if (space > 0) {
+            if (space > 0 && space < 1.0) {
                 float minValue = currentMinY - space;
                 float maxValue = currentMaxY + space;
                 if ((maxValue - minValue) < 0.02F) {
