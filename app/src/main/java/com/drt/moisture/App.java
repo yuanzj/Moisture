@@ -161,59 +161,56 @@ public class App extends Application {
                 }
 
                 if (date1 == null || date2 == null || date3 == null) {
+                    Log.e("yzj","date1 == null || date2 == null || date3 == null");
                     EventBus.getDefault().post(new SendUpdateAlarmMsg());
                 } else {
                     if (DashboardActivity.getDashboardActivity() == null
                             || !DashboardActivity.getDashboardActivity().isFront) {
 
-                        if (isSameDay(date1, new Date())) {
-                            // 客户端直接启动测量
-                            if (new Date().after(date1) && new Date().before(new Date(date1.getTime() + 1000 * 60 * 2)) && (lastAutoRunDate1 == null || lastAutoRunDate1.before(date1))) {
-                                lastAutoRunDate1 = new Date();
-                                // 发指令
-                                if (MeasureActivity.getInstance() != null) {
-                                    MeasureActivity.getInstance().finish();
-                                }
-                                if (DashboardActivity.getDashboardActivity() != null) {
-                                    DashboardActivity.getDashboardActivity().finish();
-                                }
-                                Intent intent = new Intent();
-                                intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-                                intent.setClass(getApplicationContext(), DashboardActivity.class);
-                                intent.putExtra("autoStart", true);
-                                startActivity(intent);
-                            } else if (new Date().after(date2) && new Date().before(new Date(date2.getTime() + 1000 * 60 * 2)) && (lastAutoRunDate2 == null || lastAutoRunDate2.before(date2))) {
-                                lastAutoRunDate2 = new Date();
-                                // 发指令
-                                if (MeasureActivity.getInstance() != null) {
-                                    MeasureActivity.getInstance().finish();
-                                }
-                                if (DashboardActivity.getDashboardActivity() != null) {
-                                    DashboardActivity.getDashboardActivity().finish();
-                                }
-                                Intent intent = new Intent();
-                                intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-                                intent.setClass(getApplicationContext(), DashboardActivity.class);
-                                intent.putExtra("autoStart", true);
-                                startActivity(intent);
-
-                            } else if (new Date().after(date3) && new Date().before(new Date(date3.getTime() + 1000 * 60 * 2)) && (lastAutoRunDate3 == null || lastAutoRunDate3.before(date3))) {
-                                lastAutoRunDate3 = new Date();
-                                // 发指令
-                                if (MeasureActivity.getInstance() != null) {
-                                    MeasureActivity.getInstance().finish();
-                                }
-                                if (DashboardActivity.getDashboardActivity() != null) {
-                                    DashboardActivity.getDashboardActivity().finish();
-                                }
-                                Intent intent = new Intent();
-                                intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-                                intent.setClass(getApplicationContext(), DashboardActivity.class);
-                                intent.putExtra("autoStart", true);
-                                startActivity(intent);
+                        // 客户端直接启动测量
+                        if (new Date().after(date1) && new Date().before(new Date(date1.getTime() + 1000 * 60 * 2)) && (lastAutoRunDate1 == null || lastAutoRunDate1.before(date1))) {
+                            lastAutoRunDate1 = new Date();
+                            // 发指令
+                            if (MeasureActivity.getInstance() != null) {
+                                MeasureActivity.getInstance().finish();
                             }
-                        } else {
-                            EventBus.getDefault().post(new SendUpdateAlarmMsg());
+                            if (DashboardActivity.getDashboardActivity() != null) {
+                                DashboardActivity.getDashboardActivity().finish();
+                            }
+                            Intent intent = new Intent();
+                            intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                            intent.setClass(getApplicationContext(), DashboardActivity.class);
+                            intent.putExtra("autoStart", true);
+                            startActivity(intent);
+                        } else if (new Date().after(date2) && new Date().before(new Date(date2.getTime() + 1000 * 60 * 2)) && (lastAutoRunDate2 == null || lastAutoRunDate2.before(date2))) {
+                            lastAutoRunDate2 = new Date();
+                            // 发指令
+                            if (MeasureActivity.getInstance() != null) {
+                                MeasureActivity.getInstance().finish();
+                            }
+                            if (DashboardActivity.getDashboardActivity() != null) {
+                                DashboardActivity.getDashboardActivity().finish();
+                            }
+                            Intent intent = new Intent();
+                            intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                            intent.setClass(getApplicationContext(), DashboardActivity.class);
+                            intent.putExtra("autoStart", true);
+                            startActivity(intent);
+
+                        } else if (new Date().after(date3) && new Date().before(new Date(date3.getTime() + 1000 * 60 * 2)) && (lastAutoRunDate3 == null || lastAutoRunDate3.before(date3))) {
+                            lastAutoRunDate3 = new Date();
+                            // 发指令
+                            if (MeasureActivity.getInstance() != null) {
+                                MeasureActivity.getInstance().finish();
+                            }
+                            if (DashboardActivity.getDashboardActivity() != null) {
+                                DashboardActivity.getDashboardActivity().finish();
+                            }
+                            Intent intent = new Intent();
+                            intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                            intent.setClass(getApplicationContext(), DashboardActivity.class);
+                            intent.putExtra("autoStart", true);
+                            startActivity(intent);
                         }
                     }
                 }

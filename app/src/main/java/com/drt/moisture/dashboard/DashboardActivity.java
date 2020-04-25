@@ -694,6 +694,7 @@ public class DashboardActivity extends BluetoothBaseActivity<DashboardPresenter>
         EventBus.getDefault().post(new SendUpdateAlarmMsg());
 
         if (getIntent().getBooleanExtra("autoStart", false)) {
+            getIntent().putExtra("autoStart", false);
             Toast.makeText(this, "即将启动定时测量", Toast.LENGTH_LONG).show();
             startMeasure();
         }
