@@ -133,9 +133,7 @@ public class DashboardModel implements DashboardContract.Model {
         runningTimer.schedule(new TimerTask() {
             @Override
             public void run() {
-
                 if (App.getInstance().getBluetoothClient().getConnectStatus(App.getInstance().getConnectMacAddress()) != Constants.STATUS_DEVICE_CONNECTED) {
-                    EventBus.getDefault().post(new BleEvent());
                     return;
                 }
                 CommandEntity commandEntity = new CommandEntity();
@@ -621,73 +619,84 @@ public class DashboardModel implements DashboardContract.Model {
                 } catch (InterruptedException e) {
                     e.printStackTrace();
                 }
-                if (measureDataCallback != null && startTime != null) {
+
+                if (App.getInstance().getBluetoothClient().getConnectStatus(App.getInstance().getConnectMacAddress()) != Constants.STATUS_DEVICE_CONNECTED) {
+                    EventBus.getDefault().post(new BleEvent());
+
+                    try {
+                        Thread.sleep(1000);
+                    } catch (InterruptedException e) {
+                        e.printStackTrace();
+                    }
+                } else {
+                    if (measureDataCallback != null && startTime != null) {
+                        for (MeasureRunningStatus measureRunningStatus : measureRunningStatusMap.values()) {
+                            if (measureRunningStatus.isRunning) {
+                                measureRunningStatus.setRunningTime(DateUtil.dateDistance1(new Date(measureRunningStatus.getStartTime()), new Date()));
+                            }
+                        }
+                        measureDataCallback.runningStatus(measureRunningStatusMap);
+                    }
+
                     for (MeasureRunningStatus measureRunningStatus : measureRunningStatusMap.values()) {
                         if (measureRunningStatus.isRunning) {
-                            measureRunningStatus.setRunningTime(DateUtil.dateDistance1(new Date(measureRunningStatus.getStartTime()), new Date()));
+                            AppConfig appConfig = App.getInstance().getLocalDataService().queryAppConfig(measureRunningStatus.getIndex());
+                            long measuringTime = measureRunningStatus.getStartTime() + appConfig.getMeasuringTime() * 60 * 1000;
+                            // 定时测量自动关闭
+                            if (new Date().after(new Date(measuringTime))) {
+                                stopMeasure(true, measureRunningStatus.getIndex());
+                            }
                         }
                     }
-                    measureDataCallback.runningStatus(measureRunningStatusMap);
-                }
 
-                for (MeasureRunningStatus measureRunningStatus : measureRunningStatusMap.values()) {
-                    if (measureRunningStatus.isRunning) {
-                        AppConfig appConfig = App.getInstance().getLocalDataService().queryAppConfig(measureRunningStatus.getIndex());
-                        long measuringTime = measureRunningStatus.getStartTime() + appConfig.getMeasuringTime() * 60 * 1000;
-                        // 定时测量自动关闭
-                        if (new Date().after(new Date(measuringTime))) {
-                            stopMeasure(true, measureRunningStatus.getIndex());
+                    boolean isRunning = false;
+                    for (MeasureRunningStatus measureRunningStatus : measureRunningStatusMap.values()) {
+                        if (measureRunningStatus.isRunning) {
+                            isRunning = true;
+                            break;
                         }
                     }
-                }
+                    if (!isRunning
+                            && DashboardActivity.getDashboardActivity() != null
+                            && DashboardActivity.getDashboardActivity().isFront
+                            && App.getInstance().date1 != null
+                            && App.getInstance().date2 != null
+                            && App.getInstance().date3 != null) {
 
-                boolean isRunning = false;
-                for (MeasureRunningStatus measureRunningStatus : measureRunningStatusMap.values()) {
-                    if (measureRunningStatus.isRunning) {
-                        isRunning = true;
-                        break;
+                        Date date1 = App.getInstance().date1;
+                        Date date2 = App.getInstance().date2;
+                        Date date3 = App.getInstance().date3;
+
+                        // 客户端直接启动测量
+                        if (new Date().after(date1) && new Date().before(new Date(date1.getTime() + 1000 * 60 * 2)) && (App.getInstance().lastAutoRunDate1 == null || App.getInstance().lastAutoRunDate1.before(date1))) {
+                            EventBus.getDefault().post(new SendAutoStartMsg());
+                            App.getInstance().lastAutoRunDate1 = new Date();
+                        } else if (new Date().after(date2) && new Date().before(new Date(date2.getTime() + 1000 * 60 * 2)) && (App.getInstance().lastAutoRunDate2 == null || App.getInstance().lastAutoRunDate2.before(date2))) {
+                            EventBus.getDefault().post(new SendAutoStartMsg());
+                            App.getInstance().lastAutoRunDate2 = new Date();
+                        } else if (new Date().after(date3) && new Date().before(new Date(date3.getTime() + 1000 * 60 * 2)) && (App.getInstance().lastAutoRunDate3 == null || App.getInstance().lastAutoRunDate3.before(date3))) {
+                            EventBus.getDefault().post(new SendAutoStartMsg());
+                            App.getInstance().lastAutoRunDate3 = new Date();
+                        }
+                        // 客户端发送指令询问终端是否在运行
+                        else if (new Date().after(date1) && new Date().before(new Date(date1.getTime() + 1000 * 60 * 60)) && (App.getInstance().lastAutoRunDate1 == null || App.getInstance().lastAutoRunDate1.before(date1))) {
+                            CommandEntity commandEntity = new CommandEntity();
+                            commandEntity.setType(2);
+                            timerIndex = 0;
+                            commandQueue.push(commandEntity);
+                        } else if (new Date().after(date2) && new Date().before(new Date(date2.getTime() + 1000 * 60 * 60)) && (App.getInstance().lastAutoRunDate2 == null || App.getInstance().lastAutoRunDate2.before(date2))) {
+                            CommandEntity commandEntity = new CommandEntity();
+                            commandEntity.setType(2);
+                            timerIndex = 1;
+                            commandQueue.push(commandEntity);
+                        } else if (new Date().after(date3) && new Date().before(new Date(date3.getTime() + 1000 * 60 * 60)) && (App.getInstance().lastAutoRunDate3 == null || App.getInstance().lastAutoRunDate3.before(date3))) {
+                            CommandEntity commandEntity = new CommandEntity();
+                            commandEntity.setType(2);
+                            timerIndex = 2;
+                            commandQueue.push(commandEntity);
+                        }
+
                     }
-                }
-                if (!isRunning
-                        && DashboardActivity.getDashboardActivity() != null
-                        && DashboardActivity.getDashboardActivity().isFront
-                        && App.getInstance().date1 != null
-                        && App.getInstance().date2 != null
-                        && App.getInstance().date3 != null) {
-
-                    Date date1 = App.getInstance().date1;
-                    Date date2 = App.getInstance().date2;
-                    Date date3 = App.getInstance().date3;
-
-                    // 客户端直接启动测量
-                    if (new Date().after(date1) && new Date().before(new Date(date1.getTime() + 1000 * 60 * 2)) && (App.getInstance().lastAutoRunDate1 == null || App.getInstance().lastAutoRunDate1.before(date1))) {
-                        EventBus.getDefault().post(new SendAutoStartMsg());
-                        App.getInstance().lastAutoRunDate1 = new Date();
-                    } else if (new Date().after(date2) && new Date().before(new Date(date2.getTime() + 1000 * 60 * 2)) && (App.getInstance().lastAutoRunDate2 == null || App.getInstance().lastAutoRunDate2.before(date2))) {
-                        EventBus.getDefault().post(new SendAutoStartMsg());
-                        App.getInstance().lastAutoRunDate2 = new Date();
-                    } else if (new Date().after(date3) && new Date().before(new Date(date3.getTime() + 1000 * 60 * 2)) && (App.getInstance().lastAutoRunDate3 == null || App.getInstance().lastAutoRunDate3.before(date3))) {
-                        EventBus.getDefault().post(new SendAutoStartMsg());
-                        App.getInstance().lastAutoRunDate3 = new Date();
-                    }
-                    // 客户端发送指令询问终端是否在运行
-                    else if (new Date().after(date1) && new Date().before(new Date(date1.getTime() + 1000 * 60 * 60)) && (App.getInstance().lastAutoRunDate1 == null || App.getInstance().lastAutoRunDate1.before(date1))) {
-                        CommandEntity commandEntity = new CommandEntity();
-                        commandEntity.setType(2);
-                        timerIndex = 0;
-                        commandQueue.push(commandEntity);
-                    } else if (new Date().after(date2) && new Date().before(new Date(date2.getTime() + 1000 * 60 * 60)) && (App.getInstance().lastAutoRunDate2 == null || App.getInstance().lastAutoRunDate2.before(date2))) {
-                        CommandEntity commandEntity = new CommandEntity();
-                        commandEntity.setType(2);
-                        timerIndex = 1;
-                        commandQueue.push(commandEntity);
-                    } else if (new Date().after(date3) && new Date().before(new Date(date3.getTime() + 1000 * 60 * 60)) && (App.getInstance().lastAutoRunDate3 == null || App.getInstance().lastAutoRunDate3.before(date3))) {
-                        CommandEntity commandEntity = new CommandEntity();
-                        commandEntity.setType(2);
-                        timerIndex = 2;
-                        commandQueue.push(commandEntity);
-                    }
-
                 }
             }
         }

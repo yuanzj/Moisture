@@ -1097,7 +1097,7 @@ public class BluetoothServiceImpl implements BluetoothService, BleWriteResponse 
     }
 
     @Override
-    public void queryHisRecord(int pointIndex, String name, int index, SppDataCallback<HisRecordDataResponse> sppDataCallback) {
+    public void queryHisRecord(int pointIndex, String name, int index, int status, SppDataCallback<HisRecordDataResponse> sppDataCallback) {
         this.sppDataCallback = sppDataCallback;
 
         HisRecordDataRequest recordDataRequest = new HisRecordDataRequest();
@@ -1114,6 +1114,7 @@ public class BluetoothServiceImpl implements BluetoothService, BleWriteResponse 
             recordDataRequest.setQueryModel(0x03);
         }
         recordDataRequest.setPointIndex(pointIndex);
+        recordDataRequest.setStatus(status);
         try {
             write(App.getInstance().getConnectMacAddress(), UUIDUtils.makeUUID(0xFFE0), UUIDUtils.makeUUID(0xFFE1), BluetoothDataUtil.encode(recordDataRequest), this);
 

@@ -4,6 +4,7 @@ import android.app.Application;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.os.PowerManager;
 import android.util.Log;
 
 import com.drt.moisture.dashboard.DashboardActivity;
@@ -164,8 +165,11 @@ public class App extends Application {
                     Log.e("yzj","date1 == null || date2 == null || date3 == null");
                     EventBus.getDefault().post(new SendUpdateAlarmMsg());
                 } else {
-                    if (DashboardActivity.getDashboardActivity() == null
-                            || !DashboardActivity.getDashboardActivity().isFront) {
+                    PowerManager pm = (PowerManager) getSystemService(Context.POWER_SERVICE);
+                    boolean isScreenOn = pm.isInteractive();//如果为true，则表示屏幕“亮”了，否则屏幕“暗”了。
+
+                    if (isScreenOn && (DashboardActivity.getDashboardActivity() == null
+                            || !DashboardActivity.getDashboardActivity().isFront)) {
 
                         // 客户端直接启动测量
                         if (new Date().after(date1) && new Date().before(new Date(date1.getTime() + 1000 * 60 * 2)) && (lastAutoRunDate1 == null || lastAutoRunDate1.before(date1))) {

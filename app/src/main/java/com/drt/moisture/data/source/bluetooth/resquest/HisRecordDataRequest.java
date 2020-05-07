@@ -34,6 +34,9 @@ public class HisRecordDataRequest {
     @RkField(position = 42, length = 1)
     private int pointIndex;
 
+    @RkField(position = 43, length = 1)
+    private int status;
+
     public int getCmdGroup() {
         return CmdGroup;
     }
@@ -104,5 +107,13 @@ public class HisRecordDataRequest {
 
     public void setPointIndex(int pointIndex) {
         this.pointIndex = pointIndex;
+    }
+
+    public int getStatus() {
+        return status;
+    }
+
+    public void setStatus(int status) {
+        this.status = status;
     }
 }

@@ -1,6 +1,7 @@
 package com.drt.moisture.dashboard;
 
 import android.app.ProgressDialog;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Point;
@@ -11,6 +12,8 @@ import android.os.Bundle;
 import android.os.Handler;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AlertDialog;
+
+import android.os.PowerManager;
 import android.util.Log;
 import android.view.View;
 import android.widget.LinearLayout;
@@ -177,7 +180,9 @@ public class DashboardActivity extends BluetoothBaseActivity<DashboardPresenter>
 
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void onSendAutoStartMsg(SendAutoStartMsg mSendAutoStartMsg) {
-        if (isFront) {
+        PowerManager pm = (PowerManager) getSystemService(Context.POWER_SERVICE);
+        boolean isScreenOn = pm.isInteractive();//如果为true，则表示屏幕“亮”了，否则屏幕“暗”了。
+        if (isFront && isScreenOn) {
             Toast.makeText(this, "即将启动定时测量", Toast.LENGTH_LONG).show();
             startMeasure();
         }
@@ -960,7 +965,7 @@ public class DashboardActivity extends BluetoothBaseActivity<DashboardPresenter>
         chart.setScaleEnabled(false);
         chart.setScaleXEnabled(false);
         chart.setScaleYEnabled(false);
-        chart.setDragEnabled(false);
+        chart.setDragEnabled(true);
     }
 
     public void playSound() {

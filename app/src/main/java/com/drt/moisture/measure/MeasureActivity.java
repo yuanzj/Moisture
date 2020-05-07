@@ -645,7 +645,7 @@ public class MeasureActivity extends BluetoothBaseActivity<DashboardPresenter> i
         chart.setScaleEnabled(false);
         chart.setScaleXEnabled(false);
         chart.setScaleYEnabled(false);
-        chart.setDragEnabled(false);
+        chart.setDragEnabled(true);
     }
 
     public void playSound() {

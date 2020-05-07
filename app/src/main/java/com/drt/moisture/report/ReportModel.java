@@ -27,8 +27,11 @@ public class ReportModel implements ReportContract.Model, SppDataCallback<HisRec
 
     volatile boolean running;
 
+    volatile int pointIndex;
+
     @Override
-    public void queryReport(final int index, final String measureName, final Date startTime, final Date endTime, final MeasureDataCallback<List<MeasureValue>> report) {
+    public void queryReport(int index, final String measureName, final Date startTime, final Date endTime, final MeasureDataCallback<List<MeasureValue>> report) {
+        pointIndex = index;
         temp.clear();
         this.measureName = measureName;
         this.report = report;
@@ -45,7 +48,7 @@ public class ReportModel implements ReportContract.Model, SppDataCallback<HisRec
                         break;
                     }
 
-                    App.getInstance().getBluetoothService().queryHisRecord(index, measureName, i, ReportModel.this);
+                    App.getInstance().getBluetoothService().queryHisRecord(pointIndex, measureName, i, 0x00, ReportModel.this);
 //                    HisRecordDataResponse recordDataResponse = new HisRecordDataResponse();
 //                    recordDataResponse.setName("text");
 //                    recordDataResponse.setTime(System.currentTimeMillis()/1000);
@@ -67,9 +70,37 @@ public class ReportModel implements ReportContract.Model, SppDataCallback<HisRec
         new Thread(runnable).start();
     }
 
+    volatile int retryCount;
+    volatile boolean isSuccess;
+
     @Override
     public void stop() {
         running = false;
+        new Thread(() -> {
+            retryCount = 0;
+            isSuccess = false;
+            while ((retryCount < 3) && (!isSuccess)) {
+                App.getInstance().getBluetoothService().queryHisRecord(pointIndex, measureName, 1, 0x55, new SppDataCallback<HisRecordDataResponse>() {
+
+                    @Override
+                    public void delivery(HisRecordDataResponse hisRecordDataResponse) {
+                        isSuccess = true;
+                    }
+
+                    @Override
+                    public Class<HisRecordDataResponse> getEntityType() {
+                        return HisRecordDataResponse.class;
+                    }
+                });
+                try {
+                    Thread.sleep(1000);
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
+                retryCount++;
+            }
+        }).start();
+
     }
 
     @Override

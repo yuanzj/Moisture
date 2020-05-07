@@ -98,12 +98,7 @@ public class LocalDataServiceImpl implements LocalDataService {
         if (historyList.size() >= 20) {
             historyList.remove(0);
         }
-        for (String item : historyList) {
-            if (item.equals(name)) {
-                return;
-            }
-        }
-
+        historyList.remove(name);
         historyList.add(name);
 
         SharedPreferences sp = context.getSharedPreferences("SP", MODE_PRIVATE);

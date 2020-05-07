@@ -256,7 +256,7 @@ public interface BluetoothService {
      *
      * @param sppDataCallback
      */
-    void queryHisRecord(int pointIndex, String name, int index, SppDataCallback<HisRecordDataResponse> sppDataCallback);
+    void queryHisRecord(int pointIndex, String name, int index, int status, SppDataCallback<HisRecordDataResponse> sppDataCallback);
 
 
     /**
