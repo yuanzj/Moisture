@@ -72,11 +72,11 @@ public class DashboardActivity extends BluetoothBaseActivity<DashboardPresenter>
 
     public volatile boolean isFront = false;
 
-    @BindView(R.id.parent_chart)
-    RelativeLayout parentChart;
+//    @BindView(R.id.parent_chart)
+//    RelativeLayout parentChart;
 
 
-    LineChart chart;
+//    LineChart chart;
 
     @BindView(R.id.btnStartMeasure)
     LinearLayout btnStartMeasure;
@@ -307,7 +307,7 @@ public class DashboardActivity extends BluetoothBaseActivity<DashboardPresenter>
                 updateUI(MeasureStatus.RUNNING);
 
 
-                addEntry(measureValueList);
+//                addEntry(measureValueList);
                 DecimalFormat df = new DecimalFormat("0.0000");
                 df.setRoundingMode(RoundingMode.DOWN);
 
@@ -446,12 +446,12 @@ public class DashboardActivity extends BluetoothBaseActivity<DashboardPresenter>
         progressdialog.setCancelable(false);
         progressdialog.show();
 
-        if (chart != null) {
-            parentChart.removeAllViews();
-        }
-        chart = (LineChart) getLayoutInflater().inflate(R.layout.chart_view, parentChart, false);
-        parentChart.addView(chart);
-        initChartView();
+//        if (chart != null) {
+//            parentChart.removeAllViews();
+//        }
+//        chart = (LineChart) getLayoutInflater().inflate(R.layout.chart_view, parentChart, false);
+//        parentChart.addView(chart);
+//        initChartView();
         // 校准时间
         App.getInstance().getBluetoothService().setTime(System.currentTimeMillis() / 1000);
 
@@ -694,7 +694,7 @@ public class DashboardActivity extends BluetoothBaseActivity<DashboardPresenter>
                 }
 
             }
-        }, 500);
+        }, 1000);
 
         EventBus.getDefault().post(new SendUpdateAlarmMsg());
 
@@ -776,104 +776,104 @@ public class DashboardActivity extends BluetoothBaseActivity<DashboardPresenter>
         }
     }
 
-    private void addEntry(List<MeasureValue> measureValueList) {
-        if (chart == null) {
-            chart = (LineChart) getLayoutInflater().inflate(R.layout.chart_view, parentChart, false);
-            parentChart.addView(chart);
-            initChartView();
-        }
-        LineData data = chart.getData();
-
-        if (data == null) {
-            data = new LineData();
-            chart.setData(data);
-        }
-
-        float minY = Float.MAX_VALUE, maxY = Float.MIN_VALUE;
-        IndexEntry indexEntry = new IndexEntry();
-
-        for (int i = 0; i < measureValueList.size(); i++) {
-
-            MeasureValue measureValue = measureValueList.get(i);
-            measureValue.setIndex(i + 1);
-            ILineDataSet set = data.getDataSetByIndex(i);
-
-            if (set == null) {
-                set = createActivitySet(i);
-                data.addDataSet(set);
-            }
-
-            if (measureValue.getMeasureStatus() == 0x01 || measureValue.getMeasureStatus() == 0x03 && measureValue.getActivity() > 0) {
-
-                data.addEntry(new Entry(set.getEntryCount(), (float) measureValue.getActivity(), measureValue), i);
-                if (minY > (float) measureValue.getActivity()) {
-                    minY = (float) measureValue.getActivity();
-                }
-                if (maxY < (float) measureValue.getActivity()) {
-                    maxY = (float) measureValue.getActivity();
-                }
-            } else {
-                data.addEntry(new Entry(set.getEntryCount(), -1, measureValue), i);
-            }
-        }
-
-        indexEntry.setMaxValue(maxY);
-        indexEntry.setMinValue(minY);
-
-        data.notifyDataChanged();
-
-        // let the chart know it's data has changed
-        chart.notifyDataSetChanged();
-
-
-        //chart.setVisibleYRangeMaximum(15, AxisDependency.LEFT);
+//    private void addEntry(List<MeasureValue> measureValueList) {
+//        if (chart == null) {
+//            chart = (LineChart) getLayoutInflater().inflate(R.layout.chart_view, parentChart, false);
+//            parentChart.addView(chart);
+//            initChartView();
+//        }
+//        LineData data = chart.getData();
 //
-//            // this automatically refreshes the chart (calls invalidate())
-        if (data.getXMax() >= 50) {
-            chart.getXAxis().resetAxisMaximum();
-            chart.setVisibleXRangeMaximum(50);
-        } else {
-            chart.getXAxis().setAxisMaximum(50);
-        }
-
-
-        if (maxY > 0 && minY > 0) {
-            queue.add(indexEntry);
-        }
-        while (queue.size() > 51) {
-            queue.remove();
-        }
-
-        if (queue.size() > 0) {
-            float currentMinY = Float.MAX_VALUE, currentMaxY = Float.MIN_VALUE;
-            for (IndexEntry item : queue) {
-                if (currentMinY > item.getMinValue()) {
-                    currentMinY = item.getMinValue();
-                }
-                if (currentMaxY < item.getMaxValue()) {
-                    currentMaxY = item.getMaxValue();
-                }
-            }
-
-            float space = (currentMaxY - currentMinY) / 8.0F;
-            Log.e("yzj1", "setAxisMinimum：" + (currentMinY - space) + "，setAxisMaximum:" + (currentMaxY + space));
-
-            if (space > 0 && space < 1.0) {
-                float minValue = currentMinY - space;
-                float maxValue = currentMaxY + space;
-                if ((maxValue - minValue) < 0.02F) {
-                    float temp = (0.02F - (maxValue - minValue)) / 2.0f;
-                    minValue -= temp;
-                    maxValue += temp;
-                }
-
-                chart.getAxisLeft().setAxisMinimum(minValue);
-                chart.getAxisLeft().setAxisMaximum(maxValue);
-            }
-        }
-
-        chart.moveViewToX(data.getXMax());
-    }
+//        if (data == null) {
+//            data = new LineData();
+//            chart.setData(data);
+//        }
+//
+//        float minY = Float.MAX_VALUE, maxY = Float.MIN_VALUE;
+//        IndexEntry indexEntry = new IndexEntry();
+//
+//        for (int i = 0; i < measureValueList.size(); i++) {
+//
+//            MeasureValue measureValue = measureValueList.get(i);
+//            measureValue.setIndex(i + 1);
+//            ILineDataSet set = data.getDataSetByIndex(i);
+//
+//            if (set == null) {
+//                set = createActivitySet(i);
+//                data.addDataSet(set);
+//            }
+//
+//            if (measureValue.getMeasureStatus() == 0x01 || measureValue.getMeasureStatus() == 0x03 && measureValue.getActivity() > 0) {
+//
+//                data.addEntry(new Entry(set.getEntryCount(), (float) measureValue.getActivity(), measureValue), i);
+//                if (minY > (float) measureValue.getActivity()) {
+//                    minY = (float) measureValue.getActivity();
+//                }
+//                if (maxY < (float) measureValue.getActivity()) {
+//                    maxY = (float) measureValue.getActivity();
+//                }
+//            } else {
+//                data.addEntry(new Entry(set.getEntryCount(), -1, measureValue), i);
+//            }
+//        }
+//
+//        indexEntry.setMaxValue(maxY);
+//        indexEntry.setMinValue(minY);
+//
+//        data.notifyDataChanged();
+//
+//        // let the chart know it's data has changed
+//        chart.notifyDataSetChanged();
+//
+//
+//        //chart.setVisibleYRangeMaximum(15, AxisDependency.LEFT);
+////
+////            // this automatically refreshes the chart (calls invalidate())
+//        if (data.getXMax() >= 50) {
+//            chart.getXAxis().resetAxisMaximum();
+//            chart.setVisibleXRangeMaximum(50);
+//        } else {
+//            chart.getXAxis().setAxisMaximum(50);
+//        }
+//
+//
+//        if (maxY > 0 && minY > 0) {
+//            queue.add(indexEntry);
+//        }
+//        while (queue.size() > 51) {
+//            queue.remove();
+//        }
+//
+//        if (queue.size() > 0) {
+//            float currentMinY = Float.MAX_VALUE, currentMaxY = Float.MIN_VALUE;
+//            for (IndexEntry item : queue) {
+//                if (currentMinY > item.getMinValue()) {
+//                    currentMinY = item.getMinValue();
+//                }
+//                if (currentMaxY < item.getMaxValue()) {
+//                    currentMaxY = item.getMaxValue();
+//                }
+//            }
+//
+//            float space = (currentMaxY - currentMinY) / 8.0F;
+//            Log.e("yzj1", "setAxisMinimum：" + (currentMinY - space) + "，setAxisMaximum:" + (currentMaxY + space));
+//
+//            if (space > 0 && space < 1.0) {
+//                float minValue = currentMinY - space;
+//                float maxValue = currentMaxY + space;
+//                if ((maxValue - minValue) < 0.02F) {
+//                    float temp = (0.02F - (maxValue - minValue)) / 2.0f;
+//                    minValue -= temp;
+//                    maxValue += temp;
+//                }
+//
+//                chart.getAxisLeft().setAxisMinimum(minValue);
+//                chart.getAxisLeft().setAxisMaximum(maxValue);
+//            }
+//        }
+//
+//        chart.moveViewToX(data.getXMax());
+//    }
 
     private LineDataSet createActivitySet(int i) {
 
@@ -897,76 +897,76 @@ public class DashboardActivity extends BluetoothBaseActivity<DashboardPresenter>
         return d2;
     }
 
-    private void initChartView() {
-        queue.clear();
-
-        Point outSize = new Point();
-        this.getWindowManager().getDefaultDisplay().getSize(outSize);
-//        chart.setMinimumHeight((outSize.x - getResources().getDimensionPixelSize(R.dimen.padding_default) * 2) / 2);
-
-        // apply styling
-        // holder.chart.setValueTypeface(mTf);
-        chart.setDrawBorders(false);
-        chart.setDrawGridBackground(false);
-
-        chart.getDescription().setEnabled(false);
-        chart.setDrawGridBackground(false);
-        chart.setNoDataText("没有测量数据。请点击右上角蓝牙按钮连接设备后开始测量!");
-        chart.setNoDataTextColor(getColor(R.color.colorSecondBody));
-
-        XAxis xAxis = chart.getXAxis();
-        xAxis.setAxisMaximum(50);
-        xAxis.setLabelCount(10, false);
-        xAxis.setPosition(XAxis.XAxisPosition.BOTTOM);
-        xAxis.enableGridDashedLine(10f, 10f, 0f);
-        xAxis.setDrawGridLines(true);
-        xAxis.setDrawAxisLine(true);
-        xAxis.setValueFormatter(new ValueFormatter() {
-            @Override
-            public String getFormattedValue(float value) {
-                if (chart.getLineData() != null
-                        && chart.getLineData().getMaxEntryCountSet() != null
-                        && chart.getLineData().getMaxEntryCountSet().getEntryCount() > (int) value
-                        && chart.getLineData().getMaxEntryCountSet().getEntryForIndex((int) value) != null) {
-                    Entry entry = chart.getLineData().getMaxEntryCountSet().getEntryForIndex((int) value);
-                    if (entry.getData() instanceof MeasureValue) {
-                        return ((MeasureValue) entry.getData()).getReportTime();
-                    } else {
-                        return "";
-                    }
-                } else {
-                    return "";
-                }
-            }
-        });
-
-        YAxis leftAxis = chart.getAxisLeft();
-        leftAxis.setLabelCount(10, false);
-        leftAxis.setDrawGridLines(false);
-        leftAxis.setAxisMinimum(0f); // this replaces setStartAtZero(true)
-        leftAxis.setAxisMaximum(1.0000f);
-        leftAxis.enableGridDashedLine(10f, 10f, 0f);
-        leftAxis.setDrawGridLines(true);
-
-        YAxis rightAxis = chart.getAxisRight();
-        rightAxis.setLabelCount(5, false);
-        rightAxis.setDrawGridLines(false);
-        rightAxis.setAxisMinimum(0f); // this replaces setStartAtZero(true)
-        rightAxis.setAxisMaximum(1.0000f);
-        rightAxis.setEnabled(false);
-        rightAxis.setDrawGridLines(false);
-
-        LineChartMarkView mv = new LineChartMarkView(this, xAxis.getValueFormatter());
-        mv.setChartView(chart);
-        chart.setMarker(mv);
-        chart.invalidate();
-
-        chart.setDoubleTapToZoomEnabled(false);//双击屏幕缩放
-        chart.setScaleEnabled(false);
-        chart.setScaleXEnabled(false);
-        chart.setScaleYEnabled(false);
-        chart.setDragEnabled(true);
-    }
+//    private void initChartView() {
+//        queue.clear();
+//
+//        Point outSize = new Point();
+//        this.getWindowManager().getDefaultDisplay().getSize(outSize);
+////        chart.setMinimumHeight((outSize.x - getResources().getDimensionPixelSize(R.dimen.padding_default) * 2) / 2);
+//
+//        // apply styling
+//        // holder.chart.setValueTypeface(mTf);
+//        chart.setDrawBorders(false);
+//        chart.setDrawGridBackground(false);
+//
+//        chart.getDescription().setEnabled(false);
+//        chart.setDrawGridBackground(false);
+//        chart.setNoDataText("没有测量数据。请点击右上角蓝牙按钮连接设备后开始测量!");
+//        chart.setNoDataTextColor(getColor(R.color.colorSecondBody));
+//
+//        XAxis xAxis = chart.getXAxis();
+//        xAxis.setAxisMaximum(50);
+//        xAxis.setLabelCount(10, false);
+//        xAxis.setPosition(XAxis.XAxisPosition.BOTTOM);
+//        xAxis.enableGridDashedLine(10f, 10f, 0f);
+//        xAxis.setDrawGridLines(true);
+//        xAxis.setDrawAxisLine(true);
+//        xAxis.setValueFormatter(new ValueFormatter() {
+//            @Override
+//            public String getFormattedValue(float value) {
+//                if (chart.getLineData() != null
+//                        && chart.getLineData().getMaxEntryCountSet() != null
+//                        && chart.getLineData().getMaxEntryCountSet().getEntryCount() > (int) value
+//                        && chart.getLineData().getMaxEntryCountSet().getEntryForIndex((int) value) != null) {
+//                    Entry entry = chart.getLineData().getMaxEntryCountSet().getEntryForIndex((int) value);
+//                    if (entry.getData() instanceof MeasureValue) {
+//                        return ((MeasureValue) entry.getData()).getReportTime();
+//                    } else {
+//                        return "";
+//                    }
+//                } else {
+//                    return "";
+//                }
+//            }
+//        });
+//
+//        YAxis leftAxis = chart.getAxisLeft();
+//        leftAxis.setLabelCount(10, false);
+//        leftAxis.setDrawGridLines(false);
+//        leftAxis.setAxisMinimum(0f); // this replaces setStartAtZero(true)
+//        leftAxis.setAxisMaximum(1.0000f);
+//        leftAxis.enableGridDashedLine(10f, 10f, 0f);
+//        leftAxis.setDrawGridLines(true);
+//
+//        YAxis rightAxis = chart.getAxisRight();
+//        rightAxis.setLabelCount(5, false);
+//        rightAxis.setDrawGridLines(false);
+//        rightAxis.setAxisMinimum(0f); // this replaces setStartAtZero(true)
+//        rightAxis.setAxisMaximum(1.0000f);
+//        rightAxis.setEnabled(false);
+//        rightAxis.setDrawGridLines(false);
+//
+//        LineChartMarkView mv = new LineChartMarkView(this, xAxis.getValueFormatter());
+//        mv.setChartView(chart);
+//        chart.setMarker(mv);
+//        chart.invalidate();
+//
+//        chart.setDoubleTapToZoomEnabled(false);//双击屏幕缩放
+//        chart.setScaleEnabled(false);
+//        chart.setScaleXEnabled(false);
+//        chart.setScaleYEnabled(false);
+//        chart.setDragEnabled(true);
+//    }
 
     public void playSound() {
         Uri uri = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION);

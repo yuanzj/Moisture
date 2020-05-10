@@ -52,7 +52,7 @@ public class MainActivity extends BluetoothBaseActivity<MainPresenter> {
         mPresenter = new MainPresenter();
         mPresenter.attachView(this);
 
-        setTitle(R.string.app_name);
+        setTitle(R.string.app_name_m);
     }
 
     @Override

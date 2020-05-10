@@ -7,67 +7,48 @@
 
     <include layout="@layout/widget_tool_bar" />
 
+    <RelativeLayout
+        android:id="@+id/parent_chart"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_weight="1"
+        android:visibility="gone" />
+
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="0dp"
         android:layout_weight="1"
-        android:orientation="horizontal"
+        android:gravity="center"
         android:background="@drawable/bg_measure_2"
-        >
-
+        android:orientation="horizontal">
         <LinearLayout
-            android:layout_weight="1"
-            android:layout_width="0dp"
+            android:layout_width="wrap_content"
             android:layout_height="match_parent"
-            android:orientation="vertical"
-            >
-            <RelativeLayout
-                android:id="@+id/parent_chart"
-                android:layout_width="match_parent"
-                android:layout_height="0dp"
-                android:layout_weight="1"
-                />
-
-            <TextView
-                android:id="@+id/time"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:gravity="center"
-                android:text="--"
-                android:layout_margin="16dp"
-                android:textColor="@color/navBarTitleColor"
-                android:textSize="@dimen/sizeTitle" />
-        </LinearLayout>
-        <LinearLayout
-            android:layout_width="0dp"
-            android:layout_weight="1"
-            android:layout_height="match_parent"
-            android:orientation="vertical"
             android:gravity="center"
-            >
+            android:orientation="vertical">
+
             <Space
                 android:layout_width="match_parent"
                 android:layout_height="0dp"
                 android:layout_weight="1" />
 
 
-
             <LinearLayout
-                android:background="@drawable/selector_btn"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:paddingLeft="16dp"
-                android:paddingRight="16dp"
-                android:paddingTop="8dp"
-                android:paddingBottom="8dp"
+                android:background="@drawable/selector_btn"
                 android:gravity="center"
-                android:orientation="horizontal">
+                android:orientation="horizontal"
+                android:paddingLeft="16dp"
+                android:paddingTop="8dp"
+                android:paddingRight="16dp"
+                android:paddingBottom="8dp">
 
                 <TextView
                     android:layout_width="160dp"
                     android:layout_height="wrap_content"
-                    android:text="温度"
                     android:gravity="left"
+                    android:text="温度"
                     android:textColor="@color/colorWhite"
                     android:textSize="@dimen/sizeTitle" />
 
@@ -78,69 +59,69 @@
                     android:layout_marginLeft="@dimen/padding_default"
                     android:gravity="right"
                     android:text="--"
-                    android:textStyle="bold"
                     android:textColor="@color/colorWhite"
-                    android:textSize="@dimen/sizeBigTitle" />
+                    android:textSize="@dimen/sizeBigTitle"
+                    android:textStyle="bold" />
             </LinearLayout>
 
             <LinearLayout
-                android:layout_marginTop="32dp"
-                android:background="@drawable/selector_btn"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:paddingLeft="16dp"
-                android:paddingRight="16dp"
-                android:paddingTop="8dp"
-                android:paddingBottom="8dp"
+                android:layout_marginTop="16dp"
+                android:background="@drawable/selector_btn"
                 android:gravity="center"
-                android:orientation="horizontal">
+                android:orientation="horizontal"
+                android:paddingLeft="16dp"
+                android:paddingTop="8dp"
+                android:paddingRight="16dp"
+                android:paddingBottom="8dp">
 
                 <TextView
                     android:layout_width="160dp"
                     android:layout_height="wrap_content"
-                    android:text="水分活度"
                     android:gravity="left"
+                    android:text="水分活度"
                     android:textColor="@color/colorWhite"
                     android:textSize="@dimen/sizeTitle" />
 
                 <TextView
                     android:id="@+id/activeness"
                     android:layout_width="160dp"
-                    android:gravity="right"
                     android:layout_height="wrap_content"
                     android:layout_marginLeft="@dimen/padding_default"
+                    android:gravity="right"
                     android:text="--"
-                    android:textStyle="bold"
                     android:textColor="@color/colorWhite"
-                    android:textSize="@dimen/sizeBigTitle" />
+                    android:textSize="@dimen/sizeBigTitle"
+                    android:textStyle="bold" />
             </LinearLayout>
 
             <LinearLayout
-                android:layout_marginTop="32dp"
-                android:background="@drawable/selector_btn"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:paddingLeft="16dp"
-                android:paddingRight="16dp"
-                android:paddingTop="8dp"
-                android:paddingBottom="8dp"
+                android:layout_marginTop="16dp"
+                android:background="@drawable/selector_btn"
                 android:gravity="center"
                 android:orientation="horizontal"
-                >
+                android:paddingLeft="16dp"
+                android:paddingTop="8dp"
+                android:paddingRight="16dp"
+                android:paddingBottom="8dp">
+
                 <TextView
                     android:layout_width="160dp"
                     android:layout_height="wrap_content"
-                    android:text="测量耗时"
                     android:gravity="left"
+                    android:text="测量耗时"
                     android:textColor="@color/colorWhite"
                     android:textSize="@dimen/sizeTitle" />
 
                 <TextView
                     android:id="@+id/alreadyRunning"
                     android:layout_width="160dp"
-                    android:gravity="right"
                     android:layout_height="wrap_content"
                     android:layout_marginLeft="@dimen/padding_default"
+                    android:gravity="right"
                     android:text="--"
                     android:textColor="@color/colorWhite"
                     android:textSize="@dimen/sizeTitle" />
@@ -151,11 +132,33 @@
                 android:layout_height="0dp"
                 android:layout_weight="1" />
 
-            <LinearLayout
+
+        </LinearLayout>
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:layout_marginLeft="32dp"
+            android:orientation="vertical">
+
+            <Space
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1" />
+
+            <TextView
+                android:id="@+id/time"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:layout_margin="16dp"
+                android:gravity="center"
+                android:text="--"
+                android:textColor="@color/navBarTitleColor"
+                android:textSize="@dimen/sizeTitle" />
+
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
                 android:gravity="center_vertical"
-                android:paddingBottom="@dimen/padding_default"
                 android:orientation="horizontal">
 
                 <Space
@@ -174,15 +177,17 @@
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="开始\n测量"
                         android:gravity="center"
+                        android:text="开始\n测量"
                         android:textColor="@color/colorWhite"
                         android:textSize="@dimen/sizeTitle" />
                 </LinearLayout>
+
                 <Space
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_weight="1" />
+
                 <LinearLayout
                     android:id="@+id/btnStopMeasure"
                     android:layout_width="72dp"
@@ -196,11 +201,12 @@
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="停止\n测量"
                         android:gravity="center"
+                        android:text="停止\n测量"
                         android:textColor="@color/colorWhite"
                         android:textSize="@dimen/sizeTitle" />
                 </LinearLayout>
+
                 <Space
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
@@ -208,25 +214,31 @@
 
             </LinearLayout>
 
+            <Space
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1" />
         </LinearLayout>
+
+
     </LinearLayout>
 
     <LinearLayout
-        android:background="@color/colorWhite"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="horizontal"
-        >
+        android:background="@color/colorWhite"
+        android:orientation="horizontal">
+
         <LinearLayout
             android:layout_width="0dp"
             android:layout_height="@dimen/list_item_height_default"
+            android:layout_weight="1"
             android:background="@color/colorWhite"
             android:gravity="left|center_vertical"
             android:orientation="horizontal"
-            android:layout_weight="1"
             android:paddingLeft="@dimen/padding_default"
-            android:paddingRight="@dimen/padding_default"
-            >
+            android:paddingRight="@dimen/padding_default">
+
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
@@ -242,11 +254,11 @@
                 android:layout_marginTop="8dp"
                 android:layout_marginRight="@dimen/padding_default"
                 android:layout_marginBottom="8dp"
-                android:maxLength="10"
                 android:layout_weight="1"
                 android:background="@drawable/edittext_bg_selector"
                 android:focusableInTouchMode="true"
                 android:hint="请输入测量样品名称"
+                android:maxLength="10"
                 android:singleLine="true"
                 android:textColor="@color/colorBody"
                 android:textCursorDrawable="@drawable/solid_shape_bottom_line"
@@ -256,9 +268,8 @@
                 android:id="@+id/history"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:src="@mipmap/ic_history"
                 android:background="@drawable/selector_btn_transparent"
-                />
+                android:src="@mipmap/ic_history" />
 
 
         </LinearLayout>
@@ -266,8 +277,8 @@
 
         <LinearLayout
             android:layout_width="0dp"
-            android:layout_weight="1"
             android:layout_height="wrap_content"
+            android:layout_weight="1"
             android:gravity="center_vertical"
             android:orientation="horizontal"
             android:padding="@dimen/padding_default">

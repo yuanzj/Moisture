@@ -7,7 +7,7 @@ android {
         targetCompatibility JavaVersion.VERSION_1_8
     }
     defaultConfig {
-        applicationId "com.drt.moisture"
+        applicationId "com.drt.moisture.phone"
         minSdkVersion 23
         targetSdkVersion 28
         versionCode 20200505

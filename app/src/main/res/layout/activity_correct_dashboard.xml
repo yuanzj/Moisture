@@ -45,7 +45,7 @@
                 <LinearLayout
                     android:id="@+id/point1"
                     android:layout_width="300dp"
-                    android:layout_height="48dp"
+                    android:layout_height="40dp"
                     android:background="@drawable/bg_white"
                     android:gravity="center"
                     android:orientation="horizontal"
@@ -58,7 +58,7 @@
                         android:gravity="center"
                         android:text="1"
                         android:textColor="@color/colorWhite"
-                        android:textSize="@dimen/sizeTitle"
+                        android:textSize="@dimen/sizeSubTitle"
                         android:textStyle="bold" />
 
                     <Space
@@ -73,7 +73,7 @@
                         android:gravity="center"
                         android:text="--"
                         android:textColor="@color/colorWhite"
-                        android:textSize="@dimen/sizeTitle" />
+                        android:textSize="@dimen/sizeSubTitle" />
 
                     <Space
                         android:layout_width="match_parent"
@@ -87,7 +87,7 @@
                         android:gravity="center"
                         android:text="--"
                         android:textColor="@color/colorWhite"
-                        android:textSize="@dimen/sizeTitle" />
+                        android:textSize="@dimen/sizeSubTitle" />
 
                     <Space
                         android:layout_width="match_parent"
@@ -102,7 +102,7 @@
                         android:paddingBottom="4dp"
                         android:text="--"
                         android:textColor="@color/colorWhite"
-                        android:textSize="@dimen/sizeTitle" />
+                        android:textSize="@dimen/sizeSubTitle" />
 
                 </LinearLayout>
 
@@ -110,7 +110,7 @@
                 <LinearLayout
                     android:id="@+id/point2"
                     android:layout_width="300dp"
-                    android:layout_height="48dp"
+                    android:layout_height="40dp"
                     android:layout_marginTop="16dp"
                     android:background="@drawable/bg_white"
                     android:gravity="center"
@@ -124,7 +124,7 @@
                         android:gravity="center"
                         android:text="2"
                         android:textColor="@color/colorWhite"
-                        android:textSize="@dimen/sizeTitle"
+                        android:textSize="@dimen/sizeSubTitle"
                         android:textStyle="bold" />
 
                     <Space
@@ -139,7 +139,7 @@
                         android:gravity="center"
                         android:text="--"
                         android:textColor="@color/colorWhite"
-                        android:textSize="@dimen/sizeTitle" />
+                        android:textSize="@dimen/sizeSubTitle" />
 
                     <Space
                         android:layout_width="match_parent"
@@ -153,7 +153,7 @@
                         android:gravity="center"
                         android:text="--"
                         android:textColor="@color/colorWhite"
-                        android:textSize="@dimen/sizeTitle" />
+                        android:textSize="@dimen/sizeSubTitle" />
 
                     <Space
                         android:layout_width="match_parent"
@@ -167,14 +167,14 @@
                         android:gravity="center"
                         android:text="--"
                         android:textColor="@color/colorWhite"
-                        android:textSize="@dimen/sizeTitle" />
+                        android:textSize="@dimen/sizeSubTitle" />
 
                 </LinearLayout>
 
                 <LinearLayout
                     android:id="@+id/point3"
                     android:layout_width="300dp"
-                    android:layout_height="48dp"
+                    android:layout_height="40dp"
                     android:layout_marginTop="16dp"
                     android:background="@drawable/bg_white"
                     android:gravity="center"
@@ -188,7 +188,7 @@
                         android:gravity="center"
                         android:text="3"
                         android:textColor="@color/colorWhite"
-                        android:textSize="@dimen/sizeTitle"
+                        android:textSize="@dimen/sizeSubTitle"
                         android:textStyle="bold" />
 
                     <Space
@@ -203,7 +203,7 @@
                         android:gravity="center"
                         android:text="--"
                         android:textColor="@color/colorWhite"
-                        android:textSize="@dimen/sizeTitle" />
+                        android:textSize="@dimen/sizeSubTitle" />
 
                     <Space
                         android:layout_width="0dp"
@@ -217,7 +217,7 @@
                         android:gravity="center"
                         android:text="--"
                         android:textColor="@color/colorWhite"
-                        android:textSize="@dimen/sizeTitle" />
+                        android:textSize="@dimen/sizeSubTitle" />
 
                     <Space
                         android:layout_width="0dp"
@@ -231,7 +231,7 @@
                         android:gravity="center"
                         android:text="--"
                         android:textColor="@color/colorWhite"
-                        android:textSize="@dimen/sizeTitle" />
+                        android:textSize="@dimen/sizeSubTitle" />
 
                 </LinearLayout>
             </LinearLayout>
@@ -247,7 +247,7 @@
                 <LinearLayout
                     android:id="@+id/point4"
                     android:layout_width="300dp"
-                    android:layout_height="48dp"
+                    android:layout_height="40dp"
                     android:background="@drawable/bg_white"
                     android:gravity="center"
                     android:orientation="horizontal"
@@ -260,7 +260,7 @@
                         android:gravity="center"
                         android:text="4"
                         android:textColor="@color/colorWhite"
-                        android:textSize="@dimen/sizeTitle"
+                        android:textSize="@dimen/sizeSubTitle"
                         android:textStyle="bold" />
 
                     <Space
@@ -275,7 +275,7 @@
                         android:gravity="center"
                         android:text="--"
                         android:textColor="@color/colorWhite"
-                        android:textSize="@dimen/sizeTitle" />
+                        android:textSize="@dimen/sizeSubTitle" />
 
                     <Space
                         android:layout_width="0dp"
@@ -289,7 +289,7 @@
                         android:gravity="center"
                         android:text="--"
                         android:textColor="@color/colorWhite"
-                        android:textSize="@dimen/sizeTitle" />
+                        android:textSize="@dimen/sizeSubTitle" />
 
                     <Space
                         android:layout_width="0dp"
@@ -304,14 +304,14 @@
                         android:paddingBottom="4dp"
                         android:text="--"
                         android:textColor="@color/colorWhite"
-                        android:textSize="@dimen/sizeTitle" />
+                        android:textSize="@dimen/sizeSubTitle" />
 
                 </LinearLayout>
 
                 <LinearLayout
                     android:id="@+id/point5"
                     android:layout_width="300dp"
-                    android:layout_height="48dp"
+                    android:layout_height="40dp"
                     android:layout_marginTop="16dp"
                     android:background="@drawable/bg_white"
                     android:gravity="center"
@@ -325,7 +325,7 @@
                         android:gravity="center"
                         android:text="5"
                         android:textColor="@color/colorWhite"
-                        android:textSize="@dimen/sizeTitle"
+                        android:textSize="@dimen/sizeSubTitle"
                         android:textStyle="bold" />
 
                     <Space
@@ -340,7 +340,7 @@
                         android:gravity="center"
                         android:text="--"
                         android:textColor="@color/colorWhite"
-                        android:textSize="@dimen/sizeTitle" />
+                        android:textSize="@dimen/sizeSubTitle" />
 
                     <Space
                         android:layout_width="0dp"
@@ -354,7 +354,7 @@
                         android:gravity="center"
                         android:text="--"
                         android:textColor="@color/colorWhite"
-                        android:textSize="@dimen/sizeTitle" />
+                        android:textSize="@dimen/sizeSubTitle" />
 
                     <Space
                         android:layout_width="0dp"
@@ -369,7 +369,7 @@
                         android:paddingBottom="4dp"
                         android:text="--"
                         android:textColor="@color/colorWhite"
-                        android:textSize="@dimen/sizeTitle" />
+                        android:textSize="@dimen/sizeSubTitle" />
 
                 </LinearLayout>
             </LinearLayout>
@@ -391,7 +391,7 @@
 
                 <LinearLayout
                     android:layout_width="300dp"
-                    android:layout_height="48dp"
+                    android:layout_height="40dp"
                     android:background="@drawable/bg_white"
                     android:gravity="center_vertical"
                     android:orientation="horizontal"
@@ -410,7 +410,7 @@
 
                 <LinearLayout
                     android:layout_width="300dp"
-                    android:layout_height="48dp"
+                    android:layout_height="40dp"
                     android:layout_marginTop="16dp"
                     android:background="@drawable/bg_white"
                     android:gravity="center_vertical"
@@ -443,7 +443,7 @@
                 <LinearLayout
                     android:id="@+id/btnStartMeasure"
                     android:layout_width="300dp"
-                    android:layout_height="48dp"
+                    android:layout_height="40dp"
                     android:background="@drawable/bg_white1"
                     android:gravity="center"
                     android:orientation="vertical"
@@ -457,13 +457,13 @@
                         android:paddingBottom="4dp"
                         android:text="开始校正"
                         android:textColor="@color/colorBtnUnPress"
-                        android:textSize="@dimen/sizeTitle" />
+                        android:textSize="@dimen/sizeSubTitle" />
                 </LinearLayout>
 
                 <LinearLayout
                     android:id="@+id/btnStopMeasure"
                     android:layout_width="300dp"
-                    android:layout_height="48dp"
+                    android:layout_height="40dp"
                     android:layout_marginTop="@dimen/padding_default"
                     android:alpha="0.32"
                     android:background="@drawable/bg_white1"
@@ -479,7 +479,7 @@
                         android:paddingBottom="4dp"
                         android:text="停止校正"
                         android:textColor="@color/colorBtnUnPress"
-                        android:textSize="@dimen/sizeTitle" />
+                        android:textSize="@dimen/sizeSubTitle" />
                 </LinearLayout>
             </LinearLayout>
 
