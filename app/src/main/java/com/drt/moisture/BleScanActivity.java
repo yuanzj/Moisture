@@ -36,6 +36,7 @@ public class BleScanActivity extends CustomActionBarActivity {
         // 初始化蓝牙按钮
         initBack();
         findViewById(R.id.second_title).setVisibility(View.GONE);
+        App.getInstance().pickDevice = true;
     }
 
     @Override
@@ -104,6 +105,12 @@ public class BleScanActivity extends CustomActionBarActivity {
     protected void onPause() {
         super.onPause();
         App.getInstance().getBluetoothClient().stopSearch();
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        App.getInstance().pickDevice = false;
     }
 
     private BaseAdapter mAdapter = new BaseAdapter() {
