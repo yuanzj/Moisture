@@ -2,7 +2,9 @@ package com.drt.moisture;
 
 import android.content.Intent;
 import android.os.Bundle;
+
 import androidx.annotation.Nullable;
+
 import android.view.KeyEvent;
 import android.view.View;
 import android.widget.Toast;
@@ -39,6 +41,10 @@ public class MainActivity extends BluetoothBaseActivity<MainPresenter> {
         } else {
             //
             Toast.makeText(this, "拒绝存储权限将无法保存日志！", Toast.LENGTH_LONG).show();
+        }
+
+        if (!App.getInstance().isRunning) {
+            App.getInstance().initAutoConnect();
         }
     }
 
@@ -138,6 +144,7 @@ public class MainActivity extends BluetoothBaseActivity<MainPresenter> {
     @Override
     protected void onDestroy() {
         super.onDestroy();
+        App.getInstance().isRunning = false;
         App.getInstance().getBluetoothSPP().disconnect();
     }
 
@@ -146,32 +153,34 @@ public class MainActivity extends BluetoothBaseActivity<MainPresenter> {
 
     }
 
-    private Timer timer;
+//    private Timer timer;
 
     @Override
     protected void onResume() {
         super.onResume();
-        if (timer != null) {
-            timer.cancel();
-            timer = null;
-        }
-        timer = new Timer();
-        timer.schedule(new TimerTask() {
-            @Override
-            public void run() {
-                if (App.getInstance().getConnectMacAddress() != null && App.getInstance().getBluetoothClient().getConnectStatus(App.getInstance().getConnectMacAddress()) != Constants.STATUS_DEVICE_CONNECTED) {
-                    EventBus.getDefault().post(new BleEvent());
-                }
-            }
-        }, 0, 3000);
+//        if (timer != null) {
+//            timer.cancel();
+//            timer = null;
+//        }
+//        timer = new Timer();
+//        timer.schedule(new TimerTask() {
+//            @Override
+//            public void run() {
+//                if (App.getInstance().getConnectMacAddress() != null && App.getInstance().getBluetoothClient().getConnectStatus(App.getInstance().getConnectMacAddress()) != Constants.STATUS_DEVICE_CONNECTED) {
+//                    EventBus.getDefault().post(new BleEvent());
+//                }
+//            }
+//        }, 0, 3000);
     }
 
     @Override
     protected void onStop() {
         super.onStop();
-        if (timer != null) {
-            timer.cancel();
-            timer = null;
-        }
+//        if (timer != null) {
+//            timer.cancel();
+//            timer = null;
+//        }
     }
+
+
 }

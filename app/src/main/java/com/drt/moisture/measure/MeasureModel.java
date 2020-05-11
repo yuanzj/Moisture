@@ -85,7 +85,7 @@ public class MeasureModel implements MeasureContract.Model {
             public void run() {
 
                 if (App.getInstance().getBluetoothClient().getConnectStatus(App.getInstance().getConnectMacAddress()) != Constants.STATUS_DEVICE_CONNECTED) {
-                    EventBus.getDefault().post(new BleEvent());
+//                    EventBus.getDefault().post(new BleEvent());
                     return;
                 }
 

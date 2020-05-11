@@ -142,7 +142,7 @@ public class CorrectDashboardModel implements CorrectDashboardContract.Model {
             public void run() {
 
                 if (App.getInstance().getBluetoothClient().getConnectStatus(App.getInstance().getConnectMacAddress()) != Constants.STATUS_DEVICE_CONNECTED) {
-                    EventBus.getDefault().post(new BleEvent());
+//                    EventBus.getDefault().post(new BleEvent());
                     return;
                 }
                 CommandEntity commandEntity = new CommandEntity();

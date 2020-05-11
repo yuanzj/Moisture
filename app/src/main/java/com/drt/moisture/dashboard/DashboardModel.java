@@ -621,7 +621,7 @@ public class DashboardModel implements DashboardContract.Model {
                 }
 
                 if (App.getInstance().getBluetoothClient().getConnectStatus(App.getInstance().getConnectMacAddress()) != Constants.STATUS_DEVICE_CONNECTED) {
-                    EventBus.getDefault().post(new BleEvent());
+//                    EventBus.getDefault().post(new BleEvent());
 
                     try {
                         Thread.sleep(1000);
