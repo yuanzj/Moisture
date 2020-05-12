@@ -239,9 +239,9 @@ public class LineChartRenderer extends LineRadarRenderer {
                 curDy = (next.getY() - prev.getY()) * intensity;
 
                 if (prevPrev.getY() == -1 || prev.getY() == -1 || cur.getY() == -1 || next.getY() == -1
-//                || prevPrev.getY() == 0 || prev.getY() == 0 || cur.getY() == 0 || next.getY() == 0
+                || prevPrev.getY() == 0 || prev.getY() == 0 || cur.getY() == 0 || next.getY() == 0
                 ) {
-                    cubicPath.moveTo(cur.getX(), next.getY() * phaseY);
+                    cubicPath.moveTo(cur.getX(), cur.getY() * phaseY);
                     continue;
                 }
 
