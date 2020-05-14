@@ -110,7 +110,7 @@ public class ReportModel implements ReportContract.Model, SppDataCallback<HisRec
             return;
         }
 
-        if (recordDataResponse.getTime() == 0 || recordDataResponse.getResponse() == 5) {
+        if (recordDataResponse.getTime() == 0) {
             running = false;
             return;
         }
@@ -131,6 +131,10 @@ public class ReportModel implements ReportContract.Model, SppDataCallback<HisRec
                 report.success(values);
             }
 
+        }
+
+        if (recordDataResponse.getResponse() == 5) {
+            running = false;
         }
     }
 
