@@ -243,6 +243,12 @@ public interface BluetoothService {
      */
     void setTiming(TimingSetRequest timingSetRequest, SppDataCallback<ParameterSetResponse> sppDataCallback, boolean retry);
 
+    /**
+     * 设置定时时间
+     *
+     * @param sppDataCallback
+     */
+    void setMeasureName(int index, String name, SppDataCallback<ParameterSetResponse> sppDataCallback, boolean retry);
 
     /**
      * 查询测量参数
