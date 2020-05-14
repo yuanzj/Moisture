@@ -1039,6 +1039,49 @@ public class BluetoothServiceImpl implements BluetoothService, BleWriteResponse 
     }
 
     @Override
+    public void setMeasureName(final int index,final String name, SppDataCallback<ParameterSetResponse> sppDataCallback, boolean retry) {
+        this.sppDataCallback = sppDataCallback;
+        MeasureNameSetRequest timingSetRequest = new MeasureNameSetRequest();
+        timingSetRequest.setCmdGroup((byte) 0xA2);
+        timingSetRequest.setCmd((byte) 0x0C);
+        timingSetRequest.setResponse((byte) 0x01);
+        timingSetRequest.setReserved(0);
+        timingSetRequest.setIndex(index);
+        timingSetRequest.setName(name);
+        try {
+            write(App.getInstance().getConnectMacAddress(), UUIDUtils.makeUUID(0xFFE0), UUIDUtils.makeUUID(0xFFE1), BluetoothDataUtil.encode(timingSetRequest), this);
+
+            if (!retry) {
+                expectResponseCode = 0xA2;
+                currentRetryCount = 0;
+                if (timeoutTimer != null) {
+                    timeoutTimer.cancel();
+                }
+                timeoutTimer = new Timer();
+                timeoutTimer.schedule(new TimerTask() {
+                    @Override
+                    public void run() {
+                        if (currentRetryCount >= 2) {
+                            currentRetryCount = 0;
+                            timeoutTimer.cancel();
+                            timeoutTimer = null;
+                        } else {
+                            if (timeoutTimer != null) {
+                                currentRetryCount++;
+                                setMeasureName(index, name, sppDataCallback, true);
+                            }
+                        }
+
+                    }
+                }, 800, 800);
+            }
+
+        } catch (IllegalAccessException | RkFieldException | FieldConvertException e) {
+            e.printStackTrace();
+        }
+    }
+
+    @Override
     public void queryRateParame(SppDataCallback<SetRateRequest> sppDataCallback) {
         this.sppDataCallback = sppDataCallback;
         QueryParameRequest queryParameRequest = new QueryParameRequest();

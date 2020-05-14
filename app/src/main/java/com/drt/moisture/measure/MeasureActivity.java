@@ -31,6 +31,8 @@ import com.drt.moisture.dashboard.DashboardPresenter;
 import com.drt.moisture.data.AppConfig;
 import com.drt.moisture.data.MeasureStatus;
 import com.drt.moisture.data.MeasureValue;
+import com.drt.moisture.data.source.bluetooth.SppDataCallback;
+import com.drt.moisture.data.source.bluetooth.response.ParameterSetResponse;
 import com.drt.moisture.util.LineChartMarkView;
 import com.github.mikephil.charting.charts.LineChart;
 import com.github.mikephil.charting.components.XAxis;
@@ -125,6 +127,26 @@ public class MeasureActivity extends BluetoothBaseActivity<DashboardPresenter> i
         }
         List<String> names = App.getInstance().getLocalDataService().queryHistory(index);
         measureName.setText(names.get(names.size() - 1));
+        measureName.setOnEditorActionListener((v, actionId, event) -> {
+            Log.e("输入完点击确认执行该方法", "输入结束");
+            if (!TextUtils.isEmpty(measureName.getText())) {
+                App.getInstance().getLocalDataService().setHistory(index, measureName.getText().toString());
+                App.getInstance().getBluetoothService().setMeasureName(index, measureName.getText().toString(), new SppDataCallback<ParameterSetResponse>() {
+
+                    @Override
+                    public void delivery(ParameterSetResponse parameterSetResponse) {
+
+                    }
+
+                    @Override
+                    public Class<ParameterSetResponse> getEntityType() {
+                        return ParameterSetResponse.class;
+                    }
+                }, false);
+            }
+
+            return false;
+        });
 
         setTitleName("测点" + index + "测量");
     }
@@ -436,6 +458,18 @@ public class MeasureActivity extends BluetoothBaseActivity<DashboardPresenter> i
         super.onStop();
         if (!TextUtils.isEmpty(measureName.getText())) {
             App.getInstance().getLocalDataService().setHistory(index, measureName.getText().toString());
+            App.getInstance().getBluetoothService().setMeasureName(index, measureName.getText().toString(), new SppDataCallback<ParameterSetResponse>() {
+
+                @Override
+                public void delivery(ParameterSetResponse parameterSetResponse) {
+
+                }
+
+                @Override
+                public Class<ParameterSetResponse> getEntityType() {
+                    return ParameterSetResponse.class;
+                }
+            }, false);
         }
     }
 
