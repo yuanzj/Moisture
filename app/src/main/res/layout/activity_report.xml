@@ -18,7 +18,7 @@
         <RelativeLayout
             android:layout_width="0dp"
             android:layout_height="match_parent"
-            android:layout_weight="1.5"
+            android:layout_weight="1.4"
             >
 
             <com.bin.david.form.core.SmartTable
@@ -160,7 +160,7 @@
                 android:layout_height="48dp"
                 android:text="查询"
                 android:id="@+id/search"
-                android:textSize="@dimen/sizeSubTitle"
+                android:textSize="@dimen/sizeBody"
                 android:gravity="center"
                 android:textStyle="bold"
                 android:textColor="@color/colorPrimary"
@@ -187,7 +187,7 @@
                     android:layout_height="match_parent"
                     android:text="上一页"
                     android:id="@+id/previous"
-                    android:textSize="@dimen/sizeSubTitle"
+                    android:textSize="@dimen/sizeBody"
                     android:textStyle="bold"
                     android:textColor="@color/colorPrimary"
                     android:background="@drawable/selector_btn_transparent"
@@ -203,7 +203,7 @@
                         android:layout_height="match_parent"
                         android:gravity="center"
                         android:id="@+id/page"
-                        android:textSize="@dimen/sizeBody"
+                        android:textSize="@dimen/sizeSecondBody"
                         android:textColor="@color/colorSecondBody"
                         android:text="0/0"
                         />
@@ -212,7 +212,7 @@
                         android:layout_marginLeft="16dp"
                         android:layout_width="wrap_content"
                         android:layout_height="match_parent"
-                        android:textSize="@dimen/sizeBody"
+                        android:textSize="@dimen/sizeSecondBody"
                         android:textColor="@color/colorSecondBody"
                         android:gravity="center"
                         android:text="共0条"
@@ -226,7 +226,7 @@
                     android:layout_height="match_parent"
                     android:text="下一页"
                     android:id="@+id/next"
-                    android:textSize="@dimen/sizeSubTitle"
+                    android:textSize="@dimen/sizeBody"
                     android:textStyle="bold"
                     android:textColor="@color/colorPrimary"
                     android:background="@drawable/selector_btn_transparent"

@@ -79,7 +79,7 @@ public class SettingActivity extends BluetoothBaseActivity<SettingPresenter> imp
                     ((TextView) deviceInfoView.findViewById(R.id.title1)).setText(deviceInfo.getSN());
                     ((TextView) deviceInfoView.findViewById(R.id.title2)).setText(deviceInfo.getVersion());
                     ((TextView) deviceInfoView.findViewById(R.id.title3)).setText(deviceInfo.getModel());
-                    ((TextView) deviceInfoView.findViewById(R.id.title4)).setText("水分活度测量仪");
+                    ((TextView) deviceInfoView.findViewById(R.id.title4)).setText("智能水分活度仪");
                     ((TextView) deviceInfoView.findViewById(R.id.title5)).setText(deviceInfo.getBattery());
                 }
 
@@ -127,7 +127,7 @@ public class SettingActivity extends BluetoothBaseActivity<SettingPresenter> imp
                     for (int i = 0; i < NameFinal.length; i++) {
                         NameFinal[i] = Name.get(i);
                     }
-                    ((EditText) dialogSetDeviceInfo.findViewById(R.id.mc)).setText(new String(NameFinal));
+//                    ((EditText) dialogSetDeviceInfo.findViewById(R.id.mc)).setText(new String(NameFinal));
 
                     byte[] getBatteryTemp = deviceInfo.getBattery().getBytes();
 
@@ -349,7 +349,7 @@ public class SettingActivity extends BluetoothBaseActivity<SettingPresenter> imp
 
         item1 = new HashMap<>();
         item1.put("icon", R.mipmap.icons_data_configuration);
-        item1.put("title", "定时测量设置");
+        item1.put("title", "预约测量时间设置");
         data.add(item1);
 
 //        item1 = new HashMap<>();
@@ -529,7 +529,7 @@ public class SettingActivity extends BluetoothBaseActivity<SettingPresenter> imp
                 });
 
 
-                AlertDialog.Builder builder = new AlertDialog.Builder(this).setTitle("定时测量设置")
+                AlertDialog.Builder builder = new AlertDialog.Builder(this).setTitle("预约测量时间设置")
                         .setView(dialogSetTiming)
                         .setPositiveButton("确认", new DialogInterface.OnClickListener() {
                             @Override
@@ -856,7 +856,7 @@ public class SettingActivity extends BluetoothBaseActivity<SettingPresenter> imp
 
             item1 = new HashMap<>();
             item1.put("icon", R.mipmap.icons_data_configuration);
-            item1.put("title", "定时测量设置");
+            item1.put("title", "预约测量时间设置");
             data.add(item1);
 
 //            item1 = new HashMap<>();

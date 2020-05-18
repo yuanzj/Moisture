@@ -1,128 +1,135 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:background="@color/colorWhite"
-    android:orientation="vertical"
-    android:padding="@dimen/padding_default">
+    android:background="@color/colorWhite">
 
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="48dp"
-        android:gravity="center_vertical"
-        android:orientation="horizontal">
-
-        <TextView
-            android:layout_width="60dp"
-            android:layout_height="wrap_content"
-            android:text="序列号"
-            android:textColor="@color/colorSecondBody"
-            android:textSize="@dimen/sizeBody" />
+        android:layout_height="wrap_content"
+        android:background="@color/colorWhite"
+        android:orientation="vertical"
+        android:padding="@dimen/padding_default">
 
 
-
-        <EditText
-            android:id="@+id/xlh"
+        <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginLeft="@dimen/padding_default"
-            android:background="@drawable/edittext_bg_selector"
-            android:focusableInTouchMode="true"
-            android:hint="请输入序列号"
-            android:inputType="textEmailAddress"
-            android:digits="0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ-."
-            android:singleLine="true"
-            android:textColor="@color/colorBody"
-            android:textCursorDrawable="@drawable/solid_shape_bottom_line"
-            android:textSize="@dimen/sizeSubTitle" />
-    </LinearLayout>
+            android:layout_height="48dp"
+            android:gravity="center_vertical"
+            android:orientation="horizontal">
+
+            <TextView
+                android:layout_width="60dp"
+                android:layout_height="wrap_content"
+                android:text="序列号"
+                android:textColor="@color/colorSecondBody"
+                android:textSize="@dimen/sizeBody" />
 
 
+            <EditText
+                android:id="@+id/xlh"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="@dimen/padding_default"
+                android:background="@drawable/edittext_bg_selector"
+                android:digits="0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ-."
+                android:focusableInTouchMode="true"
+                android:hint="请输入序列号"
+                android:inputType="textEmailAddress"
+                android:singleLine="true"
+                android:textColor="@color/colorBody"
+                android:textCursorDrawable="@drawable/solid_shape_bottom_line"
+                android:textSize="@dimen/sizeSubTitle" />
+        </LinearLayout>
 
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="48dp"
-        android:gravity="center_vertical"
-        android:orientation="horizontal">
 
-        <TextView
-            android:layout_width="60dp"
-            android:layout_height="wrap_content"
-            android:text="型号"
-            android:textColor="@color/colorSecondBody"
-            android:textSize="@dimen/sizeBody" />
-
-        <EditText
-            android:id="@+id/xh"
+        <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginLeft="@dimen/padding_default"
-            android:background="@drawable/edittext_bg_selector"
-            android:focusableInTouchMode="true"
-            android:hint="请输入型号"
-            android:inputType="textEmailAddress"
-            android:digits="0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ-."
-            android:singleLine="true"
-            android:textColor="@color/colorBody"
-            android:textCursorDrawable="@drawable/solid_shape_bottom_line"
-            android:textSize="@dimen/sizeSubTitle" />
-    </LinearLayout>
+            android:layout_height="48dp"
+            android:gravity="center_vertical"
+            android:orientation="horizontal">
 
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="48dp"
-        android:gravity="center_vertical"
-        android:orientation="horizontal">
+            <TextView
+                android:layout_width="60dp"
+                android:layout_height="wrap_content"
+                android:text="型号"
+                android:textColor="@color/colorSecondBody"
+                android:textSize="@dimen/sizeBody" />
 
-        <TextView
-            android:layout_width="60dp"
-            android:layout_height="wrap_content"
-            android:text="名称"
-            android:textColor="@color/colorSecondBody"
-            android:textSize="@dimen/sizeBody" />
+            <EditText
+                android:id="@+id/xh"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="@dimen/padding_default"
+                android:background="@drawable/edittext_bg_selector"
+                android:digits="0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ-."
+                android:focusableInTouchMode="true"
+                android:hint="请输入型号"
+                android:inputType="textEmailAddress"
+                android:singleLine="true"
+                android:textColor="@color/colorBody"
+                android:textCursorDrawable="@drawable/solid_shape_bottom_line"
+                android:textSize="@dimen/sizeSubTitle" />
+        </LinearLayout>
 
-        <EditText
-            android:id="@+id/mc"
+        <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginLeft="@dimen/padding_default"
-            android:background="@drawable/edittext_bg_selector"
-            android:focusableInTouchMode="true"
-            android:hint="请输入名称"
-            android:inputType="textEmailAddress"
-            android:digits="0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ-."
-            android:singleLine="true"
-            android:textColor="@color/colorBody"
-            android:textCursorDrawable="@drawable/solid_shape_bottom_line"
-            android:textSize="@dimen/sizeSubTitle" />
-    </LinearLayout>
+            android:layout_height="48dp"
+            android:gravity="center_vertical"
+            android:orientation="horizontal">
 
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="48dp"
-        android:gravity="center_vertical"
-        android:orientation="horizontal">
+            <TextView
+                android:layout_width="60dp"
+                android:layout_height="wrap_content"
+                android:text="名称"
+                android:textColor="@color/colorSecondBody"
+                android:textSize="@dimen/sizeBody" />
 
-        <TextView
-            android:layout_width="60dp"
-            android:layout_height="wrap_content"
-            android:text="电池"
-            android:textColor="@color/colorSecondBody"
-            android:textSize="@dimen/sizeBody" />
+            <EditText
+                android:id="@+id/mc"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="@dimen/padding_default"
+                android:enabled="false"
+                android:background="@drawable/edittext_bg_selector"
+                android:digits="0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ-."
+                android:focusableInTouchMode="true"
+                android:inputType="textEmailAddress"
+                android:singleLine="true"
+                android:text="智能水分活度仪"
+                android:textColor="@color/colorBody"
+                android:textCursorDrawable="@drawable/solid_shape_bottom_line"
+                android:textSize="@dimen/sizeSubTitle" />
+        </LinearLayout>
 
-        <EditText
-            android:id="@+id/dc"
+        <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginLeft="@dimen/padding_default"
-            android:background="@drawable/edittext_bg_selector"
-            android:focusableInTouchMode="true"
-            android:hint="请输入电池"
-            android:inputType="textEmailAddress"
-            android:digits="0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ-."
-            android:singleLine="true"
-            android:textColor="@color/colorBody"
-            android:textCursorDrawable="@drawable/solid_shape_bottom_line"
-            android:textSize="@dimen/sizeSubTitle" />
+            android:layout_height="48dp"
+            android:gravity="center_vertical"
+            android:orientation="horizontal">
+
+            <TextView
+                android:layout_width="60dp"
+                android:layout_height="wrap_content"
+                android:text="电池"
+                android:textColor="@color/colorSecondBody"
+                android:textSize="@dimen/sizeBody" />
+
+            <EditText
+                android:id="@+id/dc"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="@dimen/padding_default"
+                android:background="@drawable/edittext_bg_selector"
+                android:digits="0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ-."
+                android:focusableInTouchMode="true"
+                android:hint="请输入电池"
+                android:inputType="textEmailAddress"
+                android:singleLine="true"
+                android:textColor="@color/colorBody"
+                android:textCursorDrawable="@drawable/solid_shape_bottom_line"
+                android:textSize="@dimen/sizeSubTitle" />
+        </LinearLayout>
+
     </LinearLayout>
-</LinearLayout>
+</ScrollView>

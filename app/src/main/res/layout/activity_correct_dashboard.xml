@@ -44,7 +44,7 @@
 
                 <LinearLayout
                     android:id="@+id/point1"
-                    android:layout_width="300dp"
+                    android:layout_width="280dp"
                     android:layout_height="40dp"
                     android:background="@drawable/bg_white"
                     android:gravity="center"
@@ -109,7 +109,7 @@
 
                 <LinearLayout
                     android:id="@+id/point2"
-                    android:layout_width="300dp"
+                    android:layout_width="280dp"
                     android:layout_height="40dp"
                     android:layout_marginTop="16dp"
                     android:background="@drawable/bg_white"
@@ -173,7 +173,7 @@
 
                 <LinearLayout
                     android:id="@+id/point3"
-                    android:layout_width="300dp"
+                    android:layout_width="280dp"
                     android:layout_height="40dp"
                     android:layout_marginTop="16dp"
                     android:background="@drawable/bg_white"
@@ -246,7 +246,7 @@
 
                 <LinearLayout
                     android:id="@+id/point4"
-                    android:layout_width="300dp"
+                    android:layout_width="280dp"
                     android:layout_height="40dp"
                     android:background="@drawable/bg_white"
                     android:gravity="center"
@@ -310,7 +310,7 @@
 
                 <LinearLayout
                     android:id="@+id/point5"
-                    android:layout_width="300dp"
+                    android:layout_width="280dp"
                     android:layout_height="40dp"
                     android:layout_marginTop="16dp"
                     android:background="@drawable/bg_white"
@@ -390,7 +390,7 @@
                 android:paddingRight="16dp">
 
                 <LinearLayout
-                    android:layout_width="300dp"
+                    android:layout_width="280dp"
                     android:layout_height="40dp"
                     android:background="@drawable/bg_white"
                     android:gravity="center_vertical"
@@ -409,7 +409,7 @@
                 </LinearLayout>
 
                 <LinearLayout
-                    android:layout_width="300dp"
+                    android:layout_width="280dp"
                     android:layout_height="40dp"
                     android:layout_marginTop="16dp"
                     android:background="@drawable/bg_white"
@@ -442,7 +442,7 @@
 
                 <LinearLayout
                     android:id="@+id/btnStartMeasure"
-                    android:layout_width="300dp"
+                    android:layout_width="280dp"
                     android:layout_height="40dp"
                     android:background="@drawable/bg_white1"
                     android:gravity="center"
@@ -462,7 +462,7 @@
 
                 <LinearLayout
                     android:id="@+id/btnStopMeasure"
-                    android:layout_width="300dp"
+                    android:layout_width="280dp"
                     android:layout_height="40dp"
                     android:layout_marginTop="@dimen/padding_default"
                     android:alpha="0.32"

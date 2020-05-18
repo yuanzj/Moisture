@@ -13,7 +13,7 @@
         android:orientation="horizontal">
 
         <TextView
-            android:layout_width="60dp"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="定时1："
             android:textColor="@color/colorSecondBody"
@@ -48,7 +48,7 @@
         android:orientation="horizontal">
 
         <TextView
-            android:layout_width="60dp"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="定时2："
             android:textColor="@color/colorSecondBody"
@@ -83,7 +83,7 @@
         android:orientation="horizontal">
 
         <TextView
-            android:layout_width="60dp"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="定时3："
             android:textColor="@color/colorSecondBody"
