@@ -113,7 +113,7 @@
                     android:textStyle="bold"
                     android:gravity="center"
                     android:textColor="@color/colorWhite"
-                    android:textSize="@dimen/sizeBody" />
+                    android:textSize="@dimen/sizeSubTitle" />
                 <View
                     android:layout_width="48dp"
                     android:layout_height="0.8dp"
@@ -129,7 +129,7 @@
                     android:text="--"
                     android:gravity="center"
                     android:textColor="@color/colorWhite"
-                    android:textSize="@dimen/sizeBody" />
+                    android:textSize="@dimen/sizeSubTitle" />
 
                 <TextView
                     android:id="@+id/activeness"
@@ -139,7 +139,7 @@
                     android:text="--"
                     android:gravity="center"
                     android:textColor="@color/colorWhite"
-                    android:textSize="@dimen/sizeBody" />
+                    android:textSize="@dimen/sizeSubTitle" />
 
                 <TextView
                     android:id="@+id/alreadyRunning"
@@ -150,7 +150,7 @@
                     android:paddingBottom="4dp"
                     android:gravity="center"
                     android:textColor="@color/colorWhite"
-                    android:textSize="@dimen/sizeBody" />
+                    android:textSize="@dimen/sizeSubTitle" />
 
             </LinearLayout>
 
@@ -174,7 +174,7 @@
                     android:textStyle="bold"
                     android:gravity="center"
                     android:textColor="@color/colorWhite"
-                    android:textSize="@dimen/sizeBody" />
+                    android:textSize="@dimen/sizeSubTitle" />
                 <View
                     android:layout_width="48dp"
                     android:layout_height="0.8dp"
@@ -189,7 +189,7 @@
                     android:text="--"
                     android:gravity="center"
                     android:textColor="@color/colorWhite"
-                    android:textSize="@dimen/sizeBody" />
+                    android:textSize="@dimen/sizeSubTitle" />
 
                 <TextView
                     android:id="@+id/activeness1"
@@ -199,7 +199,7 @@
                     android:text="--"
                     android:gravity="center"
                     android:textColor="@color/colorWhite"
-                    android:textSize="@dimen/sizeBody" />
+                    android:textSize="@dimen/sizeSubTitle" />
 
                 <TextView
                     android:id="@+id/alreadyRunning1"
@@ -210,7 +210,7 @@
                     android:gravity="center"
                     android:paddingBottom="4dp"
                     android:textColor="@color/colorWhite"
-                    android:textSize="@dimen/sizeBody" />
+                    android:textSize="@dimen/sizeSubTitle" />
 
             </LinearLayout>
 
@@ -234,7 +234,7 @@
                     android:textStyle="bold"
                     android:gravity="center"
                     android:textColor="@color/colorWhite"
-                    android:textSize="@dimen/sizeBody" />
+                    android:textSize="@dimen/sizeSubTitle" />
                 <View
                     android:layout_width="48dp"
                     android:layout_height="0.8dp"
@@ -249,7 +249,7 @@
                     android:text="--"
                     android:gravity="center"
                     android:textColor="@color/colorWhite"
-                    android:textSize="@dimen/sizeBody" />
+                    android:textSize="@dimen/sizeSubTitle" />
 
                 <TextView
                     android:id="@+id/activeness2"
@@ -259,7 +259,7 @@
                     android:text="--"
                     android:gravity="center"
                     android:textColor="@color/colorWhite"
-                    android:textSize="@dimen/sizeBody" />
+                    android:textSize="@dimen/sizeSubTitle" />
 
                 <TextView
                     android:id="@+id/alreadyRunning2"
@@ -270,7 +270,7 @@
                     android:paddingBottom="4dp"
                     android:gravity="center"
                     android:textColor="@color/colorWhite"
-                    android:textSize="@dimen/sizeBody" />
+                    android:textSize="@dimen/sizeSubTitle" />
 
             </LinearLayout>
 
@@ -294,7 +294,7 @@
                     android:textStyle="bold"
                     android:gravity="center"
                     android:textColor="@color/colorWhite"
-                    android:textSize="@dimen/sizeBody" />
+                    android:textSize="@dimen/sizeSubTitle" />
                 <View
                     android:layout_width="48dp"
                     android:layout_height="0.8dp"
@@ -309,7 +309,7 @@
                     android:text="--"
                     android:gravity="center"
                     android:textColor="@color/colorWhite"
-                    android:textSize="@dimen/sizeBody" />
+                    android:textSize="@dimen/sizeSubTitle" />
 
                 <TextView
                     android:id="@+id/activeness3"
@@ -319,7 +319,7 @@
                     android:text="--"
                     android:gravity="center"
                     android:textColor="@color/colorWhite"
-                    android:textSize="@dimen/sizeBody" />
+                    android:textSize="@dimen/sizeSubTitle" />
 
                 <TextView
                     android:id="@+id/alreadyRunning3"
@@ -330,7 +330,7 @@
                     android:paddingBottom="4dp"
                     android:gravity="center"
                     android:textColor="@color/colorWhite"
-                    android:textSize="@dimen/sizeBody" />
+                    android:textSize="@dimen/sizeSubTitle" />
 
             </LinearLayout>
 
@@ -354,7 +354,7 @@
                     android:textStyle="bold"
                     android:gravity="center"
                     android:textColor="@color/colorWhite"
-                    android:textSize="@dimen/sizeBody" />
+                    android:textSize="@dimen/sizeSubTitle" />
 
                 <View
                     android:layout_width="48dp"
@@ -371,7 +371,7 @@
                     android:text="--"
                     android:gravity="center"
                     android:textColor="@color/colorWhite"
-                    android:textSize="@dimen/sizeBody" />
+                    android:textSize="@dimen/sizeSubTitle" />
 
                 <TextView
                     android:id="@+id/activeness4"
@@ -381,7 +381,7 @@
                     android:text="--"
                     android:gravity="center"
                     android:textColor="@color/colorWhite"
-                    android:textSize="@dimen/sizeBody" />
+                    android:textSize="@dimen/sizeSubTitle" />
 
                 <TextView
                     android:id="@+id/alreadyRunning4"
@@ -392,7 +392,7 @@
                     android:paddingBottom="4dp"
                     android:gravity="center"
                     android:textColor="@color/colorWhite"
-                    android:textSize="@dimen/sizeBody" />
+                    android:textSize="@dimen/sizeSubTitle" />
 
             </LinearLayout>
 

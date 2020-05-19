@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">水分活度测量仪</string>
+    <string name="app_name">智能水分活度仪</string>
 
     <string name="activity_measure">水分活度测量</string>
 
