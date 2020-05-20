@@ -330,21 +330,16 @@ public class SettingActivity extends BluetoothBaseActivity<SettingPresenter> imp
 
     @Override
     public void onSetTimeSuccess() {
-        runOnUiThread(() -> {
-                    if (progressDialog != null) {
-                        progressDialog.dismiss();
-                    }
-                    Toast.makeText(getApplicationContext(), "设置成功", Toast.LENGTH_SHORT).show();
-                });
+        runOnUiThread(() -> Toast.makeText(getApplicationContext(), "设置成功", Toast.LENGTH_SHORT).show());
     }
 
     @Override
     public void onSetParameSuccess() {
-        runOnUiThread(new Runnable() {
-            @Override
-            public void run() {
-                Toast.makeText(getApplicationContext(), "设置成功", Toast.LENGTH_SHORT).show();
+        runOnUiThread(() -> {
+            if (progressDialog != null) {
+                progressDialog.dismiss();
             }
+            Toast.makeText(getApplicationContext(), "设置成功", Toast.LENGTH_SHORT).show();
         });
     }
 
