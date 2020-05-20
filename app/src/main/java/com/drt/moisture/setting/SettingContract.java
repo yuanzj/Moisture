@@ -60,6 +60,8 @@ public interface SettingContract {
 
     interface View extends BaseView {
 
+        void onStartSetTimer();
+
         void onDeviceInfoSuccess(DeviceInfo deviceInfo);
 
         void onMeasureConfigSuccess(SetMeasureParameRequest deviceInfo);

@@ -1,5 +1,6 @@
 package com.drt.moisture.setting;
 
+import android.app.ProgressDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
@@ -69,6 +70,27 @@ public class SettingActivity extends BluetoothBaseActivity<SettingPresenter> imp
     View deviceInfoView, dialogDateTime, dialogRate, dialogParameSet, dialogSetDeviceInfo, dialogSetTiming;
 
     boolean isBleConnected;
+
+    ProgressDialog progressDialog;
+
+    @Override
+    public void onStartSetTimer() {
+        runOnUiThread(() -> {
+            if (progressDialog != null) {
+                progressDialog.dismiss();
+            }
+            progressDialog = new ProgressDialog(SettingActivity.this);
+            progressDialog.setTitle("提示");
+            progressDialog.setMessage("设置中，请稍后...");
+            progressDialog.setCancelable(false);
+            progressDialog.setButton(DialogInterface.BUTTON_NEGATIVE, "取消",
+                    (dialog, which) -> {
+                        // TODO Auto-generated method stub
+                        progressDialog.dismiss();
+                    });
+            progressDialog.show();
+        });
+    }
 
     @Override
     public void onDeviceInfoSuccess(final DeviceInfo deviceInfo) {
@@ -308,12 +330,12 @@ public class SettingActivity extends BluetoothBaseActivity<SettingPresenter> imp
 
     @Override
     public void onSetTimeSuccess() {
-        runOnUiThread(new Runnable() {
-            @Override
-            public void run() {
-                Toast.makeText(getApplicationContext(), "设置成功", Toast.LENGTH_SHORT).show();
-            }
-        });
+        runOnUiThread(() -> {
+                    if (progressDialog != null) {
+                        progressDialog.dismiss();
+                    }
+                    Toast.makeText(getApplicationContext(), "设置成功", Toast.LENGTH_SHORT).show();
+                });
     }
 
     @Override
