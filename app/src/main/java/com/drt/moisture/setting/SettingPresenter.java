@@ -151,7 +151,7 @@ public class SettingPresenter extends BasePresenter<SettingContract.View> implem
         if (!isViewAttached()) {
             return;
         }
-        mView.onStartSetTimer();
+        mView.showLoading();
         model.setTime(time, new DataCallback<ParameterSetResponse>() {
             @Override
             public void delivery(ParameterSetResponse deviceInfo) {
@@ -253,7 +253,7 @@ public class SettingPresenter extends BasePresenter<SettingContract.View> implem
         if (!isViewAttached()) {
             return;
         }
-        mView.showLoading();
+        mView.onStartSetTimer();
         model.setTiming(timingSetRequest, new DataCallback<ParameterSetResponse>() {
             @Override
             public void delivery(ParameterSetResponse deviceInfo) {
