@@ -290,14 +290,14 @@ public class SettingModel implements SettingContract.Model {
 
     @Override
     public void setTiming(TimingSetRequest timingSetRequest, DataCallback<ParameterSetResponse> sppDataCallback) {
-        App.getInstance().date1 = null;
-        App.getInstance().date2 = null;
-        App.getInstance().date3 = null;
         this.setTimingSetResponseDataCallback = sppDataCallback;
         App.getInstance().getBluetoothService().setTiming(timingSetRequest, new SppDataCallback<ParameterSetResponse>() {
 
             @Override
             public void delivery(ParameterSetResponse parameterSetResponse) {
+                App.getInstance().date1 = null;
+                App.getInstance().date2 = null;
+                App.getInstance().date3 = null;
                 if (setTimingSetResponseDataCallback != null) {
                     setTimingSetResponseDataCallback.delivery(parameterSetResponse);
                 }
