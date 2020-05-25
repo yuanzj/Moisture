@@ -15,7 +15,7 @@
         <TextView
             android:layout_width="60dp"
             android:layout_height="wrap_content"
-            android:text="定时1："
+            android:text="预约1："
             android:textColor="@color/colorSecondBody"
             android:textSize="@dimen/sizeBody" />
 
@@ -50,7 +50,7 @@
         <TextView
             android:layout_width="60dp"
             android:layout_height="wrap_content"
-            android:text="定时2："
+            android:text="预约2："
             android:textColor="@color/colorSecondBody"
             android:textSize="@dimen/sizeBody" />
 
@@ -85,7 +85,7 @@
         <TextView
             android:layout_width="60dp"
             android:layout_height="wrap_content"
-            android:text="定时3："
+            android:text="预约3："
             android:textColor="@color/colorSecondBody"
             android:textSize="@dimen/sizeBody" />
 

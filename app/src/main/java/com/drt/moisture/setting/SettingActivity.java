@@ -366,7 +366,7 @@ public class SettingActivity extends BluetoothBaseActivity<SettingPresenter> imp
 
         item1 = new HashMap<>();
         item1.put("icon", R.mipmap.icons_data_configuration);
-        item1.put("title", "预约测量时间设置");
+        item1.put("title", "定时测量时间设置");
         data.add(item1);
 
 //        item1 = new HashMap<>();
@@ -506,7 +506,7 @@ public class SettingActivity extends BluetoothBaseActivity<SettingPresenter> imp
                                 time1.setText(dateTime1);
                             }
                         });
-                        DialogUtil.showDialog(SettingActivity.this, "定时1运行时间设置", picker);
+                        DialogUtil.showDialog(SettingActivity.this, "预约1运行时间设置", picker);
                     }
                 });
 
@@ -522,7 +522,7 @@ public class SettingActivity extends BluetoothBaseActivity<SettingPresenter> imp
                                 time2.setText(dateTime2);
                             }
                         });
-                        DialogUtil.showDialog(SettingActivity.this, "定时2运行时间设置", picker);
+                        DialogUtil.showDialog(SettingActivity.this, "预约2运行时间设置", picker);
 
                     }
                 });
@@ -540,13 +540,13 @@ public class SettingActivity extends BluetoothBaseActivity<SettingPresenter> imp
                                 time3.setText(dateTime3);
                             }
                         });
-                        DialogUtil.showDialog(SettingActivity.this, "定时3运行时间设置", picker);
+                        DialogUtil.showDialog(SettingActivity.this, "预约3运行时间设置", picker);
 
                     }
                 });
 
 
-                AlertDialog.Builder builder = new AlertDialog.Builder(this).setTitle("预约测量时间设置")
+                AlertDialog.Builder builder = new AlertDialog.Builder(this).setTitle("定时测量时间设置")
                         .setView(dialogSetTiming)
                         .setPositiveButton("确认", new DialogInterface.OnClickListener() {
                             @Override
@@ -873,7 +873,7 @@ public class SettingActivity extends BluetoothBaseActivity<SettingPresenter> imp
 
             item1 = new HashMap<>();
             item1.put("icon", R.mipmap.icons_data_configuration);
-            item1.put("title", "预约测量时间设置");
+            item1.put("title", "定时测量时间设置");
             data.add(item1);
 
 //            item1 = new HashMap<>();

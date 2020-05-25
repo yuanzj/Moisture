@@ -18,7 +18,7 @@
         <RelativeLayout
             android:layout_width="0dp"
             android:layout_height="match_parent"
-            android:layout_weight="1.5"
+            android:layout_weight="1.7"
             >
 
             <com.bin.david.form.core.SmartTable
@@ -49,7 +49,7 @@
                     android:layout_marginTop="@dimen/padding_default_half"
                     android:text="加载中请稍后..."
                     android:textColor="@color/colorSecondBody"
-                    android:textSize="@dimen/sizeBody" />
+                    android:textSize="@dimen/sizeSecondBody" />
             </LinearLayout>
         </RelativeLayout>
         <View
@@ -99,7 +99,7 @@
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="match_parent"
-                    android:textSize="@dimen/sizeBody"
+                    android:textSize="@dimen/sizeSecondBody"
                     android:textColor="@color/colorSecondBody"
                     android:gravity="center"
                     android:text="~"
@@ -203,7 +203,7 @@
                         android:layout_height="match_parent"
                         android:gravity="center"
                         android:id="@+id/page"
-                        android:textSize="@dimen/sizeBody"
+                        android:textSize="@dimen/sizeSecondBody"
                         android:textColor="@color/colorSecondBody"
                         android:text="0/0"
                         />
@@ -212,7 +212,7 @@
                         android:layout_marginLeft="16dp"
                         android:layout_width="wrap_content"
                         android:layout_height="match_parent"
-                        android:textSize="@dimen/sizeBody"
+                        android:textSize="@dimen/sizeSecondBody"
                         android:textColor="@color/colorSecondBody"
                         android:gravity="center"
                         android:text="共0条"
