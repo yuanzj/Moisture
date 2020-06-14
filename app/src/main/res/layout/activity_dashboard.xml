@@ -101,7 +101,7 @@
             <LinearLayout
                 android:id="@+id/point1"
                 android:background="@drawable/bg_shadow_orange"
-                android:layout_width="144dp"
+                android:layout_width="120dp"
                 android:layout_height="wrap_content"
                 android:gravity="center"
                 android:orientation="vertical">
@@ -162,7 +162,7 @@
             <LinearLayout
                 android:id="@+id/point2"
                 android:background="@drawable/bg_shadow_green"
-                android:layout_width="144dp"
+                android:layout_width="120dp"
                 android:layout_height="wrap_content"
                 android:gravity="center"
                 android:orientation="vertical">
@@ -222,7 +222,7 @@
             <LinearLayout
                 android:id="@+id/point3"
                 android:background="@drawable/bg_shadow_blue"
-                android:layout_width="144dp"
+                android:layout_width="120dp"
                 android:layout_height="wrap_content"
                 android:gravity="center"
                 android:orientation="vertical">
@@ -282,7 +282,7 @@
             <LinearLayout
                 android:id="@+id/point4"
                 android:background="@drawable/bg_shadow_red1"
-                android:layout_width="144dp"
+                android:layout_width="120dp"
                 android:layout_height="wrap_content"
                 android:gravity="center"
                 android:orientation="vertical">
@@ -342,7 +342,7 @@
             <LinearLayout
                 android:id="@+id/point5"
                 android:background="@drawable/bg_shadow_red"
-                android:layout_width="144dp"
+                android:layout_width="120dp"
                 android:layout_height="wrap_content"
                 android:gravity="center"
                 android:orientation="vertical">

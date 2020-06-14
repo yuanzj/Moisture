@@ -1,5 +1,6 @@
 package com.drt.moisture.correctdashboard;
 
+import android.annotation.SuppressLint;
 import android.app.ProgressDialog;
 import android.content.DialogInterface;
 import android.graphics.Point;
@@ -10,6 +11,8 @@ import android.os.Bundle;
 import android.os.Handler;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AlertDialog;
+
+import android.os.PowerManager;
 import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
@@ -196,9 +199,15 @@ public class CorrectDashboardActivity extends BluetoothBaseActivity<CorrectDashb
         }
     }
 
+    private PowerManager.WakeLock mWakelock;
+
+    @SuppressLint("InvalidWakeLockTag")
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        PowerManager pm = (PowerManager) getSystemService(POWER_SERVICE);// init powerManager
+        mWakelock = pm.newWakeLock(PowerManager.ACQUIRE_CAUSES_WAKEUP | PowerManager.SCREEN_DIM_WAKE_LOCK, "moisture"); // this target for tell OS which app control screen
+        mWakelock.acquire(); // Wake up Screen and keep screen lighting
         correctDashboardActivity = this;
         AppConfig appConfig = App.getInstance().getLocalDataService().queryAppConfig();
         point1.setTag(1);
@@ -764,6 +773,7 @@ public class CorrectDashboardActivity extends BluetoothBaseActivity<CorrectDashb
     protected void onDestroy() {
         mPresenter.onDestroy();
         super.onDestroy();
+        mWakelock.release(); // release control.stop to keep screen lighting
     }
 
     @Override
