@@ -80,10 +80,10 @@ public class SettingActivity extends BluetoothBaseActivity<SettingPresenter> imp
                 progressDialog.dismiss();
             }
             progressDialog = new ProgressDialog(SettingActivity.this);
-            progressDialog.setTitle("提示");
+            progressDialog.setTitle(getString(R.string.content_affirm_title));
             progressDialog.setMessage("设置中，请稍后...");
             progressDialog.setCancelable(false);
-            progressDialog.setButton(DialogInterface.BUTTON_NEGATIVE, "取消",
+            progressDialog.setButton(DialogInterface.BUTTON_NEGATIVE, getString(R.string.content_affirm_cancel),
                     (dialog, which) -> {
                         // TODO Auto-generated method stub
                         progressDialog.dismiss();
@@ -330,7 +330,7 @@ public class SettingActivity extends BluetoothBaseActivity<SettingPresenter> imp
 
     @Override
     public void onSetTimeSuccess() {
-        runOnUiThread(() -> Toast.makeText(getApplicationContext(), "设置成功", Toast.LENGTH_SHORT).show());
+        runOnUiThread(() -> Toast.makeText(getApplicationContext(), getString(R.string.content_set_success), Toast.LENGTH_SHORT).show());
     }
 
     @Override
@@ -339,7 +339,7 @@ public class SettingActivity extends BluetoothBaseActivity<SettingPresenter> imp
             if (progressDialog != null) {
                 progressDialog.dismiss();
             }
-            Toast.makeText(getApplicationContext(), "设置成功", Toast.LENGTH_SHORT).show();
+            Toast.makeText(getApplicationContext(), getString(R.string.content_set_success), Toast.LENGTH_SHORT).show();
         });
     }
 
@@ -356,17 +356,17 @@ public class SettingActivity extends BluetoothBaseActivity<SettingPresenter> imp
         List<Map<String, Object>> data = new ArrayList<>();
         Map<String, Object> item1 = new HashMap<>();
         item1.put("icon", R.mipmap.icons_device_information);
-        item1.put("title", "设备信息");
+        item1.put("title", getString(R.string.content_device_info));
         data.add(item1);
 
         item1 = new HashMap<>();
         item1.put("icon", R.mipmap.icons_clock_settings);
-        item1.put("title", "时间设置");
+        item1.put("title", getString(R.string.content_time_set));
         data.add(item1);
 
         item1 = new HashMap<>();
         item1.put("icon", R.mipmap.icons_data_configuration);
-        item1.put("title", "定时测量时间设置");
+        item1.put("title", getString(R.string.content_timing_set));
         data.add(item1);
 
 //        item1 = new HashMap<>();
@@ -422,9 +422,9 @@ public class SettingActivity extends BluetoothBaseActivity<SettingPresenter> imp
             case 0: {
                 // 取得自定义View
                 deviceInfoView = LayoutInflater.from(this).inflate(R.layout.dialog_device_info, null);
-                AlertDialog.Builder builder = new AlertDialog.Builder(this).setTitle("设备信息")
+                AlertDialog.Builder builder = new AlertDialog.Builder(this).setTitle(getString(R.string.content_device_info))
                         .setView(deviceInfoView)
-                        .setPositiveButton("确认", new DialogInterface.OnClickListener() {
+                        .setPositiveButton(getString(R.string.content_affirm_ok), new DialogInterface.OnClickListener() {
                             @Override
                             public void onClick(DialogInterface dialogInterface, int i) {
 
@@ -456,9 +456,9 @@ public class SettingActivity extends BluetoothBaseActivity<SettingPresenter> imp
                 etHour.setText(String.valueOf(hour));
                 etMinute.setText(String.valueOf(minute));
 
-                AlertDialog.Builder builder = new AlertDialog.Builder(this).setTitle("时间设置")
+                AlertDialog.Builder builder = new AlertDialog.Builder(this).setTitle(getString(R.string.content_time_set))
                         .setView(dialogDateTime)
-                        .setPositiveButton("确认", new DialogInterface.OnClickListener() {
+                        .setPositiveButton(getString(R.string.content_affirm_ok), new DialogInterface.OnClickListener() {
                             @Override
                             public void onClick(DialogInterface dialogInterface, int i) {
                                 int year = Integer.parseInt(etYear.getText().toString());
@@ -474,7 +474,7 @@ public class SettingActivity extends BluetoothBaseActivity<SettingPresenter> imp
                                 mPresenter.setTime(timeValue);
                             }
                         })
-                        .setNegativeButton("取消", new DialogInterface.OnClickListener() {
+                        .setNegativeButton(getString(R.string.content_affirm_cancel), new DialogInterface.OnClickListener() {
                             @Override
                             public void onClick(DialogInterface dialog, int which) {
                                 // TODO Auto-generated method stub
@@ -506,7 +506,7 @@ public class SettingActivity extends BluetoothBaseActivity<SettingPresenter> imp
                                 time1.setText(dateTime1);
                             }
                         });
-                        DialogUtil.showDialog(SettingActivity.this, "预约1运行时间设置", picker);
+                        DialogUtil.showDialog(SettingActivity.this, getString(R.string.content_timing_set_subscribe1), picker);
                     }
                 });
 
@@ -522,7 +522,7 @@ public class SettingActivity extends BluetoothBaseActivity<SettingPresenter> imp
                                 time2.setText(dateTime2);
                             }
                         });
-                        DialogUtil.showDialog(SettingActivity.this, "预约2运行时间设置", picker);
+                        DialogUtil.showDialog(SettingActivity.this, getString(R.string.content_timing_set_subscribe2), picker);
 
                     }
                 });
@@ -540,15 +540,15 @@ public class SettingActivity extends BluetoothBaseActivity<SettingPresenter> imp
                                 time3.setText(dateTime3);
                             }
                         });
-                        DialogUtil.showDialog(SettingActivity.this, "预约3运行时间设置", picker);
+                        DialogUtil.showDialog(SettingActivity.this, getString(R.string.content_timing_set_subscribe3), picker);
 
                     }
                 });
 
 
-                AlertDialog.Builder builder = new AlertDialog.Builder(this).setTitle("定时测量时间设置")
+                AlertDialog.Builder builder = new AlertDialog.Builder(this).setTitle(getString(R.string.content_timing_set))
                         .setView(dialogSetTiming)
-                        .setPositiveButton("确认", new DialogInterface.OnClickListener() {
+                        .setPositiveButton(getString(R.string.content_affirm_ok), new DialogInterface.OnClickListener() {
                             @Override
                             public void onClick(DialogInterface dialogInterface, int i) {
                                 TimingSetRequest timingSetRequest = new TimingSetRequest();
@@ -617,7 +617,7 @@ public class SettingActivity extends BluetoothBaseActivity<SettingPresenter> imp
                                 mPresenter.setTiming(timingSetRequest);
                             }
                         })
-                        .setNegativeButton("取消", new DialogInterface.OnClickListener() {
+                        .setNegativeButton(getString(R.string.content_affirm_cancel), new DialogInterface.OnClickListener() {
                             @Override
                             public void onClick(DialogInterface dialog, int which) {
                                 // TODO Auto-generated method stub
@@ -660,7 +660,7 @@ public class SettingActivity extends BluetoothBaseActivity<SettingPresenter> imp
 //                    //设置dialog布局
 //                    editDialog.setView(edit);
 //                    //设置按钮
-//                    editDialog.setPositiveButton("确认"
+//                    editDialog.setPositiveButton(getString(R.string.content_affirm_ok)
 //                            , new DialogInterface.OnClickListener() {
 //                                @Override
 //                                public void onClick(DialogInterface dialog, int which) {
@@ -674,7 +674,7 @@ public class SettingActivity extends BluetoothBaseActivity<SettingPresenter> imp
 //                                    hideInput();
 //                                }
 //                            })
-//                            .setNegativeButton("取消", new DialogInterface.OnClickListener() {
+//                            .setNegativeButton(getString(R.string.content_affirm_cancel), new DialogInterface.OnClickListener() {
 //                                @Override
 //                                public void onClick(DialogInterface dialog, int which) {
 //                                    // TODO Auto-generated method stub
@@ -691,7 +691,7 @@ public class SettingActivity extends BluetoothBaseActivity<SettingPresenter> imp
 //
 //                AlertDialog.Builder builder = new AlertDialog.Builder(this).setTitle("查询频率")
 //                        .setView(dialogRate)
-//                        .setPositiveButton("确认", new DialogInterface.OnClickListener() {
+//                        .setPositiveButton(getString(R.string.content_affirm_ok), new DialogInterface.OnClickListener() {
 //                            @Override
 //                            public void onClick(DialogInterface dialogInterface, int i) {
 //                                Log.d("yzj", "查询频率：" + Integer.parseInt(spinner2.getSelectedItem().toString()));
@@ -703,7 +703,7 @@ public class SettingActivity extends BluetoothBaseActivity<SettingPresenter> imp
 //
 //                            }
 //                        })
-//                        .setNegativeButton("取消", new DialogInterface.OnClickListener() {
+//                        .setNegativeButton(getString(R.string.content_affirm_cancel), new DialogInterface.OnClickListener() {
 //                            @Override
 //                            public void onClick(DialogInterface dialog, int which) {
 //                                // TODO Auto-generated method stub
@@ -723,7 +723,7 @@ public class SettingActivity extends BluetoothBaseActivity<SettingPresenter> imp
                     //设置dialog布局
                     editDialog.setView(edit);
                     //设置按钮
-                    editDialog.setPositiveButton("确认"
+                    editDialog.setPositiveButton(getString(R.string.content_affirm_ok)
                             , new DialogInterface.OnClickListener() {
                                 @Override
                                 public void onClick(DialogInterface dialog, int which) {
@@ -737,7 +737,7 @@ public class SettingActivity extends BluetoothBaseActivity<SettingPresenter> imp
                                     hideInput();
                                 }
                             })
-                            .setNegativeButton("取消", new DialogInterface.OnClickListener() {
+                            .setNegativeButton(getString(R.string.content_affirm_cancel), new DialogInterface.OnClickListener() {
                                 @Override
                                 public void onClick(DialogInterface dialog, int which) {
                                     // TODO Auto-generated method stub
@@ -756,7 +756,7 @@ public class SettingActivity extends BluetoothBaseActivity<SettingPresenter> imp
 
                 AlertDialog.Builder builder = new AlertDialog.Builder(this).setTitle("信息设置")
                         .setView(dialogSetDeviceInfo)
-                        .setPositiveButton("确认", new DialogInterface.OnClickListener() {
+                        .setPositiveButton(getString(R.string.content_affirm_ok), new DialogInterface.OnClickListener() {
                             @Override
                             public void onClick(DialogInterface dialogInterface, int i) {
                                 SetDeviceInfoParame mSetDeviceInfoParame = new SetDeviceInfoParame();
@@ -767,7 +767,7 @@ public class SettingActivity extends BluetoothBaseActivity<SettingPresenter> imp
                                 mPresenter.setDeviceInfo(mSetDeviceInfoParame);
                             }
                         })
-                        .setNegativeButton("取消", new DialogInterface.OnClickListener() {
+                        .setNegativeButton(getString(R.string.content_affirm_cancel), new DialogInterface.OnClickListener() {
                             @Override
                             public void onClick(DialogInterface dialog, int which) {
                                 // TODO Auto-generated method stub
@@ -787,7 +787,7 @@ public class SettingActivity extends BluetoothBaseActivity<SettingPresenter> imp
                 et.setText("" + pointCount);
                 new AlertDialog.Builder(this).setTitle("请输入测点数量")
                         .setView(et)
-                        .setPositiveButton("确定", new DialogInterface.OnClickListener() {
+                        .setPositiveButton(getString(R.string.content_affirm_ok), new DialogInterface.OnClickListener() {
                             @Override
                             public void onClick(DialogInterface dialogInterface, int i) {
                                 if (et.getText().length() > 0) {
@@ -804,7 +804,7 @@ public class SettingActivity extends BluetoothBaseActivity<SettingPresenter> imp
                                 }
 
                             }
-                        }).setNegativeButton("取消", null).show();
+                        }).setNegativeButton(getString(R.string.content_affirm_cancel), null).show();
             }
             break;
 
@@ -863,17 +863,17 @@ public class SettingActivity extends BluetoothBaseActivity<SettingPresenter> imp
             List<Map<String, Object>> data = new ArrayList<>();
             Map<String, Object> item1 = new HashMap<>();
             item1.put("icon", R.mipmap.icons_device_information);
-            item1.put("title", "设备信息");
+            item1.put("title", getString(R.string.content_device_info));
             data.add(item1);
 
             item1 = new HashMap<>();
             item1.put("icon", R.mipmap.icons_clock_settings);
-            item1.put("title", "时间设置");
+            item1.put("title", getString(R.string.content_time_set));
             data.add(item1);
 
             item1 = new HashMap<>();
             item1.put("icon", R.mipmap.icons_data_configuration);
-            item1.put("title", "定时测量时间设置");
+            item1.put("title", getString(R.string.content_timing_set));
             data.add(item1);
 
 //            item1 = new HashMap<>();

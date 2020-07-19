@@ -36,7 +36,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:gravity="left"
-                    android:text="温度"
+                    android:text="@string/content_temp"
                     android:textColor="@color/colorWhite"
                     android:textSize="@dimen/sizeTitle" />
 
@@ -66,7 +66,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:gravity="left"
-                    android:text="水分活度"
+                    android:text="@string/content_sfhd"
                     android:textColor="@color/colorWhite"
                     android:textSize="@dimen/sizeTitle" />
 
@@ -97,7 +97,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:gravity="left"
-                    android:text="校正耗时"
+                    android:text="@string/content_hs"
                     android:textColor="@color/colorWhite"
                     android:textSize="@dimen/sizeTitle" />
 
@@ -132,7 +132,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:gravity="center"
-                        android:text="开始校正"
+                        android:text="@string/content_start_correct"
                         android:textColor="@color/colorBtnUnPress"
                         android:textSize="@dimen/sizeTitle" />
                 </LinearLayout>
@@ -155,7 +155,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:gravity="center"
-                        android:text="停止校正"
+                        android:text="@string/content_stop_correct"
                         android:textColor="@color/colorBtnUnPress"
                         android:textSize="@dimen/sizeTitle" />
                 </LinearLayout>

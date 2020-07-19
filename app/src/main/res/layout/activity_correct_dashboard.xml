@@ -455,7 +455,7 @@
                         android:layout_height="wrap_content"
                         android:gravity="center"
                         android:paddingBottom="4dp"
-                        android:text="开始校正"
+                        android:text="@string/content_start_correct"
                         android:textColor="@color/colorBtnUnPress"
                         android:textSize="@dimen/sizeTitle" />
                 </LinearLayout>
@@ -477,7 +477,7 @@
                         android:layout_height="wrap_content"
                         android:gravity="center"
                         android:paddingBottom="4dp"
-                        android:text="停止校正"
+                        android:text="@string/content_stop_correct"
                         android:textColor="@color/colorBtnUnPress"
                         android:textSize="@dimen/sizeTitle" />
                 </LinearLayout>

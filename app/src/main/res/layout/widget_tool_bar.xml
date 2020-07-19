@@ -52,7 +52,7 @@
             android:textSize="16sp"
             android:layout_gravity="right"
             android:drawableLeft="@mipmap/ic_back"
-            android:text="返回"
+            android:text="@string/content_back"
             android:layout_marginRight="16dp"
             android:background="@drawable/selector_btn_transparent"
             />
@@ -81,7 +81,7 @@
             android:gravity="center"
             android:singleLine="true"
             android:layout_marginRight="16dp"
-            android:text="蓝牙未连接"
+            android:text="@string/content_not_connect"
             android:textColor="@color/colorBody"
             android:textSize="@dimen/sizeBody"
             />

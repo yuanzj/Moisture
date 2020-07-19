@@ -444,10 +444,10 @@ public class CorrectDashboardActivity extends BluetoothBaseActivity<CorrectDashb
             public void run() {
                 if (isFront) {
                     AlertDialog.Builder builder = new AlertDialog.Builder(CorrectDashboardActivity.this);
-                    builder.setTitle("提示");//设置title
-                    builder.setMessage("校正完成");//设置内容
+                    builder.setTitle(getString(R.string.content_affirm_title));//设置title
+                    builder.setMessage(getString(R.string.content_correct_done));//设置内容
                     //点击确认按钮事件
-                    builder.setPositiveButton("确认", new DialogInterface.OnClickListener() {
+                    builder.setPositiveButton(getString(R.string.content_affirm_ok), new DialogInterface.OnClickListener() {
                         @Override
                         public void onClick(DialogInterface dialog, int which) {
                             dialog.dismiss();
@@ -483,23 +483,23 @@ public class CorrectDashboardActivity extends BluetoothBaseActivity<CorrectDashb
 
         String title;
         if (model == 0x01 && type == 0x01) {
-            title = "请放置氯化钠饱和液";
+            title = getString(R.string.content_qxfz_lhn_1);
         } else if (model == 0x01 && type == 0x02) {
-            title = "请放置氯化镁饱和液";
+            title = getString(R.string.content_qxfz_lhm);
         } else {
-            title = "请先放置氯化钠饱和液";
+            title = getString(R.string.content_qxfz_lhn);
         }
 
         AlertDialog.Builder builder = new AlertDialog.Builder(this)
-                .setTitle("提示")
-                .setMessage(title).setPositiveButton("确认", new DialogInterface.OnClickListener() {
+                .setTitle(getString(R.string.content_affirm_title))
+                .setMessage(title).setPositiveButton(getString(R.string.content_affirm_ok), new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialogInterface, int i) {
 
                         startCorrect();
 
                     }
-                }).setNegativeButton("取消", new DialogInterface.OnClickListener() {
+                }).setNegativeButton(getString(R.string.content_affirm_cancel), new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialogInterface, int i) {
                         dialogInterface.dismiss();
@@ -521,8 +521,8 @@ public class CorrectDashboardActivity extends BluetoothBaseActivity<CorrectDashb
                 break;
         }
         progressdialog = new ProgressDialog(CorrectDashboardActivity.this);
-        progressdialog.setTitle("提示");
-        progressdialog.setMessage("启动所有校正，请稍后...");
+        progressdialog.setTitle(getString(R.string.content_affirm_title));
+        progressdialog.setMessage(getString(R.string.content_correct_start_title));
         progressdialog.setCancelable(false);
         progressdialog.show();
 
@@ -556,16 +556,16 @@ public class CorrectDashboardActivity extends BluetoothBaseActivity<CorrectDashb
     @OnClick(R.id.btnStopMeasure)
     public void stopMeasure() {
 
-        AlertDialog.Builder builder = new AlertDialog.Builder(this).setTitle("提示")
-                .setMessage("是否确认停止校正？")
-                .setPositiveButton("确认", new DialogInterface.OnClickListener() {
+        AlertDialog.Builder builder = new AlertDialog.Builder(this).setTitle(getString(R.string.content_affirm_title))
+                .setMessage(getString(R.string.content_stop_correct1))
+                .setPositiveButton(getString(R.string.content_affirm_ok), new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialogInterface, int i) {
                         runOnUiThread(new Runnable() {
                             @Override
                             public void run() {
                                 progressdialog = new ProgressDialog(CorrectDashboardActivity.this);
-                                progressdialog.setTitle("提示");
+                                progressdialog.setTitle(getString(R.string.content_affirm_title));
                                 progressdialog.setMessage("停止所有校正，请稍后...");
                                 progressdialog.setCancelable(false);
                                 progressdialog.show();
@@ -580,7 +580,7 @@ public class CorrectDashboardActivity extends BluetoothBaseActivity<CorrectDashb
                         }).start();
                     }
                 })
-                .setNegativeButton("取消", new DialogInterface.OnClickListener() {
+                .setNegativeButton(getString(R.string.content_affirm_cancel), new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
                         // TODO Auto-generated method stub
@@ -627,14 +627,14 @@ public class CorrectDashboardActivity extends BluetoothBaseActivity<CorrectDashb
             @Override
             public void run() {
                 AlertDialog.Builder builder = new AlertDialog.Builder(CorrectDashboardActivity.this)
-                        .setTitle("提示")
-                        .setMessage(message).setPositiveButton("确认", new DialogInterface.OnClickListener() {
+                        .setTitle(getString(R.string.content_affirm_title))
+                        .setMessage(message).setPositiveButton(getString(R.string.content_affirm_ok), new DialogInterface.OnClickListener() {
                             @Override
                             public void onClick(DialogInterface dialogInterface, int i) {
                                 AppConfig appConfig = App.getInstance().getLocalDataService().queryAppConfig();
                                 mPresenter.startCorrect(0x02, 0x02, appConfig.getPointCount());
                             }
-                        }).setNegativeButton("取消", new DialogInterface.OnClickListener() {
+                        }).setNegativeButton(getString(R.string.content_affirm_cancel), new DialogInterface.OnClickListener() {
                             @Override
                             public void onClick(DialogInterface dialogInterface, int i) {
                                 dialogInterface.dismiss();
@@ -848,7 +848,7 @@ public class CorrectDashboardActivity extends BluetoothBaseActivity<CorrectDashb
     private LineDataSet createActivitySet(int i) {
 
 
-        LineDataSet d2 = new LineDataSet(null, "测点" + (i + 1) + "水分活度");
+        LineDataSet d2 = new LineDataSet(null, getString(R.string.content_point) + (i + 1) + getString(R.string.content_sfhd));
         d2.setLineWidth(2.0f);
         d2.setCircleRadius(4.5f);
         d2.setHighLightColor(getResources().getColor(colors[i], getTheme()));

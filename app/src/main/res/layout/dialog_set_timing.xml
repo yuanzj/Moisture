@@ -15,7 +15,7 @@
         <TextView
             android:layout_width="60dp"
             android:layout_height="wrap_content"
-            android:text="预约1："
+            android:text="@string/content_subscribe1"
             android:textColor="@color/colorSecondBody"
             android:textSize="@dimen/sizeBody" />
 
@@ -34,7 +34,7 @@
             android:background="@drawable/selector_btn_transparent"
             android:paddingLeft="16dp"
             android:paddingRight="16dp"
-            android:text="设置"
+            android:text="@string/content_setting"
             android:textColor="@color/colorPrimary"
             android:textSize="@dimen/sizeBody"
              />
@@ -50,7 +50,7 @@
         <TextView
             android:layout_width="60dp"
             android:layout_height="wrap_content"
-            android:text="预约2："
+            android:text="@string/content_subscribe2"
             android:textColor="@color/colorSecondBody"
             android:textSize="@dimen/sizeBody" />
 
@@ -70,7 +70,7 @@
             android:background="@drawable/selector_btn_transparent"
             android:paddingLeft="16dp"
             android:paddingRight="16dp"
-            android:text="设置"
+            android:text="@string/content_setting"
             android:textColor="@color/colorPrimary"
             android:textSize="@dimen/sizeBody"
              />
@@ -85,7 +85,7 @@
         <TextView
             android:layout_width="60dp"
             android:layout_height="wrap_content"
-            android:text="预约3："
+            android:text="@string/content_subscribe3"
             android:textColor="@color/colorSecondBody"
             android:textSize="@dimen/sizeBody" />
 
@@ -105,7 +105,7 @@
             android:background="@drawable/selector_btn_transparent"
             android:paddingLeft="16dp"
             android:paddingRight="16dp"
-            android:text="设置"
+            android:text="@string/content_setting"
             android:textColor="@color/colorPrimary"
             android:textSize="@dimen/sizeBody"
              />

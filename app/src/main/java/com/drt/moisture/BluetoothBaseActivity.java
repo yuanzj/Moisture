@@ -116,7 +116,7 @@ public abstract class BluetoothBaseActivity<T extends BasePresenter> extends Bas
             App.getInstance().getBluetoothClient().registerConnectStatusListener(App.getInstance().getConnectMacAddress(), mBleConnectStatusListener);
             setBleConnectStatus(Constants.STATUS_CONNECTED);
             if (!TextUtils.isEmpty(App.getInstance().getDeviceSoc())) {
-                secondTitle.setText("电量: " + App.getInstance().getDeviceSoc() + "%");
+                secondTitle.setText(getString(R.string.content_battery) + ": " + App.getInstance().getDeviceSoc() + "%");
             } else {
                 secondTitle.setText("已连接");
             }
@@ -124,7 +124,7 @@ public abstract class BluetoothBaseActivity<T extends BasePresenter> extends Bas
         } else {
             btnBluetooth.setImageResource(R.mipmap.ic_bluetooth);
             setBleConnectStatus(STATUS_DISCONNECTED);
-            secondTitle.setText("蓝牙未连接");
+            secondTitle.setText(R.string.content_not_connect);
         }
     }
 
@@ -261,9 +261,9 @@ public abstract class BluetoothBaseActivity<T extends BasePresenter> extends Bas
         } else {
 
             if (getBluetoothStatus() == Constants.STATUS_DEVICE_CONNECTED) {
-                AlertDialog.Builder builder = new AlertDialog.Builder(this).setTitle("提示")
+                AlertDialog.Builder builder = new AlertDialog.Builder(this).setTitle(getString(R.string.content_affirm_title))
                         .setMessage("当前蓝牙已经连接，是否确认关闭当前连接选择新的设备？")
-                        .setPositiveButton("确认", new DialogInterface.OnClickListener() {
+                        .setPositiveButton(getString(R.string.content_affirm_ok), new DialogInterface.OnClickListener() {
                             @Override
                             public void onClick(DialogInterface dialogInterface, int i) {
                                 App.getInstance().getBluetoothClient().disconnect(App.getInstance().getConnectMacAddress());
@@ -272,7 +272,7 @@ public abstract class BluetoothBaseActivity<T extends BasePresenter> extends Bas
                                 startActivityForResult(intent, REQUEST_CONNECT_DEVICE);
                             }
                         })
-                        .setNegativeButton("取消", new DialogInterface.OnClickListener() {
+                        .setNegativeButton(getString(R.string.content_affirm_cancel), new DialogInterface.OnClickListener() {
                             @Override
                             public void onClick(DialogInterface dialogInterface, int i) {
 
@@ -455,7 +455,7 @@ public abstract class BluetoothBaseActivity<T extends BasePresenter> extends Bas
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void onGetMessage(SocResponse socResponse) {
         App.getInstance().setDeviceSoc(String.valueOf(socResponse.getSoc()));
-        secondTitle.setText("电量: " + App.getInstance().getDeviceSoc() + "%");
+        secondTitle.setText(getString(R.string.content_battery) + ": " + App.getInstance().getDeviceSoc() + "%");
     }
 
     @Subscribe(threadMode = ThreadMode.MAIN)

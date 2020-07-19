@@ -223,7 +223,7 @@ public class SettingActivity extends BluetoothBaseActivity<SettingPresenter> imp
         runOnUiThread(new Runnable() {
             @Override
             public void run() {
-                Toast.makeText(getApplicationContext(), "设置成功", Toast.LENGTH_SHORT).show();
+                Toast.makeText(getApplicationContext(), getString(R.string.content_set_success), Toast.LENGTH_SHORT).show();
             }
         });
     }
@@ -233,7 +233,7 @@ public class SettingActivity extends BluetoothBaseActivity<SettingPresenter> imp
         runOnUiThread(new Runnable() {
             @Override
             public void run() {
-                Toast.makeText(getApplicationContext(), "设置成功", Toast.LENGTH_SHORT).show();
+                Toast.makeText(getApplicationContext(), getString(R.string.content_set_success), Toast.LENGTH_SHORT).show();
             }
         });
     }
@@ -243,7 +243,7 @@ public class SettingActivity extends BluetoothBaseActivity<SettingPresenter> imp
         runOnUiThread(new Runnable() {
             @Override
             public void run() {
-                Toast.makeText(getApplicationContext(), "设置成功", Toast.LENGTH_SHORT).show();
+                Toast.makeText(getApplicationContext(), getString(R.string.content_set_success), Toast.LENGTH_SHORT).show();
             }
         });
     }
@@ -254,7 +254,7 @@ public class SettingActivity extends BluetoothBaseActivity<SettingPresenter> imp
             @Override
             public void run() {
                 progressdialog = new ProgressDialog(SettingActivity.this);
-                progressdialog.setTitle("提示");
+                progressdialog.setTitle(getString(R.string.content_affirm_title));
                 progressdialog.setMessage("重置进行中，请稍后...");
                 progressdialog.setCancelable(false);
                 progressdialog.show();
@@ -339,7 +339,7 @@ public class SettingActivity extends BluetoothBaseActivity<SettingPresenter> imp
 //                deviceInfoView = LayoutInflater.from(this).inflate(R.layout.dialog_device_info, null);
 //                AlertDialog.Builder builder = new AlertDialog.Builder(this).setTitle("设备信息")
 //                        .setView(deviceInfoView)
-//                        .setPositiveButton("确认", new DialogInterface.OnClickListener() {
+//                        .setPositiveButton(getString(R.string.content_affirm_ok), new DialogInterface.OnClickListener() {
 //                            @Override
 //                            public void onClick(DialogInterface dialogInterface, int i) {
 //
@@ -373,7 +373,7 @@ public class SettingActivity extends BluetoothBaseActivity<SettingPresenter> imp
 //
 //                AlertDialog.Builder builder = new AlertDialog.Builder(this).setTitle("时间设置")
 //                        .setView(dialogDateTime)
-//                        .setPositiveButton("确认", new DialogInterface.OnClickListener() {
+//                        .setPositiveButton(getString(R.string.content_affirm_ok), new DialogInterface.OnClickListener() {
 //                            @Override
 //                            public void onClick(DialogInterface dialogInterface, int i) {
 //                                int year = Integer.parseInt(etYear.getText().toString());
@@ -389,7 +389,7 @@ public class SettingActivity extends BluetoothBaseActivity<SettingPresenter> imp
 //                                mPresenter.setTime(timeValue);
 //                            }
 //                        })
-//                        .setNegativeButton("取消", new DialogInterface.OnClickListener() {
+//                        .setNegativeButton(getString(R.string.content_affirm_cancel), new DialogInterface.OnClickListener() {
 //                            @Override
 //                            public void onClick(DialogInterface dialog, int which) {
 //                                // TODO Auto-generated method stub
@@ -408,7 +408,7 @@ public class SettingActivity extends BluetoothBaseActivity<SettingPresenter> imp
 //                    //设置dialog布局
 //                    editDialog.setView(edit);
 //                    //设置按钮
-//                    editDialog.setPositiveButton("确认"
+//                    editDialog.setPositiveButton(getString(R.string.content_affirm_ok)
 //                            , new DialogInterface.OnClickListener() {
 //                                @Override
 //                                public void onClick(DialogInterface dialog, int which) {
@@ -422,7 +422,7 @@ public class SettingActivity extends BluetoothBaseActivity<SettingPresenter> imp
 //                                    hideInput();
 //                                }
 //                            })
-//                            .setNegativeButton("取消", new DialogInterface.OnClickListener() {
+//                            .setNegativeButton(getString(R.string.content_affirm_cancel), new DialogInterface.OnClickListener() {
 //                                @Override
 //                                public void onClick(DialogInterface dialog, int which) {
 //                                    // TODO Auto-generated method stub
@@ -439,7 +439,7 @@ public class SettingActivity extends BluetoothBaseActivity<SettingPresenter> imp
 //
 //                AlertDialog.Builder builder = new AlertDialog.Builder(this).setTitle("查询频率")
 //                        .setView(dialogRate)
-//                        .setPositiveButton("确认", new DialogInterface.OnClickListener() {
+//                        .setPositiveButton(getString(R.string.content_affirm_ok), new DialogInterface.OnClickListener() {
 //                            @Override
 //                            public void onClick(DialogInterface dialogInterface, int i) {
 //                                Log.d("yzj", "查询频率：" + Integer.parseInt(spinner2.getSelectedItem().toString()));
@@ -451,7 +451,7 @@ public class SettingActivity extends BluetoothBaseActivity<SettingPresenter> imp
 //
 //                            }
 //                        })
-//                        .setNegativeButton("取消", new DialogInterface.OnClickListener() {
+//                        .setNegativeButton(getString(R.string.content_affirm_cancel), new DialogInterface.OnClickListener() {
 //                            @Override
 //                            public void onClick(DialogInterface dialog, int which) {
 //                                // TODO Auto-generated method stub
@@ -471,7 +471,7 @@ public class SettingActivity extends BluetoothBaseActivity<SettingPresenter> imp
 //                    //设置dialog布局
 //                    editDialog.setView(edit);
 //                    //设置按钮
-//                    editDialog.setPositiveButton("确认"
+//                    editDialog.setPositiveButton(getString(R.string.content_affirm_ok)
 //                            , new DialogInterface.OnClickListener() {
 //                                @Override
 //                                public void onClick(DialogInterface dialog, int which) {
@@ -485,7 +485,7 @@ public class SettingActivity extends BluetoothBaseActivity<SettingPresenter> imp
 //                                    hideInput();
 //                                }
 //                            })
-//                            .setNegativeButton("取消", new DialogInterface.OnClickListener() {
+//                            .setNegativeButton(getString(R.string.content_affirm_cancel), new DialogInterface.OnClickListener() {
 //                                @Override
 //                                public void onClick(DialogInterface dialog, int which) {
 //                                    // TODO Auto-generated method stub
@@ -529,7 +529,7 @@ public class SettingActivity extends BluetoothBaseActivity<SettingPresenter> imp
                 int pointCount = App.getInstance().getLocalDataService().queryAppConfig().getPointCount();
                 final String[] mItems = new String[pointCount];
                 for (int i = 0; i < pointCount; i++) {
-                    mItems[i] = "测点" + (i + 1);
+                    mItems[i] = getString(R.string.content_point) + (i + 1);
                 }
                 // 建立Adapter并且绑定数据源
                 ArrayAdapter<String> adapter = new ArrayAdapter<>(this, android.R.layout.simple_spinner_item, mItems);
@@ -603,7 +603,7 @@ public class SettingActivity extends BluetoothBaseActivity<SettingPresenter> imp
 
                 AlertDialog.Builder builder = new AlertDialog.Builder(this).setTitle("参数设置")
                         .setView(dialogParameSet)
-                        .setPositiveButton("确认", new DialogInterface.OnClickListener() {
+                        .setPositiveButton(getString(R.string.content_affirm_ok), new DialogInterface.OnClickListener() {
                             @Override
                             public void onClick(DialogInterface dialogInterface, int i) {
                                 if (tabhost.getCurrentTab() == 0) {
@@ -742,7 +742,7 @@ public class SettingActivity extends BluetoothBaseActivity<SettingPresenter> imp
 
                             }
                         })
-                        .setNegativeButton("取消", new DialogInterface.OnClickListener() {
+                        .setNegativeButton(getString(R.string.content_affirm_cancel), new DialogInterface.OnClickListener() {
                             @Override
                             public void onClick(DialogInterface dialog, int which) {
                                 // TODO Auto-generated method stub
@@ -769,16 +769,16 @@ public class SettingActivity extends BluetoothBaseActivity<SettingPresenter> imp
             break;
             case 1: {
                 AlertDialog.Builder builder = new AlertDialog.Builder(this)
-                        .setTitle("提示")
+                        .setTitle(getString(R.string.content_affirm_title))
                         .setMessage("是否确认恢复出厂设置")
-                        .setPositiveButton("确认", new DialogInterface.OnClickListener() {
+                        .setPositiveButton(getString(R.string.content_affirm_ok), new DialogInterface.OnClickListener() {
                             @Override
                             public void onClick(DialogInterface dialogInterface, int i) {
                                 App.getInstance().getLocalDataService().clearAll();
                                 mPresenter.reset();
                             }
                         })
-                        .setNegativeButton("取消", new DialogInterface.OnClickListener() {
+                        .setNegativeButton(getString(R.string.content_affirm_cancel), new DialogInterface.OnClickListener() {
                             @Override
                             public void onClick(DialogInterface dialog, int which) {
                                 // TODO Auto-generated method stub

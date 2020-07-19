@@ -3,6 +3,7 @@ package com.drt.moisture.report;
 import android.app.DatePickerDialog;
 import android.app.ProgressDialog;
 import android.app.TimePickerDialog;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.graphics.Canvas;
 import android.graphics.Paint;
@@ -10,8 +11,10 @@ import android.graphics.Point;
 import android.graphics.Rect;
 import android.os.Bundle;
 import android.os.Handler;
+
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AlertDialog;
+
 import android.util.DisplayMetrics;
 import android.util.Log;
 import android.util.TypedValue;
@@ -25,6 +28,7 @@ import com.drt.moisture.App;
 import com.drt.moisture.BluetoothBaseActivity;
 import com.drt.moisture.R;
 import com.drt.moisture.data.MeasureValue;
+import com.drt.moisture.data.MeasureValueEn;
 import com.drt.moisture.util.AppPermission;
 import com.drt.moisture.util.ExcelUtil;
 import com.drt.moisture.util.StatusBarUtil;
@@ -34,6 +38,7 @@ import java.io.File;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.*;
+import java.util.stream.Collectors;
 
 import butterknife.BindView;
 import butterknife.OnClick;
@@ -152,7 +157,7 @@ public class ReportActivity extends BluetoothBaseActivity<ReportPresenter> imple
         int pointCount = App.getInstance().getLocalDataService().queryAppConfig().getPointCount();
         final String[] mItems = new String[pointCount];
         for (int i = 0; i < pointCount; i++) {
-            mItems[i] = "测点" + (i + 1);
+            mItems[i] = getString(R.string.content_point) + (i + 1);
         }
         // 建立Adapter并且绑定数据源
         ArrayAdapter<String> adapter = new ArrayAdapter<>(this, android.R.layout.simple_spinner_item, mItems);
@@ -203,35 +208,63 @@ public class ReportActivity extends BluetoothBaseActivity<ReportPresenter> imple
         });
     }
 
+    public boolean isZh(Context context) {
+        Locale locale = context.getResources().getConfiguration().locale;
+        String language = locale.getLanguage();
+        if (language.endsWith("zh"))
+            return true;
+        else
+            return false;
+    }
+
     @Override
     public void onSuccess(final List<MeasureValue> measureValues) {
-        runOnUiThread(new Runnable() {
-            @Override
-            public void run() {
-                if (table.getVisibility() != View.VISIBLE) {
-                    table.setVisibility(View.VISIBLE);
+        runOnUiThread(() -> {
+            if (table.getVisibility() != View.VISIBLE) {
+                table.setVisibility(View.VISIBLE);
+            }
+            List<MeasureValue> temp = new ArrayList<>();
+
+            if (!isZh(ReportActivity.this)) {
+                if (measureValues != null && measureValues.size() > 0) {
+                    for (MeasureValue measureValue : measureValues) {
+                        MeasureValueEn measureValueEn = new MeasureValueEn();
+                        measureValueEn.setActivity(measureValue.getActivity());
+                        measureValueEn.setHumidity(measureValue.getHumidity());
+                        measureValueEn.setIndex(measureValue.getIndex());
+                        measureValueEn.setMeasureStatus(measureValue.getMeasureStatus());
+                        measureValueEn.setName(measureValue.getName());
+                        measureValueEn.setReportTime(measureValue.getReportTime());
+                        measureValueEn.setRunning(measureValue.isRunning());
+                        measureValueEn.setTemperature(measureValue.getTemperature());
+                        temp.add(measureValueEn);
+                    }
                 }
+            }
+            if (!temp.isEmpty()) {
+                currentData.addAll(temp);
+            } else {
                 currentData.addAll(measureValues);
-                PageTableData<MeasureValue> pageTableData = table.setData(currentData);
-                pageTableData.setPageSize(pageSize);
-                pageTableData.setCurrentPage(currentPage);
+            }
+            PageTableData<MeasureValue> pageTableData = table.setData(currentData);
+            pageTableData.setPageSize(pageSize);
+            pageTableData.setCurrentPage(currentPage);
 
-                page.setText((pageTableData.getCurrentPage() + 1) + "/" + pageTableData.getTotalPage());
-                total.setText("共" + currentData.size() + "条");
-                if (pageTableData.getCurrentPage() == 0) {
-                    previous.setAlpha(0.54f);
-                } else {
-                    previous.setAlpha(1.0f);
-                }
-                if ((pageTableData.getCurrentPage() + 1) == pageTableData.getTotalPage()) {
-                    next.setAlpha(0.54f);
-                } else {
-                    next.setAlpha(1.0f);
-                }
+            page.setText((pageTableData.getCurrentPage() + 1) + "/" + pageTableData.getTotalPage());
+            total.setText("共" + currentData.size() + "条");
+            if (pageTableData.getCurrentPage() == 0) {
+                previous.setAlpha(0.54f);
+            } else {
+                previous.setAlpha(1.0f);
+            }
+            if ((pageTableData.getCurrentPage() + 1) == pageTableData.getTotalPage()) {
+                next.setAlpha(0.54f);
+            } else {
+                next.setAlpha(1.0f);
+            }
 
-                if (progressDialog != null) {
-                    progressDialog.setMessage("已经加载" + currentData.size() + "条数据请稍后...");
-                }
+            if (progressDialog != null) {
+                progressDialog.setMessage(getString(R.string.content_loaded) + currentData.size() + getString(R.string.content_please_wait));
             }
         });
     }
@@ -251,8 +284,8 @@ public class ReportActivity extends BluetoothBaseActivity<ReportPresenter> imple
                     progressDialog.dismiss();
                 }
 
-                AlertDialog.Builder builder = new AlertDialog.Builder(ReportActivity.this).setIcon(R.mipmap.ic_launcher).setTitle("提示")
-                        .setMessage("获取结束").setPositiveButton("确认", new DialogInterface.OnClickListener() {
+                AlertDialog.Builder builder = new AlertDialog.Builder(ReportActivity.this).setIcon(R.mipmap.ic_launcher).setTitle(getString(R.string.content_affirm_title))
+                        .setMessage(getString(R.string.content_finish_loading)).setPositiveButton(getString(R.string.content_affirm_ok), new DialogInterface.OnClickListener() {
                             @Override
                             public void onClick(DialogInterface dialogInterface, int i) {
                                 dialogInterface.dismiss();
@@ -294,7 +327,7 @@ public class ReportActivity extends BluetoothBaseActivity<ReportPresenter> imple
 
         if (AppPermission.isGrantExternalRW(this)) {
             if (currentData != null && currentData.size() > 0) {
-                String[] title = { "测点", "时间", "样品名称", "温度", "水分活度", "环境值"};
+                String[] title = {getString(R.string.content_point), getString(R.string.content_time), getString(R.string.content_simple_name), getString(R.string.content_temp), getString(R.string.content_sfhd), getString(R.string.content_environment)};
 
                 File file = new File(ExcelUtil.getSDPath() + "/水分活度测量");
                 ExcelUtil.makeDir(file);
@@ -309,7 +342,7 @@ public class ReportActivity extends BluetoothBaseActivity<ReportPresenter> imple
 
                 Toast.makeText(this, "数据导出在" + fileName + "中", Toast.LENGTH_LONG).show();
             } else {
-                Toast.makeText(this, "尚未加载完数据...", Toast.LENGTH_SHORT).show();
+                Toast.makeText(this, getString(R.string.content_no_loaded_data), Toast.LENGTH_SHORT).show();
             }
         }
 
@@ -321,7 +354,7 @@ public class ReportActivity extends BluetoothBaseActivity<ReportPresenter> imple
         Collections.reverse(historyList);
         final String[] items = historyList.toArray(new String[historyList.size()]);
         AlertDialog.Builder builder = new AlertDialog.Builder(this)
-                .setTitle("历史样品名称")
+                .setTitle(getString(R.string.content_his_name))
                 .setItems(items, new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialogInterface, int i) {
@@ -358,10 +391,10 @@ public class ReportActivity extends BluetoothBaseActivity<ReportPresenter> imple
             next.setEnabled(false);
         }
         progressDialog = new ProgressDialog(ReportActivity.this);
-        progressDialog.setTitle("提示");
+        progressDialog.setTitle(getString(R.string.content_affirm_title));
         progressDialog.setMessage("查询中，请稍后...");
         progressDialog.setCancelable(false);
-        progressDialog.setButton(DialogInterface.BUTTON_NEGATIVE, "取消",
+        progressDialog.setButton(DialogInterface.BUTTON_NEGATIVE, getString(R.string.content_affirm_cancel),
                 new DialogInterface.OnClickListener() {
 
                     @Override

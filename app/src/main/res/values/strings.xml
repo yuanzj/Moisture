@@ -1,6 +1,8 @@
 <resources>
     <string name="app_name">智能水分活度仪</string>
 
+    <string name="content_back">返回</string>
+
     <string name="activity_measure">水分活度测量</string>
 
     <string name="activity_correct">数据校正</string>
@@ -10,4 +12,129 @@
     <string name="activity_setting">应用设置</string>
 
     <string name="activity_scan">扫描设备</string>
+
+    <string name="content_battery">电量</string>
+
+    <string name="content_not_connect">蓝牙未连接</string>
+
+    <string name="content_start_measure">开始测量</string>
+
+    <string name="content_start_measure1">开始\n测量</string>
+
+    <string name="content_start_correct">开始校正</string>
+
+    <string name="content_stop_measure">停止测量</string>
+
+    <string name="content_stop_measure1">停止\n测量</string>
+
+    <string name="content_stop_correct">停止校正</string>
+
+    <string name="content_start_title">启动所有测量，请稍后</string>
+
+    <string name="content_correct_start_title">启动所有校正，请稍后...</string>
+
+    <string name="content_point">测点</string>
+
+    <string name="content_sfhd">水分活度</string>
+
+    <string name="content_affirm_stop">是否确认停止测量？</string>
+
+    <string name="content_affirm_ok">确认</string>
+
+    <string name="content_affirm_cancel">取消</string>
+
+    <string name="content_affirm_title">提示</string>
+
+    <string name="content_measure_done">测量完成</string>
+
+    <string name="content_temp">温度</string>
+
+    <string name="content_measure_time">测量耗时</string>
+
+    <string name="content_no_data">没有测量数据。请确保在蓝牙连接的设备的状态下开始测量。</string>
+
+    <string name="content_simple_name">样品名称</string>
+
+    <string name="content_auto_start">自动测量</string>
+
+    <string name="content_timing_start">定时测量</string>
+
+    <string name="content_measure">测量</string>
+
+    <string name="content_mins">分钟</string>
+
+    <string name="content_measuring">测量中...</string>
+
+    <string name="content_enter_simple_name">请输入测量样品名称</string>
+
+    <string name="content_search">查询</string>
+
+    <string name="content_his_name">历史样品名称</string>
+
+    <string name="content_loaded">已加载</string>
+
+    <string name="content_please_wait">条数据请稍后...</string>
+
+    <string name="content_environment">环境值</string>
+
+    <string name="content_pre">上一页</string>
+
+    <string name="content_next">下一页</string>
+
+    <string name="content_finish_loading">获取结束</string>
+
+    <string name="content_export_data_in">数据导出在</string>
+
+    <string name="content_no_loaded_data">尚未加载数据</string>
+
+    <string name="content_lhn_jz">氯化钠饱和溶液校正</string>
+
+    <string name="content_qxfz_lhn">请先放置氯化钠饱和液</string>
+
+    <string name="content_qxfz_lhm">请放置氯化镁饱和液</string>
+
+    <string name="content_qxfz_lhn_1">请放置氯化钠饱和液</string>
+
+    <string name="content_stop_correct1">是否确认停止校正？</string>
+
+    <string name="content_correct_done">校正完成</string>
+
+    <string name="content_device_info">设备信息</string>
+
+    <string name="content_sn">序列号</string>
+
+    <string name="content_version">版本</string>
+
+    <string name="content_model">型号</string>
+
+    <string name="content_product">名称</string>
+
+    <string name="content_time_set">时间设置</string>
+
+    <string name="content_set_success">设置成功</string>
+
+    <string name="content_timing_set">定时测量时间设置</string>
+
+    <string name="content_subscribe1">预约1：</string>
+
+    <string name="content_subscribe2">预约2：</string>
+
+    <string name="content_subscribe3">预约3：</string>
+
+    <string name="content_timing_set_subscribe1">预约1运行时间设置</string>
+
+    <string name="content_timing_set_subscribe2">预约2运行时间设置</string>
+
+    <string name="content_timing_set_subscribe3">预约3运行时间设置</string>
+
+    <string name="content_hs">校正耗时</string>
+
+    <string name="content_jz_title">校正</string>
+
+    <string name="content_setting">设置</string>
+
+    <string name="content_time">时间</string>
+
 </resources>
+
+

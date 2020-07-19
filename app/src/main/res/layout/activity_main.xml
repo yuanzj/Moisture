@@ -52,7 +52,7 @@
                     android:layout_gravity="right"
                     android:drawableLeft="@mipmap/ic_back"
                     android:visibility="gone"
-                    android:text="返回"
+                    android:text="@string/content_back"
                     android:background="@drawable/selector_btn_transparent"
                     />
                 <ImageButton
@@ -79,7 +79,7 @@
                     android:gravity="center"
                     android:singleLine="true"
                     android:layout_marginRight="16dp"
-                    android:text="蓝牙未连接"
+                    android:text="@string/content_not_connect"
                     android:textColor="@color/colorBody"
                     android:textSize="@dimen/sizeBody"
                     />
@@ -151,7 +151,7 @@
                             <TextView
                                 android:layout_width="match_parent"
                                 android:layout_height="wrap_content"
-                                android:text="水分活度测量"
+                                android:text="@string/activity_measure"
                                 android:textColor="@color/colorBody"
                                 android:textSize="@dimen/sizeSubTitle"
                                 android:textStyle="bold" />
@@ -208,7 +208,7 @@
                             <TextView
                                 android:layout_width="match_parent"
                                 android:layout_height="wrap_content"
-                                android:text="数据校正"
+                                android:text="@string/activity_correct"
                                 android:textColor="@color/colorBody"
                                 android:textSize="@dimen/sizeSubTitle"
                                 android:textStyle="bold" />
@@ -280,7 +280,7 @@
                             <TextView
                                 android:layout_width="match_parent"
                                 android:layout_height="wrap_content"
-                                android:text="历史查询"
+                                android:text="@string/activity_query"
                                 android:textColor="@color/colorBody"
                                 android:textSize="@dimen/sizeSubTitle"
                                 android:textStyle="bold" />
@@ -336,7 +336,7 @@
                             <TextView
                                 android:layout_width="match_parent"
                                 android:layout_height="wrap_content"
-                                android:text="应用设置"
+                                android:text="@string/activity_setting"
                                 android:textColor="@color/colorBody"
                                 android:textSize="@dimen/sizeSubTitle"
                                 android:textStyle="bold" />

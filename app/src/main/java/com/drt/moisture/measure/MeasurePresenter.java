@@ -3,6 +3,7 @@ package com.drt.moisture.measure;
 import android.text.TextUtils;
 
 import com.drt.moisture.App;
+import com.drt.moisture.R;
 import com.drt.moisture.dashboard.DashboardModel;
 import com.drt.moisture.data.MeasureStatus;
 import com.drt.moisture.data.MeasureValue;
@@ -47,7 +48,7 @@ public class MeasurePresenter extends BasePresenter<MeasureContract.View> implem
             case DONE:
                 break;
             case RUNNING:
-                mView.onError(new Exception("测量中..."));
+                mView.onError(new Exception(App.getInstance().getString(R.string.content_measuring)));
                 return;
             case BT_NOT_CONNECT:
                 mView.onError(new Exception("设备尚未连接，请点击右上角蓝牙按钮连接设备"));
@@ -57,7 +58,7 @@ public class MeasurePresenter extends BasePresenter<MeasureContract.View> implem
         }
 
         if (TextUtils.isEmpty(measureName)) {
-            mView.onError(new Exception("请输入测量样品名称"));
+            mView.onError(new Exception(App.getInstance().getString(R.string.content_enter_simple_name)));
             return;
         }
 

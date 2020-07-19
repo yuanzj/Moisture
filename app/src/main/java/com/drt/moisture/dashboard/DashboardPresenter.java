@@ -3,6 +3,7 @@ package com.drt.moisture.dashboard;
 import android.text.TextUtils;
 
 import com.drt.moisture.App;
+import com.drt.moisture.R;
 import com.drt.moisture.data.MeasureStatus;
 import com.drt.moisture.data.MeasureValue;
 import com.drt.moisture.data.source.MeasureDataCallback;
@@ -46,7 +47,7 @@ public class DashboardPresenter extends BasePresenter<DashboardContract.View> im
         }
 
         if (TextUtils.isEmpty(measureName)) {
-            mView.onError(new Exception("请输入测量样品名称"));
+            mView.onError(new Exception(App.getInstance().getString(R.string.content_enter_simple_name)));
             return;
         }
 

@@ -8,6 +8,7 @@ import android.media.Ringtone;
 import android.media.RingtoneManager;
 import android.net.Uri;
 import android.os.Bundle;
+
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AlertDialog;
 
@@ -157,7 +158,7 @@ public class MeasureActivity extends BluetoothBaseActivity<DashboardPresenter> i
             return false;
         });
 
-        setTitleName("测点" + index + "测量");
+        setTitleName(getString(R.string.content_point) + index + getString(R.string.content_measure));
     }
 
     @Override
@@ -269,10 +270,10 @@ public class MeasureActivity extends BluetoothBaseActivity<DashboardPresenter> i
             @Override
             public void run() {
                 AlertDialog.Builder builder = new AlertDialog.Builder(MeasureActivity.this);
-                builder.setTitle("提示");//设置title
-                builder.setMessage("测点" + index + "测量完成");//设置内容
+                builder.setTitle(getString(R.string.content_affirm_title));//设置title
+                builder.setMessage(getString(R.string.content_point) + index + getString(R.string.content_measure_done));//设置内容
                 //点击确认按钮事件
-                builder.setPositiveButton("确认", new DialogInterface.OnClickListener() {
+                builder.setPositiveButton(getString(R.string.content_affirm_ok), new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
                         dialog.dismiss();
@@ -309,7 +310,7 @@ public class MeasureActivity extends BluetoothBaseActivity<DashboardPresenter> i
             case DONE:
                 break;
             case RUNNING:
-                onError(new Exception("测量中..."));
+                onError(new Exception(getString(R.string.content_measuring)));
                 return;
             case BT_NOT_CONNECT:
                 onError(new Exception("设备尚未连接，请点击右上角蓝牙按钮连接设备"));
@@ -318,8 +319,8 @@ public class MeasureActivity extends BluetoothBaseActivity<DashboardPresenter> i
                 return;
         }
         progressdialog = new ProgressDialog(MeasureActivity.this);
-        progressdialog.setTitle("提示");
-        progressdialog.setMessage("启动所有测量，请稍后...");
+        progressdialog.setTitle(getString(R.string.content_affirm_title));
+        progressdialog.setMessage(getString(R.string.content_start_title));
         progressdialog.setCancelable(false);
         progressdialog.show();
 
@@ -351,15 +352,15 @@ public class MeasureActivity extends BluetoothBaseActivity<DashboardPresenter> i
     @OnClick(R.id.btnStopMeasure)
     public void stopMeasure() {
 
-        AlertDialog.Builder builder = new AlertDialog.Builder(this).setTitle("提示")
-                .setMessage("是否确认停止测量？")
-                .setPositiveButton("确认", new DialogInterface.OnClickListener() {
+        AlertDialog.Builder builder = new AlertDialog.Builder(this).setTitle(getString(R.string.content_affirm_title))
+                .setMessage(getString(R.string.content_affirm_stop))
+                .setPositiveButton(getString(R.string.content_affirm_ok), new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialogInterface, int i) {
                         mPresenter.stopMeasure(true, index);
                     }
                 })
-                .setNegativeButton("取消", new DialogInterface.OnClickListener() {
+                .setNegativeButton(getString(R.string.content_affirm_cancel), new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
                         // TODO Auto-generated method stub
@@ -377,7 +378,7 @@ public class MeasureActivity extends BluetoothBaseActivity<DashboardPresenter> i
         Collections.reverse(historyList);
         final String[] items = historyList.toArray(new String[historyList.size()]);
         AlertDialog.Builder builder = new AlertDialog.Builder(this)
-                .setTitle("历史样品名称")
+                .setTitle(getString(R.string.content_his_name))
                 .setItems(items, new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialogInterface, int i) {
@@ -605,7 +606,7 @@ public class MeasureActivity extends BluetoothBaseActivity<DashboardPresenter> i
 
     private LineDataSet createActivitySet() {
 
-        LineDataSet d2 = new LineDataSet(null, "水分活度");
+        LineDataSet d2 = new LineDataSet(null, getString(R.string.content_sfhd));
         d2.setLineWidth(2f);
         d2.setCircleRadius(4.5f);
         d2.setHighLightColor(getResources().getColor(colors[index - 1], getTheme()));
@@ -638,7 +639,7 @@ public class MeasureActivity extends BluetoothBaseActivity<DashboardPresenter> i
 
         chart.getDescription().setEnabled(false);
         chart.setDrawGridBackground(false);
-        chart.setNoDataText("没有测量数据。请点击右上角蓝牙按钮连接设备后开始测量!");
+        chart.setNoDataText(getString(R.string.content_no_data));
         chart.setNoDataTextColor(getColor(R.color.colorSecondBody));
 
         XAxis xAxis = chart.getXAxis();

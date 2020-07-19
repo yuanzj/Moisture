@@ -4,6 +4,7 @@ import android.annotation.SuppressLint;
 import android.content.Context;
 import android.widget.TextView;
 
+import com.drt.moisture.App;
 import com.drt.moisture.R;
 import com.drt.moisture.data.MeasureValue;
 import com.github.mikephil.charting.components.MarkerView;
@@ -31,7 +32,7 @@ public class LineChartMarkView extends MarkerView {
     public void refreshContent(Entry e, Highlight highlight) {
         //展示自定义X轴值 后的X轴内容
         tvDate.setText(xAxisValueFormatter.getFormattedValue(e.getX()));
-        tvValue.setText("测点" + ((MeasureValue) e.getData()).getIndex() + "水分活度：" + e.getY());
+        tvValue.setText(App.getInstance().getString(R.string.content_point) + ((MeasureValue) e.getData()).getIndex() + "水分活度：" + e.getY());
         super.refreshContent(e, highlight);
     }
 

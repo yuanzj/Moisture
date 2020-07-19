@@ -39,7 +39,7 @@
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="开始测量"
+                    android:text="@string/content_start_measure"
                     android:gravity="center"
                     android:paddingBottom="4dp"
                     android:textColor="@color/colorWhite"
@@ -64,7 +64,7 @@
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="停止测量"
+                    android:text="@string/content_stop_measure"
                     android:gravity="center"
                     android:paddingBottom="4dp"
                     android:textColor="@color/colorWhite"

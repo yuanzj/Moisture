@@ -129,7 +129,7 @@ public class CorrectActivity extends BluetoothBaseActivity<CorrectDashboardPrese
 
         spMeasureTime.setSelection(mPresenter.geCorrectTime(index) - 15);
 
-        setTitleName("测点" + index + "校正");
+        setTitleName(getString(R.string.content_point) + index + getString(R.string.content_jz_title));
     }
 
     @Override
@@ -158,11 +158,11 @@ public class CorrectActivity extends BluetoothBaseActivity<CorrectDashboardPrese
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
                 Log.d(TAG, "spMeasureModel:onItemSelected:position:" + position);
                 if (position == 0) {
-                    correctTitle.setText("请放置氯化钠饱和液");
+                    correctTitle.setText(getString(R.string.content_qxfz_lhn_1));
                 } else if (position == 1) {
-                    correctTitle.setText("请放置氯化镁饱和液");
+                    correctTitle.setText(getString(R.string.content_qxfz_lhm));
                 } else {
-                    correctTitle.setText("请先放置氯化钠饱和液");
+                    correctTitle.setText(getString(R.string.content_qxfz_lhn));
                 }
 
                 int model;
@@ -256,8 +256,8 @@ public class CorrectActivity extends BluetoothBaseActivity<CorrectDashboardPrese
     public void startMeasure() {
 
         AlertDialog.Builder builder = new AlertDialog.Builder(this)
-                .setTitle("提示")
-                .setMessage(correctTitle.getText()).setPositiveButton("确认", new DialogInterface.OnClickListener() {
+                .setTitle(getString(R.string.content_affirm_title))
+                .setMessage(correctTitle.getText()).setPositiveButton(getString(R.string.content_affirm_ok), new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialogInterface, int i) {
 
@@ -298,7 +298,7 @@ public class CorrectActivity extends BluetoothBaseActivity<CorrectDashboardPrese
 
                         mPresenter.startCorrect(model, type, pointCount);
                     }
-                }).setNegativeButton("取消", new DialogInterface.OnClickListener() {
+                }).setNegativeButton(getString(R.string.content_affirm_cancel), new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialogInterface, int i) {
                         dialogInterface.dismiss();
@@ -310,15 +310,15 @@ public class CorrectActivity extends BluetoothBaseActivity<CorrectDashboardPrese
 
     @OnClick(R.id.btnStopMeasure)
     public void stopMeasure() {
-        AlertDialog.Builder builder = new AlertDialog.Builder(this).setTitle("提示")
-                .setMessage("是否确认停止校正？")
-                .setPositiveButton("确认", new DialogInterface.OnClickListener() {
+        AlertDialog.Builder builder = new AlertDialog.Builder(this).setTitle(getString(R.string.content_affirm_title))
+                .setMessage(getString(R.string.content_stop_correct1))
+                .setPositiveButton(getString(R.string.content_affirm_ok), new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialogInterface, int i) {
                         mPresenter.stopCorrect(false);
                     }
                 })
-                .setNegativeButton("取消", new DialogInterface.OnClickListener() {
+                .setNegativeButton(getString(R.string.content_affirm_cancel), new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
                         // TODO Auto-generated method stub
@@ -358,10 +358,10 @@ public class CorrectActivity extends BluetoothBaseActivity<CorrectDashboardPrese
                     case DONE:
                         if (measureStatus == MeasureStatus.DONE) {
                             AlertDialog.Builder builder = new AlertDialog.Builder(CorrectActivity.this);
-                            builder.setTitle("提示");//设置title
-                            builder.setMessage("校正完成");//设置内容
+                            builder.setTitle(getString(R.string.content_affirm_title));//设置title
+                            builder.setMessage(getString(R.string.content_correct_done));//设置内容
                             //点击确认按钮事件
-                            builder.setPositiveButton("确认", new DialogInterface.OnClickListener() {
+                            builder.setPositiveButton(getString(R.string.content_affirm_ok), new DialogInterface.OnClickListener() {
                                 @Override
                                 public void onClick(DialogInterface dialog, int which) {
                                     dialog.dismiss();
@@ -401,8 +401,8 @@ public class CorrectActivity extends BluetoothBaseActivity<CorrectDashboardPrese
             public void run() {
                 correctTitle.setText(message);
                 AlertDialog.Builder builder = new AlertDialog.Builder(CorrectActivity.this)
-                        .setTitle("提示")
-                        .setMessage(message).setPositiveButton("确认", new DialogInterface.OnClickListener() {
+                        .setTitle(getString(R.string.content_affirm_title))
+                        .setMessage(message).setPositiveButton(getString(R.string.content_affirm_ok), new DialogInterface.OnClickListener() {
                             @Override
                             public void onClick(DialogInterface dialogInterface, int i) {
 
@@ -410,7 +410,7 @@ public class CorrectActivity extends BluetoothBaseActivity<CorrectDashboardPrese
                                 mPresenter.startCorrect(0x02, 0x02, pointCount);
 
                             }
-                        }).setNegativeButton("取消", new DialogInterface.OnClickListener() {
+                        }).setNegativeButton(getString(R.string.content_affirm_cancel), new DialogInterface.OnClickListener() {
                             @Override
                             public void onClick(DialogInterface dialogInterface, int i) {
                                 dialogInterface.dismiss();
@@ -536,7 +536,7 @@ public class CorrectActivity extends BluetoothBaseActivity<CorrectDashboardPrese
 
     private LineDataSet createActivitySet() {
 
-        LineDataSet d2 = new LineDataSet(null, "水分活度");
+        LineDataSet d2 = new LineDataSet(null, getString(R.string.content_sfhd));
         d2.setLineWidth(2f);
         d2.setCircleRadius(4.5f);
         d2.setHighLightColor(getResources().getColor(R.color.colorGreen, getTheme()));

@@ -66,7 +66,7 @@
                 <TextView
                     android:layout_width="160dp"
                     android:layout_height="wrap_content"
-                    android:text="温度"
+                    android:text="@string/content_temp"
                     android:gravity="left"
                     android:textColor="@color/colorWhite"
                     android:textSize="@dimen/sizeTitle" />
@@ -98,7 +98,7 @@
                 <TextView
                     android:layout_width="160dp"
                     android:layout_height="wrap_content"
-                    android:text="水分活度"
+                    android:text="@string/content_sfhd"
                     android:gravity="left"
                     android:textColor="@color/colorWhite"
                     android:textSize="@dimen/sizeTitle" />
@@ -130,7 +130,7 @@
                 <TextView
                     android:layout_width="160dp"
                     android:layout_height="wrap_content"
-                    android:text="测量耗时"
+                    android:text="@string/content_measure_time"
                     android:gravity="left"
                     android:textColor="@color/colorWhite"
                     android:textSize="@dimen/sizeTitle" />
@@ -174,7 +174,7 @@
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="开始\n测量"
+                        android:text="@string/content_start_measure1"
                         android:gravity="center"
                         android:textColor="@color/colorWhite"
                         android:textSize="@dimen/sizeTitle" />
@@ -196,7 +196,7 @@
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="停止\n测量"
+                        android:text="@string/content_stop_measure1"
                         android:gravity="center"
                         android:textColor="@color/colorWhite"
                         android:textSize="@dimen/sizeTitle" />
@@ -230,7 +230,7 @@
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="样品名称"
+                android:text="@string/content_simple_name"
                 android:textColor="@color/colorSecondBody"
                 android:textSize="@dimen/sizeBody" />
 
@@ -246,7 +246,7 @@
                 android:layout_weight="1"
                 android:background="@drawable/edittext_bg_selector"
                 android:focusableInTouchMode="true"
-                android:hint="请输入测量样品名称"
+                android:hint="@string/content_enter_simple_name"
                 android:singleLine="true"
                 android:textColor="@color/colorBody"
                 android:textCursorDrawable="@drawable/solid_shape_bottom_line"
