@@ -461,6 +461,12 @@ public class MeasureActivity extends BluetoothBaseActivity<DashboardPresenter> i
     protected void onResume() {
         super.onResume();
         updateUI(mPresenter.getMeasureStatus(index));
+
+        if (getIntent().getBooleanExtra("autoStart", false)) {
+            getIntent().putExtra("autoStart", false);
+            Toast.makeText(this, "即将启动定时测量", Toast.LENGTH_LONG).show();
+            startMeasure();
+        }
     }
 
     @Override

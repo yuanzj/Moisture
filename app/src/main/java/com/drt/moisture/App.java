@@ -133,6 +133,7 @@ public class App extends Application {
                 } catch (InterruptedException e) {
                     e.printStackTrace();
                 }
+                int pointCount = getLocalDataService().queryAppConfig().getPointCount();
 
                 PowerManager pm = (PowerManager) getSystemService(Context.POWER_SERVICE);
                 boolean isScreenOn = pm.isInteractive();//如果为true，则表示屏幕“亮”了，否则屏幕“暗”了。
@@ -159,11 +160,21 @@ public class App extends Application {
                                 if (DashboardActivity.getDashboardActivity() != null) {
                                     DashboardActivity.getDashboardActivity().finish();
                                 }
-                                Intent intent = new Intent();
-                                intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-                                intent.setClass(getApplicationContext(), DashboardActivity.class);
-                                intent.putExtra("autoStart", true);
-                                startActivity(intent);
+
+                                if (pointCount == 1) {
+                                    Intent intent = new Intent();
+                                    intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                                    intent.setClass(getApplicationContext(), MeasureActivity.class);
+                                    intent.putExtra("index", 1);
+                                    intent.putExtra("autoStart", true);
+                                    startActivity(intent);
+                                } else {
+                                    Intent intent = new Intent();
+                                    intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                                    intent.setClass(getApplicationContext(), DashboardActivity.class);
+                                    intent.putExtra("autoStart", true);
+                                    startActivity(intent);
+                                }
                             } else if (new Date().after(date2) && new Date().before(new Date(date2.getTime() + 1000 * 60 * 2)) && (lastAutoRunDate2 == null || lastAutoRunDate2.before(date2))) {
                                 lastAutoRunDate2 = new Date();
                                 // 发指令
@@ -173,11 +184,20 @@ public class App extends Application {
                                 if (DashboardActivity.getDashboardActivity() != null) {
                                     DashboardActivity.getDashboardActivity().finish();
                                 }
-                                Intent intent = new Intent();
-                                intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-                                intent.setClass(getApplicationContext(), DashboardActivity.class);
-                                intent.putExtra("autoStart", true);
-                                startActivity(intent);
+                                if (pointCount == 1) {
+                                    Intent intent = new Intent();
+                                    intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                                    intent.setClass(getApplicationContext(), MeasureActivity.class);
+                                    intent.putExtra("index", 1);
+                                    intent.putExtra("autoStart", true);
+                                    startActivity(intent);
+                                } else {
+                                    Intent intent = new Intent();
+                                    intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                                    intent.setClass(getApplicationContext(), DashboardActivity.class);
+                                    intent.putExtra("autoStart", true);
+                                    startActivity(intent);
+                                }
 
                             } else if (new Date().after(date3) && new Date().before(new Date(date3.getTime() + 1000 * 60 * 2)) && (lastAutoRunDate3 == null || lastAutoRunDate3.before(date3))) {
                                 lastAutoRunDate3 = new Date();
@@ -188,11 +208,20 @@ public class App extends Application {
                                 if (DashboardActivity.getDashboardActivity() != null) {
                                     DashboardActivity.getDashboardActivity().finish();
                                 }
-                                Intent intent = new Intent();
-                                intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-                                intent.setClass(getApplicationContext(), DashboardActivity.class);
-                                intent.putExtra("autoStart", true);
-                                startActivity(intent);
+                                if (pointCount == 1) {
+                                    Intent intent = new Intent();
+                                    intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                                    intent.setClass(getApplicationContext(), MeasureActivity.class);
+                                    intent.putExtra("index", 1);
+                                    intent.putExtra("autoStart", true);
+                                    startActivity(intent);
+                                } else {
+                                    Intent intent = new Intent();
+                                    intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                                    intent.setClass(getApplicationContext(), DashboardActivity.class);
+                                    intent.putExtra("autoStart", true);
+                                    startActivity(intent);
+                                }
                             }
                         }
                     }

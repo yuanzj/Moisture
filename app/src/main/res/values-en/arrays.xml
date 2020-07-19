@@ -1,0 +1,118 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <string-array name="measure_name">
+        <item>specimen1</item>
+        <item>specimen2</item>
+        <item>specimen3</item>
+        <item>specimen4</item>
+        <item>specimen5</item>
+        <item>specimen6</item>
+        <item>specimen7</item>
+        <item>specimen8</item>
+        <item>specimen9</item>
+        <item>specimen10</item>
+    </string-array>
+
+    <string-array name="measure_model">
+        <item>timing measurement</item>
+        <item>automatically measurement</item>
+    </string-array>
+
+    <string-array name="correct_model">
+        <item>Sodium chloride saturated solution correction</item>
+        <item>Magnesium chloride saturated solution correction</item>
+        <item>two point correction</item>
+    </string-array>
+
+    <string-array name="measure_time_array">
+        <item>5 mins</item>
+        <item>6 mins</item>
+        <item>7 mins</item>
+        <item>8 mins</item>
+        <item>9 mins</item>
+        <item>10 mins</item>
+
+        <item>11 mins</item>
+        <item>12 mins</item>
+        <item>13 mins</item>
+        <item>14 mins</item>
+        <item>15 mins</item>
+        <item>16 mins</item>
+        <item>17 mins</item>
+        <item>18 mins</item>
+        <item>19 mins</item>
+        <item>20 mins</item>
+
+        <item>21 mins</item>
+        <item>22 mins</item>
+        <item>23 mins</item>
+        <item>24 mins</item>
+        <item>25 mins</item>
+        <item>26 mins</item>
+        <item>27 mins</item>
+        <item>28 mins</item>
+        <item>29 mins</item>
+        <item>30 mins</item>
+
+        <item>31 mins</item>
+        <item>32 mins</item>
+        <item>33 mins</item>
+        <item>34 mins</item>
+        <item>35 mins</item>
+        <item>36 mins</item>
+        <item>37 mins</item>
+        <item>38 mins</item>
+        <item>39 mins</item>
+        <item>40 mins</item>
+
+        <item>41 mins</item>
+        <item>42 mins</item>
+        <item>43 mins</item>
+        <item>44 mins</item>
+        <item>45 mins</item>
+        <item>46 mins</item>
+        <item>47 mins</item>
+        <item>48 mins</item>
+        <item>49 mins</item>
+        <item>50 mins</item>
+
+        <item>51 mins</item>
+        <item>52 mins</item>
+        <item>53 mins</item>
+        <item>54 mins</item>
+        <item>55 mins</item>
+        <item>56 mins</item>
+        <item>57 mins</item>
+        <item>58 mins</item>
+        <item>59 mins</item>
+        <item>60 mins</item>
+
+    </string-array>
+
+    <string-array name="correct_time_array">
+        <item>15 mins</item>
+        <item>16 mins</item>
+        <item>17 mins</item>
+        <item>18 mins</item>
+        <item>19 mins</item>
+        <item>20 mins</item>
+
+        <item>21 mins</item>
+        <item>22 mins</item>
+        <item>23 mins</item>
+        <item>24 mins</item>
+        <item>25 mins</item>
+        <item>26 mins</item>
+        <item>27 mins</item>
+        <item>28 mins</item>
+        <item>29 mins</item>
+        <item>30 mins</item>
+    </string-array>
+
+    <string-array name="setting_rate">
+        <item>1.5</item>
+        <item>3</item>
+        <item>5</item>
+    </string-array>
+</resources>

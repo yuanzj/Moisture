@@ -1,0 +1,138 @@
+<resources>
+    <string name="app_name">Water Activity Measuring Instrument</string>
+
+    <string name="content_back">back</string>
+
+    <string name="activity_measure">water activity measuring (aw measuring)</string>
+
+    <string name="activity_correct">data correction</string>
+
+    <string name="activity_query">search data</string>
+
+    <string name="activity_setting">application settings</string>
+
+    <string name="activity_scan">scanning device</string>
+
+    <string name="content_battery">battery</string>
+
+    <string name="content_not_connect">bluetooth unconnected</string>
+
+    <string name="content_start_measure">start</string>
+
+    <string name="content_start_measure1">start</string>
+
+    <string name="content_start_correct">start</string>
+
+    <string name="content_stop_measure">stop</string>
+
+    <string name="content_stop_measure1">stop</string>
+
+    <string name="content_stop_correct">stop</string>
+
+    <string name="content_start_title">start measuring, please wait</string>
+
+    <string name="content_correct_start_title">start correction, please wait</string>
+
+    <string name="content_point">point</string>
+
+    <string name="content_sfhd">Aw</string>
+
+    <string name="content_affirm_stop">Are you sure to stop measuring?</string>
+
+    <string name="content_affirm_ok">Yes</string>
+
+    <string name="content_affirm_cancel">No</string>
+
+    <string name="content_affirm_title">Alert</string>
+
+    <string name="content_measure_done">finish measuring</string>
+
+    <string name="content_temp">temp</string>
+
+    <string name="content_measure_time">time</string>
+
+    <string name="content_no_data">No data, before measuring please make sure App is connected with the meter by bluetooth</string>
+
+    <string name="content_simple_name">Sample Name</string>
+
+    <string name="content_auto_start">automatically measurement</string>
+
+    <string name="content_timing_start">timing measurement</string>
+
+    <string name="content_mins">mins</string>
+
+    <string name="content_measuring">measuring</string>
+
+    <string name="content_enter_simple_name">enter sample name</string>
+
+    <string name="content_search">search</string>
+
+    <string name="content_his_name">historical sample name</string>
+
+    <string name="content_loaded">loaded</string>
+
+    <string name="content_please_wait">please wait...</string>
+
+    <string name="content_environment">environment value</string>
+
+    <string name="content_pre">previous page</string>
+
+    <string name="content_next">next page</string>
+
+    <string name="content_finish_loading">finish loading</string>
+
+    <string name="content_export_data_in">export data in...</string>
+
+    <string name="content_no_loaded_data">No loaded data</string>
+
+    <string name="content_lhn_jz">Sodium chloride saturated solution correction</string>
+
+    <string name="content_qxfz_lhn">please put Sodium chloride saturated solution in the sensor first</string>
+
+    <string name="content_qxfz_lhm">please put Magnesium chloride saturated solution in the sensor</string>
+
+    <string name="content_qxfz_lhn_1">please put Sodium chloride saturated solution in the sensor</string>
+
+    <string name="content_stop_correct1">Are you sure to stop correcting</string>
+
+    <string name="content_correct_done">correction completed</string>
+
+    <string name="content_device_info">instrument information</string>
+
+    <string name="content_sn">serial number</string>
+
+    <string name="content_version">version</string>
+
+    <string name="content_model">model</string>
+
+    <string name="content_product">product</string>
+
+    <string name="content_time_set">time settings</string>
+
+    <string name="content_set_success">setup succeed</string>
+
+    <string name="content_timing_set">timing measurement settings</string>
+
+    <string name="content_measure">measurement</string>
+
+    <string name="content_subscribe1">appointment 1</string>
+
+    <string name="content_subscribe2">appointment 2</string>
+
+    <string name="content_subscribe3">appointment 3</string>
+
+    <string name="content_timing_set_subscribe1">appointment 1 running time settings</string>
+
+    <string name="content_timing_set_subscribe2">appointment 2 running time settings</string>
+
+    <string name="content_timing_set_subscribe3">appointment 3 running time settings</string>
+
+    <string name="content_hs">Time-consuming</string>
+
+    <string name="content_jz_title">correction</string>
+
+    <string name="content_setting">setting</string>
+
+    <string name="content_time">time</string>
+
+</resources>
