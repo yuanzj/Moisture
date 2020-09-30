@@ -505,7 +505,9 @@ public class CorrectDashboardActivity extends BluetoothBaseActivity<CorrectDashb
                         dialogInterface.dismiss();
                     }
                 });
-        builder.create().show();
+        AlertDialog  alertDialog = builder.create();
+        alertDialog.setCanceledOnTouchOutside(false);
+        alertDialog.show();
     }
 
     private void startCorrect() {
@@ -588,7 +590,9 @@ public class CorrectDashboardActivity extends BluetoothBaseActivity<CorrectDashb
                     }
                 })
                 .setCancelable(false);
-        builder.show();
+        AlertDialog  alertDialog = builder.create();
+        alertDialog.setCanceledOnTouchOutside(false);
+        alertDialog.show();
 
     }
 
@@ -640,7 +644,9 @@ public class CorrectDashboardActivity extends BluetoothBaseActivity<CorrectDashb
                                 dialogInterface.dismiss();
                             }
                         });
-                builder.create().show();
+                AlertDialog  alertDialog = builder.create();
+                alertDialog.setCanceledOnTouchOutside(false);
+                alertDialog.show();
             }
         });
     }

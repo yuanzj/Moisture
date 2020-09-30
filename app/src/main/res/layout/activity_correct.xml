@@ -191,6 +191,7 @@
                 android:visibility="gone" />
 
             <LinearLayout
+                android:id="@+id/tip"
                 android:layout_width="300dp"
                 android:layout_height="48dp"
                 android:background="@drawable/bg_white"

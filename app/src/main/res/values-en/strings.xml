@@ -3,7 +3,7 @@
 
     <string name="content_back">back</string>
 
-    <string name="activity_measure">water activity measuring (aw measuring)</string>
+    <string name="activity_measure">water activity measuring</string>
 
     <string name="activity_correct">data correction</string>
 
@@ -134,5 +134,9 @@
     <string name="content_setting">setting</string>
 
     <string name="content_time">time</string>
+
+    <string name="factory_name"></string>
+
+    <string name="factory_name_full"></string>
 
 </resources>

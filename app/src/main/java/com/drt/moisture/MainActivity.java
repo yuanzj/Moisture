@@ -109,6 +109,15 @@ public class MainActivity extends BluetoothBaseActivity<MainPresenter> {
                     intent.putExtra("index", 1);
                     startActivity(intent);
                 } else {
+                    if (DashboardActivity.getDashboardPresenter() != null) {
+                        DashboardActivity.getDashboardPresenter().onDestroy();
+                        DashboardActivity.setDashboardPresenter(null);
+                    }
+
+                    if (DashboardActivity.getDashboardActivity() != null) {
+                        DashboardActivity.setDashboardActivity(null);
+                    }
+
                     startActivity(new Intent(this, DashboardActivity.class));
                 }
                 break;
@@ -127,6 +136,15 @@ public class MainActivity extends BluetoothBaseActivity<MainPresenter> {
                     intent.putExtra("index", 1);
                     startActivity(intent);
                 } else {
+                    if (CorrectDashboardActivity.getDashboardPresenter() != null) {
+                        CorrectDashboardActivity.getDashboardPresenter().onDestroy();
+                        CorrectDashboardActivity.setCorrectDashboardPresenter(null);
+                    }
+
+                    if (CorrectDashboardActivity.getCorrectDashboardActivity() != null) {
+                        CorrectDashboardActivity.setCorrectDashboardActivity(null);
+                    }
+
                     startActivity(new Intent(this, CorrectDashboardActivity.class));
                 }
                 break;

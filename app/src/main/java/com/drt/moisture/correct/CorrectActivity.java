@@ -89,6 +89,9 @@ public class CorrectActivity extends BluetoothBaseActivity<CorrectDashboardPrese
     @BindView(R.id.activeness)
     TextView activeness;
 
+    @BindView(R.id.tip)
+    View tip;
+
     int index;
 
     int pointCount;
@@ -168,14 +171,19 @@ public class CorrectActivity extends BluetoothBaseActivity<CorrectDashboardPrese
                 int model;
                 int type;
                 if (position == 2) {
+                    tip.setVisibility(View.VISIBLE);
 //                            双点校正
                     model = 0x02;
                     type = 0x01;
                 } else if (position == 1) {
+                    tip.setVisibility(View.INVISIBLE);
+
 //                            氯化镁校正
                     model = 0x01;
                     type = 0x02;
                 } else {
+                    tip.setVisibility(View.INVISIBLE);
+
 //                            氯化钠校正
                     model = 0x01;
                     type = 0x01;
@@ -304,7 +312,9 @@ public class CorrectActivity extends BluetoothBaseActivity<CorrectDashboardPrese
                         dialogInterface.dismiss();
                     }
                 });
-        builder.create().show();
+        AlertDialog  alertDialog = builder.create();
+        alertDialog.setCanceledOnTouchOutside(false);
+        alertDialog.show();
 
     }
 
@@ -326,7 +336,9 @@ public class CorrectActivity extends BluetoothBaseActivity<CorrectDashboardPrese
                     }
                 })
                 .setCancelable(false);
-        builder.show();
+        AlertDialog  alertDialog = builder.create();
+        alertDialog.setCanceledOnTouchOutside(false);
+        alertDialog.show();
     }
 
     @Override
@@ -416,7 +428,9 @@ public class CorrectActivity extends BluetoothBaseActivity<CorrectDashboardPrese
                                 dialogInterface.dismiss();
                             }
                         });
-                builder.create().show();
+                AlertDialog  alertDialog = builder.create();
+                alertDialog.setCanceledOnTouchOutside(false);
+                alertDialog.show();
             }
         });
     }
@@ -452,10 +466,7 @@ public class CorrectActivity extends BluetoothBaseActivity<CorrectDashboardPrese
     @Override
     protected void onDestroy() {
 //        mPresenter.stopCorrect(false);
-        if (CorrectDashboardActivity.getDashboardPresenter() == null) {
-            mPresenter.onDestroy();
-        }
-
+        mPresenter.onDestroy();
         super.onDestroy();
         mWakelock.release(); // release control.stop to keep screen lighting
     }

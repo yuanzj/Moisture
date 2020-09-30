@@ -135,6 +135,11 @@
 
     <string name="content_time">时间</string>
 
+    <string name="factory_name">华科仪器</string>
+
+    <string name="factory_name_full">无锡市华科仪器仪表有限公司</string>
+
+
 </resources>
 
 

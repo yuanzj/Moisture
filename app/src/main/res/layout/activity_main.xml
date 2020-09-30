@@ -368,7 +368,7 @@
             android:layout_marginTop="?attr/actionBarSize"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="华科仪器"
+            android:text="@string/factory_name"
             android:paddingLeft="32dp"
             android:textColor="@color/colorBody"
             android:textSize="22sp"
@@ -397,7 +397,7 @@
     <TextView
         android:layout_width="match_parent"
         android:layout_height="?attr/actionBarSize"
-        android:text="无锡市华科仪器仪表有限公司"
+        android:text="@string/factory_name_full"
         android:gravity="center"
         android:textColor="@color/colorBody"
         android:textSize="18sp"
