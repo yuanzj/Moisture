@@ -18,7 +18,7 @@
         android:src="@mipmap/logo_title"
         android:paddingTop="8dp"
         android:paddingBottom="8dp"
-        android:paddingLeft="-8dp"
+        android:paddingLeft="8dp"
         />
 
     <TextView
