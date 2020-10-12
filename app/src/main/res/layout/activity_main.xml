@@ -28,10 +28,12 @@
             <ImageView
                 android:layout_width="wrap_content"
                 android:layout_height="match_parent"
-                android:paddingLeft="-8dp"
                 android:paddingTop="8dp"
                 android:paddingBottom="8dp"
-                android:src="@mipmap/logo_title" />
+                android:src="@mipmap/logo_title"
+                android:paddingLeft="8dp"
+                />
+
 
 
             <LinearLayout

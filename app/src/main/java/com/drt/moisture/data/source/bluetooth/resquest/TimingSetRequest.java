@@ -61,6 +61,9 @@ public class TimingSetRequest {
     @RkField(position = 19, length = 1)
     private int time3m;
 
+    @RkField(position = 20, length = 4)
+    private int timestamp;
+
     public int getCmdGroup() {
         return CmdGroup;
     }
@@ -211,6 +214,14 @@ public class TimingSetRequest {
 
     public void setTime3day(int time3day) {
         this.time3day = time3day;
+    }
+
+    public int getTimestamp() {
+        return timestamp;
+    }
+
+    public void setTimestamp(int timestamp) {
+        this.timestamp = timestamp;
     }
 
     @Override

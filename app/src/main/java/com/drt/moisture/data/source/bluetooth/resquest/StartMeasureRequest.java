@@ -31,6 +31,9 @@ public class StartMeasureRequest {
     @RkField(position = 38, length = 1)
     private int index;
 
+    @RkField(position = 39, length = 4)
+    private int timestamp;
+
     public int getCmdGroup() {
         return CmdGroup;
     }
@@ -101,5 +104,13 @@ public class StartMeasureRequest {
 
     public void setIndex(int index) {
         this.index = index;
+    }
+
+    public int getTimestamp() {
+        return timestamp;
+    }
+
+    public void setTimestamp(int timestamp) {
+        this.timestamp = timestamp;
     }
 }

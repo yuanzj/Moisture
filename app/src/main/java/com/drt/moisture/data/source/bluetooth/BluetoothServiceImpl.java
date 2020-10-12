@@ -116,6 +116,7 @@ public class BluetoothServiceImpl implements BluetoothService, BleWriteResponse 
         }
 
         startMeasureRequest.setTime((byte) time);
+        startMeasureRequest.setTimestamp((int) (System.currentTimeMillis() / 1000));
         try {
             Log.d("yzj", "startMeasure" + index);
             write(App.getInstance().getConnectMacAddress(), UUIDUtils.makeUUID(0xFFE0), UUIDUtils.makeUUID(0xFFE1), BluetoothDataUtil.encode(startMeasureRequest), this);
@@ -1004,7 +1005,7 @@ public class BluetoothServiceImpl implements BluetoothService, BleWriteResponse 
         timingSetRequest.setCmd((byte) 0x0B);
         timingSetRequest.setResponse((byte) 0x01);
         timingSetRequest.setReserved(0);
-
+        timingSetRequest.setTimestamp((int) (System.currentTimeMillis() / 1000));
         try {
             write(App.getInstance().getConnectMacAddress(), UUIDUtils.makeUUID(0xFFE0), UUIDUtils.makeUUID(0xFFE1), BluetoothDataUtil.encode(timingSetRequest), this);
 
@@ -1039,7 +1040,7 @@ public class BluetoothServiceImpl implements BluetoothService, BleWriteResponse 
     }
 
     @Override
-    public void setMeasureName(final int index,final String name, SppDataCallback<ParameterSetResponse> sppDataCallback, boolean retry) {
+    public void setMeasureName(final int index, final String name, SppDataCallback<ParameterSetResponse> sppDataCallback, boolean retry) {
         this.sppDataCallback = sppDataCallback;
         MeasureNameSetRequest timingSetRequest = new MeasureNameSetRequest();
         timingSetRequest.setCmdGroup((byte) 0xA2);
