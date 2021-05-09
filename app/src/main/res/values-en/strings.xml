@@ -13,7 +13,7 @@
 
     <string name="activity_scan">scanning device</string>
 
-    <string name="content_battery">battery</string>
+    <string name="content_battery">connected</string>
 
     <string name="content_not_connect">bluetooth unconnected</string>
 

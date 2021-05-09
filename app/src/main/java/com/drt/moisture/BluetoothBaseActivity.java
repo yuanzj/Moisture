@@ -9,12 +9,14 @@ import android.content.pm.PackageManager;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.os.Handler;
+
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.widget.Toolbar;
+
 import android.text.TextUtils;
 import android.util.Log;
 import android.view.MenuItem;
@@ -115,11 +117,7 @@ public abstract class BluetoothBaseActivity<T extends BasePresenter> extends Bas
             btnBluetooth.setImageResource(R.mipmap.ic_bluetooth_connected);
             App.getInstance().getBluetoothClient().registerConnectStatusListener(App.getInstance().getConnectMacAddress(), mBleConnectStatusListener);
             setBleConnectStatus(Constants.STATUS_CONNECTED);
-            if (!TextUtils.isEmpty(App.getInstance().getDeviceSoc())) {
-                secondTitle.setText(getString(R.string.content_battery) + ": " + App.getInstance().getDeviceSoc() + "%");
-            } else {
-                secondTitle.setText("已连接");
-            }
+            secondTitle.setText(getString(R.string.content_battery));
             App.getInstance().getBluetoothService().querySoc(socResponseSppDataCallback);
         } else {
             btnBluetooth.setImageResource(R.mipmap.ic_bluetooth);
@@ -376,7 +374,7 @@ public abstract class BluetoothBaseActivity<T extends BasePresenter> extends Bas
                 btnBluetooth.setImageResource(R.mipmap.ic_bluetooth_connected);
                 Toast.makeText(getApplicationContext(), "设备已连接", Toast.LENGTH_SHORT).show();
                 setBleConnectStatus(STATUS_CONNECTED);
-                secondTitle.setText("已连接");
+                secondTitle.setText(getString(R.string.content_battery));
             } else if (status == STATUS_DISCONNECTED) {
                 btnBluetooth.setImageResource(R.mipmap.ic_bluetooth);
                 Toast.makeText(getApplicationContext(), "连接已断开", Toast.LENGTH_SHORT).show();
@@ -454,8 +452,8 @@ public abstract class BluetoothBaseActivity<T extends BasePresenter> extends Bas
 
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void onGetMessage(SocResponse socResponse) {
-        App.getInstance().setDeviceSoc(String.valueOf(socResponse.getSoc()));
-        secondTitle.setText(getString(R.string.content_battery) + ": " + App.getInstance().getDeviceSoc() + "%");
+//        App.getInstance().setDeviceSoc(String.valueOf(socResponse.getSoc()));
+        secondTitle.setText(getString(R.string.content_battery));
     }
 
     @Subscribe(threadMode = ThreadMode.MAIN)

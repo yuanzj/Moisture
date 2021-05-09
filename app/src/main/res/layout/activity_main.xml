@@ -164,7 +164,7 @@
                             <TextView
                                 android:layout_width="match_parent"
                                 android:layout_height="wrap_content"
-                                android:text="moisture measuring"
+                                android:text="Aw Measure"
                                 android:textColor="@color/colorSecondBody"
                                 android:textSize="@dimen/sizeBody"
                                 android:textStyle="bold" />
@@ -221,7 +221,7 @@
                             <TextView
                                 android:layout_width="match_parent"
                                 android:layout_height="wrap_content"
-                                android:text="data correction"
+                                android:text="Data Correction"
                                 android:textColor="@color/colorSecondBody"
                                 android:textSize="@dimen/sizeBody"
                                 android:textStyle="bold" />
@@ -293,7 +293,7 @@
                             <TextView
                                 android:layout_width="match_parent"
                                 android:layout_height="wrap_content"
-                                android:text="query history"
+                                android:text="Query History"
                                 android:textColor="@color/colorSecondBody"
                                 android:textSize="@dimen/sizeBody"
                                 android:textStyle="bold" />
@@ -349,7 +349,7 @@
                             <TextView
                                 android:layout_width="match_parent"
                                 android:layout_height="wrap_content"
-                                android:text="application settings"
+                                android:text="Application Settings"
                                 android:textColor="@color/colorSecondBody"
                                 android:textSize="@dimen/sizeBody"
                                 android:textStyle="bold" />

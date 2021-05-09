@@ -13,9 +13,9 @@
 
     <string name="activity_scan">扫描设备</string>
 
-    <string name="content_battery">电量</string>
+    <string name="content_battery">已连接</string>
 
-    <string name="content_not_connect">蓝牙未连接</string>
+    <string name="content_not_connect">未连接</string>
 
     <string name="content_start_measure">开始测量</string>
 
