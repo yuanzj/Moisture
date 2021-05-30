@@ -1,1 +1,1 @@
-include ':app', ':zjandroidcommon', ':bluetoothspp', ':rkconverter',':MPChartLib'
+include ':app', ':zjandroidcommon', ':bluetoothspp', ':rkconverter',':MPChartLib', ':serialportlib'
