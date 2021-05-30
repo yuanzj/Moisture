@@ -10,8 +10,8 @@ android {
         applicationId "com.drt.moisture"
         minSdkVersion 23
         targetSdkVersion 28
-        versionCode 20201211
-        versionName "2.75"
+        versionCode 20210530
+        versionName "3.0"
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
     }
 
@@ -79,5 +79,8 @@ dependencies {
     implementation 'org.greenrobot:eventbus:3.1.1'
 
     implementation 'io.itimetraveler:pickerselector:0.0.0.2'
+
+    implementation project(path: ':serialportlib')
+
 
 }

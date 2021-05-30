@@ -15,7 +15,11 @@
 
     <string name="content_battery">connected</string>
 
+    <string name="content_battery_1">opened</string>
+
     <string name="content_not_connect">bluetooth unconnected</string>
+
+    <string name="content_not_connect_1">not open</string>
 
     <string name="content_start_measure">start</string>
 

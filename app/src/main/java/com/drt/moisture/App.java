@@ -35,6 +35,12 @@ import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
 
+import me.f1reking.serialportlib.SerialPortHelper;
+import me.f1reking.serialportlib.entity.DATAB;
+import me.f1reking.serialportlib.entity.FLOWCON;
+import me.f1reking.serialportlib.entity.PARITY;
+import me.f1reking.serialportlib.entity.STOPB;
+
 
 public class App extends Application {
 
@@ -48,6 +54,8 @@ public class App extends Application {
 
     private BluetoothClient mClient;
 
+    private SerialPortHelper mSerialPortHelper;
+
     private String connectMacAddress;
 
     private String deviceSoc;
@@ -56,6 +64,11 @@ public class App extends Application {
 
     public volatile boolean pickDevice;
 
+    /**
+     * 0: 串口
+     * 1：蓝牙
+     */
+    public volatile int connectedModel;
 
     public static App getInstance() {
         if (app == null) {
@@ -78,6 +91,19 @@ public class App extends Application {
 
     public BluetoothClient getBluetoothClient() {
         return mClient;
+    }
+
+    public SerialPortHelper getSerialPortHelper() {
+        if (mSerialPortHelper == null) {
+            mSerialPortHelper = new SerialPortHelper();
+            mSerialPortHelper.setPort("/dev/ttyS4");
+            mSerialPortHelper.setBaudRate(115200);
+            mSerialPortHelper.setStopBits(STOPB.getStopBit(STOPB.B1));
+            mSerialPortHelper.setDataBits(DATAB.getDataBit(DATAB.CS8));
+            mSerialPortHelper.setParity(PARITY.getParity(PARITY.NONE));
+            mSerialPortHelper.setFlowCon(FLOWCON.getFlowCon(FLOWCON.NONE));
+        }
+        return mSerialPortHelper;
     }
 
     public String getConnectMacAddress() {
@@ -119,6 +145,10 @@ public class App extends Application {
         bluetoothService = new BluetoothServiceImpl(this);
 
         mClient = new BluetoothClient(this);
+
+
+        SharedPreferences sharedPreferences = getSharedPreferences("config", Context.MODE_PRIVATE);
+        connectedModel = sharedPreferences.getInt("connectedModel", 0);
         initAutoConnect();
     }
 
@@ -141,7 +171,7 @@ public class App extends Application {
                     continue;
                 }
 
-                if (!pickDevice && App.getInstance().getConnectMacAddress() != null && App.getInstance().getBluetoothClient().getConnectStatus(App.getInstance().getConnectMacAddress()) != Constants.STATUS_DEVICE_CONNECTED) {
+                if (connectedModel == 1 && !pickDevice && App.getInstance().getConnectMacAddress() != null && App.getInstance().getBluetoothClient().getConnectStatus(App.getInstance().getConnectMacAddress()) != Constants.STATUS_DEVICE_CONNECTED) {
                     EventBus.getDefault().post(new BleEvent());
                 } else {
                     if (date1 == null || date2 == null || date3 == null) {

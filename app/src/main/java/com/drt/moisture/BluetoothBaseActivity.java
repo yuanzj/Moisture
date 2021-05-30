@@ -53,11 +53,15 @@ import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
 
+import java.io.File;
 import java.util.Arrays;
 import java.util.UUID;
 
 import butterknife.BindView;
 import butterknife.OnClick;
+import me.f1reking.serialportlib.listener.IOpenSerialPortListener;
+import me.f1reking.serialportlib.listener.ISerialPortDataListener;
+import me.f1reking.serialportlib.listener.Status;
 
 import static com.inuker.bluetooth.library.Constants.REQUEST_SUCCESS;
 import static com.inuker.bluetooth.library.Constants.STATUS_CONNECTED;
@@ -107,22 +111,43 @@ public abstract class BluetoothBaseActivity<T extends BasePresenter> extends Bas
         initBack();
         btnBluetooth.setVisibility(View.VISIBLE);
 
-        App.getInstance().getBluetoothClient().registerBluetoothStateListener(mBluetoothStateListener);
+
+        if (App.getInstance().connectedModel == 0) {
+            App.getInstance().getSerialPortHelper().setIOpenSerialPortListener(iOpenSerialPortListener);
+            App.getInstance().getSerialPortHelper().setISerialPortDataListener(iSerialPortDataListener);
+        } else {
+            App.getInstance().getBluetoothClient().registerBluetoothStateListener(mBluetoothStateListener);
+        }
     }
 
     @Override
     protected void onResume() {
         super.onResume();
-        if (getBluetoothStatus() == Constants.STATUS_DEVICE_CONNECTED) {
-            btnBluetooth.setImageResource(R.mipmap.ic_bluetooth_connected);
-            App.getInstance().getBluetoothClient().registerConnectStatusListener(App.getInstance().getConnectMacAddress(), mBleConnectStatusListener);
-            setBleConnectStatus(Constants.STATUS_CONNECTED);
-            secondTitle.setText(getString(R.string.content_battery));
-            App.getInstance().getBluetoothService().querySoc(socResponseSppDataCallback);
+        if (App.getInstance().connectedModel == 0) {
+            if (App.getInstance().getSerialPortHelper().isOpen()) {
+                btnBluetooth.setImageResource(R.mipmap.icon_usb_connected);
+                App.getInstance().getSerialPortHelper().setIOpenSerialPortListener(iOpenSerialPortListener);
+                App.getInstance().getSerialPortHelper().setISerialPortDataListener(iSerialPortDataListener);
+                setBleConnectStatus(Constants.STATUS_CONNECTED);
+                secondTitle.setText(getString(R.string.content_battery_1));
+                App.getInstance().getBluetoothService().queryClsl(cdslSetResponseSppDataCallback);
+            } else {
+                btnBluetooth.setImageResource(R.mipmap.icon_usb_disconnected);
+                setBleConnectStatus(STATUS_DISCONNECTED);
+                secondTitle.setText(R.string.content_not_connect_1);
+            }
         } else {
-            btnBluetooth.setImageResource(R.mipmap.ic_bluetooth);
-            setBleConnectStatus(STATUS_DISCONNECTED);
-            secondTitle.setText(R.string.content_not_connect);
+            if (getBluetoothStatus() == Constants.STATUS_DEVICE_CONNECTED) {
+                btnBluetooth.setImageResource(R.mipmap.ic_bluetooth_connected);
+                App.getInstance().getBluetoothClient().registerConnectStatusListener(App.getInstance().getConnectMacAddress(), mBleConnectStatusListener);
+                setBleConnectStatus(Constants.STATUS_CONNECTED);
+                secondTitle.setText(getString(R.string.content_battery));
+                App.getInstance().getBluetoothService().queryClsl(cdslSetResponseSppDataCallback);
+            } else {
+                btnBluetooth.setImageResource(R.mipmap.ic_bluetooth);
+                setBleConnectStatus(STATUS_DISCONNECTED);
+                secondTitle.setText(R.string.content_not_connect);
+            }
         }
     }
 
@@ -254,47 +279,68 @@ public abstract class BluetoothBaseActivity<T extends BasePresenter> extends Bas
     @OnClick(R.id.title_rightImage)
     public void connect() {
 
-        if (!App.getInstance().getBluetoothClient().isBluetoothOpened()) {
-            App.getInstance().getBluetoothClient().openBluetooth();
-        } else {
-
-            if (getBluetoothStatus() == Constants.STATUS_DEVICE_CONNECTED) {
+        if (App.getInstance().connectedModel == 0) {
+            if (!App.getInstance().getSerialPortHelper().isOpen()) {
+                App.getInstance().getSerialPortHelper().open();
+            } else {
                 AlertDialog.Builder builder = new AlertDialog.Builder(this).setTitle(getString(R.string.content_affirm_title))
-                        .setMessage("当前蓝牙已经连接，是否确认关闭当前连接选择新的设备？")
-                        .setPositiveButton(getString(R.string.content_affirm_ok), new DialogInterface.OnClickListener() {
-                            @Override
-                            public void onClick(DialogInterface dialogInterface, int i) {
-                                App.getInstance().getBluetoothClient().disconnect(App.getInstance().getConnectMacAddress());
-                                // Do something if bluetooth is already enable
-                                Intent intent = new Intent(getApplicationContext(), BleScanActivity.class);
-                                startActivityForResult(intent, REQUEST_CONNECT_DEVICE);
-                            }
+                        .setMessage("当前串口已经打开，是否确认关闭当前串口？")
+                        .setPositiveButton(getString(R.string.content_affirm_ok), (dialogInterface, i) -> {
+                            App.getInstance().getSerialPortHelper().close();
+                            btnBluetooth.setImageResource(R.mipmap.icon_usb_disconnected);
+                            setBleConnectStatus(STATUS_DISCONNECTED);
+                            secondTitle.setText(R.string.content_not_connect_1);
                         })
-                        .setNegativeButton(getString(R.string.content_affirm_cancel), new DialogInterface.OnClickListener() {
-                            @Override
-                            public void onClick(DialogInterface dialogInterface, int i) {
-
-                            }
+                        .setNegativeButton(getString(R.string.content_affirm_cancel), (dialogInterface, i) -> {
                         });
                 builder.show();
+            }
+        } else {
+            if (!App.getInstance().getBluetoothClient().isBluetoothOpened()) {
+                App.getInstance().getBluetoothClient().openBluetooth();
             } else {
 
-                if (ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION)
-                        != PackageManager.PERMISSION_GRANTED) {//未开启定位权限
-                    //开启定位权限,200是标识码
-                    ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.ACCESS_FINE_LOCATION}, 200);
+                if (getBluetoothStatus() == Constants.STATUS_DEVICE_CONNECTED) {
+                    AlertDialog.Builder builder = new AlertDialog.Builder(this).setTitle(getString(R.string.content_affirm_title))
+                            .setMessage("当前蓝牙已经连接，是否确认关闭当前连接选择新的设备？")
+                            .setPositiveButton(getString(R.string.content_affirm_ok), new DialogInterface.OnClickListener() {
+                                @Override
+                                public void onClick(DialogInterface dialogInterface, int i) {
+                                    App.getInstance().getBluetoothClient().disconnect(App.getInstance().getConnectMacAddress());
+                                    // Do something if bluetooth is already enable
+                                    Intent intent = new Intent(getApplicationContext(), BleScanActivity.class);
+                                    startActivityForResult(intent, REQUEST_CONNECT_DEVICE);
+                                }
+                            })
+                            .setNegativeButton(getString(R.string.content_affirm_cancel), new DialogInterface.OnClickListener() {
+                                @Override
+                                public void onClick(DialogInterface dialogInterface, int i) {
+
+                                }
+                            });
+                    builder.show();
                 } else {
-                    Intent intent = new Intent(getApplicationContext(), BleScanActivity.class);
-                    startActivityForResult(intent, REQUEST_CONNECT_DEVICE);
+
+                    if (ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION)
+                            != PackageManager.PERMISSION_GRANTED) {//未开启定位权限
+                        //开启定位权限,200是标识码
+                        ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.ACCESS_FINE_LOCATION}, 200);
+                    } else {
+                        Intent intent = new Intent(getApplicationContext(), BleScanActivity.class);
+                        startActivityForResult(intent, REQUEST_CONNECT_DEVICE);
+                    }
+
                 }
 
             }
-
         }
     }
 
     @Override
     protected void onDestroy() {
+        App.getInstance().getSerialPortHelper().setIOpenSerialPortListener(null);
+        App.getInstance().getSerialPortHelper().setISerialPortDataListener(null);
+
         App.getInstance().getBluetoothSPP().setBluetoothStateListener(null);
         App.getInstance().getBluetoothSPP().setBluetoothConnectionListener(null);
         App.getInstance().getBluetoothSPP().setOnDataReceivedListener(null);
@@ -362,6 +408,38 @@ public abstract class BluetoothBaseActivity<T extends BasePresenter> extends Bas
 
     };
 
+    private final IOpenSerialPortListener iOpenSerialPortListener = new IOpenSerialPortListener() {
+        @Override
+        public void onSuccess(final File device) {
+            runOnUiThread(() -> {
+                btnBluetooth.setImageResource(R.mipmap.icon_usb_connected);
+                Toast.makeText(getApplicationContext(), "串口打开成功", Toast.LENGTH_SHORT).show();
+                setBleConnectStatus(STATUS_CONNECTED);
+                secondTitle.setText(getString(R.string.content_battery_1));
+            });
+        }
+
+        @Override
+        public void onFail(final File device, final Status status) {
+            runOnUiThread(() -> {
+                switch (status) {
+                    case NO_READ_WRITE_PERMISSION:
+                        Toast.makeText(getApplicationContext(), device.getPath() + " :没有读写权限", Toast.LENGTH_SHORT).show();
+                        setBleConnectStatus(STATUS_DISCONNECTED);
+                        secondTitle.setText(getString(R.string.content_not_connect_1));
+                        break;
+                    case OPEN_FAIL:
+                    default:
+                        Toast.makeText(getApplicationContext(), device.getPath() + " :串口打开失败", Toast.LENGTH_SHORT).show();
+                        setBleConnectStatus(STATUS_DISCONNECTED);
+                        secondTitle.setText(getString(R.string.content_not_connect_1));
+                        break;
+                }
+            });
+        }
+    };
+
+
     private final BleConnectStatusListener mBleConnectStatusListener = new BleConnectStatusListener() {
 
         @Override
@@ -393,9 +471,6 @@ public abstract class BluetoothBaseActivity<T extends BasePresenter> extends Bas
             }
 
             try {
-                if (value.length > 7) {
-                    value = Arrays.copyOfRange(value, 6, value.length - 1);
-                }
                 App.getInstance().getBluetoothService().parse(value);
             } catch (Exception e) {
                 e.printStackTrace();
@@ -411,49 +486,65 @@ public abstract class BluetoothBaseActivity<T extends BasePresenter> extends Bas
                 new Handler().postDelayed(new Runnable() {
                     @Override
                     public void run() {
-                        App.getInstance().getBluetoothService().querySoc(socResponseSppDataCallback);
+                        App.getInstance().getBluetoothService().queryClsl(cdslSetResponseSppDataCallback);
                     }
                 }, 100);
             }
         }
     };
 
-    public abstract void setBleConnectStatus(int status);
-
-    private static final SppDataCallback<SocResponse> socResponseSppDataCallback = new SppDataCallback<SocResponse>() {
+    private static final ISerialPortDataListener iSerialPortDataListener = new ISerialPortDataListener() {
         @Override
-        public void delivery(SocResponse socResponse) {
-            EventBus.getDefault().post(socResponse); //普通事件发布
-            App.getInstance().getBluetoothService().queryClsl(new SppDataCallback<CdslSetResponse>() {
+        public void onDataReceived(byte[] value) {
+            if (value != null && value.length > 0) {
+                MyLog.i("SERIAL PORT RX", HexString.bytesToHex(value));
+            }
 
-                @Override
-                public void delivery(CdslSetResponse cdslSetResponse) {
-                    AppConfig appConfig = App.getInstance().getLocalDataService().queryAppConfig();
-                    appConfig.setPointCount(cdslSetResponse.getCount());
-                    if (appConfig.getPointCount() > 0 && appConfig.getPointCount() < 6) {
-                        App.getInstance().getLocalDataService().setAppConfig(appConfig);
-                        Log.d(TAG, "缓存测量测点：" + cdslSetResponse.getCount());
-                        EventBus.getDefault().post(appConfig); //普通事件发布s
-                    }
-                }
-
-                @Override
-                public Class<CdslSetResponse> getEntityType() {
-                    return CdslSetResponse.class;
-                }
-            });
+            try {
+                App.getInstance().getBluetoothService().parse(value);
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
         }
 
         @Override
-        public Class<SocResponse> getEntityType() {
-            return SocResponse.class;
+        public void onDataSend(byte[] value) {
+            if (value != null && value.length > 0) {
+                MyLog.i("SERIAL PORT TX", HexString.bytesToHex(value));
+            }
+        }
+    };
+
+    public abstract void setBleConnectStatus(int status);
+
+    private static final SppDataCallback<CdslSetResponse> cdslSetResponseSppDataCallback = new SppDataCallback<CdslSetResponse>() {
+
+        @Override
+        public void delivery(CdslSetResponse cdslSetResponse) {
+            EventBus.getDefault().post(new SocResponse()); //普通事件发布
+            AppConfig appConfig = App.getInstance().getLocalDataService().queryAppConfig();
+            appConfig.setPointCount(cdslSetResponse.getCount());
+            if (appConfig.getPointCount() > 0 && appConfig.getPointCount() < 6) {
+                App.getInstance().getLocalDataService().setAppConfig(appConfig);
+                Log.d(TAG, "缓存测量测点：" + cdslSetResponse.getCount());
+                EventBus.getDefault().post(appConfig); //普通事件发布s
+            }
+        }
+
+        @Override
+        public Class<CdslSetResponse> getEntityType() {
+            return CdslSetResponse.class;
         }
     };
 
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void onGetMessage(SocResponse socResponse) {
 //        App.getInstance().setDeviceSoc(String.valueOf(socResponse.getSoc()));
-        secondTitle.setText(getString(R.string.content_battery));
+        if (App.getInstance().connectedModel == 0) {
+            secondTitle.setText(getString(R.string.content_battery_1));
+        } else {
+            secondTitle.setText(getString(R.string.content_battery));
+        }
     }
 
     @Subscribe(threadMode = ThreadMode.MAIN)

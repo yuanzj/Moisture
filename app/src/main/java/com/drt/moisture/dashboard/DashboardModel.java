@@ -133,7 +133,7 @@ public class DashboardModel implements DashboardContract.Model {
         runningTimer.schedule(new TimerTask() {
             @Override
             public void run() {
-                if (App.getInstance().getBluetoothClient().getConnectStatus(App.getInstance().getConnectMacAddress()) != Constants.STATUS_DEVICE_CONNECTED) {
+                if (App.getInstance().connectedModel == 1 && App.getInstance().getBluetoothClient().getConnectStatus(App.getInstance().getConnectMacAddress()) != Constants.STATUS_DEVICE_CONNECTED) {
                     return;
                 }
                 CommandEntity commandEntity = new CommandEntity();
@@ -620,7 +620,7 @@ public class DashboardModel implements DashboardContract.Model {
                     e.printStackTrace();
                 }
 
-                if (App.getInstance().getBluetoothClient().getConnectStatus(App.getInstance().getConnectMacAddress()) != Constants.STATUS_DEVICE_CONNECTED) {
+                if (App.getInstance().connectedModel == 1 && App.getInstance().getBluetoothClient().getConnectStatus(App.getInstance().getConnectMacAddress()) != Constants.STATUS_DEVICE_CONNECTED) {
 //                    EventBus.getDefault().post(new BleEvent());
 
                     try {

@@ -9,9 +9,38 @@ import com.drt.moisture.data.HumidityParame;
 import com.drt.moisture.data.MeasureParame;
 import com.drt.moisture.data.SetDeviceInfoParame;
 import com.drt.moisture.data.source.BluetoothService;
-import com.drt.moisture.data.source.bluetooth.response.*;
-import com.drt.moisture.data.source.bluetooth.resquest.*;
-import com.drt.moisture.measure.MeasureModel;
+import com.drt.moisture.data.source.bluetooth.response.AutoRecordDataResponse;
+import com.drt.moisture.data.source.bluetooth.response.CdslSetResponse;
+import com.drt.moisture.data.source.bluetooth.response.CorrectDataResponse;
+import com.drt.moisture.data.source.bluetooth.response.DashboardRecordDataResponse;
+import com.drt.moisture.data.source.bluetooth.response.DeviceInfoResponse;
+import com.drt.moisture.data.source.bluetooth.response.HisRecordDataResponse;
+import com.drt.moisture.data.source.bluetooth.response.ParameterSetResponse;
+import com.drt.moisture.data.source.bluetooth.response.RecordDataResponse;
+import com.drt.moisture.data.source.bluetooth.response.SocResponse;
+import com.drt.moisture.data.source.bluetooth.response.StartMeasureResponse;
+import com.drt.moisture.data.source.bluetooth.response.StopMeasureResponse;
+import com.drt.moisture.data.source.bluetooth.response.TimingSetResponse;
+import com.drt.moisture.data.source.bluetooth.resquest.CorrectDataRequest;
+import com.drt.moisture.data.source.bluetooth.resquest.DashboardRecordDataRequest;
+import com.drt.moisture.data.source.bluetooth.resquest.DeviceInfoRequest;
+import com.drt.moisture.data.source.bluetooth.resquest.HisRecordDataRequest;
+import com.drt.moisture.data.source.bluetooth.resquest.MeasureNameSetRequest;
+import com.drt.moisture.data.source.bluetooth.resquest.QueryHumidityParameRequest;
+import com.drt.moisture.data.source.bluetooth.resquest.QueryParameRequest;
+import com.drt.moisture.data.source.bluetooth.resquest.RecordDataRequest;
+import com.drt.moisture.data.source.bluetooth.resquest.SetCdslRequest;
+import com.drt.moisture.data.source.bluetooth.resquest.SetCorrectParameRequest;
+import com.drt.moisture.data.source.bluetooth.resquest.SetDeviceInfoRequest;
+import com.drt.moisture.data.source.bluetooth.resquest.SetHumidityParameRequest;
+import com.drt.moisture.data.source.bluetooth.resquest.SetMeasureParameRequest;
+import com.drt.moisture.data.source.bluetooth.resquest.SetRateRequest;
+import com.drt.moisture.data.source.bluetooth.resquest.SetTimeRequest;
+import com.drt.moisture.data.source.bluetooth.resquest.StartCorrectRequest;
+import com.drt.moisture.data.source.bluetooth.resquest.StartMeasureRequest;
+import com.drt.moisture.data.source.bluetooth.resquest.StopCorrectRequest;
+import com.drt.moisture.data.source.bluetooth.resquest.StopMeasureRequest;
+import com.drt.moisture.data.source.bluetooth.resquest.TimingSetRequest;
 import com.drt.moisture.util.MyLog;
 import com.inuker.bluetooth.library.connect.response.BleWriteResponse;
 import com.inuker.bluetooth.library.utils.UUIDUtils;
@@ -22,8 +51,8 @@ import com.zhjian.bluetooth.spp.HexString;
 
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
-import java.nio.charset.Charset;
-import java.nio.charset.StandardCharsets;
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Timer;
 import java.util.TimerTask;
 import java.util.UUID;
@@ -47,33 +76,73 @@ public class BluetoothServiceImpl implements BluetoothService, BleWriteResponse 
     }
 
     private void write(String mac, UUID service, UUID character, byte[] value, BleWriteResponse response) {
-        App.getInstance().getBluetoothClient().write(mac, service, character, value, response);
-        if (value != null) {
-            MyLog.i("TX", HexString.bytesToHex(value));
+
+        if (App.getInstance().connectedModel == 0) {
+            if (App.getInstance().getSerialPortHelper().isOpen()) {
+                App.getInstance().getSerialPortHelper().sendBytes(value);
+            } else {
+                App.getInstance().getSerialPortHelper().open();
+            }
+        } else {
+            App.getInstance().getBluetoothClient().write(mac, service, character, value, response);
+            if (value != null) {
+                MyLog.i("TX", HexString.bytesToHex(value));
+            }
         }
+
     }
 
+    ArrayList<Integer> arr_byte = new ArrayList<>();
+
     @Override
-    public void parse(byte[] data) {
-        if (sppDataCallback != null) {
-            try {
-                Object object = BluetoothDataUtil.decode(sppDataCallback.getEntityType(), data);
-                Method getCmdGroup = null;//得到方法对象
-                try {
-                    getCmdGroup = sppDataCallback.getEntityType().getMethod("getCmdGroup");
-                    Object CmdGroup = getCmdGroup.invoke(object);//调用借钱方法，得到返回值
-                    if (timeoutTimer != null && expectResponseCode == Integer.parseInt(CmdGroup.toString())) {
-                        timeoutTimer.cancel();
-                        timeoutTimer = null;
-                    }
-                } catch (NoSuchMethodException | InvocationTargetException e) {
-                    e.printStackTrace();
+    public synchronized void parse(byte[] tempData) {
+
+        for (int index = 0; index < tempData.length; index++) {
+            int itemData = tempData[index] & 0xff;
+
+
+            if (itemData == 0x5A && arr_byte.size() >= 17 && arr_byte.size() == (6 + 11 + ByteConvert.bytesToUshort(new byte[]{arr_byte.get(15).byteValue(), arr_byte.get(16).byteValue()}) + 2)) {
+                arr_byte.add(itemData);
+                byte[] data = new byte[arr_byte.size()];
+                for (int i = 0; i < arr_byte.size(); i++) {
+                    data[i] = arr_byte.get(i).byteValue();
                 }
+                MyLog.i("PARSE RX", HexString.bytesToHex(data));
+                // Send the obtained bytes to the UI Activity
+                if (sppDataCallback != null) {
+                    try {
+
+                        Object object = BluetoothDataUtil.decode(sppDataCallback.getEntityType(), Arrays.copyOfRange(data, 6, data.length - 1));
+                        Method getCmdGroup = null;//得到方法对象
+                        try {
+                            getCmdGroup = sppDataCallback.getEntityType().getMethod("getCmdGroup");
+                            Object CmdGroup = getCmdGroup.invoke(object);//调用借钱方法，得到返回值
+                            if (timeoutTimer != null && expectResponseCode == Integer.parseInt(CmdGroup.toString())) {
+                                timeoutTimer.cancel();
+                                timeoutTimer = null;
+                            }
+                        } catch (NoSuchMethodException | InvocationTargetException e) {
+                            e.printStackTrace();
+                        }
 
 
-                sppDataCallback.delivery(object);
-            } catch (InstantiationException | IllegalAccessException | FieldConvertException | RkFieldException e) {
-                e.printStackTrace();
+                        sppDataCallback.delivery(object);
+                    } catch (InstantiationException | IllegalAccessException | FieldConvertException | RkFieldException e) {
+                        e.printStackTrace();
+                    }
+                }
+                arr_byte.clear();
+            } else {
+                arr_byte.add(itemData);
+                if (arr_byte.size() >= 6) {
+                    for (int i = 0; i < 6; i++) {
+                        int head = arr_byte.get(i);
+                        if (head != 0xA5) {
+                            arr_byte.clear();
+                            break;
+                        }
+                    }
+                }
             }
         }
     }

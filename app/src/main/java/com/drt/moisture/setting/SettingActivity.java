@@ -1,13 +1,17 @@
 package com.drt.moisture.setting;
 
 import android.app.ProgressDialog;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.SystemClock;
+
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AlertDialog;
+
 import android.text.InputType;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -414,6 +418,45 @@ public class SettingActivity extends BluetoothBaseActivity<SettingPresenter> imp
 
     @Override
     public void onItemClick(final AdapterView<?> parent, final View view, final int position, long id) {
+
+
+        if (position == 6) {
+            final String[] items = {"串口", "蓝牙"};
+            AlertDialog.Builder listDialog = new AlertDialog.Builder(this);
+            listDialog.setTitle("请选择连接方式");
+            listDialog.setItems(items, (dialog, which) -> {
+
+                switch (which) {
+                    case 0: {
+                        App.getInstance().connectedModel = 0;
+                        SharedPreferences sharedPreferences = getSharedPreferences("config", Context.MODE_PRIVATE);
+                        //步骤2： 实例化SharedPreferences.Editor对象
+                        SharedPreferences.Editor editor = sharedPreferences.edit();
+                        //步骤3：将获取过来的值放入文件
+                        editor.putInt("connectedModel", 0);
+                        //步骤4：提交
+                        editor.apply();
+                    }
+                    break;
+                    case 1: {
+                        App.getInstance().connectedModel = 1;
+                        SharedPreferences sharedPreferences = getSharedPreferences("config", Context.MODE_PRIVATE);
+                        //步骤2： 实例化SharedPreferences.Editor对象
+                        SharedPreferences.Editor editor = sharedPreferences.edit();
+                        //步骤3：将获取过来的值放入文件
+                        editor.putInt("connectedModel", 1);
+                        //步骤4：提交
+                        editor.apply();
+                    }
+                    break;
+                    default:
+                        break;
+                }
+            });
+            listDialog.show();
+            return;
+        }
+
         if (!isBleConnected) {
             Toast.makeText(this, "设备尚未连接，请点击右上角蓝牙按钮连接设备", Toast.LENGTH_SHORT).show();
             return;
@@ -807,7 +850,6 @@ public class SettingActivity extends BluetoothBaseActivity<SettingPresenter> imp
                         }).setNegativeButton(getString(R.string.content_affirm_cancel), null).show();
             }
             break;
-
             default:
                 break;
         }
@@ -894,6 +936,11 @@ public class SettingActivity extends BluetoothBaseActivity<SettingPresenter> imp
             item1 = new HashMap<>();
             item1.put("icon", R.mipmap.icons_data_configuration);
             item1.put("title", "测点设置");
+            data.add(item1);
+
+            item1 = new HashMap<>();
+            item1.put("icon", R.mipmap.icons_data_configuration);
+            item1.put("title", "连接设置");
             data.add(item1);
 
 

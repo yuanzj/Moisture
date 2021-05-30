@@ -15,7 +15,11 @@
 
     <string name="content_battery">已连接</string>
 
+    <string name="content_battery_1">已打开</string>
+
     <string name="content_not_connect">未连接</string>
+
+    <string name="content_not_connect_1">未打开</string>
 
     <string name="content_start_measure">开始测量</string>
 
