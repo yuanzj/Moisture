@@ -1,0 +1,20 @@
+{
+  "buildFiles": [
+    "/Users/yuanzhijian/StudioProjects/Moisture/serialportlib/CMakeLists.txt",
+    "/Users/yuanzhijian/Library/Android/sdk/ndk/21.1.6352462/build/cmake/android.toolchain.cmake",
+    "/Users/yuanzhijian/Library/Android/sdk/ndk/21.1.6352462/build/cmake/platforms.cmake"
+  ],
+  "cleanCommands": [
+    "/Users/yuanzhijian/Library/Android/sdk/cmake/3.10.2.4988404/bin/ninja -C \"/Users/yuanzhijian/StudioProjects/Moisture/serialportlib/.cxx/cmake/release/x86_64\" clean"
+  ],
+  "buildTargetsCommand": "/Users/yuanzhijian/Library/Android/sdk/cmake/3.10.2.4988404/bin/ninja  -C \"/Users/yuanzhijian/StudioProjects/Moisture/serialportlib/.cxx/cmake/release/x86_64\" {LIST_OF_TARGETS_TO_BUILD}",
+  "libraries": {
+    "serialport-Release-x86_64": {
+      "artifactName": "serialport",
+      "buildCommand": "/Users/yuanzhijian/Library/Android/sdk/cmake/3.10.2.4988404/bin/ninja -C \"/Users/yuanzhijian/StudioProjects/Moisture/serialportlib/.cxx/cmake/release/x86_64\" serialport",
+      "abi": "x86_64",
+      "output": "/Users/yuanzhijian/StudioProjects/Moisture/serialportlib/build/intermediates/cmake/release/obj/x86_64/libserialport.so",
+      "runtimeFiles": []
+    }
+  }
+}
