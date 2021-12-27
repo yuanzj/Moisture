@@ -55,7 +55,7 @@
 
     <string name="content_measure_time">测量耗时</string>
 
-    <string name="content_no_data">没有测量数据。请确保在蓝牙连接的设备的状态下开始测量。</string>
+    <string name="content_no_data">没有测量数据。请确保在连接的设备的状态下开始测量。</string>
 
     <string name="content_simple_name">样品名称</string>
 

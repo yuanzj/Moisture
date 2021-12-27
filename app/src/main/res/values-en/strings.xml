@@ -55,7 +55,7 @@
 
     <string name="content_measure_time">time</string>
 
-    <string name="content_no_data">No data, before measuring please make sure App is connected with the meter by bluetooth</string>
+    <string name="content_no_data">No data, before measuring please make sure App is connected with the meter</string>
 
     <string name="content_simple_name">Sample Name</string>
 

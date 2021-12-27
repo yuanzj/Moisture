@@ -338,8 +338,8 @@ public abstract class BluetoothBaseActivity<T extends BasePresenter> extends Bas
 
     @Override
     protected void onDestroy() {
-        App.getInstance().getSerialPortHelper().setIOpenSerialPortListener(null);
-        App.getInstance().getSerialPortHelper().setISerialPortDataListener(null);
+//        App.getInstance().getSerialPortHelper().setIOpenSerialPortListener(null);
+//        App.getInstance().getSerialPortHelper().setISerialPortDataListener(null);
 
         App.getInstance().getBluetoothSPP().setBluetoothStateListener(null);
         App.getInstance().getBluetoothSPP().setBluetoothConnectionListener(null);
