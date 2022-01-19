@@ -8,10 +8,6 @@ import android.media.Ringtone;
 import android.media.RingtoneManager;
 import android.net.Uri;
 import android.os.Bundle;
-
-import androidx.annotation.Nullable;
-import androidx.appcompat.app.AlertDialog;
-
 import android.os.PowerManager;
 import android.text.TextUtils;
 import android.util.Log;
@@ -20,11 +16,15 @@ import android.widget.AdapterView;
 import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.LinearLayout;
-import android.widget.RelativeLayout;
 import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import androidx.annotation.Nullable;
+import androidx.appcompat.app.AlertDialog;
+
+import com.bin.david.form.core.SmartTable;
+import com.bin.david.form.data.style.FontStyle;
 import com.drt.moisture.App;
 import com.drt.moisture.BluetoothBaseActivity;
 import com.drt.moisture.R;
@@ -37,24 +37,15 @@ import com.drt.moisture.data.MeasureStatus;
 import com.drt.moisture.data.MeasureValue;
 import com.drt.moisture.data.source.bluetooth.SppDataCallback;
 import com.drt.moisture.data.source.bluetooth.response.ParameterSetResponse;
-import com.drt.moisture.util.LineChartMarkView;
-import com.github.mikephil.charting.charts.LineChart;
-import com.github.mikephil.charting.components.XAxis;
-import com.github.mikephil.charting.components.YAxis;
-import com.github.mikephil.charting.data.Entry;
-import com.github.mikephil.charting.data.LineData;
-import com.github.mikephil.charting.data.LineDataSet;
-import com.github.mikephil.charting.formatter.ValueFormatter;
-import com.github.mikephil.charting.interfaces.datasets.ILineDataSet;
+import com.drt.moisture.util.BarometricPressureUtil;
 import com.inuker.bluetooth.library.Constants;
 
 import java.math.RoundingMode;
 import java.text.DecimalFormat;
+import java.util.ArrayList;
 import java.util.Collections;
-import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
-import java.util.Queue;
 
 import butterknife.BindView;
 import butterknife.OnClick;
@@ -66,12 +57,12 @@ public class MeasureActivity extends BluetoothBaseActivity<DashboardPresenter> i
 
     private static final String TAG = MeasureActivity.class.getSimpleName();
 
-    int[] colors = new int[]{R.color.btnOrange, R.color.btnGreen, R.color.btnBlue, R.color.btnRed1, R.color.btnRed};
+//    int[] colors = new int[]{R.color.btnOrange, R.color.btnGreen, R.color.btnBlue, R.color.btnRed1, R.color.btnRed};
 
-    @BindView(R.id.parent_chart)
-    RelativeLayout parentChart;
+    @BindView(R.id.table)
+    SmartTable table;
 
-    LineChart chart;
+//    LineChart chart;
 
     @BindView(R.id.btnStartMeasure)
     LinearLayout btnStartMeasure;
@@ -158,7 +149,7 @@ public class MeasureActivity extends BluetoothBaseActivity<DashboardPresenter> i
             return false;
         });
 
-        setTitleName(getString(R.string.content_point) + index + getString(R.string.content_measure));
+        setTitleName("天然气水合物相平衡仪");
     }
 
     @Override
@@ -175,12 +166,8 @@ public class MeasureActivity extends BluetoothBaseActivity<DashboardPresenter> i
         }
         mPresenter.attachView(this);
 
-        if (chart != null) {
-            parentChart.removeAllViews();
-        }
-        chart = (LineChart) getLayoutInflater().inflate(R.layout.chart_view, parentChart, false);
-        parentChart.addView(chart);
-        initChartView();
+
+        initTableView();
 
         spMeasureModel.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
@@ -324,12 +311,13 @@ public class MeasureActivity extends BluetoothBaseActivity<DashboardPresenter> i
         progressdialog.setCancelable(false);
         progressdialog.show();
 
-        if (chart != null) {
-            parentChart.removeAllViews();
+        // 初始化表格
+        List<BarometricPressure> list = new ArrayList<>();
+        for (int i = 0; i <= 25; i++) {
+//            list.add(new BarometricPressure(i, BarometricPressureUtil.Button111_Click(i, 0.02)));
+            list.add(new BarometricPressure(i, "--"));
         }
-        chart = (LineChart) getLayoutInflater().inflate(R.layout.chart_view, parentChart, false);
-        parentChart.addView(chart);
-        initChartView();
+        table.setData(list);
         // 校准时间
         App.getInstance().getBluetoothService().setTime(System.currentTimeMillis() / 1000);
         // 根据测点数量发送开始指令
@@ -347,6 +335,25 @@ public class MeasureActivity extends BluetoothBaseActivity<DashboardPresenter> i
             }
         }).start();
 
+    }
+
+    private void initTableView() {
+        Point outSize = new Point();
+        this.getWindowManager().getDefaultDisplay().getSize(outSize);
+        FontStyle.setDefaultTextSize(getResources().getDimensionPixelSize(R.dimen.sizeTitle));
+        table.getConfig().setMinTableWidth(outSize.x / 2 - getResources().getDimensionPixelOffset(R.dimen.padding_default) * 2);
+        table.getConfig().setShowXSequence(false);
+        table.getConfig().setShowYSequence(false);
+        table.getConfig().setContentBackground((canvas, rect, paint) -> {
+
+        });
+
+        // 初始化表格
+        List<BarometricPressure> list = new ArrayList<>();
+        for (int i = 0; i <= 25; i++) {
+            list.add(new BarometricPressure(i, "--"));
+        }
+        table.setData(list);
     }
 
     @OnClick(R.id.btnStopMeasure)
@@ -517,187 +524,25 @@ public class MeasureActivity extends BluetoothBaseActivity<DashboardPresenter> i
         }
     }
 
-    Queue<DashboardActivity.IndexEntry> queue = new LinkedList<>();
 
     private void addEntry(MeasureValue measureValue) {
-
-        LineData data = chart.getData();
-
-        if (data == null) {
-            data = new LineData();
-            chart.setData(data);
-        }
-        ILineDataSet set = data.getDataSetByIndex(0);
-        if (set == null) {
-            set = createActivitySet();
-            data.addDataSet(set);
-        }
-        float minY = Float.MAX_VALUE, maxY = Float.MIN_VALUE;
-        DashboardActivity.IndexEntry indexEntry = new DashboardActivity.IndexEntry();
-
-        if (measureValue.getActivity() > 0) {
-            data.addEntry(new Entry(set.getEntryCount(), (float) measureValue.getActivity(), measureValue), 0);
-            if (minY > (float) measureValue.getActivity()) {
-                minY = (float) measureValue.getActivity();
-            }
-            if (maxY < (float) measureValue.getActivity()) {
-                maxY = (float) measureValue.getActivity();
+        double aw = measureValue.getActivity();
+        // 初始化表格
+        List<BarometricPressure> list = new ArrayList<>();
+        // 0.85—1
+        if (aw >= 0.85 && aw <= 1.0) {
+            for (int i = 0; i <= 25; i++) {
+                list.add(new BarometricPressure(i, String.format("%.3f", BarometricPressureUtil.Button111_Click(i, aw))));
             }
         } else {
-            data.addEntry(new Entry(set.getEntryCount(), -1, measureValue), 0);
-        }
-        indexEntry.setIndex(set.getEntryCount());
-        indexEntry.setMaxValue(maxY);
-        indexEntry.setMinValue(minY);
-
-        data.notifyDataChanged();
-
-        // let the chart know it's data has changed
-        chart.notifyDataSetChanged();
-
-        if (data.getXMax() >= 30) {
-            chart.getXAxis().resetAxisMaximum();
-            chart.setVisibleXRangeMaximum(30);
-        } else {
-            chart.getXAxis().setAxisMaximum(30);
-        }
-        if (maxY > 0 && minY > 0) {
-            Log.e("yzj", indexEntry.toString());
-            queue.add(indexEntry);
-        }
-        while (queue.size() > 31) {
-            queue.remove();
-        }
-
-        if (queue.size() > 0) {
-            float currentMinY = Float.MAX_VALUE, currentMaxY = Float.MIN_VALUE;
-            for (DashboardActivity.IndexEntry item : queue) {
-                if (currentMinY > item.getMinValue()) {
-                    currentMinY = item.getMinValue();
-                }
-                if (currentMaxY < item.getMaxValue()) {
-                    currentMaxY = item.getMaxValue();
-                }
-            }
-
-            float space = (currentMaxY - currentMinY) / 8.0F;
-            if (space > 0 && space < 1.0) {
-                float minValue = currentMinY - space;
-                float maxValue = currentMaxY + space;
-                if ((maxValue - minValue) < 0.02F) {
-                    float temp = (0.02F - (maxValue - minValue)) / 2.0f;
-                    minValue -= temp;
-                    maxValue += temp;
-                }
-
-                chart.getAxisLeft().setAxisMinimum(minValue);
-                chart.getAxisLeft().setAxisMaximum(maxValue);
+            for (int i = 0; i <= 25; i++) {
+                list.add(new BarometricPressure(i, "--"));
             }
         }
 
-        chart.moveViewToX(data.getXMax());
+        table.setData(list);
     }
 
-//    private LineDataSet createTemperatureSet() {
-//
-//        LineDataSet d1 = new LineDataSet(null, "温度");
-//        d1.setLineWidth(2.5f);
-//        d1.setCircleRadius(4.5f);
-//        d1.setHighLightColor(getResources().getColor(R.color.colorAccent, getTheme()));
-//        d1.setColor(getResources().getColor(R.color.colorAccent, getTheme()));
-//        d1.setCircleColor(getResources().getColor(R.color.colorAccent, getTheme()));
-//        d1.setDrawValues(true);
-//        return d1;
-//    }
-
-    private LineDataSet createActivitySet() {
-
-        LineDataSet d2 = new LineDataSet(null, getString(R.string.content_sfhd));
-        d2.setLineWidth(2f);
-        d2.setCircleRadius(4.5f);
-        d2.setHighLightColor(getResources().getColor(colors[index - 1], getTheme()));
-        d2.setColor(getResources().getColor(colors[index - 1], getTheme()));
-        d2.setCircleColor(getResources().getColor(colors[index - 1], getTheme()));
-        d2.setDrawValues(false);
-        d2.setDrawCircles(false);
-        d2.setMode(LineDataSet.Mode.CUBIC_BEZIER);
-        d2.setValueFormatter(new ValueFormatter() {
-            public String getFormattedValue(float value) {
-                DecimalFormat df = new DecimalFormat("0.0000");
-                df.setRoundingMode(RoundingMode.DOWN);
-                return df.format(value);
-            }
-        });
-        return d2;
-    }
-
-    private void initChartView() {
-        queue.clear();
-
-        Point outSize = new Point();
-        this.getWindowManager().getDefaultDisplay().getSize(outSize);
-//        chart.setMinimumHeight((outSize.x - getResources().getDimensionPixelSize(R.dimen.padding_default) * 2) / 2);
-
-        // apply styling
-        // holder.chart.setValueTypeface(mTf);
-        chart.setDrawBorders(false);
-        chart.setDrawGridBackground(false);
-
-        chart.getDescription().setEnabled(false);
-        chart.setDrawGridBackground(false);
-        chart.setNoDataText(getString(R.string.content_no_data));
-        chart.setNoDataTextColor(getColor(R.color.colorSecondBody));
-
-        XAxis xAxis = chart.getXAxis();
-        xAxis.setAxisMaximum(30);
-        xAxis.setLabelCount(6, false);
-        xAxis.setPosition(XAxis.XAxisPosition.BOTTOM);
-//        xAxis.setAxisMaximum(30);
-        xAxis.enableGridDashedLine(10f, 10f, 0f);
-        xAxis.setDrawGridLines(true);
-        xAxis.setDrawAxisLine(true);
-        xAxis.setValueFormatter(new ValueFormatter() {
-            @Override
-            public String getFormattedValue(float value) {
-                if (chart.getLineData() != null
-                        && chart.getLineData().getMaxEntryCountSet() != null
-                        && chart.getLineData().getMaxEntryCountSet().getEntryCount() > (int) value
-                        && chart.getLineData().getMaxEntryCountSet().getEntryForIndex((int) value) != null) {
-                    Entry entry = chart.getLineData().getMaxEntryCountSet().getEntryForIndex((int) value);
-                    return ((MeasureValue) entry.getData()).getReportTime();
-                } else {
-                    return "";
-                }
-            }
-        });
-
-        YAxis leftAxis = chart.getAxisLeft();
-        leftAxis.setLabelCount(10, false);
-        leftAxis.setDrawGridLines(false);
-        leftAxis.setAxisMinimum(0f); // this replaces setStartAtZero(true)
-        leftAxis.setAxisMaximum(1.0000f);
-        leftAxis.enableGridDashedLine(10f, 10f, 0f);
-        leftAxis.setDrawGridLines(true);
-
-        YAxis rightAxis = chart.getAxisRight();
-        rightAxis.setLabelCount(5, false);
-        rightAxis.setDrawGridLines(false);
-        rightAxis.setAxisMinimum(0f); // this replaces setStartAtZero(true)
-        rightAxis.setAxisMaximum(1.0000f);
-        rightAxis.setEnabled(false);
-        rightAxis.setDrawGridLines(false);
-
-        LineChartMarkView mv = new LineChartMarkView(this, xAxis.getValueFormatter());
-        mv.setChartView(chart);
-        chart.setMarker(mv);
-        chart.invalidate();
-
-        chart.setDoubleTapToZoomEnabled(false);//双击屏幕缩放
-        chart.setScaleEnabled(false);
-        chart.setScaleXEnabled(false);
-        chart.setScaleYEnabled(false);
-        chart.setDragEnabled(true);
-    }
 
     public void playSound() {
         Uri uri = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION);

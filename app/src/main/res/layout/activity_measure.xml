@@ -11,63 +11,73 @@
         android:layout_width="match_parent"
         android:layout_height="0dp"
         android:layout_weight="1"
-        android:orientation="horizontal"
         android:background="@drawable/bg_measure_2"
-        >
+        android:orientation="horizontal">
 
         <LinearLayout
-            android:layout_weight="1"
             android:layout_width="0dp"
             android:layout_height="match_parent"
-            android:orientation="vertical"
-            >
+            android:layout_weight="1"
+            android:orientation="vertical">
+
             <RelativeLayout
-                android:id="@+id/parent_chart"
                 android:layout_width="match_parent"
                 android:layout_height="0dp"
+                android:layout_marginLeft="16dp"
+                android:layout_marginTop="16dp"
                 android:layout_weight="1"
-                />
+                android:padding="16dp"
+                android:background="@drawable/selector_btn_whilte"
+                android:clipChildren="false">
+
+                <com.bin.david.form.core.SmartTable
+                    android:id="@+id/table"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    />
+            </RelativeLayout>
 
             <TextView
                 android:id="@+id/time"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:layout_margin="16dp"
                 android:gravity="center"
                 android:text="--"
-                android:layout_margin="16dp"
                 android:textColor="@color/navBarTitleColor"
                 android:textSize="@dimen/sizeTitle" />
         </LinearLayout>
+
         <LinearLayout
             android:layout_width="0dp"
-            android:layout_weight="1"
             android:layout_height="match_parent"
-            android:orientation="vertical"
+            android:layout_weight="1"
             android:gravity="center"
-            >
+            android:orientation="vertical">
+
             <Space
                 android:layout_width="match_parent"
                 android:layout_height="0dp"
                 android:layout_weight="1" />
 
 
-
             <LinearLayout
-                android:background="@drawable/selector_btn"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:paddingLeft="16dp"
-                android:paddingRight="16dp"
-                android:paddingTop="8dp"
-                android:paddingBottom="8dp"
+                android:background="@drawable/selector_btn"
                 android:gravity="center"
-                android:orientation="horizontal">
+                android:orientation="horizontal"
+                android:paddingLeft="16dp"
+                android:paddingTop="8dp"
+                android:paddingRight="16dp"
+                android:paddingBottom="8dp"
+                android:visibility="gone">
 
                 <TextView
                     android:layout_width="160dp"
                     android:layout_height="wrap_content"
-                    android:text="@string/content_temp"
                     android:gravity="left"
+                    android:text="@string/content_temp"
                     android:textColor="@color/colorWhite"
                     android:textSize="@dimen/sizeTitle" />
 
@@ -78,69 +88,99 @@
                     android:layout_marginLeft="@dimen/padding_default"
                     android:gravity="right"
                     android:text="--"
-                    android:textStyle="bold"
                     android:textColor="@color/colorWhite"
-                    android:textSize="@dimen/sizeBigTitle" />
+                    android:textSize="@dimen/sizeBigTitle"
+                    android:textStyle="bold" />
             </LinearLayout>
 
             <LinearLayout
-                android:layout_marginTop="32dp"
-                android:background="@drawable/selector_btn"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:paddingLeft="16dp"
-                android:paddingRight="16dp"
-                android:paddingTop="8dp"
-                android:paddingBottom="8dp"
+                android:layout_marginTop="32dp"
+                android:background="@drawable/selector_btn"
                 android:gravity="center"
-                android:orientation="horizontal">
+                android:orientation="horizontal"
+                android:paddingLeft="16dp"
+                android:paddingTop="8dp"
+                android:paddingRight="16dp"
+                android:paddingBottom="8dp"
+                android:visibility="gone">
 
                 <TextView
                     android:layout_width="160dp"
                     android:layout_height="wrap_content"
-                    android:text="@string/content_sfhd"
                     android:gravity="left"
+                    android:text="@string/content_sfhd"
                     android:textColor="@color/colorWhite"
                     android:textSize="@dimen/sizeTitle" />
 
                 <TextView
                     android:id="@+id/activeness"
                     android:layout_width="160dp"
-                    android:gravity="right"
                     android:layout_height="wrap_content"
                     android:layout_marginLeft="@dimen/padding_default"
+                    android:gravity="right"
                     android:text="--"
-                    android:textStyle="bold"
                     android:textColor="@color/colorWhite"
-                    android:textSize="@dimen/sizeBigTitle" />
+                    android:textSize="@dimen/sizeBigTitle"
+                    android:textStyle="bold" />
             </LinearLayout>
 
             <LinearLayout
-                android:layout_marginTop="32dp"
-                android:background="@drawable/selector_btn"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:paddingLeft="16dp"
-                android:paddingRight="16dp"
-                android:paddingTop="8dp"
-                android:paddingBottom="8dp"
+                android:layout_marginTop="32dp"
+                android:background="@drawable/selector_btn_whilte"
                 android:gravity="center"
                 android:orientation="horizontal"
-                >
+                android:paddingLeft="16dp"
+                android:paddingTop="8dp"
+                android:paddingRight="16dp"
+                android:paddingBottom="8dp">
+
                 <TextView
                     android:layout_width="160dp"
                     android:layout_height="wrap_content"
-                    android:text="@string/content_measure_time"
                     android:gravity="left"
+                    android:text="气体组成："
+                    android:textColor="@color/colorBody"
+                    android:textSize="@dimen/sizeTitle" />
+
+                <Spinner
+                    android:layout_width="160dp"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="right"
+                    android:layout_marginLeft="@dimen/padding_default"
+                    android:entries="@array/test" />
+            </LinearLayout>
+
+
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="32dp"
+                android:background="@drawable/selector_btn"
+                android:gravity="center"
+                android:orientation="horizontal"
+                android:paddingLeft="16dp"
+                android:paddingTop="8dp"
+                android:paddingRight="16dp"
+                android:paddingBottom="8dp">
+
+                <TextView
+                    android:layout_width="160dp"
+                    android:layout_height="wrap_content"
+                    android:gravity="left"
+                    android:text="@string/content_measure_time"
                     android:textColor="@color/colorWhite"
                     android:textSize="@dimen/sizeTitle" />
 
                 <TextView
                     android:id="@+id/alreadyRunning"
                     android:layout_width="160dp"
-                    android:gravity="right"
                     android:layout_height="wrap_content"
                     android:layout_marginLeft="@dimen/padding_default"
+                    android:gravity="right"
                     android:text="--"
                     android:textColor="@color/colorWhite"
                     android:textSize="@dimen/sizeTitle" />
@@ -155,8 +195,8 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:gravity="center_vertical"
-                android:paddingBottom="@dimen/padding_default"
-                android:orientation="horizontal">
+                android:orientation="horizontal"
+                android:paddingBottom="@dimen/padding_default">
 
                 <Space
                     android:layout_width="0dp"
@@ -174,15 +214,17 @@
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="@string/content_start_measure1"
                         android:gravity="center"
+                        android:text="@string/content_start_measure1"
                         android:textColor="@color/colorWhite"
                         android:textSize="@dimen/sizeTitle" />
                 </LinearLayout>
+
                 <Space
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_weight="1" />
+
                 <LinearLayout
                     android:id="@+id/btnStopMeasure"
                     android:layout_width="72dp"
@@ -196,11 +238,12 @@
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="@string/content_stop_measure1"
                         android:gravity="center"
+                        android:text="@string/content_stop_measure1"
                         android:textColor="@color/colorWhite"
                         android:textSize="@dimen/sizeTitle" />
                 </LinearLayout>
+
                 <Space
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
@@ -212,21 +255,21 @@
     </LinearLayout>
 
     <LinearLayout
-        android:background="@color/colorWhite"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="horizontal"
-        >
+        android:background="@color/colorWhite"
+        android:orientation="horizontal">
+
         <LinearLayout
             android:layout_width="0dp"
             android:layout_height="@dimen/list_item_height_default"
+            android:layout_weight="1"
             android:background="@color/colorWhite"
             android:gravity="left|center_vertical"
             android:orientation="horizontal"
-            android:layout_weight="1"
             android:paddingLeft="@dimen/padding_default"
-            android:paddingRight="@dimen/padding_default"
-            >
+            android:paddingRight="@dimen/padding_default">
+
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
@@ -242,11 +285,11 @@
                 android:layout_marginTop="8dp"
                 android:layout_marginRight="@dimen/padding_default"
                 android:layout_marginBottom="8dp"
-                android:maxLength="10"
                 android:layout_weight="1"
                 android:background="@drawable/edittext_bg_selector"
                 android:focusableInTouchMode="true"
                 android:hint="@string/content_enter_simple_name"
+                android:maxLength="10"
                 android:singleLine="true"
                 android:textColor="@color/colorBody"
                 android:textCursorDrawable="@drawable/solid_shape_bottom_line"
@@ -256,9 +299,8 @@
                 android:id="@+id/history"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:src="@mipmap/ic_history"
                 android:background="@drawable/selector_btn_transparent"
-                />
+                android:src="@mipmap/ic_history" />
 
 
         </LinearLayout>
@@ -266,8 +308,8 @@
 
         <LinearLayout
             android:layout_width="0dp"
-            android:layout_weight="1"
             android:layout_height="wrap_content"
+            android:layout_weight="1"
             android:gravity="center_vertical"
             android:orientation="horizontal"
             android:padding="@dimen/padding_default">

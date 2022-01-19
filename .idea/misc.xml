@@ -1,4 +1,23 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
+  <component name="DesignSurface">
+    <option name="filePathToZoomLevelMap">
+      <map>
+        <entry key="../../../../layout/custom_preview.xml" value="0.34427083333333336" />
+        <entry key="app/src/main/res/drawable/selector_btn.xml" value="0.29453125" />
+        <entry key="app/src/main/res/drawable/selector_btn_whilte.xml" value="0.29453125" />
+        <entry key="app/src/main/res/layout/activity_measure.xml" value="0.5" />
+        <entry key="app/src/main/res/layout/activity_report.xml" value="0.4059466019417476" />
+        <entry key="app/src/main/res/layout/widget_tool_bar.xml" value="0.4059466019417476" />
+      </map>
+    </option>
+  </component>
   <component name="ProjectRootManager" version="2" languageLevel="JDK_1_8" default="true" project-jdk-name="1.8" project-jdk-type="JavaSDK" />
+  <component name="VisualizationToolProject">
+    <option name="state">
+      <ProjectState>
+        <option name="scale" value="0.4059466019417476" />
+      </ProjectState>
+    </option>
+  </component>
 </project>

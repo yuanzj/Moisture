@@ -25,6 +25,10 @@
         <item>two point correction</item>
     </string-array>
 
+    <string-array name="test">
+        <item>1</item>
+    </string-array>
+
     <string-array name="measure_time_array">
         <item>5 mins</item>
         <item>6 mins</item>

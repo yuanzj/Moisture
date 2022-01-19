@@ -25,6 +25,10 @@
         <item>双点校正</item>
     </string-array>
 
+    <string-array name="test">
+        <item>1</item>
+    </string-array>
+
     <string-array name="measure_time_array">
         <item>5 分钟</item>
         <item>6 分钟</item>

@@ -15,76 +15,88 @@
     <ImageView
         android:layout_width="wrap_content"
         android:layout_height="match_parent"
-        android:src="@mipmap/logo_title"
+        android:paddingLeft="8dp"
         android:paddingTop="8dp"
         android:paddingBottom="8dp"
-        android:paddingLeft="8dp"
-        />
+        android:src="@mipmap/logo_title" />
 
-    <TextView
-        android:id="@+id/title_name"
-        android:gravity="center"
-        android:layout_gravity="center_horizontal"
-        android:layout_width="wrap_content"
-        android:layout_height="match_parent"
-        android:singleLine="true"
-        android:text="@string/app_name"
-        android:textColor="@color/navBarTitleColor"
-        android:shadowColor="@color/navBarTitleShadowColor"
-        android:shadowRadius="1"
-        android:shadowDx="0"
-        android:shadowDy="2"
-        android:textSize="@dimen/sizeTitle"
-        android:textStyle="bold"
-        />
 
     <LinearLayout
         android:layout_width="wrap_content"
         android:layout_height="match_parent"
-        android:orientation="horizontal"
+        android:layout_gravity="center_horizontal"
+        android:gravity="center"
+        android:orientation="horizontal">
+
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="22dp"
+            android:paddingRight="-16dp"
+            android:src="@mipmap/title_icon" />
+
+        <TextView
+            android:id="@+id/title_name"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:gravity="center"
+            android:shadowColor="@color/navBarTitleShadowColor"
+            android:shadowDx="0"
+            android:shadowDy="2"
+            android:shadowRadius="1"
+            android:singleLine="true"
+            android:text="@string/app_name"
+            android:textColor="@color/navBarTitleColor"
+            android:textSize="@dimen/sizeTitle"
+            android:textStyle="bold" />
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="match_parent"
         android:layout_gravity="right"
-        >
+        android:orientation="horizontal">
+
         <Button
             android:id="@+id/title_back"
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
-            android:minWidth="48dp"
-            android:textSize="16sp"
             android:layout_gravity="right"
-            android:drawableLeft="@mipmap/ic_back"
-            android:text="@string/content_back"
             android:layout_marginRight="16dp"
             android:background="@drawable/selector_btn_transparent"
-            />
+            android:minWidth="80dp"
+            android:textSize="16sp"
+            android:visibility="invisible" />
+        <!--        android:drawableLeft="@mipmap/ic_back"-->
+        <!--        android:text="@string/content_back"-->
         <ImageButton
             android:id="@+id/export"
-            android:minWidth="48dp"
             android:layout_width="?attr/actionBarSize"
             android:layout_height="match_parent"
-            android:src="@mipmap/ic_export"
             android:background="@drawable/selector_btn_transparent"
-            android:visibility="gone"
-            />
+            android:minWidth="48dp"
+            android:src="@mipmap/ic_export"
+            android:visibility="gone" />
+
         <ImageButton
             android:id="@+id/title_rightImage"
-            android:minWidth="48dp"
             android:layout_width="?attr/actionBarSize"
             android:layout_height="match_parent"
             android:background="@drawable/selector_btn_transparent"
+            android:minWidth="48dp"
             android:src="@mipmap/ic_bluetooth"
-            android:visibility="gone"
-            />
+            android:visibility="gone" />
+
         <TextView
             android:id="@+id/second_title"
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
+            android:layout_marginRight="16dp"
             android:gravity="center"
             android:singleLine="true"
-            android:layout_marginRight="16dp"
             android:text="@string/content_not_connect"
             android:textColor="@color/colorBody"
-            android:textSize="@dimen/sizeBody"
-            />
+            android:textSize="@dimen/sizeBody" />
+
         <TextView
             android:id="@+id/title_rightTv"
             android:layout_width="wrap_content"

@@ -46,6 +46,9 @@ public class MainActivity extends BluetoothBaseActivity<MainPresenter> {
         if (!App.getInstance().isRunning) {
             App.getInstance().initAutoConnect();
         }
+        View menu1 = new View(this);
+        menu1.setId(R.id.menu_01);
+        onClick(menu1);
     }
 
     @Override

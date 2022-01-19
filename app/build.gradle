@@ -1,7 +1,7 @@
 apply plugin: 'com.android.application'
 
 android {
-    compileSdkVersion 28
+    compileSdkVersion 31
     compileOptions {
         sourceCompatibility JavaVersion.VERSION_1_8
         targetCompatibility JavaVersion.VERSION_1_8
@@ -9,8 +9,8 @@ android {
     defaultConfig {
         applicationId "com.drt.moisture"
         minSdkVersion 23
-        targetSdkVersion 28
-        versionCode 20201211
+        targetSdkVersion 31
+        versionCode 20220116
         versionName "2.75"
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
     }
