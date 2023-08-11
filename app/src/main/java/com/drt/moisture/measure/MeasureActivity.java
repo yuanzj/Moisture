@@ -38,6 +38,7 @@ import com.drt.moisture.data.MeasureValue;
 import com.drt.moisture.data.source.bluetooth.SppDataCallback;
 import com.drt.moisture.data.source.bluetooth.response.ParameterSetResponse;
 import com.drt.moisture.util.BarometricPressureUtil;
+import com.drt.moisture.util.Test1;
 import com.inuker.bluetooth.library.Constants;
 
 import java.math.RoundingMode;
@@ -532,7 +533,9 @@ public class MeasureActivity extends BluetoothBaseActivity<DashboardPresenter> i
         // 0.85—1
         if (aw >= 0.85 && aw <= 1.0) {
             for (int i = 0; i <= 25; i++) {
-                list.add(new BarometricPressure(i, String.format("%.3f", BarometricPressureUtil.Button111_Click(i, aw))));
+                double[] y = {100};
+                double t= i;
+                list.add(new BarometricPressure(i, String.format("%.3f", Test1.GetP(t, y, aw))));
             }
         } else {
             for (int i = 0; i <= 25; i++) {
