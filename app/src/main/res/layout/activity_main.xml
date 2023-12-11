@@ -45,14 +45,14 @@
                 >
                 <Button
                     android:id="@+id/title_back"
-                    android:layout_width="wrap_content"
+                    android:layout_width="48dp"
                     android:layout_height="match_parent"
                     android:minWidth="48dp"
                     android:textSize="16sp"
                     android:layout_gravity="right"
                     android:drawableLeft="@mipmap/ic_back"
                     android:visibility="gone"
-                    android:text="@string/content_back"
+                    android:text=""
                     android:background="@drawable/selector_btn_transparent"
                     />
                 <ImageButton

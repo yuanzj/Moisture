@@ -347,8 +347,8 @@ public class Test1 {
     }
 
     public static void main(String[] panduan) {
-        double[] y = new double[]{100.0};
-        double aw = 1.0;
+        double[] y = new double[]{0.0};
+        double aw = 0.90;
         double T = 0.0;
         double P = GetP(T, y, aw);
         System.out.println(String.format("%.3f", P) + "MPa");

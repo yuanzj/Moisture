@@ -19,13 +19,13 @@
 
     <string name="content_start_measure">开始测量</string>
 
-    <string name="content_start_measure1">开始\n测量</string>
+    <string name="content_start_measure1">开始测量</string>
 
     <string name="content_start_correct">开始校正</string>
 
     <string name="content_stop_measure">停止测量</string>
 
-    <string name="content_stop_measure1">停止\n测量</string>
+    <string name="content_stop_measure1">停止测量</string>
 
     <string name="content_stop_correct">停止校正</string>
 

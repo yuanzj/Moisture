@@ -3,7 +3,7 @@ package com.drt.moisture.measure;
 import com.bin.david.form.annotation.SmartColumn;
 import com.bin.david.form.annotation.SmartTable;
 
-@SmartTable(name = "相平衡数据")
+@SmartTable(name = "预测结果")
 public class BarometricPressure {
     @SmartColumn(id = 1, name = "温度/℃")
     private int temperature;

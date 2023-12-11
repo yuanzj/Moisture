@@ -11,7 +11,7 @@
         android:layout_width="match_parent"
         android:layout_height="0dp"
         android:layout_weight="1"
-        android:background="@drawable/bg_measure_2"
+        android:background="#ffffff"
         android:orientation="horizontal">
 
         <LinearLayout
@@ -20,22 +20,425 @@
             android:layout_weight="1"
             android:orientation="vertical">
 
-            <RelativeLayout
+            <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="0dp"
-                android:layout_marginLeft="16dp"
-                android:layout_marginTop="16dp"
+                android:layout_marginTop="8dp"
                 android:layout_weight="1"
-                android:padding="16dp"
                 android:background="@drawable/selector_btn_whilte"
-                android:clipChildren="false">
+                android:gravity="center"
+                android:orientation="vertical"
+                android:paddingLeft="16dp"
+                android:paddingRight="16dp">
 
-                <com.bin.david.form.core.SmartTable
-                    android:id="@+id/table"
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:padding="8dp"
+                    android:text="输入气体组成"
+                    android:textColor="@color/colorBody"
+                    android:textSize="@dimen/sizeSubTitle"
+                    android:textStyle="bold" />
+
+                <LinearLayout
                     android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    />
-            </RelativeLayout>
+                    android:layout_height="wrap_content"
+                    android:background="#5B9BD5"
+                    android:orientation="horizontal"
+                    android:padding="8dp">
+
+                    <TextView
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:gravity="center"
+                        android:text="气体名称"
+                        android:textColor="@color/colorWhite"
+                        android:textSize="@dimen/sizeSubTitle"
+                        android:textStyle="bold" />
+
+                    <TextView
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:gravity="center"
+                        android:text="含量/mol%"
+                        android:textColor="@color/colorWhite"
+                        android:textSize="@dimen/sizeSubTitle"
+                        android:textStyle="bold" />
+                </LinearLayout>
+
+
+                <ScrollView
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent">
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="vertical">
+
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:background="#EAEFF7"
+                            android:orientation="horizontal"
+                            android:paddingHorizontal="16dp"
+                            android:paddingVertical="2dp">
+
+                            <TextView
+                                android:layout_width="0dp"
+                                android:layout_height="wrap_content"
+                                android:layout_weight="1"
+                                android:gravity="center"
+                                android:text="氮气 N2"
+                                android:textColor="@color/colorBody"
+                                android:textSize="@dimen/sizeSubTitle" />
+
+                            <EditText
+                                android:id="@+id/let1"
+                                android:layout_width="0dp"
+                                android:layout_height="wrap_content"
+                                android:layout_weight="1"
+                                android:gravity="center"
+                                android:hint="0.00~100.00"
+                                android:inputType="numberDecimal"
+                                android:textColor="@color/colorBody"
+                                android:textSize="@dimen/sizeSubTitle" />
+                        </LinearLayout>
+
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:background="#D2DEEF"
+                            android:orientation="horizontal"
+                            android:paddingHorizontal="16dp"
+                            android:paddingVertical="2dp">
+
+                            <TextView
+                                android:layout_width="0dp"
+                                android:layout_height="wrap_content"
+                                android:layout_weight="1"
+                                android:gravity="center"
+                                android:text="二氧化碳 CO2"
+                                android:textColor="@color/colorBody"
+                                android:textSize="@dimen/sizeSubTitle" />
+
+                            <EditText
+                                android:id="@+id/let2"
+                                android:layout_width="0dp"
+                                android:layout_height="wrap_content"
+                                android:layout_weight="1"
+                                android:gravity="center"
+                                android:hint="0.00~100.00"
+                                android:inputType="numberDecimal"
+                                android:textColor="@color/colorBody"
+                                android:textSize="@dimen/sizeSubTitle" />
+                        </LinearLayout>
+
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:background="#EAEFF7"
+                            android:orientation="horizontal"
+                            android:paddingHorizontal="16dp"
+                            android:paddingVertical="2dp">
+
+                            <TextView
+                                android:layout_width="0dp"
+                                android:layout_height="wrap_content"
+                                android:layout_weight="1"
+                                android:gravity="center"
+                                android:text="甲烷 CH4"
+                                android:textColor="@color/colorBody"
+                                android:textSize="@dimen/sizeSubTitle" />
+
+                            <EditText
+                                android:id="@+id/let3"
+                                android:layout_width="0dp"
+                                android:layout_height="wrap_content"
+                                android:layout_weight="1"
+                                android:gravity="center"
+                                android:hint="0.00~100.00"
+                                android:inputType="numberDecimal"
+                                android:textColor="@color/colorBody"
+                                android:textSize="@dimen/sizeSubTitle" />
+                        </LinearLayout>
+
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:background="#D2DEEF"
+                            android:orientation="horizontal"
+                            android:paddingHorizontal="16dp"
+                            android:paddingVertical="2dp">
+
+                            <TextView
+                                android:layout_width="0dp"
+                                android:layout_height="wrap_content"
+                                android:layout_weight="1"
+                                android:gravity="center"
+                                android:text="乙烷 C2H6"
+                                android:textColor="@color/colorBody"
+                                android:textSize="@dimen/sizeSubTitle" />
+
+                            <EditText
+                                android:id="@+id/let4"
+                                android:layout_width="0dp"
+                                android:layout_height="wrap_content"
+                                android:layout_weight="1"
+                                android:gravity="center"
+                                android:hint="0.00~100.00"
+                                android:inputType="numberDecimal"
+                                android:textColor="@color/colorBody"
+                                android:textSize="@dimen/sizeSubTitle" />
+                        </LinearLayout>
+
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:background="#EAEFF7"
+                            android:orientation="horizontal"
+                            android:paddingHorizontal="16dp"
+                            android:paddingVertical="2dp">
+
+                            <TextView
+                                android:layout_width="0dp"
+                                android:layout_height="wrap_content"
+                                android:layout_weight="1"
+                                android:gravity="center"
+                                android:text="内烷 C3H8"
+                                android:textColor="@color/colorBody"
+                                android:textSize="@dimen/sizeSubTitle" />
+
+                            <EditText
+                                android:id="@+id/let5"
+                                android:layout_width="0dp"
+                                android:layout_height="wrap_content"
+                                android:layout_weight="1"
+                                android:gravity="center"
+                                android:hint="0.00~100.00"
+                                android:inputType="numberDecimal"
+                                android:textColor="@color/colorBody"
+                                android:textSize="@dimen/sizeSubTitle" />
+                        </LinearLayout>
+
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:background="#D2DEEF"
+                            android:orientation="horizontal"
+                            android:paddingHorizontal="16dp"
+                            android:paddingVertical="2dp">
+
+                            <TextView
+                                android:layout_width="0dp"
+                                android:layout_height="wrap_content"
+                                android:layout_weight="1"
+                                android:gravity="center"
+                                android:text="异丁烷 i-C4H10"
+                                android:textColor="@color/colorBody"
+                                android:textSize="@dimen/sizeSubTitle" />
+
+                            <EditText
+                                android:id="@+id/let6"
+                                android:layout_width="0dp"
+                                android:layout_height="wrap_content"
+                                android:layout_weight="1"
+                                android:gravity="center"
+                                android:hint="0.00~100.00"
+                                android:inputType="numberDecimal"
+                                android:textColor="@color/colorBody"
+                                android:textSize="@dimen/sizeSubTitle" />
+                        </LinearLayout>
+
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:background="#EAEFF7"
+                            android:orientation="horizontal"
+                            android:paddingHorizontal="16dp"
+                            android:paddingVertical="2dp">
+
+                            <TextView
+                                android:layout_width="0dp"
+                                android:layout_height="wrap_content"
+                                android:layout_weight="1"
+                                android:gravity="center"
+                                android:text="正丁烷 n-C4H10"
+                                android:textColor="@color/colorBody"
+                                android:textSize="@dimen/sizeSubTitle" />
+
+                            <EditText
+                                android:id="@+id/let7"
+                                android:layout_width="0dp"
+                                android:layout_height="wrap_content"
+                                android:layout_weight="1"
+                                android:gravity="center"
+                                android:hint="0.00~100.00"
+                                android:inputType="numberDecimal"
+                                android:textColor="@color/colorBody"
+                                android:textSize="@dimen/sizeSubTitle" />
+                        </LinearLayout>
+
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:background="#D2DEEF"
+                            android:orientation="horizontal"
+                            android:paddingHorizontal="16dp"
+                            android:paddingVertical="2dp">
+
+                            <TextView
+                                android:layout_width="0dp"
+                                android:layout_height="wrap_content"
+                                android:layout_weight="1"
+                                android:gravity="center"
+                                android:text="戊烷 C5H12"
+                                android:textColor="@color/colorBody"
+                                android:textSize="@dimen/sizeSubTitle" />
+
+                            <EditText
+                                android:id="@+id/let8"
+                                android:layout_width="0dp"
+                                android:layout_height="wrap_content"
+                                android:layout_weight="1"
+                                android:gravity="center"
+                                android:hint="0.00~100.00"
+                                android:inputType="numberDecimal"
+                                android:textColor="@color/colorBody"
+                                android:textSize="@dimen/sizeSubTitle" />
+                        </LinearLayout>
+
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:background="#EAEFF7"
+                            android:orientation="horizontal"
+                            android:paddingHorizontal="16dp"
+                            android:paddingVertical="2dp">
+
+                            <TextView
+                                android:layout_width="0dp"
+                                android:layout_height="wrap_content"
+                                android:layout_weight="1"
+                                android:gravity="center"
+                                android:text="己烷 C6H14"
+                                android:textColor="@color/colorBody"
+                                android:textSize="@dimen/sizeSubTitle" />
+
+                            <EditText
+                                android:id="@+id/let9"
+                                android:layout_width="0dp"
+                                android:layout_height="wrap_content"
+                                android:layout_weight="1"
+                                android:gravity="center"
+                                android:hint="0.00~100.00"
+                                android:inputType="numberDecimal"
+                                android:textColor="@color/colorBody"
+                                android:textSize="@dimen/sizeSubTitle" />
+                        </LinearLayout>
+
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:background="#D2DEEF"
+                            android:orientation="horizontal"
+                            android:paddingHorizontal="16dp"
+                            android:paddingVertical="2dp">
+
+                            <TextView
+                                android:layout_width="0dp"
+                                android:layout_height="wrap_content"
+                                android:layout_weight="1"
+                                android:gravity="center"
+                                android:text="庚烷 C7H16"
+                                android:textColor="@color/colorBody"
+                                android:textSize="@dimen/sizeSubTitle" />
+
+                            <EditText
+                                android:id="@+id/let10"
+                                android:layout_width="0dp"
+                                android:layout_height="wrap_content"
+                                android:layout_weight="1"
+                                android:gravity="center"
+                                android:hint="0.00~100.00"
+                                android:inputType="numberDecimal"
+                                android:textColor="@color/colorBody"
+                                android:textSize="@dimen/sizeSubTitle" />
+                        </LinearLayout>
+
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:background="#EAEFF7"
+                            android:orientation="horizontal"
+                            android:paddingHorizontal="16dp"
+                            android:paddingVertical="2dp">
+
+                            <TextView
+                                android:layout_width="0dp"
+                                android:layout_height="wrap_content"
+                                android:layout_weight="1"
+                                android:gravity="center"
+                                android:text="辛烷 C8H18"
+                                android:textColor="@color/colorBody"
+                                android:textSize="@dimen/sizeSubTitle" />
+
+                            <EditText
+                                android:id="@+id/let11"
+                                android:layout_width="0dp"
+                                android:layout_height="wrap_content"
+                                android:layout_weight="1"
+                                android:gravity="center"
+                                android:hint="0.00~100.00"
+                                android:inputType="numberDecimal"
+                                android:textColor="@color/colorBody"
+                                android:textSize="@dimen/sizeSubTitle" />
+                        </LinearLayout>
+
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:background="#D2DEEF"
+                            android:orientation="horizontal"
+                            android:paddingHorizontal="16dp"
+                            android:paddingVertical="2dp">
+
+                            <TextView
+                                android:layout_width="0dp"
+                                android:layout_height="wrap_content"
+                                android:layout_weight="1"
+                                android:gravity="center"
+                                android:text="合计"
+                                android:textColor="@color/colorBody"
+                                android:textSize="@dimen/sizeSubTitle" />
+
+                            <EditText
+                                android:id="@+id/let12"
+                                android:layout_width="0dp"
+                                android:layout_height="wrap_content"
+                                android:layout_weight="1"
+                                android:enabled="false"
+                                android:gravity="center"
+                                android:hint="0.00~100.00"
+                                android:inputType="numberDecimal"
+                                android:textColor="@color/colorBody"
+                                android:textSize="@dimen/sizeSubTitle" />
+                        </LinearLayout>
+                    </LinearLayout>
+
+                </ScrollView>
+
+
+                <!--                <Spinner-->
+                <!--                    android:layout_width="160dp"-->
+                <!--                    android:layout_height="wrap_content"-->
+                <!--                    android:layout_gravity="right"-->
+                <!--                    android:layout_marginLeft="@dimen/padding_default"-->
+                <!--                    android:entries="@array/test" />-->
+            </LinearLayout>
+
 
             <TextView
                 android:id="@+id/time"
@@ -45,19 +448,196 @@
                 android:gravity="center"
                 android:text="--"
                 android:textColor="@color/navBarTitleColor"
-                android:textSize="@dimen/sizeTitle" />
+                android:textSize="@dimen/sizeTitle"
+                android:visibility="gone" />
         </LinearLayout>
 
         <LinearLayout
             android:layout_width="0dp"
             android:layout_height="match_parent"
-            android:layout_weight="1"
+            android:layout_weight="2"
             android:gravity="center"
             android:orientation="vertical">
 
-            <Space
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal">
+
+                <LinearLayout
+                    android:layout_width="0dp"
+                    android:layout_height="@dimen/list_item_height_default"
+                    android:layout_weight="1"
+                    android:gravity="left|center_vertical"
+                    android:orientation="horizontal">
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="@string/content_simple_name"
+                        android:textColor="@color/colorSecondBody"
+                        android:textSize="@dimen/sizeBody" />
+
+                    <EditText
+                        android:id="@+id/mesasureName"
+                        android:layout_width="0dp"
+                        android:layout_height="match_parent"
+                        android:layout_marginLeft="@dimen/padding_default"
+                        android:layout_marginTop="8dp"
+                        android:layout_marginRight="@dimen/padding_default"
+                        android:layout_marginBottom="8dp"
+                        android:layout_weight="1"
+                        android:background="@drawable/edittext_bg_selector"
+                        android:focusableInTouchMode="true"
+                        android:hint="@string/content_enter_simple_name"
+                        android:maxLength="10"
+                        android:singleLine="true"
+                        android:textColor="@color/colorBody"
+                        android:textCursorDrawable="@drawable/solid_shape_bottom_line"
+                        android:textSize="@dimen/sizeSubTitle" />
+
+                    <ImageButton
+                        android:id="@+id/history"
+                        android:layout_width="24dp"
+                        android:layout_height="wrap_content"
+                        android:background="@drawable/selector_btn_transparent"
+                        android:src="@mipmap/ic_history" />
+
+
+                </LinearLayout>
+
+
+                <LinearLayout
+                    android:layout_width="0dp"
+                    android:layout_height="@dimen/list_item_height_default"
+                    android:layout_weight="1"
+                    android:gravity="center_vertical"
+                    android:orientation="horizontal"
+                    android:paddingLeft="16dp">
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="测量方式"
+                        android:textColor="@color/colorSecondBody"
+                        android:textSize="@dimen/sizeBody" />
+
+                    <Spinner
+                        android:id="@+id/spinner1"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:entries="@array/measure_model" />
+
+
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="0dp"
+                    android:layout_height="@dimen/list_item_height_default"
+                    android:layout_weight="1"
+                    android:gravity="center_vertical"
+                    android:orientation="horizontal"
+                    android:paddingLeft="16dp">
+
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="日期时间"
+                        android:textColor="@color/colorSecondBody"
+                        android:textSize="@dimen/sizeBody" />
+
+                    <Spinner
+                        android:id="@+id/spinner2"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:entries="@array/measure_time_array" />
+
+
+                </LinearLayout>
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal">
+
+                <LinearLayout
+                    android:layout_width="0dp"
+                    android:layout_height="48dp"
+                    android:layout_weight="1"
+                    android:gravity="center"
+                    android:orientation="horizontal"
+
+                    >
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="输入温度/°C(0.00~99.99)"
+                        android:textColor="@color/colorSecondBody"
+                        android:textSize="@dimen/sizeBody" />
+
+                    <EditText
+                        android:id="@+id/srwd"
+                        android:layout_width="100dp"
+                        android:layout_height="match_parent"
+                        android:layout_marginLeft="@dimen/padding_default"
+                        android:layout_marginTop="8dp"
+                        android:layout_marginRight="@dimen/padding_default"
+                        android:layout_marginBottom="8dp"
+                        android:background="@drawable/edittext_bg_selector"
+                        android:focusableInTouchMode="true"
+                        android:hint=""
+                        android:inputType="numberDecimal"
+                        android:maxLength="10"
+                        android:singleLine="true"
+                        android:textColor="@color/colorBody"
+                        android:textCursorDrawable="@drawable/solid_shape_bottom_line"
+                        android:textSize="@dimen/sizeSubTitle" />
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="0dp"
+                    android:layout_height="48dp"
+                    android:layout_weight="1"
+                    android:gravity="center"
+                    android:orientation="horizontal">
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="生成压力/Mpa(0.00~100.00)"
+                        android:textColor="@color/colorSecondBody"
+                        android:textSize="@dimen/sizeBody" />
+
+                    <EditText
+                        android:id="@+id/scyl"
+                        android:layout_width="100dp"
+                        android:layout_height="match_parent"
+                        android:layout_marginLeft="@dimen/padding_default"
+                        android:layout_marginTop="8dp"
+                        android:layout_marginRight="@dimen/padding_default"
+                        android:layout_marginBottom="8dp"
+                        android:background="@drawable/edittext_bg_selector"
+                        android:enabled="false"
+                        android:focusableInTouchMode="true"
+                        android:hint=""
+                        android:maxLength="10"
+                        android:singleLine="true"
+                        android:textColor="@color/colorBody"
+                        android:textCursorDrawable="@drawable/solid_shape_bottom_line"
+                        android:textSize="@dimen/sizeSubTitle" />
+                </LinearLayout>
+            </LinearLayout>
+
+            <com.bin.david.form.core.SmartTable
+                android:id="@+id/table"
                 android:layout_width="match_parent"
                 android:layout_height="0dp"
+                android:layout_marginHorizontal="16dp"
                 android:layout_weight="1" />
 
 
@@ -82,7 +662,6 @@
                     android:textSize="@dimen/sizeTitle" />
 
                 <TextView
-                    android:id="@+id/temperature"
                     android:layout_width="160dp"
                     android:layout_height="wrap_content"
                     android:layout_marginLeft="@dimen/padding_default"
@@ -126,74 +705,82 @@
                     android:textStyle="bold" />
             </LinearLayout>
 
-            <LinearLayout
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="32dp"
-                android:background="@drawable/selector_btn_whilte"
-                android:gravity="center"
-                android:orientation="horizontal"
-                android:paddingLeft="16dp"
-                android:paddingTop="8dp"
-                android:paddingRight="16dp"
-                android:paddingBottom="8dp">
-
-                <TextView
-                    android:layout_width="160dp"
-                    android:layout_height="wrap_content"
-                    android:gravity="left"
-                    android:text="气体组成："
-                    android:textColor="@color/colorBody"
-                    android:textSize="@dimen/sizeTitle" />
-
-                <Spinner
-                    android:layout_width="160dp"
-                    android:layout_height="wrap_content"
-                    android:layout_gravity="right"
-                    android:layout_marginLeft="@dimen/padding_default"
-                    android:entries="@array/test" />
-            </LinearLayout>
-
-
-            <LinearLayout
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="32dp"
-                android:background="@drawable/selector_btn"
-                android:gravity="center"
-                android:orientation="horizontal"
-                android:paddingLeft="16dp"
-                android:paddingTop="8dp"
-                android:paddingRight="16dp"
-                android:paddingBottom="8dp">
-
-                <TextView
-                    android:layout_width="160dp"
-                    android:layout_height="wrap_content"
-                    android:gravity="left"
-                    android:text="@string/content_measure_time"
-                    android:textColor="@color/colorWhite"
-                    android:textSize="@dimen/sizeTitle" />
-
-                <TextView
-                    android:id="@+id/alreadyRunning"
-                    android:layout_width="160dp"
-                    android:layout_height="wrap_content"
-                    android:layout_marginLeft="@dimen/padding_default"
-                    android:gravity="right"
-                    android:text="--"
-                    android:textColor="@color/colorWhite"
-                    android:textSize="@dimen/sizeTitle" />
-            </LinearLayout>
-
-            <Space
-                android:layout_width="match_parent"
-                android:layout_height="0dp"
-                android:layout_weight="1" />
 
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:layout_marginTop="16dp"
+                android:orientation="horizontal"
+                android:paddingHorizontal="16dp">
+
+                <LinearLayout
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:gravity="center"
+                    android:orientation="horizontal"
+                    android:paddingLeft="16dp"
+                    android:paddingTop="8dp"
+                    android:paddingRight="16dp"
+                    android:paddingBottom="8dp">
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:gravity="left"
+                        android:text="@string/content_measure_time"
+                        android:textColor="@color/colorSecondBody"
+                        android:textSize="@dimen/sizeSecondBody" />
+
+                    <TextView
+                        android:id="@+id/alreadyRunning"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_marginLeft="@dimen/padding_default"
+                        android:layout_weight="1"
+                        android:gravity="right"
+                        android:text="--"
+                        android:textColor="@color/colorText"
+                        android:textSize="@dimen/sizeSecondBody" />
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:gravity="center"
+                    android:orientation="horizontal"
+                    android:paddingLeft="16dp"
+                    android:paddingTop="8dp"
+                    android:paddingRight="16dp"
+                    android:paddingBottom="8dp">
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:gravity="left"
+                        android:text="样品温度"
+                        android:textColor="@color/colorSecondBody"
+                        android:textSize="@dimen/sizeSecondBody" />
+
+                    <TextView
+                        android:id="@+id/temperature"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_marginLeft="@dimen/padding_default"
+                        android:layout_weight="1"
+                        android:gravity="right"
+                        android:text="--"
+                        android:textColor="@color/colorBody"
+                        android:textSize="@dimen/sizeSecondBody" />
+                </LinearLayout>
+            </LinearLayout>
+
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="16dp"
                 android:gravity="center_vertical"
                 android:orientation="horizontal"
                 android:paddingBottom="@dimen/padding_default">
@@ -205,8 +792,8 @@
 
                 <LinearLayout
                     android:id="@+id/btnStartMeasure"
-                    android:layout_width="72dp"
-                    android:layout_height="72dp"
+                    android:layout_width="120dp"
+                    android:layout_height="48dp"
                     android:background="@drawable/selector_btn"
                     android:gravity="center"
                     android:orientation="vertical">
@@ -227,8 +814,8 @@
 
                 <LinearLayout
                     android:id="@+id/btnStopMeasure"
-                    android:layout_width="72dp"
-                    android:layout_height="72dp"
+                    android:layout_width="120dp"
+                    android:layout_height="48dp"
                     android:layout_marginLeft="@dimen/padding_default"
                     android:alpha="0.32"
                     android:background="@drawable/selector_btn"
@@ -249,87 +836,33 @@
                     android:layout_height="wrap_content"
                     android:layout_weight="1" />
 
+                <LinearLayout
+                    android:id="@+id/btnSCSJ"
+                    android:layout_width="120dp"
+                    android:layout_height="48dp"
+                    android:layout_marginLeft="@dimen/padding_default"
+                    android:background="@drawable/selector_btn"
+                    android:gravity="center"
+                    android:orientation="vertical">
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:gravity="center"
+                        android:text="输出数据"
+                        android:textColor="@color/colorWhite"
+                        android:textSize="@dimen/sizeTitle" />
+                </LinearLayout>
+
+                <Space
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1" />
+
             </LinearLayout>
 
         </LinearLayout>
     </LinearLayout>
 
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:background="@color/colorWhite"
-        android:orientation="horizontal">
 
-        <LinearLayout
-            android:layout_width="0dp"
-            android:layout_height="@dimen/list_item_height_default"
-            android:layout_weight="1"
-            android:background="@color/colorWhite"
-            android:gravity="left|center_vertical"
-            android:orientation="horizontal"
-            android:paddingLeft="@dimen/padding_default"
-            android:paddingRight="@dimen/padding_default">
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="@string/content_simple_name"
-                android:textColor="@color/colorSecondBody"
-                android:textSize="@dimen/sizeBody" />
-
-            <EditText
-                android:id="@+id/mesasureName"
-                android:layout_width="0dp"
-                android:layout_height="match_parent"
-                android:layout_marginLeft="@dimen/padding_default"
-                android:layout_marginTop="8dp"
-                android:layout_marginRight="@dimen/padding_default"
-                android:layout_marginBottom="8dp"
-                android:layout_weight="1"
-                android:background="@drawable/edittext_bg_selector"
-                android:focusableInTouchMode="true"
-                android:hint="@string/content_enter_simple_name"
-                android:maxLength="10"
-                android:singleLine="true"
-                android:textColor="@color/colorBody"
-                android:textCursorDrawable="@drawable/solid_shape_bottom_line"
-                android:textSize="@dimen/sizeSubTitle" />
-
-            <ImageButton
-                android:id="@+id/history"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:background="@drawable/selector_btn_transparent"
-                android:src="@mipmap/ic_history" />
-
-
-        </LinearLayout>
-
-
-        <LinearLayout
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:gravity="center_vertical"
-            android:orientation="horizontal"
-            android:padding="@dimen/padding_default">
-
-            <Spinner
-                android:id="@+id/spinner1"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:entries="@array/measure_model" />
-
-            <Spinner
-                android:id="@+id/spinner2"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_marginLeft="@dimen/padding_default"
-                android:layout_weight="1"
-                android:entries="@array/measure_time_array" />
-
-
-        </LinearLayout>
-    </LinearLayout>
 </LinearLayout>

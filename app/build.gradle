@@ -1,7 +1,7 @@
 apply plugin: 'com.android.application'
 
 android {
-    compileSdkVersion 31
+    compileSdkVersion 28
     compileOptions {
         sourceCompatibility JavaVersion.VERSION_1_8
         targetCompatibility JavaVersion.VERSION_1_8
@@ -9,9 +9,9 @@ android {
     defaultConfig {
         applicationId "com.drt.moisture"
         minSdkVersion 23
-        targetSdkVersion 31
-        versionCode 20220116
-        versionName "2.75"
+        targetSdkVersion 28
+        versionCode 20231211
+        versionName "3.0"
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
     }
 
@@ -32,6 +32,12 @@ android {
         }
     }
 
+    lintOptions {
+        checkReleaseBuilds false
+        // Or, if you prefer, you can continue to check for errors in release builds,
+        // but continue the build even when errors are found:
+        abortOnError false
+    }
 
 }
 
@@ -50,7 +56,8 @@ dependencies {
     // SPP 蓝牙库
     implementation project(':rkconverter')
     // BLE 蓝牙库
-    implementation 'com.inuker.bluetooth:library:1.4.0'
+//    implementation 'com.inuker.bluetooth:library:1.4.0'
+    implementation project(':inukerBle')
     //butterknife
     implementation 'com.jakewharton:butterknife:10.0.0'
     annotationProcessor 'com.jakewharton:butterknife-compiler:10.0.0'

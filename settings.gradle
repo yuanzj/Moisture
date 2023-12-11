@@ -1,1 +1,2 @@
 include ':app', ':zjandroidcommon', ':bluetoothspp', ':rkconverter',':MPChartLib'
+include ':inukerBle'
