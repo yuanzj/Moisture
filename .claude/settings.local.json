@@ -6,7 +6,10 @@
       "Bash(java:*)",
       "Bash(/usr/libexec/java_home:*)",
       "Bash(find:*)",
-      "Bash(ls:*)"
+      "Bash(ls:*)",
+      "Bash(adb shell:*)",
+      "Bash(rg:*)",
+      "Bash(grep:*)"
     ],
     "deny": []
   }
