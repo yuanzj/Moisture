@@ -1,0 +1,11 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(./gradlew:*)",
+      "Bash(/usr/libexec/java_home:*)",
+      "Bash(export:*)",
+      "Bash(export PATH=$JAVA_HOME/bin:$PATH)"
+    ],
+    "deny": []
+  }
+}
