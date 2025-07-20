@@ -1,13 +1,14 @@
 apply plugin: 'com.android.library'
 
 android {
-    compileSdkVersion 28
+    namespace 'net.yzj.android.common'
+    compileSdkVersion 34
 
 
 
     defaultConfig {
-        minSdkVersion 15
-        targetSdkVersion 28
+        minSdkVersion 30
+        targetSdkVersion 34
         versionCode 1
         versionName "1.0"
 

@@ -1,5 +1,7 @@
 package com.drt.moisture.data.source.bluetooth;
 
+import static com.inuker.bluetooth.library.Code.REQUEST_SUCCESS;
+
 import android.content.Context;
 import android.util.Log;
 
@@ -57,8 +59,6 @@ import java.util.Timer;
 import java.util.TimerTask;
 import java.util.UUID;
 
-import static com.inuker.bluetooth.library.Code.REQUEST_SUCCESS;
-
 public class BluetoothServiceImpl implements BluetoothService, BleWriteResponse {
 
     private static final String TAG = BluetoothServiceImpl.class.getSimpleName();
@@ -78,10 +78,31 @@ public class BluetoothServiceImpl implements BluetoothService, BleWriteResponse 
     private void write(String mac, UUID service, UUID character, byte[] value, BleWriteResponse response) {
 
         if (App.getInstance().connectedModel == 0) {
-            if (App.getInstance().getSerialPortHelper().isOpen()) {
-                App.getInstance().getSerialPortHelper().sendBytes(value);
+            // USB转串口模式
+            boolean success = false;
+            
+            // 检查串口是否打开
+            if (!App.getInstance().isUsbConnected()) {
+                // 串口未打开，尝试自动选择设备并连接
+                if (App.getInstance().autoConnectUsbDevice()) {
+                    // 连接成功，发送数据
+                    success = App.getInstance().sendUsbData(value);
+                } else {
+                    // 连接失败
+                    success = false;
+                }
             } else {
-                App.getInstance().getSerialPortHelper().open();
+                // 串口已打开，直接发送数据
+                success = App.getInstance().sendUsbData(value);
+            }
+            
+            if (response != null) {
+                // 模拟蓝牙写入响应
+                if (success) {
+                    response.onResponse(0); // 成功
+                } else {
+                    response.onResponse(-1); // 失败
+                }
             }
         } else {
             App.getInstance().getBluetoothClient().write(mac, service, character, value, response);
@@ -188,7 +209,7 @@ public class BluetoothServiceImpl implements BluetoothService, BleWriteResponse 
         startMeasureRequest.setTimestamp((int) (System.currentTimeMillis() / 1000));
         try {
             Log.d("yzj", "startMeasure" + index);
-            write(App.getInstance().getConnectMacAddress(), UUIDUtils.makeUUID(0xFFE0), UUIDUtils.makeUUID(0xFFE1), BluetoothDataUtil.encode(startMeasureRequest), this);
+            write(App.getInstance().getConnectMacAddress(), UUIDUtils.makeUuidFromInt(0xFFE0), UUIDUtils.makeUuidFromInt(0xFFE1), BluetoothDataUtil.encode(startMeasureRequest), this);
 
             if (!retry) {
                 expectResponseCode = 0xA5;
@@ -245,7 +266,7 @@ public class BluetoothServiceImpl implements BluetoothService, BleWriteResponse 
 
 
         try {
-            write(App.getInstance().getConnectMacAddress(), UUIDUtils.makeUUID(0xFFE0), UUIDUtils.makeUUID(0xFFE1), BluetoothDataUtil.encode(startCorrectRequest), this);
+            write(App.getInstance().getConnectMacAddress(), UUIDUtils.makeUuidFromInt(0xFFE0), UUIDUtils.makeUuidFromInt(0xFFE1), BluetoothDataUtil.encode(startCorrectRequest), this);
 
             if (!retry) {
                 expectResponseCode = 0xA5;
@@ -324,7 +345,7 @@ public class BluetoothServiceImpl implements BluetoothService, BleWriteResponse 
         try {
             Log.d("yzj", "startCorrect" + pointCount);
 
-            write(App.getInstance().getConnectMacAddress(), UUIDUtils.makeUUID(0xFFE0), UUIDUtils.makeUUID(0xFFE1), BluetoothDataUtil.encode(startCorrectRequest), this);
+            write(App.getInstance().getConnectMacAddress(), UUIDUtils.makeUuidFromInt(0xFFE0), UUIDUtils.makeUuidFromInt(0xFFE1), BluetoothDataUtil.encode(startCorrectRequest), this);
 
             if (!retry) {
                 expectResponseCode = 0xA5;
@@ -377,7 +398,7 @@ public class BluetoothServiceImpl implements BluetoothService, BleWriteResponse 
         request.setIndex((byte) index);
 
         try {
-            write(App.getInstance().getConnectMacAddress(), UUIDUtils.makeUUID(0xFFE0), UUIDUtils.makeUUID(0xFFE1), BluetoothDataUtil.encode(request), this);
+            write(App.getInstance().getConnectMacAddress(), UUIDUtils.makeUuidFromInt(0xFFE0), UUIDUtils.makeUuidFromInt(0xFFE1), BluetoothDataUtil.encode(request), this);
         } catch (IllegalAccessException | RkFieldException | FieldConvertException e) {
             e.printStackTrace();
         }
@@ -426,7 +447,7 @@ public class BluetoothServiceImpl implements BluetoothService, BleWriteResponse 
         }
 
         try {
-            write(App.getInstance().getConnectMacAddress(), UUIDUtils.makeUUID(0xFFE0), UUIDUtils.makeUUID(0xFFE1), BluetoothDataUtil.encode(request), this);
+            write(App.getInstance().getConnectMacAddress(), UUIDUtils.makeUuidFromInt(0xFFE0), UUIDUtils.makeUuidFromInt(0xFFE1), BluetoothDataUtil.encode(request), this);
         } catch (IllegalAccessException | RkFieldException | FieldConvertException e) {
             e.printStackTrace();
         }
@@ -443,7 +464,7 @@ public class BluetoothServiceImpl implements BluetoothService, BleWriteResponse 
         recordDataRequest.setReserved(0);
         recordDataRequest.setTime(ByteConvert.uintToBytes(time));
         try {
-            write(App.getInstance().getConnectMacAddress(), UUIDUtils.makeUUID(0xFFE0), UUIDUtils.makeUUID(0xFFE1), BluetoothDataUtil.encode(recordDataRequest), this);
+            write(App.getInstance().getConnectMacAddress(), UUIDUtils.makeUuidFromInt(0xFFE0), UUIDUtils.makeUuidFromInt(0xFFE1), BluetoothDataUtil.encode(recordDataRequest), this);
 
         } catch (IllegalAccessException | RkFieldException | FieldConvertException e) {
             e.printStackTrace();
@@ -482,7 +503,7 @@ public class BluetoothServiceImpl implements BluetoothService, BleWriteResponse 
                 break;
         }
         try {
-            write(App.getInstance().getConnectMacAddress(), UUIDUtils.makeUUID(0xFFE0), UUIDUtils.makeUUID(0xFFE1), BluetoothDataUtil.encode(recordDataRequest), this);
+            write(App.getInstance().getConnectMacAddress(), UUIDUtils.makeUuidFromInt(0xFFE0), UUIDUtils.makeUuidFromInt(0xFFE1), BluetoothDataUtil.encode(recordDataRequest), this);
 
         } catch (IllegalAccessException | RkFieldException | FieldConvertException e) {
             e.printStackTrace();
@@ -500,7 +521,7 @@ public class BluetoothServiceImpl implements BluetoothService, BleWriteResponse 
         recordDataRequest.setReserved(0);
         recordDataRequest.setTime(ByteConvert.uintToBytes(time));
         try {
-            write(App.getInstance().getConnectMacAddress(), UUIDUtils.makeUUID(0xFFE0), UUIDUtils.makeUUID(0xFFE1), BluetoothDataUtil.encode(recordDataRequest), this);
+            write(App.getInstance().getConnectMacAddress(), UUIDUtils.makeUuidFromInt(0xFFE0), UUIDUtils.makeUuidFromInt(0xFFE1), BluetoothDataUtil.encode(recordDataRequest), this);
 
         } catch (IllegalAccessException | RkFieldException | FieldConvertException e) {
             e.printStackTrace();
@@ -545,7 +566,7 @@ public class BluetoothServiceImpl implements BluetoothService, BleWriteResponse 
 
         recordDataRequest.setReserved(0x00);
         try {
-            write(App.getInstance().getConnectMacAddress(), UUIDUtils.makeUUID(0xFFE0), UUIDUtils.makeUUID(0xFFE1), BluetoothDataUtil.encode(recordDataRequest), this);
+            write(App.getInstance().getConnectMacAddress(), UUIDUtils.makeUuidFromInt(0xFFE0), UUIDUtils.makeUuidFromInt(0xFFE1), BluetoothDataUtil.encode(recordDataRequest), this);
 
         } catch (IllegalAccessException | RkFieldException | FieldConvertException e) {
             e.printStackTrace();
@@ -612,7 +633,7 @@ public class BluetoothServiceImpl implements BluetoothService, BleWriteResponse 
                 break;
         }
         try {
-            write(App.getInstance().getConnectMacAddress(), UUIDUtils.makeUUID(0xFFE0), UUIDUtils.makeUUID(0xFFE1), BluetoothDataUtil.encode(recordDataRequest), this);
+            write(App.getInstance().getConnectMacAddress(), UUIDUtils.makeUuidFromInt(0xFFE0), UUIDUtils.makeUuidFromInt(0xFFE1), BluetoothDataUtil.encode(recordDataRequest), this);
 
         } catch (IllegalAccessException | RkFieldException | FieldConvertException e) {
             e.printStackTrace();
@@ -630,7 +651,7 @@ public class BluetoothServiceImpl implements BluetoothService, BleWriteResponse 
         deviceInfoRequest.setReserved(0);
 
         try {
-            write(App.getInstance().getConnectMacAddress(), UUIDUtils.makeUUID(0xFFE0), UUIDUtils.makeUUID(0xFFE1), BluetoothDataUtil.encode(deviceInfoRequest), this);
+            write(App.getInstance().getConnectMacAddress(), UUIDUtils.makeUuidFromInt(0xFFE0), UUIDUtils.makeUuidFromInt(0xFFE1), BluetoothDataUtil.encode(deviceInfoRequest), this);
 
             if (!retry) {
                 expectResponseCode = 0xA1;
@@ -722,7 +743,7 @@ public class BluetoothServiceImpl implements BluetoothService, BleWriteResponse 
         deviceInfoRequest.setName(name);
 
         try {
-            write(App.getInstance().getConnectMacAddress(), UUIDUtils.makeUUID(0xFFE0), UUIDUtils.makeUUID(0xFFE1), BluetoothDataUtil.encode(deviceInfoRequest), this);
+            write(App.getInstance().getConnectMacAddress(), UUIDUtils.makeUuidFromInt(0xFFE0), UUIDUtils.makeUuidFromInt(0xFFE1), BluetoothDataUtil.encode(deviceInfoRequest), this);
             if (!retry) {
                 expectResponseCode = 0xA1;
                 currentRetryCount = 0;
@@ -764,7 +785,7 @@ public class BluetoothServiceImpl implements BluetoothService, BleWriteResponse 
         setTimeRequest.setTime(time);
 
         try {
-            write(App.getInstance().getConnectMacAddress(), UUIDUtils.makeUUID(0xFFE0), UUIDUtils.makeUUID(0xFFE1), BluetoothDataUtil.encode(setTimeRequest), this);
+            write(App.getInstance().getConnectMacAddress(), UUIDUtils.makeUuidFromInt(0xFFE0), UUIDUtils.makeUuidFromInt(0xFFE1), BluetoothDataUtil.encode(setTimeRequest), this);
 
             if (!retry) {
                 expectResponseCode = 0xA2;
@@ -808,7 +829,7 @@ public class BluetoothServiceImpl implements BluetoothService, BleWriteResponse 
 
         try {
 
-            write(App.getInstance().getConnectMacAddress(), UUIDUtils.makeUUID(0xFFE0), UUIDUtils.makeUUID(0xFFE1), BluetoothDataUtil.encode(setTimeRequest), this);
+            write(App.getInstance().getConnectMacAddress(), UUIDUtils.makeUuidFromInt(0xFFE0), UUIDUtils.makeUuidFromInt(0xFFE1), BluetoothDataUtil.encode(setTimeRequest), this);
 
             if (!retry) {
                 expectResponseCode = 0xA2;
@@ -850,7 +871,7 @@ public class BluetoothServiceImpl implements BluetoothService, BleWriteResponse 
         setTimeRequest.setTime(time);
 
         try {
-            write(App.getInstance().getConnectMacAddress(), UUIDUtils.makeUUID(0xFFE0), UUIDUtils.makeUUID(0xFFE1), BluetoothDataUtil.encode(setTimeRequest), this);
+            write(App.getInstance().getConnectMacAddress(), UUIDUtils.makeUuidFromInt(0xFFE0), UUIDUtils.makeUuidFromInt(0xFFE1), BluetoothDataUtil.encode(setTimeRequest), this);
         } catch (IllegalAccessException | RkFieldException | FieldConvertException e) {
             e.printStackTrace();
         }
@@ -882,7 +903,7 @@ public class BluetoothServiceImpl implements BluetoothService, BleWriteResponse 
         setMeasureParameRequest.setO(measureParame.getCdsl());
 
         try {
-            write(App.getInstance().getConnectMacAddress(), UUIDUtils.makeUUID(0xFFE0), UUIDUtils.makeUUID(0xFFE1), BluetoothDataUtil.encode(setMeasureParameRequest), this);
+            write(App.getInstance().getConnectMacAddress(), UUIDUtils.makeUuidFromInt(0xFFE0), UUIDUtils.makeUuidFromInt(0xFFE1), BluetoothDataUtil.encode(setMeasureParameRequest), this);
 
             if (!retry) {
                 expectResponseCode = 0xA2;
@@ -936,7 +957,7 @@ public class BluetoothServiceImpl implements BluetoothService, BleWriteResponse 
         setCorrectParameRequest.setJ(measureParame.getJ());
 
         try {
-            write(App.getInstance().getConnectMacAddress(), UUIDUtils.makeUUID(0xFFE0), UUIDUtils.makeUUID(0xFFE1), BluetoothDataUtil.encode(setCorrectParameRequest), this);
+            write(App.getInstance().getConnectMacAddress(), UUIDUtils.makeUuidFromInt(0xFFE0), UUIDUtils.makeUuidFromInt(0xFFE1), BluetoothDataUtil.encode(setCorrectParameRequest), this);
 
             if (!retry) {
                 expectResponseCode = 0xA2;
@@ -993,7 +1014,7 @@ public class BluetoothServiceImpl implements BluetoothService, BleWriteResponse 
         setMeasureParameRequest.setO(measureParame.getO());
 
         try {
-            write(App.getInstance().getConnectMacAddress(), UUIDUtils.makeUUID(0xFFE0), UUIDUtils.makeUUID(0xFFE1), BluetoothDataUtil.encode(setMeasureParameRequest), this);
+            write(App.getInstance().getConnectMacAddress(), UUIDUtils.makeUuidFromInt(0xFFE0), UUIDUtils.makeUuidFromInt(0xFFE1), BluetoothDataUtil.encode(setMeasureParameRequest), this);
         } catch (IllegalAccessException | RkFieldException | FieldConvertException e) {
             e.printStackTrace();
         }
@@ -1009,7 +1030,7 @@ public class BluetoothServiceImpl implements BluetoothService, BleWriteResponse 
         queryParameRequest.setReserved(0);
 
         try {
-            write(App.getInstance().getConnectMacAddress(), UUIDUtils.makeUUID(0xFFE0), UUIDUtils.makeUUID(0xFFE1), BluetoothDataUtil.encode(queryParameRequest), this);
+            write(App.getInstance().getConnectMacAddress(), UUIDUtils.makeUuidFromInt(0xFFE0), UUIDUtils.makeUuidFromInt(0xFFE1), BluetoothDataUtil.encode(queryParameRequest), this);
         } catch (IllegalAccessException | RkFieldException | FieldConvertException e) {
             e.printStackTrace();
         }
@@ -1026,7 +1047,7 @@ public class BluetoothServiceImpl implements BluetoothService, BleWriteResponse 
         queryParameRequest.setType(type);
         queryParameRequest.setIndex(index);
         try {
-            write(App.getInstance().getConnectMacAddress(), UUIDUtils.makeUUID(0xFFE0), UUIDUtils.makeUUID(0xFFE1), BluetoothDataUtil.encode(queryParameRequest), this);
+            write(App.getInstance().getConnectMacAddress(), UUIDUtils.makeUuidFromInt(0xFFE0), UUIDUtils.makeUuidFromInt(0xFFE1), BluetoothDataUtil.encode(queryParameRequest), this);
         } catch (IllegalAccessException | RkFieldException | FieldConvertException e) {
             e.printStackTrace();
         }
@@ -1043,7 +1064,7 @@ public class BluetoothServiceImpl implements BluetoothService, BleWriteResponse 
         queryParameRequest.setType(type);
         queryParameRequest.setIndex(index);
         try {
-            write(App.getInstance().getConnectMacAddress(), UUIDUtils.makeUUID(0xFFE0), UUIDUtils.makeUUID(0xFFE1), BluetoothDataUtil.encode(queryParameRequest), this);
+            write(App.getInstance().getConnectMacAddress(), UUIDUtils.makeUuidFromInt(0xFFE0), UUIDUtils.makeUuidFromInt(0xFFE1), BluetoothDataUtil.encode(queryParameRequest), this);
         } catch (IllegalAccessException | RkFieldException | FieldConvertException e) {
             e.printStackTrace();
         }
@@ -1061,7 +1082,7 @@ public class BluetoothServiceImpl implements BluetoothService, BleWriteResponse 
         queryParameRequest.setIndex(index);
 
         try {
-            write(App.getInstance().getConnectMacAddress(), UUIDUtils.makeUUID(0xFFE0), UUIDUtils.makeUUID(0xFFE1), BluetoothDataUtil.encode(queryParameRequest), this);
+            write(App.getInstance().getConnectMacAddress(), UUIDUtils.makeUuidFromInt(0xFFE0), UUIDUtils.makeUuidFromInt(0xFFE1), BluetoothDataUtil.encode(queryParameRequest), this);
         } catch (IllegalAccessException | RkFieldException | FieldConvertException e) {
             e.printStackTrace();
         }
@@ -1076,7 +1097,7 @@ public class BluetoothServiceImpl implements BluetoothService, BleWriteResponse 
         timingSetRequest.setReserved(0);
         timingSetRequest.setTimestamp((int) (System.currentTimeMillis() / 1000));
         try {
-            write(App.getInstance().getConnectMacAddress(), UUIDUtils.makeUUID(0xFFE0), UUIDUtils.makeUUID(0xFFE1), BluetoothDataUtil.encode(timingSetRequest), this);
+            write(App.getInstance().getConnectMacAddress(), UUIDUtils.makeUuidFromInt(0xFFE0), UUIDUtils.makeUuidFromInt(0xFFE1), BluetoothDataUtil.encode(timingSetRequest), this);
 
             if (!retry) {
                 expectResponseCode = 0xA2;
@@ -1119,7 +1140,7 @@ public class BluetoothServiceImpl implements BluetoothService, BleWriteResponse 
         timingSetRequest.setIndex(index);
         timingSetRequest.setName(name);
         try {
-            write(App.getInstance().getConnectMacAddress(), UUIDUtils.makeUUID(0xFFE0), UUIDUtils.makeUUID(0xFFE1), BluetoothDataUtil.encode(timingSetRequest), this);
+            write(App.getInstance().getConnectMacAddress(), UUIDUtils.makeUuidFromInt(0xFFE0), UUIDUtils.makeUuidFromInt(0xFFE1), BluetoothDataUtil.encode(timingSetRequest), this);
 
             if (!retry) {
                 expectResponseCode = 0xA2;
@@ -1161,7 +1182,7 @@ public class BluetoothServiceImpl implements BluetoothService, BleWriteResponse 
         queryParameRequest.setReserved(0);
 
         try {
-            write(App.getInstance().getConnectMacAddress(), UUIDUtils.makeUUID(0xFFE0), UUIDUtils.makeUUID(0xFFE1), BluetoothDataUtil.encode(queryParameRequest), this);
+            write(App.getInstance().getConnectMacAddress(), UUIDUtils.makeUuidFromInt(0xFFE0), UUIDUtils.makeUuidFromInt(0xFFE1), BluetoothDataUtil.encode(queryParameRequest), this);
         } catch (IllegalAccessException | RkFieldException | FieldConvertException e) {
             e.printStackTrace();
         }
@@ -1178,7 +1199,7 @@ public class BluetoothServiceImpl implements BluetoothService, BleWriteResponse 
         setRateRequest.setRate(rate);
 
         try {
-            write(App.getInstance().getConnectMacAddress(), UUIDUtils.makeUUID(0xFFE0), UUIDUtils.makeUUID(0xFFE1), BluetoothDataUtil.encode(setRateRequest), this);
+            write(App.getInstance().getConnectMacAddress(), UUIDUtils.makeUuidFromInt(0xFFE0), UUIDUtils.makeUuidFromInt(0xFFE1), BluetoothDataUtil.encode(setRateRequest), this);
 
             if (!retry) {
                 expectResponseCode = 0xA2;
@@ -1229,7 +1250,7 @@ public class BluetoothServiceImpl implements BluetoothService, BleWriteResponse 
         recordDataRequest.setPointIndex(pointIndex);
         recordDataRequest.setStatus(status);
         try {
-            write(App.getInstance().getConnectMacAddress(), UUIDUtils.makeUUID(0xFFE0), UUIDUtils.makeUUID(0xFFE1), BluetoothDataUtil.encode(recordDataRequest), this);
+            write(App.getInstance().getConnectMacAddress(), UUIDUtils.makeUuidFromInt(0xFFE0), UUIDUtils.makeUuidFromInt(0xFFE1), BluetoothDataUtil.encode(recordDataRequest), this);
 
         } catch (IllegalAccessException | RkFieldException | FieldConvertException e) {
             e.printStackTrace();
@@ -1246,7 +1267,7 @@ public class BluetoothServiceImpl implements BluetoothService, BleWriteResponse 
         queryParameRequest.setReserved(0);
 
         try {
-            write(App.getInstance().getConnectMacAddress(), UUIDUtils.makeUUID(0xFFE0), UUIDUtils.makeUUID(0xFFE1), BluetoothDataUtil.encode(queryParameRequest), this);
+            write(App.getInstance().getConnectMacAddress(), UUIDUtils.makeUuidFromInt(0xFFE0), UUIDUtils.makeUuidFromInt(0xFFE1), BluetoothDataUtil.encode(queryParameRequest), this);
         } catch (IllegalAccessException | RkFieldException | FieldConvertException e) {
             e.printStackTrace();
         }
@@ -1262,7 +1283,7 @@ public class BluetoothServiceImpl implements BluetoothService, BleWriteResponse 
         queryParameRequest.setReserved(0);
 
         try {
-            write(App.getInstance().getConnectMacAddress(), UUIDUtils.makeUUID(0xFFE0), UUIDUtils.makeUUID(0xFFE1), BluetoothDataUtil.encode(queryParameRequest), this);
+            write(App.getInstance().getConnectMacAddress(), UUIDUtils.makeUuidFromInt(0xFFE0), UUIDUtils.makeUuidFromInt(0xFFE1), BluetoothDataUtil.encode(queryParameRequest), this);
         } catch (IllegalAccessException | RkFieldException | FieldConvertException e) {
             e.printStackTrace();
         }
@@ -1278,7 +1299,7 @@ public class BluetoothServiceImpl implements BluetoothService, BleWriteResponse 
         queryParameRequest.setReserved(0);
 
         try {
-            write(App.getInstance().getConnectMacAddress(), UUIDUtils.makeUUID(0xFFE0), UUIDUtils.makeUUID(0xFFE1), BluetoothDataUtil.encode(queryParameRequest), this);
+            write(App.getInstance().getConnectMacAddress(), UUIDUtils.makeUuidFromInt(0xFFE0), UUIDUtils.makeUuidFromInt(0xFFE1), BluetoothDataUtil.encode(queryParameRequest), this);
 
             if (!retry) {
                 expectResponseCode = 0xA2;
