@@ -1,23 +1,23 @@
 package com.drt.moisture;
 
+import static com.inuker.bluetooth.library.Constants.REQUEST_SUCCESS;
+import static com.inuker.bluetooth.library.Constants.STATUS_CONNECTED;
+import static com.inuker.bluetooth.library.Constants.STATUS_DEVICE_CONNECTING;
+import static com.inuker.bluetooth.library.Constants.STATUS_DISCONNECTED;
+
 import android.Manifest;
 import android.app.Activity;
-import android.content.DialogInterface;
+import android.content.BroadcastReceiver;
+import android.content.Context;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.content.pm.ActivityInfo;
 import android.content.pm.PackageManager;
 import android.graphics.Color;
+import android.hardware.usb.UsbDevice;
+import android.hardware.usb.UsbManager;
 import android.os.Bundle;
 import android.os.Handler;
-
-import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
-import androidx.core.app.ActivityCompat;
-import androidx.core.content.ContextCompat;
-import androidx.appcompat.app.AlertDialog;
-import androidx.appcompat.widget.Toolbar;
-
-import android.text.TextUtils;
 import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
@@ -27,8 +27,16 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+import androidx.appcompat.app.AlertDialog;
+import androidx.appcompat.widget.Toolbar;
+import androidx.core.app.ActivityCompat;
+import androidx.core.content.ContextCompat;
+
 import com.drt.moisture.data.AppConfig;
 import com.drt.moisture.data.BleEvent;
+import com.drt.moisture.data.UsbConnectEvent;
 import com.drt.moisture.data.source.bluetooth.SppDataCallback;
 import com.drt.moisture.data.source.bluetooth.response.CdslSetResponse;
 import com.drt.moisture.data.source.bluetooth.response.SocResponse;
@@ -55,20 +63,12 @@ import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
 
-import java.io.File;
-import java.util.Arrays;
+import java.util.ArrayList;
 import java.util.UUID;
 
 import butterknife.BindView;
 import butterknife.OnClick;
-import me.f1reking.serialportlib.listener.IOpenSerialPortListener;
-import me.f1reking.serialportlib.listener.ISerialPortDataListener;
-import me.f1reking.serialportlib.listener.Status;
-
-import static com.inuker.bluetooth.library.Constants.REQUEST_SUCCESS;
-import static com.inuker.bluetooth.library.Constants.STATUS_CONNECTED;
-import static com.inuker.bluetooth.library.Constants.STATUS_DEVICE_CONNECTING;
-import static com.inuker.bluetooth.library.Constants.STATUS_DISCONNECTED;
+import cn.wch.uartlib.WCHUARTManager;
 
 /**
  * Created by Administrator on 2016/9/5 0005.
@@ -98,6 +98,8 @@ public abstract class BluetoothBaseActivity<T extends BasePresenter> extends Bas
     ImageButton btnBluetooth;
 
     private long lastConnectTime;
+    
+    private BroadcastReceiver usbPermissionReceiver;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -115,8 +117,8 @@ public abstract class BluetoothBaseActivity<T extends BasePresenter> extends Bas
 
 
         if (App.getInstance().connectedModel == 0) {
-            App.getInstance().getSerialPortHelper().setIOpenSerialPortListener(iOpenSerialPortListener);
-            App.getInstance().getSerialPortHelper().setISerialPortDataListener(iSerialPortDataListener);
+            // USB转串口模式 - 仅设置权限监听，数据回调由App层统一管理
+            setupUsbPermissionReceiver();
         } else {
             App.getInstance().getBluetoothClient().registerBluetoothStateListener(mBluetoothStateListener);
         }
@@ -126,12 +128,11 @@ public abstract class BluetoothBaseActivity<T extends BasePresenter> extends Bas
     protected void onResume() {
         super.onResume();
         if (App.getInstance().connectedModel == 0) {
-            if (App.getInstance().getSerialPortHelper().isOpen()) {
+            // USB转串口模式 - 检查连接状态
+            if (App.getInstance().isUsbConnected()) {
                 btnBluetooth.setImageResource(R.mipmap.icon_usb_connected);
-                App.getInstance().getSerialPortHelper().setIOpenSerialPortListener(iOpenSerialPortListener);
-                App.getInstance().getSerialPortHelper().setISerialPortDataListener(iSerialPortDataListener);
                 setBleConnectStatus(Constants.STATUS_CONNECTED);
-                secondTitle.setText(getString(R.string.content_battery_1));
+                secondTitle.setText("USB已连接");
                 App.getInstance().getBluetoothService().queryClsl(cdslSetResponseSppDataCallback);
             } else {
                 btnBluetooth.setImageResource(R.mipmap.icon_usb_disconnected);
@@ -283,17 +284,148 @@ public abstract class BluetoothBaseActivity<T extends BasePresenter> extends Bas
         return false;
     }
 
+    private void setupUsbPermissionReceiver() {
+        usbPermissionReceiver = new BroadcastReceiver() {
+            @Override
+            public void onReceive(Context context, Intent intent) {
+                String action = intent.getAction();
+                if (App.ACTION_USB_PERMISSION.equals(action)) {
+                    synchronized (this) {
+                        UsbDevice device = intent.getParcelableExtra(UsbManager.EXTRA_DEVICE);
+                        if (intent.getBooleanExtra(UsbManager.EXTRA_PERMISSION_GRANTED, false)) {
+                            if (device != null) {
+                                MyLog.i("USB_PERMISSION", "USB权限已获得，开始连接设备");
+                                // 权限获得后尝试连接
+                                connectToUsbDeviceWithPermission(device);
+                            }
+                        } else {
+                            MyLog.e("USB_PERMISSION", "USB权限被拒绝");
+                            Toast.makeText(BluetoothBaseActivity.this, "USB权限被拒绝，无法连接设备", Toast.LENGTH_SHORT).show();
+                        }
+                    }
+                }
+            }
+        };
+        
+        IntentFilter filter = new IntentFilter(App.ACTION_USB_PERMISSION);
+        if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.TIRAMISU) {
+            registerReceiver(usbPermissionReceiver, filter, Context.RECEIVER_NOT_EXPORTED);
+        } else {
+            registerReceiver(usbPermissionReceiver, filter);
+        }
+    }
+
+    private void showUsbDeviceSelection() {
+        try {
+            // 获取可用的USB设备
+            ArrayList<UsbDevice> usbDeviceList = WCHUARTManager.getInstance().enumDevice();
+            if (usbDeviceList == null || usbDeviceList.isEmpty()) {
+                Toast.makeText(this, "未找到USB转串口设备", Toast.LENGTH_SHORT).show();
+                return;
+            }
+
+            // 自动选择第一个可用设备进行连接
+            UsbDevice firstDevice = usbDeviceList.get(0);
+            String deviceName = firstDevice.getProductName();
+            if (deviceName == null || deviceName.isEmpty()) {
+                deviceName = "USB设备";
+            }
+            String deviceInfo = deviceName + " (VID:" + String.format("%04X", firstDevice.getVendorId()) + 
+                               " PID:" + String.format("%04X", firstDevice.getProductId()) + ")";
+            
+            Log.d("USB连接", "自动选择设备: " + deviceInfo);
+            Toast.makeText(this, "连接设备: " + deviceName, Toast.LENGTH_SHORT).show();
+            
+            connectToUsbDevice(firstDevice);
+        } catch (Exception e) {
+            e.printStackTrace();
+            Toast.makeText(this, "获取USB设备失败: " + e.getMessage(), Toast.LENGTH_SHORT).show();
+        }
+    }
+
+    private void connectToUsbDevice(UsbDevice device) {
+        // 检查USB权限
+        if (!App.getInstance().hasUsbPermission(device)) {
+            MyLog.d("USB_CONNECT", "没有USB权限，申请权限");
+            App.getInstance().requestUsbPermission(device, this);
+            return;
+        }
+        
+        // 有权限，直接连接
+        connectToUsbDeviceWithPermission(device);
+    }
+    
+    private void connectToUsbDeviceWithPermission(UsbDevice device) {
+        try {
+            // 先设置设备引用，再尝试打开
+            App.getInstance().setCurrentUsbDevice(device);
+            
+            // 尝试打开USB设备
+            boolean success = App.getInstance().openUsbDevice();
+            if (success) {
+                // 连接成功，数据回调已在App层自动设置，Activity无需重复设置
+                
+                btnBluetooth.setImageResource(R.mipmap.icon_usb_connected);
+                setBleConnectStatus(STATUS_CONNECTED);
+                secondTitle.setText("USB已连接");
+                Toast.makeText(this, "USB设备连接成功", Toast.LENGTH_SHORT).show();
+                
+                // 连接成功后查询设备状态
+                App.getInstance().getBluetoothService().queryClsl(cdslSetResponseSppDataCallback);
+            } else {
+                // 连接失败，清理设备引用
+                App.getInstance().setCurrentUsbDevice(null);
+                Toast.makeText(this, "USB设备连接失败", Toast.LENGTH_SHORT).show();
+            }
+        } catch (Exception e) {
+            // 发生异常，清理资源
+            App.getInstance().setCurrentUsbDevice(null);
+            MyLog.e("USB_CONNECT", "连接错误: " + e.getMessage());
+            e.printStackTrace();
+            Toast.makeText(this, "连接错误: " + e.getMessage(), Toast.LENGTH_SHORT).show();
+        }
+    }
+
+    private void connectBluetooth() {
+        if (!App.getInstance().getBluetoothClient().isBluetoothOpened()) {
+            App.getInstance().getBluetoothClient().openBluetooth();
+        } else {
+            if (getBluetoothStatus() == Constants.STATUS_DEVICE_CONNECTED) {
+                AlertDialog.Builder builder = new AlertDialog.Builder(this).setTitle(getString(R.string.content_affirm_title))
+                        .setMessage("当前蓝牙已经连接，是否确认关闭当前连接选择新的设备？")
+                        .setPositiveButton(getString(R.string.content_affirm_ok), (dialogInterface, i) -> {
+                            App.getInstance().getBluetoothClient().disconnect(App.getInstance().getConnectMacAddress());
+                            Intent intent = new Intent(getApplicationContext(), BleScanActivity.class);
+                            startActivityForResult(intent, REQUEST_CONNECT_DEVICE);
+                        })
+                        .setNegativeButton(getString(R.string.content_affirm_cancel), (dialogInterface, i) -> {
+                        });
+                builder.show();
+            } else {
+                if (ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION)
+                        != PackageManager.PERMISSION_GRANTED) {
+                    ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.ACCESS_FINE_LOCATION}, 200);
+                } else {
+                    Intent intent = new Intent(getApplicationContext(), BleScanActivity.class);
+                    startActivityForResult(intent, REQUEST_CONNECT_DEVICE);
+                }
+            }
+        }
+    }
+
+
     @OnClick(R.id.title_rightImage)
     public void connect() {
-
         if (App.getInstance().connectedModel == 0) {
-            if (!App.getInstance().getSerialPortHelper().isOpen()) {
-                App.getInstance().getSerialPortHelper().open();
+            // USB转串口模式
+            if (!App.getInstance().isUsbConnected()) {
+                // 显示USB设备选择
+                showUsbDeviceSelection();
             } else {
                 AlertDialog.Builder builder = new AlertDialog.Builder(this).setTitle(getString(R.string.content_affirm_title))
-                        .setMessage("当前串口已经打开，是否确认关闭当前串口？")
+                        .setMessage("当前USB设备已经连接，是否确认断开连接？")
                         .setPositiveButton(getString(R.string.content_affirm_ok), (dialogInterface, i) -> {
-                            App.getInstance().getSerialPortHelper().close();
+                            App.getInstance().closeUsbDevice();
                             btnBluetooth.setImageResource(R.mipmap.icon_usb_disconnected);
                             setBleConnectStatus(STATUS_DISCONNECTED);
                             secondTitle.setText(R.string.content_not_connect_1);
@@ -303,50 +435,27 @@ public abstract class BluetoothBaseActivity<T extends BasePresenter> extends Bas
                 builder.show();
             }
         } else {
-            if (!App.getInstance().getBluetoothClient().isBluetoothOpened()) {
-                App.getInstance().getBluetoothClient().openBluetooth();
-            } else {
-
-                if (getBluetoothStatus() == Constants.STATUS_DEVICE_CONNECTED) {
-                    AlertDialog.Builder builder = new AlertDialog.Builder(this).setTitle(getString(R.string.content_affirm_title))
-                            .setMessage("当前蓝牙已经连接，是否确认关闭当前连接选择新的设备？")
-                            .setPositiveButton(getString(R.string.content_affirm_ok), new DialogInterface.OnClickListener() {
-                                @Override
-                                public void onClick(DialogInterface dialogInterface, int i) {
-                                    App.getInstance().getBluetoothClient().disconnect(App.getInstance().getConnectMacAddress());
-                                    // Do something if bluetooth is already enable
-                                    Intent intent = new Intent(getApplicationContext(), BleScanActivity.class);
-                                    startActivityForResult(intent, REQUEST_CONNECT_DEVICE);
-                                }
-                            })
-                            .setNegativeButton(getString(R.string.content_affirm_cancel), new DialogInterface.OnClickListener() {
-                                @Override
-                                public void onClick(DialogInterface dialogInterface, int i) {
-
-                                }
-                            });
-                    builder.show();
-                } else {
-
-                    if (ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION)
-                            != PackageManager.PERMISSION_GRANTED) {//未开启定位权限
-                        //开启定位权限,200是标识码
-                        ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.ACCESS_FINE_LOCATION}, 200);
-                    } else {
-                        Intent intent = new Intent(getApplicationContext(), BleScanActivity.class);
-                        startActivityForResult(intent, REQUEST_CONNECT_DEVICE);
-                    }
-
-                }
-
-            }
+            // 蓝牙模式
+            connectBluetooth();
         }
     }
 
     @Override
     protected void onDestroy() {
-//        App.getInstance().getSerialPortHelper().setIOpenSerialPortListener(null);
-//        App.getInstance().getSerialPortHelper().setISerialPortDataListener(null);
+        // 清理USB相关资源
+        if (App.getInstance().connectedModel == 0) {
+            // 不在Activity中清理USB回调，由App层统一管理生命周期
+            // 只清理Activity特有的权限广播接收器
+            if (usbPermissionReceiver != null) {
+                try {
+                    unregisterReceiver(usbPermissionReceiver);
+                    MyLog.d("USB_PERMISSION", "USB权限广播接收器已注销");
+                } catch (Exception e) {
+                    MyLog.e("USB_PERMISSION", "注销广播接收器失败: " + e.getMessage());
+                }
+                usbPermissionReceiver = null;
+            }
+        }
 
         App.getInstance().getBluetoothSPP().setBluetoothStateListener(null);
         App.getInstance().getBluetoothSPP().setBluetoothConnectionListener(null);
@@ -388,6 +497,8 @@ public abstract class BluetoothBaseActivity<T extends BasePresenter> extends Bas
         if (requestCode == REQUEST_CONNECT_DEVICE) {
             if (resultCode == Activity.RESULT_OK) {
                 lastConnectTime = System.currentTimeMillis();
+                
+                // 蓝牙连接结果处理
                 SearchResult searchResult = data.getParcelableExtra("SearchResult");
                 App.getInstance().setConnectMacAddress(searchResult.getAddress());
 
@@ -415,36 +526,6 @@ public abstract class BluetoothBaseActivity<T extends BasePresenter> extends Bas
 
     };
 
-    private final IOpenSerialPortListener iOpenSerialPortListener = new IOpenSerialPortListener() {
-        @Override
-        public void onSuccess(final File device) {
-            runOnUiThread(() -> {
-                btnBluetooth.setImageResource(R.mipmap.icon_usb_connected);
-                Toast.makeText(getApplicationContext(), "串口打开成功", Toast.LENGTH_SHORT).show();
-                setBleConnectStatus(STATUS_CONNECTED);
-                secondTitle.setText(getString(R.string.content_battery_1));
-            });
-        }
-
-        @Override
-        public void onFail(final File device, final Status status) {
-            runOnUiThread(() -> {
-                switch (status) {
-                    case NO_READ_WRITE_PERMISSION:
-                        Toast.makeText(getApplicationContext(), device.getPath() + " :没有读写权限", Toast.LENGTH_SHORT).show();
-                        setBleConnectStatus(STATUS_DISCONNECTED);
-                        secondTitle.setText(getString(R.string.content_not_connect_1));
-                        break;
-                    case OPEN_FAIL:
-                    default:
-                        Toast.makeText(getApplicationContext(), device.getPath() + " :串口打开失败", Toast.LENGTH_SHORT).show();
-                        setBleConnectStatus(STATUS_DISCONNECTED);
-                        secondTitle.setText(getString(R.string.content_not_connect_1));
-                        break;
-                }
-            });
-        }
-    };
 
 
     private final BleConnectStatusListener mBleConnectStatusListener = new BleConnectStatusListener() {
@@ -500,27 +581,7 @@ public abstract class BluetoothBaseActivity<T extends BasePresenter> extends Bas
         }
     };
 
-    private static final ISerialPortDataListener iSerialPortDataListener = new ISerialPortDataListener() {
-        @Override
-        public void onDataReceived(byte[] value) {
-            if (value != null && value.length > 0) {
-                MyLog.i("SERIAL PORT RX", HexString.bytesToHex(value));
-            }
 
-            try {
-                App.getInstance().getBluetoothService().parse(value);
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
-        }
-
-        @Override
-        public void onDataSend(byte[] value) {
-            if (value != null && value.length > 0) {
-                MyLog.i("SERIAL PORT TX", HexString.bytesToHex(value));
-            }
-        }
-    };
 
     public abstract void setBleConnectStatus(int status);
 
@@ -559,6 +620,28 @@ public abstract class BluetoothBaseActivity<T extends BasePresenter> extends Bas
         if ((System.currentTimeMillis() - lastConnectTime) > 5 * 1000) {
             lastConnectTime = System.currentTimeMillis();
             searchDevice();
+        }
+    }
+    
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    public void onUsbConnectEvent(UsbConnectEvent usbConnectEvent) {
+        if (App.getInstance().connectedModel == 0) { // 仅在USB模式下处理
+            if (usbConnectEvent.isConnected()) {
+                // USB连接成功，更新界面状态
+                btnBluetooth.setImageResource(R.mipmap.icon_usb_connected);
+                setBleConnectStatus(Constants.STATUS_CONNECTED);
+                secondTitle.setText("USB已连接");
+                MyLog.d("USB_UI_UPDATE", "USB连接状态已更新到界面");
+                
+                // 查询设备状态
+                App.getInstance().getBluetoothService().queryClsl(cdslSetResponseSppDataCallback);
+            } else {
+                // USB断开连接，更新界面状态
+                btnBluetooth.setImageResource(R.mipmap.icon_usb_disconnected);
+                setBleConnectStatus(STATUS_DISCONNECTED);
+                secondTitle.setText(R.string.content_not_connect_1);
+                MyLog.d("USB_UI_UPDATE", "USB断开状态已更新到界面");
+            }
         }
     }
 

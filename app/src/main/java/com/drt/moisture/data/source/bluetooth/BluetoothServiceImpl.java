@@ -1,5 +1,7 @@
 package com.drt.moisture.data.source.bluetooth;
 
+import static com.inuker.bluetooth.library.Code.REQUEST_SUCCESS;
+
 import android.content.Context;
 import android.util.Log;
 
@@ -57,8 +59,6 @@ import java.util.Timer;
 import java.util.TimerTask;
 import java.util.UUID;
 
-import static com.inuker.bluetooth.library.Code.REQUEST_SUCCESS;
-
 public class BluetoothServiceImpl implements BluetoothService, BleWriteResponse {
 
     private static final String TAG = BluetoothServiceImpl.class.getSimpleName();
@@ -78,10 +78,31 @@ public class BluetoothServiceImpl implements BluetoothService, BleWriteResponse 
     private void write(String mac, UUID service, UUID character, byte[] value, BleWriteResponse response) {
 
         if (App.getInstance().connectedModel == 0) {
-            if (App.getInstance().getSerialPortHelper().isOpen()) {
-                App.getInstance().getSerialPortHelper().sendBytes(value);
+            // USB转串口模式
+            boolean success = false;
+            
+            // 检查串口是否打开
+            if (!App.getInstance().isUsbConnected()) {
+                // 串口未打开，尝试自动选择设备并连接
+                if (App.getInstance().autoConnectUsbDevice()) {
+                    // 连接成功，发送数据
+                    success = App.getInstance().sendUsbData(value);
+                } else {
+                    // 连接失败
+                    success = false;
+                }
             } else {
-                App.getInstance().getSerialPortHelper().open();
+                // 串口已打开，直接发送数据
+                success = App.getInstance().sendUsbData(value);
+            }
+            
+            if (response != null) {
+                // 模拟蓝牙写入响应
+                if (success) {
+                    response.onResponse(0); // 成功
+                } else {
+                    response.onResponse(-1); // 失败
+                }
             }
         } else {
             App.getInstance().getBluetoothClient().write(mac, service, character, value, response);

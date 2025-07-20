@@ -1,29 +1,33 @@
 package com.drt.moisture;
 
 import android.app.Application;
+import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.hardware.usb.UsbDevice;
+import android.hardware.usb.UsbManager;
 import android.os.PowerManager;
 import android.util.Log;
 
+import java.util.ArrayList;
+
 import com.drt.moisture.dashboard.DashboardActivity;
-import com.drt.moisture.dashboard.DashboardModel;
-import com.drt.moisture.data.AppConfig;
 import com.drt.moisture.data.BleEvent;
+import com.drt.moisture.data.UsbConnectEvent;
 import com.drt.moisture.data.source.BluetoothService;
 import com.drt.moisture.data.source.LocalDataService;
 import com.drt.moisture.data.source.bluetooth.BluetoothServiceImpl;
 import com.drt.moisture.data.source.bluetooth.SppDataCallback;
 import com.drt.moisture.data.source.bluetooth.response.TimingSetResponse;
-import com.drt.moisture.data.source.bluetooth.resquest.SendAutoStartMsg;
 import com.drt.moisture.data.source.bluetooth.resquest.SendUpdateAlarmMsg;
 import com.drt.moisture.data.source.local.LocalDataServiceImpl;
 import com.drt.moisture.measure.MeasureActivity;
-import com.drt.moisture.util.DateUtil;
+import com.drt.moisture.util.MyLog;
 import com.inuker.bluetooth.library.BluetoothClient;
 import com.inuker.bluetooth.library.Constants;
 import com.zhjian.bluetooth.spp.BluetoothSPP;
+import com.zhjian.bluetooth.spp.HexString;
 
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
@@ -35,11 +39,9 @@ import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
 
-import me.f1reking.serialportlib.SerialPortHelper;
-import me.f1reking.serialportlib.entity.DATAB;
-import me.f1reking.serialportlib.entity.FLOWCON;
-import me.f1reking.serialportlib.entity.PARITY;
-import me.f1reking.serialportlib.entity.STOPB;
+import cn.wch.uartlib.WCHUARTManager;
+import cn.wch.uartlib.callback.IDataCallback;
+
 
 
 public class App extends Application {
@@ -54,7 +56,19 @@ public class App extends Application {
 
     private BluetoothClient mClient;
 
-    private SerialPortHelper mSerialPortHelper;
+    private UsbDevice currentUsbDevice;
+    
+    private IDataCallback currentUsbDataCallback;
+    
+    private UsbManager usbManager;
+    
+    // USB连接状态锁，防止并发操作
+    private final Object usbConnectionLock = new Object();
+    
+    // 标识是否正在连接中，防止重复连接
+    private volatile boolean isConnecting = false;
+    
+    public static final String ACTION_USB_PERMISSION = "com.drt.moisture.USB_PERMISSION";
 
     private String connectMacAddress;
 
@@ -65,7 +79,7 @@ public class App extends Application {
     public volatile boolean pickDevice;
 
     /**
-     * 0: 串口
+     * 0: USB转串口 (原来的串口模式)
      * 1：蓝牙
      */
     public volatile int connectedModel;
@@ -93,17 +107,255 @@ public class App extends Application {
         return mClient;
     }
 
-    public SerialPortHelper getSerialPortHelper() {
-        if (mSerialPortHelper == null) {
-            mSerialPortHelper = new SerialPortHelper();
-            mSerialPortHelper.setPort("/dev/ttyS4");
-            mSerialPortHelper.setBaudRate(115200);
-            mSerialPortHelper.setStopBits(STOPB.getStopBit(STOPB.B1));
-            mSerialPortHelper.setDataBits(DATAB.getDataBit(DATAB.CS8));
-            mSerialPortHelper.setParity(PARITY.getParity(PARITY.NONE));
-            mSerialPortHelper.setFlowCon(FLOWCON.getFlowCon(FLOWCON.NONE));
+    public UsbDevice getCurrentUsbDevice() {
+        return currentUsbDevice;
+    }
+
+    public void setCurrentUsbDevice(UsbDevice usbDevice) {
+        synchronized (usbConnectionLock) {
+            this.currentUsbDevice = usbDevice;
         }
-        return mSerialPortHelper;
+    }
+
+    // USB转串口相关方法
+    public boolean isUsbConnected() {
+        synchronized (usbConnectionLock) {
+            return currentUsbDevice != null && WCHUARTManager.getInstance().isConnected(currentUsbDevice);
+        }
+    }
+
+    public boolean hasUsbPermission(UsbDevice device) {
+        return usbManager != null && usbManager.hasPermission(device);
+    }
+    
+    public void requestUsbPermission(UsbDevice device, android.content.Context context) {
+        if (usbManager != null && !usbManager.hasPermission(device)) {
+            PendingIntent permissionIntent = PendingIntent.getBroadcast(
+                context, 0, new Intent(ACTION_USB_PERMISSION), 
+                PendingIntent.FLAG_UPDATE_CURRENT | PendingIntent.FLAG_IMMUTABLE
+            );
+            usbManager.requestPermission(device, permissionIntent);
+            MyLog.d("USB_PERMISSION", "正在申请USB设备权限");
+        }
+    }
+    
+    public boolean autoConnectUsbDevice() {
+        synchronized (usbConnectionLock) {
+            // 防止重复连接
+            if (isConnecting) {
+                MyLog.w("USB_AUTO_CONNECT", "正在连接中，跳过重复连接请求");
+                return false;
+            }
+            
+            // 检查是否已连接
+            if (isUsbConnected()) {
+                MyLog.d("USB_AUTO_CONNECT", "设备已连接，无需重复连接");
+                return true;
+            }
+            
+            isConnecting = true;
+            try {
+                // 获取可用的USB设备列表
+                ArrayList<UsbDevice> usbDeviceList = WCHUARTManager.getInstance().enumDevice();
+                if (usbDeviceList == null || usbDeviceList.isEmpty()) {
+                    MyLog.e("USB_AUTO_CONNECT", "未找到可用的USB设备");
+                    return false;
+                }
+                
+                // 自动选择第一个设备
+                UsbDevice firstDevice = usbDeviceList.get(0);
+                String deviceName = firstDevice.getProductName();
+                if (deviceName == null || deviceName.isEmpty()) {
+                    deviceName = "USB设备";
+                }
+                String deviceInfo = deviceName + " (VID:" + String.format("%04X", firstDevice.getVendorId()) + 
+                                   " PID:" + String.format("%04X", firstDevice.getProductId()) + ")";
+                
+                MyLog.d("USB_AUTO_CONNECT", "自动选择设备: " + deviceInfo);
+                
+                // 设置当前设备并尝试连接
+                setCurrentUsbDevice(firstDevice);
+                boolean connected = openUsbDevice();
+                
+                if (connected) {
+                    // 连接成功后注册默认数据回调
+                    setupDefaultUsbDataCallback();
+                    // 发布USB连接成功事件，通知界面更新
+                    EventBus.getDefault().post(new UsbConnectEvent(true));
+                    MyLog.d("USB_AUTO_CONNECT", "已发布USB连接成功事件");
+                }
+                
+                return connected;
+                
+            } catch (Exception e) {
+                MyLog.e("USB_AUTO_CONNECT", "自动连接失败: " + e.getMessage());
+                e.printStackTrace();
+                return false;
+            } finally {
+                isConnecting = false;
+            }
+        }
+    }
+
+    public boolean openUsbDevice() {
+        if (currentUsbDevice == null) {
+            MyLog.e("USB_CONNECT", "设备引用为空，无法打开");
+            return false;
+        }
+        
+        // 检查权限
+        if (!hasUsbPermission(currentUsbDevice)) {
+            MyLog.e("USB_CONNECT", "没有USB设备权限，无法打开");
+            return false;
+        }
+        
+        // 检查是否已经连接
+        if (isUsbConnected()) {
+            MyLog.d("USB_CONNECT", "设备已经连接，无需重复打开");
+            return true;
+        }
+        
+        try {
+            MyLog.d("USB_CONNECT", "尝试打开USB设备: " + currentUsbDevice.getDeviceName());
+            boolean success = WCHUARTManager.getInstance().openDevice(currentUsbDevice);
+            if (success) {
+                MyLog.i("USB_CONNECT", "USB设备打开成功");
+                // 连接成功后立即设置数据回调
+                setupDefaultUsbDataCallback();
+            } else {
+                MyLog.e("USB_CONNECT", "USB设备打开失败");
+            }
+            return success;
+        } catch (Exception e) {
+            MyLog.e("USB_CONNECT", "打开USB设备异常: " + e.getMessage());
+            e.printStackTrace();
+            return false;
+        }
+    }
+
+    public void closeUsbDevice() {
+        synchronized (usbConnectionLock) {
+            if (currentUsbDevice != null) {
+                try {
+                    // 先取消数据回调
+                    unregisterUsbDataCallback();
+                    // 断开设备连接
+                    WCHUARTManager.getInstance().disconnect(currentUsbDevice);
+                    setCurrentUsbDevice(null);
+                    // 发布USB断开连接事件，通知界面更新
+                    EventBus.getDefault().post(new UsbConnectEvent(false));
+                    MyLog.d("USB_DISCONNECT", "已发布USB断开连接事件");
+                } catch (Exception e) {
+                    MyLog.e("USB_DISCONNECT", "断开连接异常: " + e.getMessage());
+                    e.printStackTrace();
+                }
+            }
+        }
+    }
+    
+    public void registerUsbDataCallback(IDataCallback callback) {
+        synchronized (usbConnectionLock) {
+            if (currentUsbDevice != null && callback != null) {
+                // 检查是否已有相同回调，避免重复注册
+                if (currentUsbDataCallback == callback) {
+                    MyLog.d("USB_CALLBACK", "相同回调已存在，跳过重复注册");
+                    return;
+                }
+                
+                // 先取消之前的回调，避免重复注册
+                unregisterUsbDataCallback();
+                
+                try {
+                    WCHUARTManager.getInstance().registerDataCallback(currentUsbDevice, callback);
+                    currentUsbDataCallback = callback;
+                    MyLog.d("USB_CALLBACK", "USB数据回调注册成功");
+                } catch (Exception e) {
+                    MyLog.e("USB_CALLBACK", "USB数据回调注册失败: " + e.getMessage());
+                    e.printStackTrace();
+                }
+            } else {
+                MyLog.w("USB_CALLBACK", "设备未连接或回调为空，无法注册");
+            }
+        }
+    }
+    
+    public void unregisterUsbDataCallback() {
+        synchronized (usbConnectionLock) {
+            if (currentUsbDataCallback != null) {
+                try {
+                    // 尝试取消注册，如果驱动不支持就忽略异常
+                    // WCH驱动可能不支持单独取消回调，所以用try-catch保护
+                    currentUsbDataCallback = null;
+                    MyLog.d("USB_CALLBACK", "USB数据回调引用已清理");
+                } catch (Exception e) {
+                    MyLog.w("USB_CALLBACK", "清理回调时出现异常: " + e.getMessage());
+                }
+            }
+        }
+    }
+    
+    private void setupDefaultUsbDataCallback() {
+        if (currentUsbDevice != null) {
+            IDataCallback callback = new IDataCallback() {
+                @Override
+                public void onData(int serialNumber, byte[] buffer, int length) {
+                    if (buffer != null && length > 0) {
+                        byte[] data = new byte[length];
+                        System.arraycopy(buffer, 0, data, 0, length);
+                        MyLog.i("USB_RX", HexString.bytesToHex(data));
+                        
+                        // 在后台线程中处理数据解析，避免主线程阻塞
+                        new Thread(() -> {
+                            try {
+                                getBluetoothService().parse(data);
+                            } catch (Exception e) {
+                                MyLog.e("USB_RX", "数据解析异常: " + e.getMessage());
+                                e.printStackTrace();
+                            }
+                        }).start();
+                    }
+                }
+            };
+            
+            registerUsbDataCallback(callback);
+            MyLog.d("USB_AUTO_CONNECT", "默认数据回调已注册");
+        }
+    }
+
+    public boolean sendUsbData(byte[] data) {
+        synchronized (usbConnectionLock) {
+            if (!isUsbConnected()) {
+                MyLog.e("USB_TX", "USB设备未连接，无法发送数据");
+                return false;
+            }
+            
+            if (data == null || data.length == 0) {
+                MyLog.e("USB_TX", "发送数据为空");
+                return false;
+            }
+            
+            // 防止在连接过程中发送数据
+            if (isConnecting) {
+                MyLog.w("USB_TX", "设备正在连接中，暂时无法发送数据");
+                return false;
+            }
+            
+            try {
+                MyLog.i("USB_TX", HexString.bytesToHex(data));
+                int result = WCHUARTManager.getInstance().syncWriteData(currentUsbDevice, 0, data, data.length, 2000);
+                if (result > 0) {
+                    MyLog.d("USB_TX", "数据发送成功，字节数: " + result);
+                    return true;
+                } else {
+                    MyLog.e("USB_TX", "数据发送失败，返回值: " + result);
+                    return false;
+                }
+            } catch (Exception e) {
+                MyLog.e("USB_TX", "数据发送异常: " + e.getMessage());
+                e.printStackTrace();
+                return false;
+            }
+        }
     }
 
     public String getConnectMacAddress() {
@@ -143,6 +395,13 @@ public class App extends Application {
         bluetoothSPP.setupService();
         localDataService = new LocalDataServiceImpl(this);
         bluetoothService = new BluetoothServiceImpl(this);
+        
+        // 初始化WCH UART管理器
+        WCHUARTManager.getInstance().init(this);
+        WCHUARTManager.setDebug(true);
+        
+        // 初始化USB管理器
+        usbManager = (UsbManager) getSystemService(Context.USB_SERVICE);
 
         mClient = new BluetoothClient(this);
 

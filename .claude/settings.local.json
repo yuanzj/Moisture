@@ -12,7 +12,12 @@
       "Bash(grep:*)",
       "Bash(echo $JAVA_HOME)",
       "Bash(echo:*)",
-      "Bash(git add:*)"
+      "Bash(git add:*)",
+      "Bash(cp:*)",
+      "Bash(mkdir:*)",
+      "Bash(mv:*)",
+      "Bash(rm:*)",
+      "Bash(jar:*)"
     ],
     "deny": []
   }

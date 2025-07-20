@@ -78,10 +78,7 @@
             android:label="@string/activity_scan"
             android:screenOrientation="landscape"
             />
-
-        <service 
-            android:name="com.inuker.bluetooth.library.BluetoothService"
-            android:exported="false" />
+        
     </application>
     <uses-feature
         android:name="android.hardware.bluetooth_le"
@@ -116,6 +113,10 @@
     <uses-permission android:name="android.permission.BLUETOOTH_ADVERTISE" />
 
     <uses-permission android:name="android.permission.WAKE_LOCK" />
+
+    <!-- USB 相关权限和功能 -->
+    <uses-feature android:name="android.hardware.usb.host" android:required="true" />
+    <uses-permission android:name="android.permission.USB_PERMISSION" />
 
 
 </manifest>
