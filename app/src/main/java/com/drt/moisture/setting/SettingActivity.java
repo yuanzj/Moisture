@@ -38,6 +38,7 @@ import com.drt.moisture.data.source.bluetooth.resquest.SetMeasureParameRequest;
 import com.drt.moisture.data.source.bluetooth.resquest.SetRateRequest;
 import com.drt.moisture.data.source.bluetooth.resquest.TimingSetRequest;
 import com.drt.moisture.util.AndroidUtil;
+import com.drt.moisture.util.CustomContentManager;
 import com.drt.moisture.util.DialogUtil;
 import com.drt.moisture.util.ExcelUtil;
 import com.inuker.bluetooth.library.Constants;
@@ -373,6 +374,11 @@ public class SettingActivity extends BluetoothBaseActivity<SettingPresenter> imp
         item1.put("title", getString(R.string.content_timing_set));
         data.add(item1);
 
+        item1 = new HashMap<>();
+        item1.put("icon", R.mipmap.icons_data_configuration);
+        item1.put("title", "自定义设置");
+        data.add(item1);
+
 //        item1 = new HashMap<>();
 //        item1.put("icon", R.mipmap.icons_recurring_appointment);
 //        item1.put("title", "查询频率");
@@ -420,7 +426,13 @@ public class SettingActivity extends BluetoothBaseActivity<SettingPresenter> imp
     public void onItemClick(final AdapterView<?> parent, final View view, final int position, long id) {
 
 
-        if (position == 6) {
+        if (position == 3) {
+            // 自定义设置 - 显示自定义品牌开关对话框
+            showCustomContentDialog();
+            return;
+        }
+        
+        if (position == 7) {
             final String[] items = {"串口", "蓝牙"};
             AlertDialog.Builder listDialog = new AlertDialog.Builder(this);
             listDialog.setTitle("请选择连接方式");
@@ -942,6 +954,10 @@ public class SettingActivity extends BluetoothBaseActivity<SettingPresenter> imp
             item1.put("icon", R.mipmap.icons_data_configuration);
             item1.put("title", "连接设置");
             data.add(item1);
+            item1 = new HashMap<>();
+            item1.put("icon", R.mipmap.icons_data_configuration);
+            item1.put("title", "自定义设置");
+            data.add(item1);
 
 
             listView.setAdapter(new SimpleAdapter(this, data,
@@ -1015,6 +1031,51 @@ public class SettingActivity extends BluetoothBaseActivity<SettingPresenter> imp
         }
 
         return ret;
+    }
+    
+    /**
+     * 显示自定义品牌开关对话框
+     */
+    private void showCustomContentDialog() {
+        CustomContentManager customContentManager = CustomContentManager.getInstance(this);
+        boolean isEnabled = customContentManager.isCustomContentEnabled();
+        
+        // 创建自定义视图
+        View dialogView = LayoutInflater.from(this).inflate(android.R.layout.select_dialog_singlechoice, null);
+        
+        // 使用简单的确认对话框来切换状态
+        String currentStatus = isEnabled ? "已启用" : "已关闭";
+        String newStatus = isEnabled ? "关闭" : "启用";
+        
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        builder.setTitle("自定义品牌设置");
+        builder.setMessage("当前状态：" + currentStatus + " 自定义品牌\n\n" +
+                          "启用后将使用Download/HKYQ_Moisture/目录下的自定义品牌名称和品牌图片文件\n\n" +
+                          "是否要" + newStatus + "自定义品牌？");
+        
+        builder.setPositiveButton(newStatus, new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                boolean newEnabled = !isEnabled;
+                customContentManager.setCustomContentEnabled(newEnabled);
+                
+                String message = newEnabled ? 
+                    "已启用自定义品牌\n请将自定义文件放置在：\nDownload/HKYQ_Moisture/" : 
+                    "已关闭自定义品牌\n将使用默认的品牌名称和品牌图片";
+                Toast.makeText(SettingActivity.this, message, Toast.LENGTH_LONG).show();
+                
+                dialog.dismiss();
+            }
+        });
+        
+        builder.setNegativeButton("取消", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                dialog.dismiss();
+            }
+        });
+        
+        builder.show();
     }
 
 }

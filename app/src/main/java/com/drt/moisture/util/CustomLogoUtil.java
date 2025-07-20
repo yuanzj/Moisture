@@ -17,13 +17,13 @@ import java.io.File;
 
 public class CustomLogoUtil {
     
-    private static final String CUSTOM_LOGO_DIR = "QUAKE_Moisture";
+    private static final String CUSTOM_LOGO_DIR = "HKYQ_Moisture";
     private static final String CUSTOM_LOGO_FILENAME = "custom_logo.png";
     
     /**
      * 获取自定义logo的完整路径
      * 使用Download目录，这个目录在Android 15中更容易访问
-     * 路径: /storage/emulated/0/Download/QUAKE_Moisture/custom_logo.png
+     * 路径: /storage/emulated/0/Download/HKYQ_Moisture/custom_logo.png
      */
     public static String getCustomLogoPath() {
         // 使用Download目录，这在Android所有版本中都比较容易访问
@@ -36,9 +36,16 @@ public class CustomLogoUtil {
     }
     
     /**
-     * 检查自定义logo是否存在
+     * 检查自定义logo是否存在并且开关已启用
      */
-    public static boolean isCustomLogoExists() {
+    public static boolean isCustomLogoExists(Context context) {
+        // 首先检查自定义品牌开关是否启用
+        CustomContentManager customContentManager = CustomContentManager.getInstance(context);
+        if (!customContentManager.isCustomContentEnabled()) {
+            MyLog.d("CustomLogoUtil", "Custom content disabled, using default logo");
+            return false;
+        }
+        
         File logoFile = new File(getCustomLogoPath());
         boolean exists = logoFile.exists();
         boolean isFile = logoFile.isFile();
@@ -47,10 +54,10 @@ public class CustomLogoUtil {
         MyLog.d("CustomLogoUtil", "Logo file exists: " + exists + ", isFile: " + isFile + ", size: " + size);
         
         if (exists && isFile && size > 0) {
-            MyLog.d("CustomLogoUtil", "Custom logo found, using custom logo");
+            MyLog.d("CustomLogoUtil", "Custom logo found and enabled, using custom logo");
             return true;
         } else {
-            MyLog.d("CustomLogoUtil", "Custom logo not found, using default logo");
+            MyLog.d("CustomLogoUtil", "Custom logo not found or disabled, using default logo");
             return false;
         }
     }
@@ -63,7 +70,7 @@ public class CustomLogoUtil {
     public static Drawable loadLogoDrawable(Context context) {
         MyLog.d("CustomLogoUtil", "Loading logo drawable...");
         
-        if (isCustomLogoExists()) {
+        if (isCustomLogoExists(context)) {
             try {
                 String logoPath = getCustomLogoPath();
                 MyLog.d("CustomLogoUtil", "Attempting to load custom logo from: " + logoPath);

@@ -1,12 +1,9 @@
 package com.drt.moisture.util;
 
 import android.content.Context;
-import android.os.Build;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.os.Environment;
-import android.provider.MediaStore;
-import android.database.Cursor;
-import android.content.ContentResolver;
-import android.net.Uri;
 
 import java.io.BufferedReader;
 import java.io.File;
@@ -16,14 +13,18 @@ import java.io.InputStream;
 
 public class CustomTextUtil {
     
-    private static final String CUSTOM_TEXT_DIR = "QUAKE_Moisture";
+    private static final String CUSTOM_TEXT_DIR = "HKYQ_Moisture";
     private static final String FACTORY_NAME_FILENAME = "factory_name.txt";
     private static final String FACTORY_NAME_SHORT_FILENAME = "factory_name_short.txt";
+    
+    // 自定义图片文件名
+    private static final String CUSTOM_LOGO_FILENAME = "custom_logo.png";
+    private static final String CUSTOM_BACKGROUND_FILENAME = "custom_background.png";
     
     /**
      * 获取自定义工厂名称文件的完整路径
      * 优先使用Download目录，这个目录在Android 15中更容易访问
-     * 路径: /storage/emulated/0/Download/QUAKE_Moisture/factory_name.txt
+     * 路径: /storage/emulated/0/Download/HKYQ_Moisture/factory_name.txt
      */
     public static String getFactoryNameFilePath() {
         return getFactoryNameFilePath(false);
@@ -31,44 +32,14 @@ public class CustomTextUtil {
     
     /**
      * 获取自定义工厂名称文件的完整路径
+     * 统一使用Download目录，方便运营人员通过文件管理器编辑
      * @param isShort true=获取短名称文件路径，false=获取完整名称文件路径
      */
     public static String getFactoryNameFilePath(boolean isShort) {
-        File textFile;
-        
-        // 针对Android 14+优化存储访问
-        if (Build.VERSION.SDK_INT >= 34) { // Android 14+ (API 34+)
-            // 优先使用应用专用存储目录
-            File appExternalDir = new File(Environment.getExternalStorageDirectory(), "Android/data/com.drt.moisture/files/Documents");
-            if (!appExternalDir.exists()) {
-                appExternalDir.mkdirs();
-            }
-            File textDir = new File(appExternalDir, CUSTOM_TEXT_DIR);
-            String filename = isShort ? FACTORY_NAME_SHORT_FILENAME : FACTORY_NAME_FILENAME;
-            textFile = new File(textDir, filename);
-            
-            // 如果应用专用目录文件不存在，尝试从Download目录复制
-            if (!textFile.exists()) {
-                File downloadDir = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS);
-                File downloadTextDir = new File(downloadDir, CUSTOM_TEXT_DIR);
-                File downloadTextFile = new File(downloadTextDir, filename);
-                if (downloadTextFile.exists()) {
-                    try {
-                        textDir.mkdirs();
-                        copyFile(downloadTextFile, textFile);
-                        MyLog.d("CustomTextUtil", "Copied file from Download to app storage: " + textFile.getAbsolutePath());
-                    } catch (Exception e) {
-                        MyLog.e("CustomTextUtil", "Failed to copy file: " + e.getMessage());
-                    }
-                }
-            }
-        } else {
-            // Android 13及以下版本使用传统方式
-            File downloadDir = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS);
-            File textDir = new File(downloadDir, CUSTOM_TEXT_DIR);
-            String filename = isShort ? FACTORY_NAME_SHORT_FILENAME : FACTORY_NAME_FILENAME;
-            textFile = new File(textDir, filename);
-        }
+        File downloadDir = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS);
+        File textDir = new File(downloadDir, CUSTOM_TEXT_DIR);
+        String filename = isShort ? FACTORY_NAME_SHORT_FILENAME : FACTORY_NAME_FILENAME;
+        File textFile = new File(textDir, filename);
         
         MyLog.d("CustomTextUtil", "Factory name file path (" + (isShort ? "short" : "full") + "): " + textFile.getAbsolutePath());
         return textFile.getAbsolutePath();
@@ -122,15 +93,21 @@ public class CustomTextUtil {
      */
     public static String loadFactoryName(Context context, String defaultFactoryName, boolean isShort) {
         String fileType = isShort ? "short" : "full";
-        String filename = isShort ? FACTORY_NAME_SHORT_FILENAME : FACTORY_NAME_FILENAME;
         MyLog.d("CustomTextUtil", "Loading factory name (" + fileType + ")...");
+        
+        // 检查是否启用自定义品牌
+        CustomContentManager customContentManager = CustomContentManager.getInstance(context);
+        if (!customContentManager.isCustomContentEnabled()) {
+            MyLog.d("CustomTextUtil", "Custom content disabled, using default factory name (" + fileType + "): " + defaultFactoryName);
+            return defaultFactoryName;
+        }
         
         // 首先尝试创建目录
         createCustomTextDir();
         
-        // 使用StorageHelper获取文件路径
-        String filePath = StorageHelper.readFileFromMultipleLocations(context, filename);
-        if (filePath != null && StorageHelper.isFileReadable(filePath)) {
+        // 直接从Download目录读取文件
+        String filePath = getFactoryNameFilePath(isShort);
+        if (StorageHelper.isFileReadable(filePath)) {
             try {
                 MyLog.d("CustomTextUtil", "Attempting to load factory name (" + fileType + ") from: " + filePath);
                 
@@ -165,15 +142,6 @@ public class CustomTextUtil {
             }
         }
         
-        // Android 14+ 使用媒体存储API作为备用方案
-        if (Build.VERSION.SDK_INT >= 34) {
-            String content = loadFactoryNameFromMediaStore(context, isShort);
-            if (content != null && !content.isEmpty()) {
-                MyLog.d("CustomTextUtil", "Successfully loaded custom factory name (" + fileType + ") from MediaStore: " + content);
-                return content;
-            }
-        }
-        
         MyLog.d("CustomTextUtil", "Using default factory name (" + fileType + "): " + defaultFactoryName);
         return defaultFactoryName;
     }
@@ -203,96 +171,105 @@ public class CustomTextUtil {
     
     /**
      * 创建自定义文本目录
+     * 统一使用Download目录
      */
     public static boolean createCustomTextDir() {
         try {
-            // Android 14+ 优先使用应用专用存储
-            if (Build.VERSION.SDK_INT >= 34) {
-                File appExternalDir = new File(Environment.getExternalStorageDirectory(), "Android/data/com.drt.moisture/files/Documents");
-                File textDir = new File(appExternalDir, CUSTOM_TEXT_DIR);
-                
-                if (!textDir.exists()) {
-                    boolean created = textDir.mkdirs();
-                    MyLog.d("CustomTextUtil", "App-specific text directory created: " + created + ", path: " + textDir.getAbsolutePath());
-                    return created;
-                }
-                return true;
-            } else {
-                // 传统方式：使用Download目录
-                File downloadDir = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS);
-                File textDir = new File(downloadDir, CUSTOM_TEXT_DIR);
-                
-                if (!textDir.exists()) {
-                    boolean created = textDir.mkdirs();
-                    MyLog.d("CustomTextUtil", "Text directory created: " + created + ", path: " + textDir.getAbsolutePath());
-                    return created;
-                }
-                return true;
+            File downloadDir = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS);
+            File textDir = new File(downloadDir, CUSTOM_TEXT_DIR);
+            
+            if (!textDir.exists()) {
+                boolean created = textDir.mkdirs();
+                MyLog.d("CustomTextUtil", "Download text directory created: " + created + ", path: " + textDir.getAbsolutePath());
+                return created;
             }
+            MyLog.d("CustomTextUtil", "Download text directory already exists: " + textDir.getAbsolutePath());
+            return true;
         } catch (Exception e) {
             MyLog.e("CustomTextUtil", "Failed to create custom text directory: " + e.getMessage());
             return false;
         }
     }
     
+    
     /**
-     * 通过MediaStore API加载工厂名称文件（Android 14+兼容）
+     * 加载自定义logo图片
+     * @param context 上下文
+     * @return Bitmap对象，如果未启用自定义品牌或文件不存在则返回null
      */
-    private static String loadFactoryNameFromMediaStore(Context context, boolean isShort) {
-        try {
-            String filename = isShort ? FACTORY_NAME_SHORT_FILENAME : FACTORY_NAME_FILENAME;
-            String relativePath = "Download/" + CUSTOM_TEXT_DIR + "/" + filename;
-            
-            // 使用MediaStore查询文件
-            ContentResolver resolver = context.getContentResolver();
-            Uri uri = MediaStore.Files.getContentUri("external");
-            
-            String[] projection = {MediaStore.Files.FileColumns._ID, MediaStore.Files.FileColumns.DISPLAY_NAME};
-            String selection = MediaStore.Files.FileColumns.RELATIVE_PATH + "=? AND " + 
-                             MediaStore.Files.FileColumns.DISPLAY_NAME + "=?";
-            String[] selectionArgs = {"Download/" + CUSTOM_TEXT_DIR + "/", filename};
-            
-            Cursor cursor = resolver.query(uri, projection, selection, selectionArgs, null);
-            
-            if (cursor != null && cursor.moveToFirst()) {
-                int idColumn = cursor.getColumnIndexOrThrow(MediaStore.Files.FileColumns._ID);
-                long id = cursor.getLong(idColumn);
-                Uri fileUri = Uri.withAppendedPath(uri, String.valueOf(id));
-                
-                InputStream inputStream = resolver.openInputStream(fileUri);
-                if (inputStream != null) {
-                    InputStreamReader isr = new InputStreamReader(inputStream, "UTF-8");
-                    BufferedReader br = new BufferedReader(isr);
-                    
-                    StringBuilder content = new StringBuilder();
-                    String line;
-                    while ((line = br.readLine()) != null) {
-                        if (content.length() > 0) {
-                            content.append("\n");
-                        }
-                        content.append(line);
-                    }
-                    
-                    br.close();
-                    isr.close();
-                    inputStream.close();
-                    cursor.close();
-                    
-                    String result = content.toString().trim();
-                    MyLog.d("CustomTextUtil", "Loaded factory name from MediaStore: " + result);
-                    return result;
+    public static Bitmap loadCustomLogo(Context context) {
+        return loadCustomImage(context, CUSTOM_LOGO_FILENAME);
+    }
+    
+    /**
+     * 加载自定义背景图片
+     * @param context 上下文
+     * @return Bitmap对象，如果未启用自定义品牌或文件不存在则返回null
+     */
+    public static Bitmap loadCustomBackground(Context context) {
+        return loadCustomImage(context, CUSTOM_BACKGROUND_FILENAME);
+    }
+    
+    /**
+     * 加载自定义图片的通用方法
+     * @param context 上下文
+     * @param filename 图片文件名
+     * @return Bitmap对象，如果未启用自定义品牌或文件不存在则返回null
+     */
+    private static Bitmap loadCustomImage(Context context, String filename) {
+        MyLog.d("CustomTextUtil", "Loading custom image: " + filename);
+        
+        // 检查是否启用自定义品牌
+        CustomContentManager customContentManager = CustomContentManager.getInstance(context);
+        if (!customContentManager.isCustomContentEnabled()) {
+            MyLog.d("CustomTextUtil", "Custom content disabled, skipping image load: " + filename);
+            return null;
+        }
+        
+        // 构建图片文件路径
+        File downloadDir = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS);
+        File imageDir = new File(downloadDir, CUSTOM_TEXT_DIR);
+        File imageFile = new File(imageDir, filename);
+        
+        if (imageFile.exists() && imageFile.canRead()) {
+            try {
+                MyLog.d("CustomTextUtil", "Loading custom image from: " + imageFile.getAbsolutePath());
+                Bitmap bitmap = BitmapFactory.decodeFile(imageFile.getAbsolutePath());
+                if (bitmap != null) {
+                    MyLog.d("CustomTextUtil", "Successfully loaded custom image: " + filename + " (" + bitmap.getWidth() + "x" + bitmap.getHeight() + ")");
+                    return bitmap;
+                } else {
+                    MyLog.w("CustomTextUtil", "Failed to decode image file: " + filename);
                 }
+            } catch (Exception e) {
+                MyLog.e("CustomTextUtil", "Error loading custom image: " + e.getMessage());
+                e.printStackTrace();
             }
-            
-            if (cursor != null) {
-                cursor.close();
-            }
-        } catch (Exception e) {
-            MyLog.e("CustomTextUtil", "Failed to load factory name from MediaStore: " + e.getMessage());
-            e.printStackTrace();
+        } else {
+            MyLog.d("CustomTextUtil", "Custom image file not found or not readable: " + imageFile.getAbsolutePath());
         }
         
         return null;
+    }
+    
+    /**
+     * 检查自定义图片是否存在
+     * @param context 上下文
+     * @param filename 图片文件名
+     * @return true=文件存在且可读，false=文件不存在或不可读
+     */
+    public static boolean isCustomImageAvailable(Context context, String filename) {
+        // 检查是否启用自定义品牌
+        CustomContentManager customContentManager = CustomContentManager.getInstance(context);
+        if (!customContentManager.isCustomContentEnabled()) {
+            return false;
+        }
+        
+        File downloadDir = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS);
+        File imageDir = new File(downloadDir, CUSTOM_TEXT_DIR);
+        File imageFile = new File(imageDir, filename);
+        
+        return imageFile.exists() && imageFile.canRead() && imageFile.length() > 0;
     }
     
     /**

@@ -35,20 +35,10 @@ public class StorageHelper {
     
     /**
      * 获取推荐的存储目录
+     * 统一使用Download目录，方便运营人员通过文件管理器编辑
      */
     public static File getRecommendedStorageDirectory(Context context) {
-        if (Build.VERSION.SDK_INT >= 34) {
-            // Android 14+ 优先使用应用专用目录
-            File appExternalDir = new File(Environment.getExternalStorageDirectory(), 
-                                         "Android/data/" + context.getPackageName() + "/files/Documents");
-            if (!appExternalDir.exists()) {
-                appExternalDir.mkdirs();
-            }
-            return appExternalDir;
-        } else {
-            // 传统方式使用Download目录
-            return Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS);
-        }
+        return Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS);
     }
     
     /**
@@ -105,14 +95,14 @@ public class StorageHelper {
     private static void showStorageInstructionDialog(Activity activity) {
         AlertDialog.Builder builder = new AlertDialog.Builder(activity);
         builder.setTitle("自定义工厂名称使用说明");
-        builder.setMessage("在Android 14+系统中，您可以通过以下方式使用自定义工厂名称：\n\n" +
-                         "方式1：将文件放在应用专用目录\n" +
-                         "• 路径：Android/data/com.drt.moisture/files/Documents/QUAKE_Moisture/\n" +
-                         "• 文件：factory_name.txt（完整名称）\n" +
-                         "• 文件：factory_name_short.txt（短名称）\n\n" +
-                         "方式2：授予完整存储权限\n" +
-                         "• 在设置中允许应用访问「所有文件」\n" +
-                         "• 然后将文件放在：Download/QUAKE_Moisture/ 目录中");
+        builder.setMessage("要使用自定义工厂名称，请按以下步骤操作：\n\n" +
+                         "1. 在设置中允许应用访问「所有文件」\n\n" +
+                         "2. 将自定义文件放在以下目录：\n" +
+                         "   Download/HKYQ_Moisture/\n\n" +
+                         "3. 文件名称：\n" +
+                         "   • factory_name.txt（完整名称）\n" +
+                         "   • factory_name_short.txt（短名称）\n\n" +
+                         "文件可通过任何文件管理器编辑");
         
         builder.setPositiveButton("知道了", new DialogInterface.OnClickListener() {
             @Override
@@ -125,28 +115,19 @@ public class StorageHelper {
     }
     
     /**
-     * 尝试从多个位置读取文件
+     * 从Download目录读取文件
+     * 统一使用Download目录，简化逻辑
      */
     public static String readFileFromMultipleLocations(Context context, String fileName) {
-        // 位置1：应用专用目录（Android 14+优先）
-        if (Build.VERSION.SDK_INT >= 34) {
-            File appDir = new File(getRecommendedStorageDirectory(context), "QUAKE_Moisture");
-            File appFile = new File(appDir, fileName);
-            if (isFileReadable(appFile.getAbsolutePath())) {
-                MyLog.d("StorageHelper", "Reading from app-specific directory: " + appFile.getAbsolutePath());
-                return appFile.getAbsolutePath();
-            }
-        }
-        
-        // 位置2：Download目录（传统位置）
         File downloadDir = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS);
-        File downloadFile = new File(new File(downloadDir, "QUAKE_Moisture"), fileName);
+        File downloadFile = new File(new File(downloadDir, "HKYQ_Moisture"), fileName);
+        
         if (isFileReadable(downloadFile.getAbsolutePath())) {
             MyLog.d("StorageHelper", "Reading from Download directory: " + downloadFile.getAbsolutePath());
             return downloadFile.getAbsolutePath();
         }
         
-        MyLog.w("StorageHelper", "File not found in any location: " + fileName);
+        MyLog.w("StorageHelper", "File not found in Download directory: " + fileName);
         return null;
     }
     
@@ -154,22 +135,20 @@ public class StorageHelper {
      * 检查并提示用户如何解决存储访问问题
      */
     public static void checkAndPromptStorageAccess(Activity activity) {
-        if (Build.VERSION.SDK_INT >= 34) {
-            if (!canAccessExternalStorage(activity)) {
-                MyLog.w("StorageHelper", "Storage access limited on Android 14+");
-                
-                // 检查是否有自定义文件在传统位置
-                boolean hasFileInDownload = isFileReadable(
-                    Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS) + 
-                    "/QUAKE_Moisture/factory_name.txt") ||
-                    isFileReadable(
-                    Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS) + 
-                    "/QUAKE_Moisture/factory_name_short.txt");
-                
-                if (hasFileInDownload) {
-                    // 如果在Download目录有文件但无法访问，提示用户
-                    showStoragePermissionDialog(activity);
-                }
+        if (!canAccessExternalStorage(activity)) {
+            MyLog.w("StorageHelper", "Storage access limited, may need MANAGE_EXTERNAL_STORAGE permission");
+            
+            // 检查是否有自定义文件在Download目录
+            boolean hasFileInDownload = isFileReadable(
+                Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS) + 
+                "/HKYQ_Moisture/factory_name.txt") ||
+                isFileReadable(
+                Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS) + 
+                "/HKYQ_Moisture/factory_name_short.txt");
+            
+            if (hasFileInDownload) {
+                // 如果在Download目录有文件但无法访问，提示用户
+                showStoragePermissionDialog(activity);
             }
         }
     }
