@@ -40,7 +40,7 @@ import com.drt.moisture.data.UsbConnectEvent;
 import com.drt.moisture.data.source.bluetooth.SppDataCallback;
 import com.drt.moisture.data.source.bluetooth.response.CdslSetResponse;
 import com.drt.moisture.data.source.bluetooth.response.SocResponse;
-import com.drt.moisture.util.CustomLogoUtil;
+import com.drt.moisture.util.CustomContentManager;
 import com.drt.moisture.util.MyLog;
 import com.drt.moisture.util.StatusBarUtil;
 import com.inuker.bluetooth.library.Constants;
@@ -167,7 +167,11 @@ public abstract class BluetoothBaseActivity<T extends BasePresenter> extends Bas
         
         ImageView logoImage = findViewById(R.id.logo_image);
         if (logoImage != null) {
-            CustomLogoUtil.setLogoToImageView(this, logoImage);
+            if (CustomContentManager.getInstance(this).isBrandLogoVisible()) {
+                logoImage.setVisibility(View.VISIBLE);
+            } else {
+                logoImage.setVisibility(View.INVISIBLE);
+            }
         }
     }
 

@@ -10,7 +10,7 @@ import android.content.SharedPreferences;
 public class CustomContentManager {
     
     private static final String PREF_NAME = "custom_content_settings";
-    private static final String KEY_CUSTOM_CONTENT_ENABLED = "custom_content_enabled";
+    private static final String KEY_BRAND_LOGO_VISIBLE = "brand_logo_visible";
     
     private static CustomContentManager instance;
     private SharedPreferences sharedPreferences;
@@ -30,24 +30,24 @@ public class CustomContentManager {
     }
     
     /**
-     * 设置是否启用自定义品牌
-     * @param enabled true=启用自定义品牌，false=使用默认内容
+     * 设置品牌标识是否可见
+     * @param visible true=显示品牌标识，false=隐藏品牌标识
      */
-    public void setCustomContentEnabled(boolean enabled) {
+    public void setBrandLogoVisible(boolean visible) {
         sharedPreferences.edit()
-            .putBoolean(KEY_CUSTOM_CONTENT_ENABLED, enabled)
+            .putBoolean(KEY_BRAND_LOGO_VISIBLE, visible)
             .apply();
-        MyLog.d("CustomContentManager", "Custom content enabled: " + enabled);
+        MyLog.d("CustomContentManager", "Brand logo visible: " + visible);
     }
     
     /**
-     * 获取是否启用自定义品牌
-     * @return true=启用自定义品牌，false=使用默认内容
+     * 获取品牌标识是否可见
+     * @return true=显示品牌标识，false=隐藏品牌标识
      */
-    public boolean isCustomContentEnabled() {
-        boolean enabled = sharedPreferences.getBoolean(KEY_CUSTOM_CONTENT_ENABLED, false);
-        MyLog.d("CustomContentManager", "Custom content enabled: " + enabled);
-        return enabled;
+    public boolean isBrandLogoVisible() {
+        boolean visible = sharedPreferences.getBoolean(KEY_BRAND_LOGO_VISIBLE, true); // 默认显示
+        MyLog.d("CustomContentManager", "Brand logo visible: " + visible);
+        return visible;
     }
     
     /**
@@ -55,8 +55,26 @@ public class CustomContentManager {
      */
     public void resetToDefaults() {
         sharedPreferences.edit()
-            .putBoolean(KEY_CUSTOM_CONTENT_ENABLED, false)
+            .putBoolean(KEY_BRAND_LOGO_VISIBLE, true) // 默认显示品牌标识
             .apply();
-        MyLog.d("CustomContentManager", "Reset custom content settings to defaults");
+        MyLog.d("CustomContentManager", "Reset brand logo settings to defaults");
+    }
+    
+    /**
+     * 为了向后兼容，保留旧方法但标记为过时
+     * @deprecated 请使用 setBrandLogoVisible(boolean)
+     */
+    @Deprecated
+    public void setCustomContentEnabled(boolean enabled) {
+        setBrandLogoVisible(enabled);
+    }
+    
+    /**
+     * 为了向后兼容，保留旧方法但标记为过时
+     * @deprecated 请使用 isBrandLogoVisible()
+     */
+    @Deprecated
+    public boolean isCustomContentEnabled() {
+        return isBrandLogoVisible();
     }
 }

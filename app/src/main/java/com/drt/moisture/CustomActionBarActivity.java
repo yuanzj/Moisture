@@ -11,7 +11,7 @@ import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import com.drt.moisture.util.CustomLogoUtil;
+import com.drt.moisture.util.CustomContentManager;
 import com.drt.moisture.util.StatusBarUtil;
 
 import net.yzj.android.common.base.BaseMvpActivity;
@@ -58,7 +58,11 @@ public abstract class CustomActionBarActivity<T extends BasePresenter> extends B
         
         ImageView logoImage = findViewById(R.id.logo_image);
         if (logoImage != null) {
-            CustomLogoUtil.setLogoToImageView(this, logoImage);
+            if (CustomContentManager.getInstance(this).isBrandLogoVisible()) {
+                logoImage.setVisibility(View.VISIBLE);
+            } else {
+                logoImage.setVisibility(View.INVISIBLE);
+            }
         }
     }
 

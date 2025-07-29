@@ -374,11 +374,6 @@ public class SettingActivity extends BluetoothBaseActivity<SettingPresenter> imp
         item1.put("title", getString(R.string.content_timing_set));
         data.add(item1);
 
-        item1 = new HashMap<>();
-        item1.put("icon", R.mipmap.icons_data_configuration);
-        item1.put("title", "自定义设置");
-        data.add(item1);
-
 //        item1 = new HashMap<>();
 //        item1.put("icon", R.mipmap.icons_recurring_appointment);
 //        item1.put("title", "查询频率");
@@ -426,13 +421,16 @@ public class SettingActivity extends BluetoothBaseActivity<SettingPresenter> imp
     public void onItemClick(final AdapterView<?> parent, final View view, final int position, long id) {
 
 
-        if (position == 3) {
-            // 自定义设置 - 显示自定义品牌开关对话框
-            showCustomContentDialog();
+        if (position == 7) {
+            // 品牌标识设置 - 仅在隐藏模式下可见（当有更多菜单项时）
+            // 检查当前是否在隐藏模式（通过判断listView的adapter中的item数量）
+            if (listView.getAdapter().getCount() > 3) {
+                showCustomContentDialog();
+            }
             return;
         }
         
-        if (position == 7) {
+        if (position == 6) {
             final String[] items = {"串口", "蓝牙"};
             AlertDialog.Builder listDialog = new AlertDialog.Builder(this);
             listDialog.setTitle("请选择连接方式");
@@ -954,9 +952,10 @@ public class SettingActivity extends BluetoothBaseActivity<SettingPresenter> imp
             item1.put("icon", R.mipmap.icons_data_configuration);
             item1.put("title", "连接设置");
             data.add(item1);
+            
             item1 = new HashMap<>();
             item1.put("icon", R.mipmap.icons_data_configuration);
-            item1.put("title", "自定义设置");
+            item1.put("title", "品牌标识设置");
             data.add(item1);
 
 
@@ -1038,31 +1037,25 @@ public class SettingActivity extends BluetoothBaseActivity<SettingPresenter> imp
      */
     private void showCustomContentDialog() {
         CustomContentManager customContentManager = CustomContentManager.getInstance(this);
-        boolean isEnabled = customContentManager.isCustomContentEnabled();
-        
-        // 创建自定义视图
-        View dialogView = LayoutInflater.from(this).inflate(android.R.layout.select_dialog_singlechoice, null);
+        boolean isVisible = customContentManager.isBrandLogoVisible();
         
         // 使用简单的确认对话框来切换状态
-        String currentStatus = isEnabled ? "已启用" : "已关闭";
-        String newStatus = isEnabled ? "关闭" : "启用";
+        String currentStatus = isVisible ? "显示" : "隐藏";
+        String newStatus = isVisible ? "隐藏" : "显示";
         
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
-        builder.setTitle("自定义品牌设置");
-        builder.setMessage("当前状态：" + currentStatus + " 自定义品牌\n\n" +
-                          "启用后将使用Download/HKYQ_Moisture/目录下的自定义品牌名称和品牌图片文件\n\n" +
-                          "是否要" + newStatus + "自定义品牌？");
+        builder.setTitle("品牌标识设置");
+        builder.setMessage("当前状态：" + currentStatus + " 品牌标识\n\n" +
+                          "是否要" + newStatus + "品牌标识？");
         
         builder.setPositiveButton(newStatus, new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
-                boolean newEnabled = !isEnabled;
-                customContentManager.setCustomContentEnabled(newEnabled);
+                boolean newVisible = !isVisible;
+                customContentManager.setBrandLogoVisible(newVisible);
                 
-                String message = newEnabled ? 
-                    "已启用自定义品牌\n请将自定义文件放置在：\nDownload/HKYQ_Moisture/" : 
-                    "已关闭自定义品牌\n将使用默认的品牌名称和品牌图片";
-                Toast.makeText(SettingActivity.this, message, Toast.LENGTH_LONG).show();
+                String message = newVisible ? "品牌标识已显示" : "品牌标识已隐藏";
+                Toast.makeText(SettingActivity.this, message, Toast.LENGTH_SHORT).show();
                 
                 dialog.dismiss();
             }
