@@ -43,7 +43,6 @@ import cn.wch.uartlib.WCHUARTManager;
 import cn.wch.uartlib.callback.IDataCallback;
 
 
-
 public class App extends Application {
 
     private static App app;
@@ -57,17 +56,17 @@ public class App extends Application {
     private BluetoothClient mClient;
 
     private UsbDevice currentUsbDevice;
-    
+
     private IDataCallback currentUsbDataCallback;
-    
+
     private UsbManager usbManager;
-    
+
     // USB连接状态锁，防止并发操作
     private final Object usbConnectionLock = new Object();
-    
+
     // 标识是否正在连接中，防止重复连接
     private volatile boolean isConnecting = false;
-    
+
     public static final String ACTION_USB_PERMISSION = "com.drt.moisture.USB_PERMISSION";
 
     private String connectMacAddress;
@@ -127,18 +126,18 @@ public class App extends Application {
     public boolean hasUsbPermission(UsbDevice device) {
         return usbManager != null && usbManager.hasPermission(device);
     }
-    
+
     public void requestUsbPermission(UsbDevice device, android.content.Context context) {
         if (usbManager != null && !usbManager.hasPermission(device)) {
             PendingIntent permissionIntent = PendingIntent.getBroadcast(
-                context, 0, new Intent(ACTION_USB_PERMISSION), 
-                PendingIntent.FLAG_UPDATE_CURRENT | PendingIntent.FLAG_IMMUTABLE
+                    context, 0, new Intent(ACTION_USB_PERMISSION),
+                    PendingIntent.FLAG_UPDATE_CURRENT | PendingIntent.FLAG_IMMUTABLE
             );
             usbManager.requestPermission(device, permissionIntent);
             MyLog.d("USB_PERMISSION", "正在申请USB设备权限");
         }
     }
-    
+
     public boolean autoConnectUsbDevice() {
         synchronized (usbConnectionLock) {
             // 防止重复连接
@@ -146,13 +145,13 @@ public class App extends Application {
                 MyLog.w("USB_AUTO_CONNECT", "正在连接中，跳过重复连接请求");
                 return false;
             }
-            
+
             // 检查是否已连接
             if (isUsbConnected()) {
                 MyLog.d("USB_AUTO_CONNECT", "设备已连接，无需重复连接");
                 return true;
             }
-            
+
             isConnecting = true;
             try {
                 // 获取可用的USB设备列表
@@ -161,22 +160,22 @@ public class App extends Application {
                     MyLog.e("USB_AUTO_CONNECT", "未找到可用的USB设备");
                     return false;
                 }
-                
+
                 // 自动选择第一个设备
                 UsbDevice firstDevice = usbDeviceList.get(0);
                 String deviceName = firstDevice.getProductName();
                 if (deviceName == null || deviceName.isEmpty()) {
                     deviceName = "USB设备";
                 }
-                String deviceInfo = deviceName + " (VID:" + String.format("%04X", firstDevice.getVendorId()) + 
-                                   " PID:" + String.format("%04X", firstDevice.getProductId()) + ")";
-                
+                String deviceInfo = deviceName + " (VID:" + String.format("%04X", firstDevice.getVendorId()) +
+                        " PID:" + String.format("%04X", firstDevice.getProductId()) + ")";
+
                 MyLog.d("USB_AUTO_CONNECT", "自动选择设备: " + deviceInfo);
-                
+
                 // 设置当前设备并尝试连接
                 setCurrentUsbDevice(firstDevice);
                 boolean connected = openUsbDevice();
-                
+
                 if (connected) {
                     // 连接成功后注册默认数据回调
                     setupDefaultUsbDataCallback();
@@ -184,9 +183,9 @@ public class App extends Application {
                     EventBus.getDefault().post(new UsbConnectEvent(true));
                     MyLog.d("USB_AUTO_CONNECT", "已发布USB连接成功事件");
                 }
-                
+
                 return connected;
-                
+
             } catch (Exception e) {
                 MyLog.e("USB_AUTO_CONNECT", "自动连接失败: " + e.getMessage());
                 e.printStackTrace();
@@ -202,30 +201,60 @@ public class App extends Application {
             MyLog.e("USB_CONNECT", "设备引用为空，无法打开");
             return false;
         }
-        
+
         // 检查权限
         if (!hasUsbPermission(currentUsbDevice)) {
             MyLog.e("USB_CONNECT", "没有USB设备权限，无法打开");
             return false;
         }
-        
+
         // 检查是否已经连接
         if (isUsbConnected()) {
             MyLog.d("USB_CONNECT", "设备已经连接，无需重复打开");
             return true;
         }
-        
+
         try {
             MyLog.d("USB_CONNECT", "尝试打开USB设备: " + currentUsbDevice.getDeviceName());
+
+            // 先打开USB设备
             boolean success = WCHUARTManager.getInstance().openDevice(currentUsbDevice);
-            if (success) {
-                MyLog.i("USB_CONNECT", "USB设备打开成功");
-                // 连接成功后立即设置数据回调
-                setupDefaultUsbDataCallback();
-            } else {
+            if (!success) {
                 MyLog.e("USB_CONNECT", "USB设备打开失败");
+                return false;
             }
-            return success;
+            MyLog.i("USB_CONNECT", "USB设备打开成功");
+
+            // 串口通信参数配置（编译时指定）
+            final int SERIAL_BAUD_RATE = 115200;    // 波特率: 可选值 9600, 19200, 38400, 57600, 115200 等
+            final int SERIAL_DATA_BITS = 8;         // 数据位: 5, 6, 7, 8
+            final int SERIAL_STOP_BITS = 1;         // 停止位: 1, 2
+            final int SERIAL_PARITY = 0;            // 校验位: 0=无校验, 1=奇校验, 2=偶校验
+            final boolean SERIAL_FLOW_CONTROL = false; // 流控制: false=无流控, true=启用流控
+            
+            MyLog.d("USB_CONNECT", "设置串口参数: 波特率=" + SERIAL_BAUD_RATE + ", 数据位=" + SERIAL_DATA_BITS + 
+                    ", 停止位=" + SERIAL_STOP_BITS + ", 校验位=" + SERIAL_PARITY + ", 流控=" + SERIAL_FLOW_CONTROL);
+            boolean paramSet = WCHUARTManager.getInstance().setSerialParameter(
+                    currentUsbDevice,
+                    0,                      // serialNumber
+                    SERIAL_BAUD_RATE,       // baud rate
+                    SERIAL_DATA_BITS,       // data bits
+                    SERIAL_STOP_BITS,       // stop bits
+                    SERIAL_PARITY,          // parity: 0=none, 1=odd, 2=even
+                    SERIAL_FLOW_CONTROL     // flow control
+            );
+
+            if (!paramSet) {
+                MyLog.e("USB_CONNECT", "设置串口参数失败");
+                // 参数设置失败，但设备已打开，继续使用默认参数
+                MyLog.w("USB_CONNECT", "使用默认串口参数继续");
+            } else {
+                MyLog.d("USB_CONNECT", "串口参数设置成功");
+            }
+            
+            // 连接成功后立即设置数据回调
+            setupDefaultUsbDataCallback();
+            return true;
         } catch (Exception e) {
             MyLog.e("USB_CONNECT", "打开USB设备异常: " + e.getMessage());
             e.printStackTrace();
@@ -252,7 +281,7 @@ public class App extends Application {
             }
         }
     }
-    
+
     public void registerUsbDataCallback(IDataCallback callback) {
         synchronized (usbConnectionLock) {
             if (currentUsbDevice != null && callback != null) {
@@ -261,10 +290,10 @@ public class App extends Application {
                     MyLog.d("USB_CALLBACK", "相同回调已存在，跳过重复注册");
                     return;
                 }
-                
+
                 // 先取消之前的回调，避免重复注册
                 unregisterUsbDataCallback();
-                
+
                 try {
                     WCHUARTManager.getInstance().registerDataCallback(currentUsbDevice, callback);
                     currentUsbDataCallback = callback;
@@ -278,7 +307,7 @@ public class App extends Application {
             }
         }
     }
-    
+
     public void unregisterUsbDataCallback() {
         synchronized (usbConnectionLock) {
             if (currentUsbDataCallback != null) {
@@ -293,7 +322,7 @@ public class App extends Application {
             }
         }
     }
-    
+
     private void setupDefaultUsbDataCallback() {
         if (currentUsbDevice != null) {
             IDataCallback callback = new IDataCallback() {
@@ -303,7 +332,7 @@ public class App extends Application {
                         byte[] data = new byte[length];
                         System.arraycopy(buffer, 0, data, 0, length);
                         MyLog.i("USB_RX", HexString.bytesToHex(data));
-                        
+
                         // 在后台线程中处理数据解析，避免主线程阻塞
                         new Thread(() -> {
                             try {
@@ -316,7 +345,7 @@ public class App extends Application {
                     }
                 }
             };
-            
+
             registerUsbDataCallback(callback);
             MyLog.d("USB_AUTO_CONNECT", "默认数据回调已注册");
         }
@@ -328,18 +357,18 @@ public class App extends Application {
                 MyLog.e("USB_TX", "USB设备未连接，无法发送数据");
                 return false;
             }
-            
+
             if (data == null || data.length == 0) {
                 MyLog.e("USB_TX", "发送数据为空");
                 return false;
             }
-            
+
             // 防止在连接过程中发送数据
             if (isConnecting) {
                 MyLog.w("USB_TX", "设备正在连接中，暂时无法发送数据");
                 return false;
             }
-            
+
             try {
                 MyLog.i("USB_TX", HexString.bytesToHex(data));
                 int result = WCHUARTManager.getInstance().syncWriteData(currentUsbDevice, 0, data, data.length, 2000);
@@ -395,11 +424,11 @@ public class App extends Application {
         bluetoothSPP.setupService();
         localDataService = new LocalDataServiceImpl(this);
         bluetoothService = new BluetoothServiceImpl(this);
-        
+
         // 初始化WCH UART管理器
         WCHUARTManager.getInstance().init(this);
         WCHUARTManager.setDebug(true);
-        
+
         // 初始化USB管理器
         usbManager = (UsbManager) getSystemService(Context.USB_SERVICE);
 
