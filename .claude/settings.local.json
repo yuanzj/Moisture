@@ -6,7 +6,18 @@
       "Bash(java:*)",
       "Bash(/usr/libexec/java_home:*)",
       "Bash(find:*)",
-      "Bash(ls:*)"
+      "Bash(ls:*)",
+      "Bash(adb shell:*)",
+      "Bash(rg:*)",
+      "Bash(grep:*)",
+      "Bash(echo $JAVA_HOME)",
+      "Bash(echo:*)",
+      "Bash(git add:*)",
+      "Bash(cp:*)",
+      "Bash(mkdir:*)",
+      "Bash(mv:*)",
+      "Bash(rm:*)",
+      "Bash(jar:*)"
     ],
     "deny": []
   }

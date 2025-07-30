@@ -23,6 +23,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageButton;
+import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -31,6 +32,7 @@ import com.drt.moisture.data.BleEvent;
 import com.drt.moisture.data.source.bluetooth.SppDataCallback;
 import com.drt.moisture.data.source.bluetooth.response.CdslSetResponse;
 import com.drt.moisture.data.source.bluetooth.response.SocResponse;
+import com.drt.moisture.util.CustomContentManager;
 import com.drt.moisture.util.MyLog;
 import com.drt.moisture.util.StatusBarUtil;
 import com.inuker.bluetooth.library.Constants;
@@ -161,6 +163,15 @@ public abstract class BluetoothBaseActivity<T extends BasePresenter> extends Bas
         titleName = findViewById(R.id.title_name);
         secondTitle = findViewById(R.id.second_title);
         setTitleName(getTitle().toString());
+
+        ImageView logoImage = findViewById(R.id.logo_image);
+        if (logoImage != null) {
+            if (CustomContentManager.getInstance(this).isBrandLogoVisible()) {
+                logoImage.setVisibility(View.VISIBLE);
+            } else {
+                logoImage.setVisibility(View.INVISIBLE);
+            }
+        }
     }
 
     /**

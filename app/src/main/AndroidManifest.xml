@@ -12,6 +12,7 @@
         android:theme="@style/AppTheme">
         <activity
             android:name=".MainActivity"
+            android:exported="true"
             android:screenOrientation="landscape">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -21,53 +22,62 @@
 
         <activity
             android:name=".dashboard.DashboardActivity"
+            android:exported="false"
             android:label="@string/activity_measure"
             android:screenOrientation="landscape" />
 
         <activity
             android:name=".measure.MeasureActivity"
+            android:exported="false"
             android:label="@string/activity_measure"
             android:screenOrientation="landscape" />
 
         <activity
             android:name=".correctdashboard.CorrectDashboardActivity"
+            android:exported="false"
             android:label="@string/activity_correct"
             android:screenOrientation="landscape" />
 
         <activity
             android:name=".correct.CorrectActivity"
+            android:exported="false"
             android:label="@string/activity_correct"
             android:screenOrientation="landscape" />
 
         <activity
             android:name=".report.ReportActivity"
+            android:exported="false"
             android:label="@string/activity_query"
             android:screenOrientation="landscape" />
 
         <activity
             android:name="com.zhjian.bluetooth.spp.DeviceList"
+            android:exported="false"
             android:screenOrientation="landscape"
             android:theme="@style/Theme.ActivityDialogStyle" />
 
         <activity
             android:name=".setting.SettingActivity"
+            android:exported="false"
             android:label="@string/activity_setting"
             android:screenOrientation="landscape" />
         <activity
             android:name=".syssetting.SettingActivity"
+            android:exported="false"
             android:label="@string/activity_setting"
             android:screenOrientation="landscape" />
         <activity
             android:name=".usersetting.SettingActivity"
+            android:exported="false"
             android:label="@string/activity_setting"
             android:screenOrientation="landscape" />
         <activity
             android:name=".BleScanActivity"
+            android:exported="false"
             android:label="@string/activity_scan"
             android:screenOrientation="landscape"
             />
 
-        <service android:name="com.inuker.bluetooth.library.BluetoothService" />
     </application>
     <uses-feature
         android:name="android.hardware.bluetooth_le"

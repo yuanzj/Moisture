@@ -38,6 +38,7 @@ import com.drt.moisture.data.source.bluetooth.resquest.SetMeasureParameRequest;
 import com.drt.moisture.data.source.bluetooth.resquest.SetRateRequest;
 import com.drt.moisture.data.source.bluetooth.resquest.TimingSetRequest;
 import com.drt.moisture.util.AndroidUtil;
+import com.drt.moisture.util.CustomContentManager;
 import com.drt.moisture.util.DialogUtil;
 import com.drt.moisture.util.ExcelUtil;
 import com.inuker.bluetooth.library.Constants;
@@ -419,6 +420,15 @@ public class SettingActivity extends BluetoothBaseActivity<SettingPresenter> imp
     @Override
     public void onItemClick(final AdapterView<?> parent, final View view, final int position, long id) {
 
+
+        if (position == 7) {
+            // 品牌标识设置 - 仅在隐藏模式下可见（当有更多菜单项时）
+            // 检查当前是否在隐藏模式（通过判断listView的adapter中的item数量）
+            if (listView.getAdapter().getCount() > 3) {
+                showCustomContentDialog();
+            }
+            return;
+        }
 
         if (position == 6) {
             final String[] items = {"串口", "蓝牙"};
@@ -943,6 +953,11 @@ public class SettingActivity extends BluetoothBaseActivity<SettingPresenter> imp
             item1.put("title", "连接设置");
             data.add(item1);
 
+            item1 = new HashMap<>();
+            item1.put("icon", R.mipmap.icons_data_configuration);
+            item1.put("title", "品牌标识设置");
+            data.add(item1);
+
 
             listView.setAdapter(new SimpleAdapter(this, data,
                     R.layout.adapter_setting_item, new String[]{"icon", "title"}, new int[]{R.id.icon, R.id.title}));
@@ -1015,6 +1030,45 @@ public class SettingActivity extends BluetoothBaseActivity<SettingPresenter> imp
         }
 
         return ret;
+    }
+
+    /**
+     * 显示自定义品牌开关对话框
+     */
+    private void showCustomContentDialog() {
+        CustomContentManager customContentManager = CustomContentManager.getInstance(this);
+        boolean isVisible = customContentManager.isBrandLogoVisible();
+
+        // 使用简单的确认对话框来切换状态
+        String currentStatus = isVisible ? "显示" : "隐藏";
+        String newStatus = isVisible ? "隐藏" : "显示";
+
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        builder.setTitle("品牌标识设置");
+        builder.setMessage("当前状态：" + currentStatus + " 品牌标识\n\n" +
+                          "是否要" + newStatus + "品牌标识？");
+
+        builder.setPositiveButton(newStatus, new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                boolean newVisible = !isVisible;
+                customContentManager.setBrandLogoVisible(newVisible);
+
+                String message = newVisible ? "品牌标识已显示" : "品牌标识已隐藏";
+                Toast.makeText(SettingActivity.this, message, Toast.LENGTH_SHORT).show();
+
+                dialog.dismiss();
+            }
+        });
+
+        builder.setNegativeButton("取消", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                dialog.dismiss();
+            }
+        });
+
+        builder.show();
     }
 
 }

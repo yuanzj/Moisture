@@ -7,6 +7,8 @@ import androidx.annotation.Nullable;
 
 import android.view.KeyEvent;
 import android.view.View;
+import android.widget.ImageView;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.drt.moisture.correct.CorrectActivity;
@@ -17,6 +19,7 @@ import com.drt.moisture.measure.MeasureActivity;
 import com.drt.moisture.report.ReportActivity;
 import com.drt.moisture.setting.SettingActivity;
 import com.drt.moisture.util.AppPermission;
+import com.drt.moisture.util.CustomContentManager;
 import com.drt.moisture.util.MyLog;
 import com.inuker.bluetooth.library.Constants;
 
@@ -59,6 +62,9 @@ public class MainActivity extends BluetoothBaseActivity<MainPresenter> {
         mPresenter.attachView(this);
 
         setTitle(R.string.app_name);
+
+        // 加载工厂名称（根据开关状态）
+        reloadFactoryNames();
     }
 
     @Override
@@ -176,6 +182,10 @@ public class MainActivity extends BluetoothBaseActivity<MainPresenter> {
     @Override
     protected void onResume() {
         super.onResume();
+
+        // 每次resume时重新加载工厂名称（根据开关状态）
+        reloadFactoryNames();
+
 //        if (timer != null) {
 //            timer.cancel();
 //            timer = null;
@@ -200,5 +210,39 @@ public class MainActivity extends BluetoothBaseActivity<MainPresenter> {
 //        }
     }
 
+    /**
+     * 重新加载工厂名称和logo
+     * 根据自定义品牌开关状态加载相应的工厂名称和logo
+     */
+    private void reloadFactoryNames() {
+        // 设置工厂名称（完整名称）
+        TextView factoryNameText = findViewById(R.id.factory_name_text);
+        // 设置工厂名称（短名称）
+        TextView factoryShortNameText = findViewById(R.id.factory_name_short_text);
+        // 重新加载logo
+        ImageView logoImage = findViewById(R.id.logo_image);
+
+        if (CustomContentManager.getInstance(this).isBrandLogoVisible()) {
+            if (factoryNameText != null) {
+                factoryNameText.setVisibility(View.VISIBLE);
+            }
+            if (factoryShortNameText != null) {
+                factoryShortNameText.setVisibility(View.VISIBLE);
+            }
+            if (logoImage != null) {
+                logoImage.setVisibility(View.VISIBLE);
+            }
+        } else {
+            if (factoryNameText != null) {
+                factoryNameText.setVisibility(View.INVISIBLE);
+            }
+            if (factoryShortNameText != null) {
+                factoryShortNameText.setVisibility(View.INVISIBLE);
+            }
+            if (logoImage != null) {
+                logoImage.setVisibility(View.INVISIBLE);
+            }
+        }
+    }
 
 }
