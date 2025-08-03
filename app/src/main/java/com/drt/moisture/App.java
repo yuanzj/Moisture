@@ -96,7 +96,7 @@ public class App extends Application {
     public SerialPortHelper getSerialPortHelper() {
         if (mSerialPortHelper == null) {
             mSerialPortHelper = new SerialPortHelper();
-            mSerialPortHelper.setPort("/dev/ttyS4");
+            mSerialPortHelper.setPort("/dev/ttyS5");
             mSerialPortHelper.setBaudRate(115200);
             mSerialPortHelper.setStopBits(STOPB.getStopBit(STOPB.B1));
             mSerialPortHelper.setDataBits(DATAB.getDataBit(DATAB.CS8));

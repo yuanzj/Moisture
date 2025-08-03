@@ -107,6 +107,11 @@ public class ReportActivity extends BluetoothBaseActivity<ReportPresenter> imple
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         export.setVisibility(View.VISIBLE);
+        
+        // 检查存储权限，如果没有权限则请求
+        if (!AppPermission.hasExternalRWPermission(this)) {
+            AppPermission.requestExternalRWPermission(this);
+        }
     }
 
     @Override
@@ -324,28 +329,33 @@ public class ReportActivity extends BluetoothBaseActivity<ReportPresenter> imple
 
     @OnClick(R.id.export)
     public void export() {
-
-        if (AppPermission.isGrantExternalRW(this)) {
-            if (currentData != null && currentData.size() > 0) {
-                String[] title = {getString(R.string.content_point), getString(R.string.content_time), getString(R.string.content_simple_name), getString(R.string.content_temp), getString(R.string.content_sfhd), getString(R.string.content_environment)};
-
-                File file = new File(ExcelUtil.getSDPath() + "/水分活度测量");
-                ExcelUtil.makeDir(file);
-
-                SimpleDateFormat sdf = new SimpleDateFormat("yyyyMMddHHmmss");
-                String time = sdf.format(new Date());//Calendar.getInstance().toString();
-
-                String fileName = file.toString() + "/" + time + ".xls";
-
-                ExcelUtil.initExcel(fileName, title);
-                ExcelUtil.writeObjListToExcel(getRecordData(currentData), fileName, this);
-
-                Toast.makeText(this, "数据导出在" + fileName + "中", Toast.LENGTH_LONG).show();
-            } else {
-                Toast.makeText(this, getString(R.string.content_no_loaded_data), Toast.LENGTH_SHORT).show();
-            }
+        if (currentData == null || currentData.size() == 0) {
+            Toast.makeText(this, getString(R.string.content_no_loaded_data), Toast.LENGTH_SHORT).show();
+            return;
         }
 
+        if (AppPermission.hasExternalRWPermission(this)) {
+            performExport();
+        } else {
+            AppPermission.requestExternalRWPermission(this);
+        }
+    }
+
+    private void performExport() {
+        String[] title = {getString(R.string.content_point), getString(R.string.content_time), getString(R.string.content_simple_name), getString(R.string.content_temp), getString(R.string.content_sfhd), getString(R.string.content_environment)};
+
+        File file = new File(ExcelUtil.getSDPath() + "/水分活度测量");
+        ExcelUtil.makeDir(file);
+
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyyMMddHHmmss");
+        String time = sdf.format(new Date());//Calendar.getInstance().toString();
+
+        String fileName = file.toString() + "/" + time + ".xls";
+
+        ExcelUtil.initExcel(fileName, title);
+        ExcelUtil.writeObjListToExcel(getRecordData(currentData), fileName, this);
+
+        Toast.makeText(this, "数据导出在" + fileName + "中", Toast.LENGTH_LONG).show();
     }
 
     @OnClick(R.id.history)
@@ -561,6 +571,21 @@ public class ReportActivity extends BluetoothBaseActivity<ReportPresenter> imple
             recordList.add(beanList);
         }
         return recordList;
+    }
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode, String[] permissions, int[] grantResults) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+        
+        if (requestCode == AppPermission.REQUEST_EXTERNAL_STORAGE) {
+            if (grantResults.length > 0 && grantResults[0] == android.content.pm.PackageManager.PERMISSION_GRANTED) {
+                // 权限被授予，执行导出
+                performExport();
+            } else {
+                // 权限被拒绝，提示用户
+                Toast.makeText(this, "需要存储权限才能导出数据，请在设置中授予权限", Toast.LENGTH_LONG).show();
+            }
+        }
     }
 
 
