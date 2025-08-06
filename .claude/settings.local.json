@@ -17,7 +17,8 @@
       "Bash(mkdir:*)",
       "Bash(mv:*)",
       "Bash(rm:*)",
-      "Bash(jar:*)"
+      "Bash(jar:*)",
+      "Bash(sed:*)"
     ],
     "deny": []
   }

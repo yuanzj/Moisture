@@ -9,8 +9,8 @@ android {
     }
     defaultConfig {
         applicationId "com.drt.moisture"
-        minSdkVersion 30
-        targetSdkVersion 34
+        minSdkVersion 23
+        targetSdkVersion 29
         versionCode 20250803
         versionName "3.6"
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
