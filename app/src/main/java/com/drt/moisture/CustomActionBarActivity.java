@@ -55,7 +55,7 @@ public abstract class CustomActionBarActivity<T extends BasePresenter> extends B
         toolBar.setTitleTextColor(Color.WHITE);
         titleName = findViewById(R.id.title_name);
         setTitleName(getTitle().toString());
-        
+
         ImageView logoImage = findViewById(R.id.logo_image);
         if (logoImage != null) {
             if (CustomContentManager.getInstance(this).isBrandLogoVisible()) {

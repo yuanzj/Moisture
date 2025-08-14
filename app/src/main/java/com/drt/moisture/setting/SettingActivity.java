@@ -429,7 +429,7 @@ public class SettingActivity extends BluetoothBaseActivity<SettingPresenter> imp
             }
             return;
         }
-        
+
         if (position == 6) {
             final String[] items = {"串口", "蓝牙"};
             AlertDialog.Builder listDialog = new AlertDialog.Builder(this);
@@ -952,7 +952,7 @@ public class SettingActivity extends BluetoothBaseActivity<SettingPresenter> imp
             item1.put("icon", R.mipmap.icons_data_configuration);
             item1.put("title", "连接设置");
             data.add(item1);
-            
+
             item1 = new HashMap<>();
             item1.put("icon", R.mipmap.icons_data_configuration);
             item1.put("title", "品牌标识设置");
@@ -1031,43 +1031,43 @@ public class SettingActivity extends BluetoothBaseActivity<SettingPresenter> imp
 
         return ret;
     }
-    
+
     /**
      * 显示自定义品牌开关对话框
      */
     private void showCustomContentDialog() {
         CustomContentManager customContentManager = CustomContentManager.getInstance(this);
         boolean isVisible = customContentManager.isBrandLogoVisible();
-        
+
         // 使用简单的确认对话框来切换状态
         String currentStatus = isVisible ? "显示" : "隐藏";
         String newStatus = isVisible ? "隐藏" : "显示";
-        
+
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
         builder.setTitle("品牌标识设置");
         builder.setMessage("当前状态：" + currentStatus + " 品牌标识\n\n" +
                           "是否要" + newStatus + "品牌标识？");
-        
+
         builder.setPositiveButton(newStatus, new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
                 boolean newVisible = !isVisible;
                 customContentManager.setBrandLogoVisible(newVisible);
-                
+
                 String message = newVisible ? "品牌标识已显示" : "品牌标识已隐藏";
                 Toast.makeText(SettingActivity.this, message, Toast.LENGTH_SHORT).show();
-                
+
                 dialog.dismiss();
             }
         });
-        
+
         builder.setNegativeButton("取消", new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
                 dialog.dismiss();
             }
         });
-        
+
         builder.show();
     }
 

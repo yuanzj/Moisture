@@ -1,27 +1,32 @@
 package com.drt.moisture;
 
 import android.content.Intent;
-import android.content.pm.PackageManager;
 import android.os.Bundle;
+
+import androidx.annotation.Nullable;
+
 import android.view.KeyEvent;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
-
 import com.drt.moisture.correct.CorrectActivity;
 import com.drt.moisture.correctdashboard.CorrectDashboardActivity;
 import com.drt.moisture.dashboard.DashboardActivity;
+import com.drt.moisture.data.BleEvent;
 import com.drt.moisture.measure.MeasureActivity;
 import com.drt.moisture.report.ReportActivity;
 import com.drt.moisture.setting.SettingActivity;
 import com.drt.moisture.util.AppPermission;
 import com.drt.moisture.util.CustomContentManager;
 import com.drt.moisture.util.MyLog;
-import com.drt.moisture.util.StorageHelper;
+import com.inuker.bluetooth.library.Constants;
+
+import org.greenrobot.eventbus.EventBus;
+
+import java.util.Timer;
+import java.util.TimerTask;
 
 
 public class MainActivity extends BluetoothBaseActivity<MainPresenter> {
@@ -33,24 +38,12 @@ public class MainActivity extends BluetoothBaseActivity<MainPresenter> {
         super.onCreate(savedInstanceState);
         titleBack.setVisibility(View.GONE);
 
-        // 请求存储权限
-        if (!AppPermission.isGrantExternalRW(this)) {
-            AppPermission.requestStoragePermissions(this);
-            
-            // Android 14+ 如果没有完整存储权限，提示用户
-            if (android.os.Build.VERSION.SDK_INT >= 34 && !AppPermission.hasFullStorageAccess()) {
-                MyLog.w("MainActivity", "Android 14+ detected, may need MANAGE_EXTERNAL_STORAGE permission for full access");
-            }
-        } else {
+        if (AppPermission.isGrantExternalRW(this)) {
+            // 申请权限
             MyLog.delFile();
-        }
-        
-        // 检查存储访问权限并提示用户
-        StorageHelper.checkAndPromptStorageAccess(this);
-
-        // 请求蓝牙权限
-        if (!AppPermission.hasBluetoothPermissions(this)) {
-            AppPermission.requestBluetoothPermissions(this);
+        } else {
+            //
+            Toast.makeText(this, "拒绝存储权限将无法保存日志！", Toast.LENGTH_LONG).show();
         }
 
         if (!App.getInstance().isRunning) {
@@ -69,7 +62,7 @@ public class MainActivity extends BluetoothBaseActivity<MainPresenter> {
         mPresenter.attachView(this);
 
         setTitle(R.string.app_name);
-        
+
         // 加载工厂名称（根据开关状态）
         reloadFactoryNames();
     }
@@ -189,10 +182,10 @@ public class MainActivity extends BluetoothBaseActivity<MainPresenter> {
     @Override
     protected void onResume() {
         super.onResume();
-        
+
         // 每次resume时重新加载工厂名称（根据开关状态）
         reloadFactoryNames();
-        
+
 //        if (timer != null) {
 //            timer.cancel();
 //            timer = null;
@@ -217,43 +210,6 @@ public class MainActivity extends BluetoothBaseActivity<MainPresenter> {
 //        }
     }
 
-    @Override
-    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
-        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
-        
-        boolean allGranted = true;
-        for (int result : grantResults) {
-            if (result != PackageManager.PERMISSION_GRANTED) {
-                allGranted = false;
-                break;
-            }
-        }
-        
-        switch (requestCode) {
-            case 1: // 存储权限
-                if (allGranted) {
-                    MyLog.d("MainActivity", "Storage permissions granted");
-                    MyLog.delFile();
-                } else {
-                    if (android.os.Build.VERSION.SDK_INT >= 34) {
-                        // Android 14+ 权限被拒绝，显示存储权限对话框
-                        Toast.makeText(this, "存储权限被拒绝，可能无法读取自定义工厂名称", Toast.LENGTH_LONG).show();
-                        StorageHelper.showStoragePermissionDialog(this);
-                    } else {
-                        Toast.makeText(this, "拒绝存储权限将无法保存日志！", Toast.LENGTH_LONG).show();
-                    }
-                }
-                break;
-            case 2: // 蓝牙权限
-                if (allGranted) {
-                    MyLog.d("MainActivity", "Bluetooth permissions granted");
-                } else {
-                    Toast.makeText(this, "拒绝蓝牙权限将无法连接设备！", Toast.LENGTH_LONG).show();
-                }
-                break;
-        }
-    }
-    
     /**
      * 重新加载工厂名称和logo
      * 根据自定义品牌开关状态加载相应的工厂名称和logo
@@ -265,7 +221,7 @@ public class MainActivity extends BluetoothBaseActivity<MainPresenter> {
         TextView factoryShortNameText = findViewById(R.id.factory_name_short_text);
         // 重新加载logo
         ImageView logoImage = findViewById(R.id.logo_image);
-        
+
         if (CustomContentManager.getInstance(this).isBrandLogoVisible()) {
             if (factoryNameText != null) {
                 factoryNameText.setVisibility(View.VISIBLE);
