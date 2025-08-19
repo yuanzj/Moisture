@@ -15,6 +15,7 @@ import java.util.ArrayList;
 import com.drt.moisture.dashboard.DashboardActivity;
 import com.drt.moisture.data.BleEvent;
 import com.drt.moisture.data.UsbConnectEvent;
+import com.drt.moisture.data.UsbPermissionRequiredEvent;
 import com.drt.moisture.data.source.BluetoothService;
 import com.drt.moisture.data.source.LocalDataService;
 import com.drt.moisture.data.source.bluetooth.BluetoothServiceImpl;
@@ -205,6 +206,8 @@ public class App extends Application {
         // 检查权限
         if (!hasUsbPermission(currentUsbDevice)) {
             MyLog.e("USB_CONNECT", "没有USB设备权限，无法打开");
+            // 发送权限请求事件，触发界面自动连接流程
+            EventBus.getDefault().post(new UsbPermissionRequiredEvent(currentUsbDevice));
             return false;
         }
 

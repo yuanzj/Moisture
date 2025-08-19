@@ -37,6 +37,7 @@ import androidx.core.content.ContextCompat;
 import com.drt.moisture.data.AppConfig;
 import com.drt.moisture.data.BleEvent;
 import com.drt.moisture.data.UsbConnectEvent;
+import com.drt.moisture.data.UsbPermissionRequiredEvent;
 import com.drt.moisture.data.source.bluetooth.SppDataCallback;
 import com.drt.moisture.data.source.bluetooth.response.CdslSetResponse;
 import com.drt.moisture.data.source.bluetooth.response.SocResponse;
@@ -304,7 +305,7 @@ public abstract class BluetoothBaseActivity<T extends BasePresenter> extends Bas
                             }
                         } else {
                             MyLog.e("USB_PERMISSION", "USB权限被拒绝");
-                            Toast.makeText(BluetoothBaseActivity.this, "USB权限被拒绝，无法连接设备", Toast.LENGTH_SHORT).show();
+//                            Toast.makeText(BluetoothBaseActivity.this, "USB权限被拒绝，自动申请权限", Toast.LENGTH_SHORT).show();
                         }
                     }
                 }
@@ -646,6 +647,15 @@ public abstract class BluetoothBaseActivity<T extends BasePresenter> extends Bas
                 secondTitle.setText(R.string.content_not_connect_1);
                 MyLog.d("USB_UI_UPDATE", "USB断开状态已更新到界面");
             }
+        }
+    }
+    
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    public void onUsbPermissionRequired(UsbPermissionRequiredEvent event) {
+        if (App.getInstance().connectedModel == 0) { // 仅在USB模式下处理
+            MyLog.d("USB_PERMISSION", "接收到USB权限请求事件，自动触发连接流程");
+            // 自动触发连接按钮的操作
+            connect();
         }
     }
 
